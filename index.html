@@ -177,9 +177,11 @@
     </a>
   </nav>
   <div class="mt-auto p-6 hidden md:block">
-    <button class="w-full py-3 bg-gradient-to-br from-[#dbfcff] to-[#00f0ff] text-[#00363a] font-headline uppercase tracking-widest text-[10px] font-bold rounded-lg transition-all scale-95 active:scale-90 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)]">
-      Deploy Probe
+    <button id="deploy-probe-btn" onclick="deployProbe()" class="w-full py-3 bg-gradient-to-br from-[#dbfcff] to-[#00f0ff] text-[#00363a] font-headline uppercase tracking-widest text-[10px] font-bold rounded-lg transition-all scale-95 active:scale-90 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] flex items-center justify-center gap-2">
+      <span id="deploy-probe-icon" class="material-symbols-outlined text-sm">rocket_launch</span>
+      <span id="deploy-probe-label">Deploy Probe</span>
     </button>
+    <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-2 h-3"></p>
   </div>
   <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent w-[1px] h-3/4"></div>
 </aside>
@@ -835,7 +837,14 @@
 <!-- ═══════════════════════════════════════════════════════ -->
 <script>
 // ── RSS Feed Config ────────────────────────────────────────
-const RSS_PROXY = 'https://api.allorigins.win/raw?url=';
+// Multiple proxies tried in order — if one fails the next is used
+const RSS_PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  url => `https://thingproxy.freeboard.io/fetch/${url}`,
+  url => `https://htmldriven.com/cors-proxy?url=${encodeURIComponent(url)}`,
+];
 const FEEDS = [
   { url: 'https://www.inverse.com/rss',                  source: 'Inverse' },
   { url: 'https://nasawatch.com/feed/',                   source: 'NASAWatch' },
@@ -878,9 +887,16 @@ function stripHtml(s) {
 }
 
 async function fetchFeed(feedInfo) {
-  const proxyUrl = RSS_PROXY + encodeURIComponent(feedInfo.url);
-  const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
-  const text = await res.text();
+  // Try each proxy in order until one returns valid XML
+  let text = '';
+  for (const proxyFn of RSS_PROXIES) {
+    try {
+      const res = await fetch(proxyFn(feedInfo.url), { signal: AbortSignal.timeout(12000) });
+      const t = await res.text();
+      if (t.includes('<item') || t.includes('<entry')) { text = t; break; }
+    } catch(e) { /* try next proxy */ }
+  }
+  if (!text) return [];
   const doc = new DOMParser().parseFromString(text, 'application/xml');
   const items = Array.from(doc.querySelectorAll('item'));
   return items.map((item, idx) => {
@@ -1041,10 +1057,10 @@ async function loadLiveFeeds() {
       }
     }
 
-    // Count live feeds
+    // Count live feeds — show real number if >0, else keep showing configured count
     const liveCount = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
     const feedCountEl = document.getElementById('hud-feed-count');
-    if (feedCountEl) feedCountEl.textContent = liveCount;
+    if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length;
 
     if (merged.length > 0) {
       articles.length = 0;
@@ -1624,6 +1640,83 @@ function drawConstellationLines() {
     line.setAttribute('x2', centers[b].x.toFixed(2) + '%');
     line.setAttribute('y2', centers[b].y.toFixed(2) + '%');
   });
+}
+
+// ── Deploy Probe ──────────────────────────────────────────
+let probeDeployed = false;
+async function deployProbe() {
+  if (probeDeployed) return;
+  probeDeployed = true;
+
+  const btn    = document.getElementById('deploy-probe-btn');
+  const icon   = document.getElementById('deploy-probe-icon');
+  const label  = document.getElementById('deploy-probe-label');
+  const status = document.getElementById('deploy-probe-status');
+
+  // Launch animation sequence
+  const stages = [
+    { icon: 'rocket_launch',  text: 'Launching…',      status: 'Probe away',          delay: 0    },
+    { icon: 'sensors',        text: 'Scanning…',        status: 'Contacting feeds',    delay: 700  },
+    { icon: 'cell_tower',     text: 'Receiving…',       status: 'Decoding signals',    delay: 1800 },
+    { icon: 'downloading',    text: 'Pulling data…',    status: 'Articles incoming',   delay: 2800 },
+  ];
+
+  if (btn)  btn.disabled = true;
+  if (btn)  btn.classList.add('opacity-80');
+
+  for (const s of stages) {
+    await new Promise(r => setTimeout(r, s.delay));
+    if (icon)   icon.textContent   = s.icon;
+    if (label)  label.textContent  = s.text;
+    if (status) status.textContent = s.status;
+  }
+
+  // Actually re-fetch all feeds
+  try {
+    const results = await Promise.allSettled(FEEDS.map(f => fetchFeed(f)));
+    const buckets = results.map(r => r.status === 'fulfilled' ? r.value : []).filter(b => b.length > 0);
+    const merged  = [];
+    const maxLen  = Math.max(...buckets.map(b => b.length), 0);
+    for (let i = 0; i < maxLen && merged.length < 40; i++) {
+      for (const bucket of buckets) {
+        if (i < bucket.length && merged.length < 40) merged.push({ ...bucket[i], id: merged.length });
+      }
+    }
+    const liveCount = buckets.length;
+    const feedCountEl = document.getElementById('hud-feed-count');
+    if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length;
+
+    if (merged.length > 0) {
+      articles.length = 0;
+      merged.forEach(a => articles.push(a));
+      currentPage = 1; currentFilter = 'All';
+      renderCurrentPage();
+      updatePrioritySignal(articles[0]);
+      updateTicker(articles.slice(0, 6));
+      if (currentView === 'trending') renderTrending();
+      if (icon)   icon.textContent   = 'check_circle';
+      if (label)  label.textContent  = 'Probe Complete';
+      if (status) status.textContent = merged.length + ' signals retrieved';
+    } else {
+      if (icon)   icon.textContent   = 'signal_disconnected';
+      if (label)  label.textContent  = 'No Signal';
+      if (status) status.textContent = 'Using cached data';
+    }
+  } catch(e) {
+    if (icon)   icon.textContent   = 'error';
+    if (label)  label.textContent  = 'Probe Failed';
+    if (status) status.textContent = 'Check connection';
+  }
+
+  // Re-enable after 8s so it can be used again
+  setTimeout(() => {
+    probeDeployed = false;
+    if (btn)    btn.disabled = false;
+    if (btn)    btn.classList.remove('opacity-80');
+    if (icon)   icon.textContent   = 'rocket_launch';
+    if (label)  label.textContent  = 'Deploy Probe';
+    if (status) status.textContent = '';
+  }, 8000);
 }
 
 // ── Boot ──────────────────────────────────────────────────
