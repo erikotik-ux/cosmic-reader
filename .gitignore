@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# npm logs
+npm-debug.log*
+.npm
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Tailwind source (keep config + input.css, skip generated output if rebuilding from source)
+# cosmic-reader.css is intentionally committed so the site works without a build step
