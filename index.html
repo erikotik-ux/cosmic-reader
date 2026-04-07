@@ -839,11 +839,10 @@
 // ── RSS Feed Config ────────────────────────────────────────
 // Multiple proxies tried in order — if one fails the next is used
 const RSS_PROXIES = [
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `/api/rss?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-  url => `https://thingproxy.freeboard.io/fetch/${url}`,
-  url => `https://htmldriven.com/cors-proxy?url=${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
   { url: 'https://www.inverse.com/rss',                  source: 'Inverse' },
