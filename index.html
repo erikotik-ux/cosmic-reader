@@ -845,12 +845,13 @@ const RSS_PROXIES = [
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
-  { url: 'https://www.inverse.com/rss',                  source: 'Inverse' },
+  { url: 'https://www.inverse.com/science/rss',           source: 'Inverse' },
   { url: 'https://nasawatch.com/feed/',                   source: 'NASAWatch' },
   { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
   { url: 'https://www.universetoday.com/feed/',           source: 'Universe Today' },
   { url: 'https://spacenews.com/feed/',                   source: 'SpaceNews' },
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
+  { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
 ];
 const KEYWORD_CATS = [
   [['exoplanet','habitable zone','james webb','jwst','red dwarf','transit spectrum','gj ','kepler','tess'],'Exoplanets'],
@@ -869,12 +870,13 @@ const FALLBACK_IMAGES = {
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', Exoplanets:'text-tertiary' };
 const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', Exoplanets:'travel_explore' };
 
+// Returns null if no space/science keyword matches — used to filter non-space articles
 function guessCategory(title, tags) {
   const txt = (title + ' ' + tags).toLowerCase();
   for (const [kws, cat] of KEYWORD_CATS) {
     for (const kw of kws) { if (txt.includes(kw)) return cat; }
   }
-  return 'Physics';
+  return null;
 }
 
 function escHtml(s) {
@@ -923,7 +925,8 @@ async function fetchFeed(feedInfo) {
     const date    = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
-    const category = guessCategory(title, tags);
+    const PURE_SPACE_SOURCES = ['NASAWatch','NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+    const category = guessCategory(title, tags) || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions' : null);
     // Image: try media:content, then enclosure, then og in content
     let image = '';
     const mc = item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'content')[0]
@@ -952,7 +955,7 @@ async function fetchFeed(feedInfo) {
         { label: 'Read Time', val: readTime + ' min', color: 'text-primary' },
       ]
     };
-  });
+  }).filter(a => a.category !== null);
 }
 
 // ── Bento Grid Renderer ────────────────────────────────────
