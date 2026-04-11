@@ -223,6 +223,33 @@
 
     <!-- ═══ DESKTOP: absolute-positioned planets ═══ -->
     <div id="desktop-galaxy" class="hidden md:block relative w-full h-full">
+
+      <!-- SVG FIRST so it renders behind all planet nodes -->
+      <svg id="constellation-svg" class="absolute inset-0 w-full h-full pointer-events-none" style="left:0;top:0;">
+        <defs>
+          <filter id="lineGlow" x="-30%" y="-300%" width="160%" height="700%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Glow layer (wide, soft) -->
+        <line id="cl0g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl1g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl2g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl3g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl4g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <!-- Core lines (sharp, crisp) -->
+        <line id="cl0"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl1"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl2"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl3"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl4"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
+      </svg>
+
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
       <div class="planet-node absolute pointer-events-auto" style="top:16%; left:26%;" onclick="openArticle(0)">
         <div class="relative">
@@ -292,40 +319,6 @@
         </div>
       </div>
 
-      <!-- SVG connecting lines — positions updated by drawConstellationLines() -->
-      <svg id="constellation-svg" class="absolute inset-0 w-full h-full pointer-events-none" style="left:0;top:0;">
-        <defs>
-          <!-- Core gradient: transparent → cyan → transparent along line direction -->
-          <linearGradient id="lineGrad1" x1="0%" x2="100%" y1="0%" y2="0%" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="#00f0ff" stop-opacity="0"/>
-            <stop offset="30%"  stop-color="#00f0ff" stop-opacity="0.7"/>
-            <stop offset="50%"  stop-color="#00f0ff" stop-opacity="1"/>
-            <stop offset="70%"  stop-color="#00f0ff" stop-opacity="0.7"/>
-            <stop offset="100%" stop-color="#00f0ff" stop-opacity="0"/>
-          </linearGradient>
-          <!-- Glow blur filter for the lines -->
-          <filter id="lineGlow" x="-20%" y="-200%" width="140%" height="500%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <!-- Glow layer (blurred, wider) -->
-        <line id="cl0g" stroke="#00f0ff" stroke-width="3" stroke-opacity="0.15" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl1g" stroke="#00f0ff" stroke-width="3" stroke-opacity="0.15" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl2g" stroke="#00f0ff" stroke-width="3" stroke-opacity="0.15" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl3g" stroke="#00f0ff" stroke-width="3" stroke-opacity="0.15" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl4g" stroke="#00f0ff" stroke-width="3" stroke-opacity="0.15" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <!-- Core lines (sharp, on top) -->
-        <line id="cl0" stroke="#00f0ff" stroke-width="0.8" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl1" stroke="#00f0ff" stroke-width="0.8" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl2" stroke="#00f0ff" stroke-width="0.8" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl3" stroke="#00f0ff" stroke-width="0.8" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl4" stroke="#00f0ff" stroke-width="0.8" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-      </svg>
     </div>
 
     <!-- ═══ MOBILE: vertical stacked planets ═══ -->
