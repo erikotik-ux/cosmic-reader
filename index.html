@@ -72,10 +72,16 @@
   .orbit-dot-1 { animation: orbit 6s linear infinite; }
   .orbit-dot-2 { animation: orbit2 9s linear infinite; }
   .orbit-dot-3 { animation: orbit3 12s linear infinite; }
-  /* Orbital ring track — tilted ellipse giving 3D perspective look */
-  .orbit-ring-track {
-    position: absolute; border-radius: 50%; pointer-events: none;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
+  /* Mobile bottom nav active state */
+  .mnav-link.active { color: #00f0ff; }
+  .drop-cap-para::first-letter {
+    font-size: 3.5rem;
+    line-height: 1;
+    font-family: 'Orbitron', sans-serif;
+    color: #00f0ff;
+    display: inline;
+    margin-right: 0.15em;
+    vertical-align: baseline;
   }
   /* View switching — !important ensures the ID selector on body doesn't interfere */
   .view { display: none !important; }
@@ -168,7 +174,7 @@
 </header>
 
 <!-- ═══ SIDE NAV ═══ -->
-<aside class="fixed left-0 top-0 h-full z-40 flex flex-col pt-24 bg-[#131313]/40 backdrop-blur-2xl w-16 md:w-64 border-r border-[#00f0ff]/10">
+<aside class="fixed left-0 top-0 h-full z-40 hidden md:flex flex-col pt-24 bg-[#131313]/40 backdrop-blur-2xl w-64 border-r border-[#00f0ff]/10">
   <div class="px-6 mb-8 hidden md:block">
     <h2 class="font-headline uppercase tracking-widest text-[10px] text-[#00f0ff]/60">Navigation</h2>
     <p class="font-headline text-[10px] text-white/40">Deep Space Network</p>
@@ -213,98 +219,168 @@
   <div class="absolute bottom-1/4 right-20 w-96 h-96 bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
 
   <!-- Galaxy Map content -->
-  <div class="relative w-full h-full flex items-center justify-center pointer-events-none pl-16 md:pl-64">
+  <div class="relative w-full h-full flex items-center justify-center pointer-events-none md:pl-64">
 
-    <!-- PLANET: Planets & Exoplanets (Top Left) -->
-    <div class="planet-node absolute pointer-events-auto" style="top:18%; left:28%;" onclick="openArticle(0)">
-      <div class="relative">
-        <!-- Orbital ring track (back half, behind planet) -->
-        <div class="orbit-ring-track" style="width:280px;height:70px;border:1px solid rgba(0,240,255,0.18);"></div>
-        <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
-          <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
+    <!-- ═══ DESKTOP: absolute-positioned planets ═══ -->
+    <div class="hidden md:block relative w-full h-full">
+      <!-- PLANET: Planets & Exoplanets (Top Left) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:18%; left:28%;" onclick="openArticle(0)">
+        <div class="relative">
+          <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
+            <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-1 absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="margin:-4px;"></div>
+            <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="margin:-3px;"></div>
+          </div>
         </div>
-        <!-- Orbiting dots -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-          <div class="orbit-dot-1 absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="margin:-4px;"></div>
-          <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="margin:-3px;"></div>
+        <div class="mt-4 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-primary-fixed-dim">Planets</span>
+          <span class="block text-xs text-on-surface-variant font-label">4 Active Signals</span>
         </div>
       </div>
-      <div class="mt-4 text-center">
-        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-primary-fixed-dim">Planets</span>
-        <span class="block text-xs text-on-surface-variant font-label">4 Active Signals</span>
+
+      <!-- PLANET: Space Missions (Center-Bottom) -->
+      <div class="planet-node absolute pointer-events-auto" style="bottom:14%; left:42%;" onclick="openArticle(2)">
+        <div class="relative">
+          <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
+            <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnN9BwZpcWWpf9YG_q64YeYGqLh1XpUdRRmrpBIujls243Mrua5-DkyLsrqc3927rmj1LInuu3fN4v2hCZv-87D-8ZdJV_5B6xdbZIojD0T2nFi8UquyRbroY7a24ZKJVv2EnxhkbGy9kvtZCb8Bl_a_UsRIxFb4mOqodXrFdNrqZpPTwGIeVYb4LXAbjHvF4QJ3xKEjI0XuTESRPSPPqB41c-z0Mnbbh3D0FvNu92YEQqiP_uOk2G5t0DV_n-4G3Tm9tmELIwEk" alt="Mars planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-1 absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="margin:-6px;animation-duration:7s;"></div>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-secondary">Space Frontier</span>
+          <span class="block text-xs text-on-surface-variant font-label">NASA • ESA • SpaceX</span>
+        </div>
+      </div>
+
+      <!-- PLANET: Physics & Cosmos (Top Right) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:30%; right:12%;" onclick="openArticle(0)">
+        <div class="relative">
+          <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
+            <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-3 absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="margin:-4px;"></div>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-tertiary-fixed-dim">Physics &amp; Cosmos</span>
+          <span class="block text-xs text-on-surface-variant font-label">Gravitational Waves &amp; Beyond</span>
+        </div>
+      </div>
+
+      <!-- PLANET: Moon (Left-Center) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:55%; left:22%;" onclick="openArticle(1)">
+        <div class="relative">
+          <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
+            <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw" alt="Lunar ops"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="margin:-3px;animation-duration:5s;"></div>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Lunar Ops</span>
+          <span class="block text-xs text-on-surface-variant font-label">2 Active Signals</span>
+        </div>
+      </div>
+
+      <!-- SVG connecting lines — positions updated by drawConstellationLines() -->
+      <svg id="constellation-svg" class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" style="left:0;top:0;">
+        <defs>
+          <linearGradient id="lineGrad1" x1="0%" x2="100%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="50%" stop-color="#00f0ff"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+        </defs>
+        <line id="cl0" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl1" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl2" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl3" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl4" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
+      </svg>
+    </div>
+
+    <!-- ═══ MOBILE: vertical stacked planets ═══ -->
+    <div class="md:hidden w-full h-full overflow-y-auto pointer-events-auto flex flex-col items-start gap-10 pt-24 pb-28 px-6">
+      <!-- Planet 1: Planets & Exoplanets — left offset -->
+      <div class="planet-node self-start ml-4 pointer-events-auto" onclick="openArticle(0)">
+        <div class="relative">
+          <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
+            <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-1 absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="margin:-4px;"></div>
+            <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="margin:-3px;"></div>
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-primary-fixed-dim">Planets</span>
+          <span class="block text-xs text-on-surface-variant font-label">4 Active Signals</span>
+        </div>
+      </div>
+
+      <!-- Planet 2: Space Missions — right offset -->
+      <div class="planet-node self-end mr-6 pointer-events-auto" onclick="openArticle(2)">
+        <div class="relative">
+          <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
+            <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnN9BwZpcWWpf9YG_q64YeYGqLh1XpUdRRmrpBIujls243Mrua5-DkyLsrqc3927rmj1LInuu3fN4v2hCZv-87D-8ZdJV_5B6xdbZIojD0T2nFi8UquyRbroY7a24ZKJVv2EnxhkbGy9kvtZCb8Bl_a_UsRIxFb4mOqodXrFdNrqZpPTwGIeVYb4LXAbjHvF4QJ3xKEjI0XuTESRPSPPqB41c-z0Mnbbh3D0FvNu92YEQqiP_uOk2G5t0DV_n-4G3Tm9tmELIwEk" alt="Mars planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-1 absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="margin:-6px;animation-duration:7s;"></div>
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-secondary">Space Frontier</span>
+          <span class="block text-xs text-on-surface-variant font-label">NASA • ESA • SpaceX</span>
+        </div>
+      </div>
+
+      <!-- Planet 3: Physics & Cosmos — center-left -->
+      <div class="planet-node self-start ml-16 pointer-events-auto" onclick="openArticle(0)">
+        <div class="relative">
+          <div class="planet-sphere relative w-40 h-40 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
+            <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-3 absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="margin:-4px;"></div>
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-tertiary-fixed-dim">Physics &amp; Cosmos</span>
+          <span class="block text-xs text-on-surface-variant font-label">Gravitational Waves &amp; Beyond</span>
+        </div>
+      </div>
+
+      <!-- Planet 4: Lunar Ops — right offset -->
+      <div class="planet-node self-end mr-12 pointer-events-auto" onclick="openArticle(1)">
+        <div class="relative">
+          <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
+            <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw" alt="Lunar ops"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="margin:-3px;animation-duration:5s;"></div>
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Lunar Ops</span>
+          <span class="block text-xs text-on-surface-variant font-label">2 Active Signals</span>
+        </div>
       </div>
     </div>
 
-    <!-- PLANET: Space Missions (Center-Bottom) -->
-    <div class="planet-node absolute pointer-events-auto" style="bottom:14%; left:42%;" onclick="openArticle(2)">
-      <div class="relative">
-        <div class="orbit-ring-track" style="width:300px;height:75px;border:1px solid rgba(215,59,0,0.18);"></div>
-        <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
-          <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnN9BwZpcWWpf9YG_q64YeYGqLh1XpUdRRmrpBIujls243Mrua5-DkyLsrqc3927rmj1LInuu3fN4v2hCZv-87D-8ZdJV_5B6xdbZIojD0T2nFi8UquyRbroY7a24ZKJVv2EnxhkbGy9kvtZCb8Bl_a_UsRIxFb4mOqodXrFdNrqZpPTwGIeVYb4LXAbjHvF4QJ3xKEjI0XuTESRPSPPqB41c-z0Mnbbh3D0FvNu92YEQqiP_uOk2G5t0DV_n-4G3Tm9tmELIwEk" alt="Mars planet"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
-        </div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-          <div class="orbit-dot-1 absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="margin:-6px;animation-duration:7s;"></div>
-        </div>
-      </div>
-      <div class="mt-4 text-center">
-        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-secondary">Space Frontier</span>
-        <span class="block text-xs text-on-surface-variant font-label">NASA • ESA • SpaceX</span>
-      </div>
-    </div>
-
-    <!-- PLANET: Physics & Cosmos (Top Right) -->
-    <div class="planet-node absolute pointer-events-auto" style="top:30%; right:12%;" onclick="openArticle(0)">
-      <div class="relative">
-        <div class="orbit-ring-track" style="width:260px;height:65px;border:1px solid rgba(200,160,255,0.18);"></div>
-        <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
-          <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
-        </div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-          <div class="orbit-dot-3 absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="margin:-4px;"></div>
-        </div>
-      </div>
-      <div class="mt-4 text-center">
-        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-tertiary-fixed-dim">Physics &amp; Cosmos</span>
-        <span class="block text-xs text-on-surface-variant font-label">Gravitational Waves &amp; Beyond</span>
-      </div>
-    </div>
-
-    <!-- PLANET: Moon (Left-Center) -->
-    <div class="planet-node absolute pointer-events-auto" style="top:55%; left:22%;" onclick="openArticle(1)">
-      <div class="relative">
-        <div class="orbit-ring-track" style="width:220px;height:55px;border:1px solid rgba(219,252,255,0.15);"></div>
-        <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
-          <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw" alt="Lunar ops"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
-        </div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-          <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="margin:-3px;animation-duration:5s;"></div>
-        </div>
-      </div>
-      <div class="mt-4 text-center">
-        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Lunar Ops</span>
-        <span class="block text-xs text-on-surface-variant font-label">2 Active Signals</span>
-      </div>
-    </div>
-
-    <!-- SVG connecting lines — positions updated by drawConstellationLines() -->
-    <svg id="constellation-svg" class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" style="left:0;top:0;">
-      <defs>
-        <linearGradient id="lineGrad1" x1="0%" x2="100%" y1="0%" y2="100%">
-          <stop offset="0%" stop-color="transparent"/>
-          <stop offset="50%" stop-color="#00f0ff"/>
-          <stop offset="100%" stop-color="transparent"/>
-        </linearGradient>
-      </defs>
-      <line id="cl0" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl1" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl2" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl3" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl4" stroke="url(#lineGrad1)" stroke-width="1" x1="0" y1="0" x2="0" y2="0"/>
-    </svg>
   </div>
 
   <!-- ── Priority Signal: hover to reveal from right edge ── -->
@@ -360,8 +436,28 @@
     </div>
   </div>
 
+  <!-- ── Mobile Bottom Nav ── -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
+    <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/></svg>
+      <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
+    </button>
+    <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('feed')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span class="font-label text-[9px] uppercase tracking-widest">Feed</span>
+    </button>
+    <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('saved')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span class="font-label text-[9px] uppercase tracking-widest">Saved</span>
+    </button>
+    <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('trending')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
+    </button>
+  </nav>
+
   <!-- ── Ticker Overlay ── -->
-  <div class="fixed bottom-0 left-0 w-full glass-panel h-10 border-t border-outline-variant/10 z-20 flex items-center overflow-hidden pl-16 md:pl-64">
+  <div class="fixed bottom-14 md:bottom-0 left-0 w-full glass-panel h-10 border-t border-outline-variant/10 z-20 flex items-center overflow-hidden md:pl-64">
     <div class="flex items-center gap-8 whitespace-nowrap animate-marquee" style="width:max-content;">
       <div class="flex items-center gap-2">
         <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
@@ -405,7 +501,7 @@
 <!-- VIEW 2: MY FEED (Bento Grid)                            -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-feed" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto pl-16 md:pl-64 pt-20 pb-10">
+  <div class="flex-1 min-h-0 overflow-y-auto md:pl-64 pt-20 pb-28 md:pb-10">
     <div class="max-w-7xl mx-auto px-6 py-10">
 
       <!-- Hero Header -->
@@ -621,7 +717,7 @@
   </div>
   <div class="fixed inset-0 bg-[#131313]/70 z-0"></div>
 
-  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto pl-16 md:pl-64 pt-20 pb-10">
+  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto md:pl-64 pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <!-- Discovery HUD -->
       <div class="glass-panel relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-outline-variant/15 rounded-lg" style="box-shadow:0 0 30px rgba(0,240,255,0.12);">
@@ -709,7 +805,7 @@
   <div id="reading-progress-track" class="fixed top-[72px] left-0 md:left-64 right-0 h-0.5 bg-surface-container-highest z-50">
     <div id="reading-progress" class="h-full bg-primary-container shadow-[0_0_8px_rgba(0,240,255,0.8)] w-1/4 reading-progress-bar"></div>
   </div>
-  <div class="flex-1 min-h-0 overflow-y-auto pl-16 md:pl-64 pt-20 pb-24" id="reading-scroll-area">
+  <div class="flex-1 min-h-0 overflow-y-auto md:pl-64 pt-20 pb-28 md:pb-24" id="reading-scroll-area">
     <div class="max-w-7xl mx-auto px-6 md:pr-16 py-10">
 
       <!-- Article Header -->
@@ -808,7 +904,7 @@
 <!-- VIEW 5: SAVED STORIES                                   -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-saved" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto pl-16 md:pl-64 pt-20 pb-10">
+  <div class="flex-1 min-h-0 overflow-y-auto md:pl-64 pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <div class="mb-8 flex items-end justify-between gap-4">
         <div>
@@ -832,7 +928,7 @@
 <!-- VIEW 6: TRENDING                                        -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-trending" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto pl-16 md:pl-64 pt-20 pb-10">
+  <div class="flex-1 min-h-0 overflow-y-auto md:pl-64 pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-4">
         <div>
@@ -1537,7 +1633,7 @@ function navigate(viewName) {
   // Show target
   const target = document.getElementById('view-' + viewName);
   if (target) target.classList.add('active');
-  // Update sidebar
+  // Update sidebar nav
   document.querySelectorAll('[id^="nav-"]').forEach(n => {
     n.classList.remove('active');
     n.classList.add('text-white/40');
@@ -1546,6 +1642,18 @@ function navigate(viewName) {
   if (navEl) {
     navEl.classList.add('active');
     navEl.classList.remove('text-white/40');
+  }
+  // Update mobile bottom nav
+  document.querySelectorAll('[id^="mnav-"]').forEach(n => {
+    n.classList.remove('active');
+    n.classList.remove('text-[#00f0ff]');
+    n.classList.add('text-white/40');
+  });
+  const mnavEl = document.getElementById('mnav-' + viewName);
+  if (mnavEl) {
+    mnavEl.classList.add('active');
+    mnavEl.classList.add('text-[#00f0ff]');
+    mnavEl.classList.remove('text-white/40');
   }
   currentView = viewName;
 
@@ -1622,7 +1730,7 @@ function openReading(idx) {
   paragraphs.forEach((p, i) => {
     const el = document.createElement('p');
     if (i === 0) {
-      el.className = 'first-letter:text-5xl first-letter:font-headline first-letter:text-primary first-letter:mr-2 first-letter:float-left';
+      el.className = 'drop-cap-para';
     }
     el.textContent = p;
     bodyEl.appendChild(el);
