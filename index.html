@@ -174,25 +174,25 @@
 </header>
 
 <!-- ═══ SIDE NAV ═══ -->
-<aside id="main-sidebar" class="fixed left-0 top-0 h-full z-40 flex flex-col pt-24 bg-[#0a0f14]/90 backdrop-blur-2xl w-64 border-r border-[#00f0ff]/15 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+<aside id="main-sidebar" class="fixed left-0 top-0 h-full z-40 flex flex-col pt-24 bg-[#0a0f14]/90 backdrop-blur-2xl w-14 md:w-64 border-r border-[#00f0ff]/15 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
   <div class="px-6 mb-8 hidden md:block">
     <h2 class="font-headline uppercase tracking-widest text-[10px] text-[#00f0ff]/60">Navigation</h2>
     <p class="font-headline text-[10px] text-white/40">Deep Space Network</p>
   </div>
   <nav class="flex flex-col gap-1">
-    <a id="nav-map" onclick="navigate('map')" class="sidebar-link active flex items-center gap-4 px-4 md:px-6 py-4 cursor-pointer select-none">
+    <a id="nav-map" onclick="navigate('map')" class="sidebar-link active flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 cursor-pointer select-none">
       <span class="material-symbols-outlined">language</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Galaxy Map</span>
     </a>
-    <a id="nav-feed" onclick="navigate('feed')" class="sidebar-link flex items-center gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
+    <a id="nav-feed" onclick="navigate('feed')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
       <span class="material-symbols-outlined">auto_awesome_motion</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">My Feed</span>
     </a>
-    <a id="nav-saved" onclick="navigate('saved')" class="sidebar-link flex items-center gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
+    <a id="nav-saved" onclick="navigate('saved')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
       <span class="material-symbols-outlined">bookmark</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Saved Stories</span>
     </a>
-    <a id="nav-trending" onclick="navigate('trending')" class="sidebar-link flex items-center gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
+    <a id="nav-trending" onclick="navigate('trending')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
       <span class="material-symbols-outlined">shutter_speed</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Trending</span>
     </a>
@@ -235,7 +235,7 @@
     <!-- ═══ DESKTOP: absolute-positioned planets ═══ -->
     <div id="desktop-galaxy" class="hidden md:block relative w-full h-full">
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:8%; left:16%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:18%; left:28%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -253,7 +253,7 @@
       </div>
 
       <!-- PLANET: Space Missions (Center-Bottom) -->
-      <div class="planet-node absolute pointer-events-auto" style="bottom:5%; left:44%;" onclick="openArticle(2)">
+      <div class="planet-node absolute pointer-events-auto" style="bottom:14%; left:42%;" onclick="openArticle(2)">
         <div class="relative">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnN9BwZpcWWpf9YG_q64YeYGqLh1XpUdRRmrpBIujls243Mrua5-DkyLsrqc3927rmj1LInuu3fN4v2hCZv-87D-8ZdJV_5B6xdbZIojD0T2nFi8UquyRbroY7a24ZKJVv2EnxhkbGy9kvtZCb8Bl_a_UsRIxFb4mOqodXrFdNrqZpPTwGIeVYb4LXAbjHvF4QJ3xKEjI0XuTESRPSPPqB41c-z0Mnbbh3D0FvNu92YEQqiP_uOk2G5t0DV_n-4G3Tm9tmELIwEk" alt="Mars planet"/>
@@ -270,7 +270,7 @@
       </div>
 
       <!-- PLANET: Physics & Cosmos (Top Right) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:18%; right:5%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:30%; right:12%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
@@ -287,7 +287,7 @@
       </div>
 
       <!-- PLANET: Moon (Left-Center) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:58%; left:6%;" onclick="openArticle(1)">
+      <div class="planet-node absolute pointer-events-auto" style="top:55%; left:22%;" onclick="openArticle(1)">
         <div class="relative">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
             <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw" alt="Lunar ops"/>
@@ -1654,7 +1654,7 @@ function toggleSidebar() {
   } else {
     // Open
     sidebar.classList.remove('-translate-x-full');
-    handle.style.left = '256px';
+    handle.style.left = '56px'; // w-14 on mobile
     backdrop.classList.remove('hidden');
     chevron.style.transform = 'rotate(180deg)';
   }
