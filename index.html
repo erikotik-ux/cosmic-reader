@@ -48,16 +48,16 @@
   }
   .animate-marquee { animation: marquee 30s linear infinite; }
   @keyframes orbit {
-    0% { transform: rotate(0deg) translateX(24px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(24px) rotate(-360deg); }
+    0% { transform: rotate(0deg) translateX(130px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(130px) rotate(-360deg); }
   }
   @keyframes orbit2 {
-    0% { transform: rotate(120deg) translateX(32px) rotate(-120deg); }
-    100% { transform: rotate(480deg) translateX(32px) rotate(-480deg); }
+    0% { transform: rotate(120deg) translateX(100px) rotate(-120deg); }
+    100% { transform: rotate(480deg) translateX(100px) rotate(-480deg); }
   }
   @keyframes orbit3 {
-    0% { transform: rotate(240deg) translateX(20px) rotate(-240deg); }
-    100% { transform: rotate(600deg) translateX(20px) rotate(-600deg); }
+    0% { transform: rotate(240deg) translateX(115px) rotate(-240deg); }
+    100% { transform: rotate(600deg) translateX(115px) rotate(-600deg); }
   }
   .orbit-dot-1 { animation: orbit 6s linear infinite; }
   .orbit-dot-2 { animation: orbit2 9s linear infinite; }
@@ -845,7 +845,6 @@ const RSS_PROXIES = [
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
-  { url: 'https://nasawatch.com/feed/',                   source: 'NASAWatch' },
   { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
   { url: 'https://www.universetoday.com/feed/',           source: 'Universe Today' },
   { url: 'https://spacenews.com/feed/',                   source: 'SpaceNews' },
@@ -924,7 +923,7 @@ async function fetchFeed(feedInfo) {
     const date    = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
-    const PURE_SPACE_SOURCES = ['NASAWatch','NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+    const PURE_SPACE_SOURCES = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
     const category = guessCategory(title, tags) || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions' : null);
     // Image: try media:content, then enclosure, then og in content
     let image = '';
@@ -1034,12 +1033,12 @@ function renderFeed(list) {
   }
 
   list.forEach((a, i) => {
-    if      (i === 0) grid.innerHTML += cardHtml(a, i, 'md:col-span-8', 'hero');
-    else if (i === 1) grid.innerHTML += cardHtml(a, i, 'md:col-span-4', 'small');
-    else if (i === 2) grid.innerHTML += cardHtml(a, i, 'md:col-span-4', 'small');
-    else if (i === 3) grid.innerHTML += cardHtml(a, i, 'md:col-span-8', 'medium');
-    else if (i === 4) grid.innerHTML += cardHtml(a, i, 'md:col-span-4', 'small');
-    else              grid.innerHTML += cardHtml(a, i, 'md:col-span-12', 'row');
+    if      (i === 0) grid.innerHTML += cardHtml(a, a.id, 'md:col-span-8', 'hero');
+    else if (i === 1) grid.innerHTML += cardHtml(a, a.id, 'md:col-span-4', 'small');
+    else if (i === 2) grid.innerHTML += cardHtml(a, a.id, 'md:col-span-4', 'small');
+    else if (i === 3) grid.innerHTML += cardHtml(a, a.id, 'md:col-span-8', 'medium');
+    else if (i === 4) grid.innerHTML += cardHtml(a, a.id, 'md:col-span-4', 'small');
+    else              grid.innerHTML += cardHtml(a, a.id, 'md:col-span-12', 'row');
   });
 
   // Update count display
@@ -1341,8 +1340,8 @@ function renderSavedStories() {
       const artIdx = articles.findIndex(x => x.title === a.title);
       return `
       <article onclick="openArticle(${artIdx >= 0 ? artIdx : 0})" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
-        <div class="w-32 h-24 shrink-0 overflow-hidden">
-          <img class="article-img w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image)}" alt="" onerror="this.src='${FALLBACK_IMAGES[a.category]}'"/>
+        <div class="w-32 self-stretch shrink-0 overflow-hidden relative">
+          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image)}" alt="" onerror="this.src='${FALLBACK_IMAGES[a.category]}'"/>
         </div>
         <div class="flex-1 p-5 flex flex-col justify-between min-w-0">
           <div>
