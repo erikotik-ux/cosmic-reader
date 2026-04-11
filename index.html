@@ -236,22 +236,22 @@
             </feMerge>
           </filter>
         </defs>
-        <!-- Glow layer (wide, soft) -->
-        <line id="cl0g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl1g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl2g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl3g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl4g" stroke="#00f0ff" stroke-width="4"   stroke-opacity="0.12" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <!-- Core lines (sharp, crisp) -->
-        <line id="cl0"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl1"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl2"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl3"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl4"  stroke="#00f0ff" stroke-width="0.75" stroke-opacity="0.5"  x1="0" y1="0" x2="0" y2="0"/>
+        <!-- Glow layer (soft, wide blur) -->
+        <line id="cl0g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl1g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl2g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl3g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl4g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
+        <!-- Core lines (hair-thin, sharp) -->
+        <line id="cl0"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl1"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl2"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl3"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl4"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
 
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:16%; left:26%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:13%; left:18%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -269,7 +269,7 @@
       </div>
 
       <!-- PLANET: Space Missions (Center-Bottom) -->
-      <div class="planet-node absolute pointer-events-auto" style="bottom:11%; left:40%;" onclick="openArticle(2)">
+      <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openArticle(2)">
         <div class="relative">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnN9BwZpcWWpf9YG_q64YeYGqLh1XpUdRRmrpBIujls243Mrua5-DkyLsrqc3927rmj1LInuu3fN4v2hCZv-87D-8ZdJV_5B6xdbZIojD0T2nFi8UquyRbroY7a24ZKJVv2EnxhkbGy9kvtZCb8Bl_a_UsRIxFb4mOqodXrFdNrqZpPTwGIeVYb4LXAbjHvF4QJ3xKEjI0XuTESRPSPPqB41c-z0Mnbbh3D0FvNu92YEQqiP_uOk2G5t0DV_n-4G3Tm9tmELIwEk" alt="Mars planet"/>
@@ -286,7 +286,7 @@
       </div>
 
       <!-- PLANET: Physics & Cosmos (Top Right) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:18%; right:6%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:14%; left:62%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
@@ -303,7 +303,7 @@
       </div>
 
       <!-- PLANET: Moon (Left-Center) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:57%; left:18%;" onclick="openArticle(1)">
+      <div class="planet-node absolute pointer-events-auto" style="top:54%; left:8%;" onclick="openArticle(1)">
         <div class="relative">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
             <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw" alt="Lunar ops"/>
@@ -1825,24 +1825,27 @@ function drawConstellationLines() {
   const nodes = Array.from(desktopGalaxy.querySelectorAll('.planet-node'));
   if (nodes.length < 4) return;
 
-  const mapRect = mapEl.getBoundingClientRect();
+  // CRITICAL: reference must be desktopGalaxy, not view-map.
+  // The SVG has absolute inset-0 inside desktopGalaxy, so its (0,0) is
+  // desktopGalaxy's top-left — NOT the viewport/sidebar edge.
+  const svgRect = desktopGalaxy.getBoundingClientRect();
 
-  // Get center + radius of each planet sphere in pixel space
+  // Get center + radius of each planet sphere relative to the SVG container
   const centers = nodes.map(n => {
     const sphere = n.querySelector('.planet-sphere');
     if (!sphere) return null;
     const r = sphere.getBoundingClientRect();
     return {
-      x:  r.left + r.width  / 2 - mapRect.left,
-      y:  r.top  + r.height / 2 - mapRect.top,
-      rx: r.width  / 2,   // horizontal radius
-      ry: r.height / 2    // vertical radius (same for circles)
+      x:  r.left + r.width  / 2 - svgRect.left,
+      y:  r.top  + r.height / 2 - svgRect.top,
+      rx: r.width  / 2,
+      ry: r.height / 2
     };
   }).filter(Boolean);
 
   // Planet DOM order: 0=Planets(teal), 1=SpaceFrontier(orange), 2=Physics(purple), 3=LunarOps(moon)
-  const pairs = [[0,1],[0,2],[1,2],[0,3],[3,1]];
-  const ORBIT_GAP = 18; // px beyond sphere edge — puts line start in orbit zone
+  const pairs = [[0,2],[0,1],[1,2],[0,3],[3,1]];
+  const ORBIT_GAP = 16; // px beyond sphere edge
 
   pairs.forEach(([a, b], i) => {
     const line = document.getElementById('cl' + i);
@@ -1852,20 +1855,18 @@ function drawConstellationLines() {
     const dy = centers[b].y - centers[a].y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist === 0) return;
-    const ux = dx / dist, uy = dy / dist; // unit vector A→B
+    const ux = dx / dist, uy = dy / dist;
 
-    // Start: edge of planet A + orbit gap, in direction of B
-    const x1 = ((centers[a].x + ux * (centers[a].rx + ORBIT_GAP)) / mapRect.width  * 100).toFixed(2) + '%';
-    const y1 = ((centers[a].y + uy * (centers[a].ry + ORBIT_GAP)) / mapRect.height * 100).toFixed(2) + '%';
-    // End:   edge of planet B - orbit gap, coming from A
-    const x2 = ((centers[b].x - ux * (centers[b].rx + ORBIT_GAP)) / mapRect.width  * 100).toFixed(2) + '%';
-    const y2 = ((centers[b].y - uy * (centers[b].ry + ORBIT_GAP)) / mapRect.height * 100).toFixed(2) + '%';
+    // Percentages within the SVG container's own coordinate space
+    const x1 = ((centers[a].x + ux * (centers[a].rx + ORBIT_GAP)) / svgRect.width  * 100).toFixed(2) + '%';
+    const y1 = ((centers[a].y + uy * (centers[a].ry + ORBIT_GAP)) / svgRect.height * 100).toFixed(2) + '%';
+    const x2 = ((centers[b].x - ux * (centers[b].rx + ORBIT_GAP)) / svgRect.width  * 100).toFixed(2) + '%';
+    const y2 = ((centers[b].y - uy * (centers[b].ry + ORBIT_GAP)) / svgRect.height * 100).toFixed(2) + '%';
 
     line.setAttribute('x1', x1);
     line.setAttribute('y1', y1);
     line.setAttribute('x2', x2);
     line.setAttribute('y2', y2);
-    // Mirror coords to glow layer
     const glow = document.getElementById('cl' + i + 'g');
     if (glow) {
       glow.setAttribute('x1', x1);
