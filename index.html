@@ -174,7 +174,7 @@
 </header>
 
 <!-- ═══ SIDE NAV ═══ -->
-<aside class="fixed left-0 top-0 h-full z-40 hidden md:flex flex-col pt-24 bg-[#131313]/40 backdrop-blur-2xl w-64 border-r border-[#00f0ff]/10">
+<aside id="main-sidebar" class="fixed left-0 top-0 h-full z-40 flex flex-col pt-24 bg-[#0a0f14]/90 backdrop-blur-2xl w-64 border-r border-[#00f0ff]/15 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
   <div class="px-6 mb-8 hidden md:block">
     <h2 class="font-headline uppercase tracking-widest text-[10px] text-[#00f0ff]/60">Navigation</h2>
     <p class="font-headline text-[10px] text-white/40">Deep Space Network</p>
@@ -207,6 +207,17 @@
   <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent w-[1px] h-3/4"></div>
 </aside>
 
+<!-- Mobile sidebar handle — always visible on mobile, slides with sidebar -->
+<button id="sidebar-handle" onclick="toggleSidebar()" class="fixed top-1/2 -translate-y-1/2 z-50 md:hidden flex flex-col items-center justify-center gap-1 w-5 h-16 bg-[#0a0f14]/90 backdrop-blur-xl border border-l-0 border-[#00f0ff]/25 rounded-r-xl transition-all duration-300 ease-in-out" style="left:0" aria-label="Toggle navigation">
+  <svg id="sidebar-chevron" width="8" height="14" viewBox="0 0 8 14" fill="none" style="transition:transform 0.3s ease">
+    <path d="M2 2l4 5-4 5" stroke="#00f0ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="w-0.5 h-3 bg-[#00f0ff]/30 rounded-full"></div>
+  <div class="w-0.5 h-1.5 bg-[#00f0ff]/20 rounded-full"></div>
+</button>
+<!-- Mobile sidebar backdrop -->
+<div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 md:hidden hidden" onclick="toggleSidebar()"></div>
+
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- VIEW 1: GALAXY MAP                                      -->
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -222,9 +233,9 @@
   <div class="relative w-full h-full flex items-center justify-center pointer-events-none md:pl-64">
 
     <!-- ═══ DESKTOP: absolute-positioned planets ═══ -->
-    <div class="hidden md:block relative w-full h-full">
+    <div id="desktop-galaxy" class="hidden md:block relative w-full h-full">
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:18%; left:28%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:8%; left:16%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -242,7 +253,7 @@
       </div>
 
       <!-- PLANET: Space Missions (Center-Bottom) -->
-      <div class="planet-node absolute pointer-events-auto" style="bottom:14%; left:42%;" onclick="openArticle(2)">
+      <div class="planet-node absolute pointer-events-auto" style="bottom:5%; left:44%;" onclick="openArticle(2)">
         <div class="relative">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnN9BwZpcWWpf9YG_q64YeYGqLh1XpUdRRmrpBIujls243Mrua5-DkyLsrqc3927rmj1LInuu3fN4v2hCZv-87D-8ZdJV_5B6xdbZIojD0T2nFi8UquyRbroY7a24ZKJVv2EnxhkbGy9kvtZCb8Bl_a_UsRIxFb4mOqodXrFdNrqZpPTwGIeVYb4LXAbjHvF4QJ3xKEjI0XuTESRPSPPqB41c-z0Mnbbh3D0FvNu92YEQqiP_uOk2G5t0DV_n-4G3Tm9tmELIwEk" alt="Mars planet"/>
@@ -259,7 +270,7 @@
       </div>
 
       <!-- PLANET: Physics & Cosmos (Top Right) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:30%; right:12%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:18%; right:5%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
@@ -276,7 +287,7 @@
       </div>
 
       <!-- PLANET: Moon (Left-Center) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:55%; left:22%;" onclick="openArticle(1)">
+      <div class="planet-node absolute pointer-events-auto" style="top:58%; left:6%;" onclick="openArticle(1)">
         <div class="relative">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
             <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw" alt="Lunar ops"/>
@@ -1627,6 +1638,28 @@ let currentView = 'map';
 let currentArticle = 0;
 
 // ── Navigation ────────────────────────────────────────────
+function toggleSidebar() {
+  const sidebar  = document.getElementById('main-sidebar');
+  const handle   = document.getElementById('sidebar-handle');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const chevron  = document.getElementById('sidebar-chevron');
+  const isOpen   = !sidebar.classList.contains('-translate-x-full');
+
+  if (isOpen) {
+    // Close
+    sidebar.classList.add('-translate-x-full');
+    handle.style.left = '0px';
+    backdrop.classList.add('hidden');
+    chevron.style.transform = '';
+  } else {
+    // Open
+    sidebar.classList.remove('-translate-x-full');
+    handle.style.left = '256px';
+    backdrop.classList.remove('hidden');
+    chevron.style.transform = 'rotate(180deg)';
+  }
+}
+
 function navigate(viewName) {
   // Hide all views
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -1654,6 +1687,11 @@ function navigate(viewName) {
     mnavEl.classList.add('active');
     mnavEl.classList.add('text-[#00f0ff]');
     mnavEl.classList.remove('text-white/40');
+  }
+  // Auto-close sidebar on mobile when navigating
+  const sidebar = document.getElementById('main-sidebar');
+  if (sidebar && !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
+    toggleSidebar();
   }
   currentView = viewName;
 
@@ -1807,7 +1845,10 @@ function setupReadingProgress() {
 function drawConstellationLines() {
   const mapEl = document.getElementById('view-map');
   if (!mapEl || !mapEl.classList.contains('active')) return;
-  const nodes = Array.from(document.querySelectorAll('.planet-node'));
+  // Only target desktop planets — mobile duplicates must be excluded
+  const desktopGalaxy = document.getElementById('desktop-galaxy');
+  if (!desktopGalaxy) return;
+  const nodes = Array.from(desktopGalaxy.querySelectorAll('.planet-node'));
   if (nodes.length < 4) return;
 
   const mapRect = mapEl.getBoundingClientRect();
