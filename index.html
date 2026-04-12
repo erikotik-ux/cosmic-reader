@@ -1026,51 +1026,51 @@ const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missi
 // pickFallback() hashes the article title so each article consistently gets a
 // different image, preventing the same placeholder from repeating across the feed.
 const FALLBACK_POOL = {
+  // All images: NASA/ESA/JPL public domain — no Wikipedia/Wikimedia
   Physics: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Black_hole_-_Messier_87_crop_max_res.jpg/1280px-Black_hole_-_Messier_87_crop_max_res.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1280px-Crab_Nebula.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Pillars_of_Creation_%28NIRCam_Image%29.jpg/1024px-Pillars_of_Creation_%28NIRCam_Image%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Hubble_ultra_deep_field.jpg/1280px-Hubble_ultra_deep_field.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cassiopeia_A.jpg/1280px-Cassiopeia_A.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1280px-Andromeda_Galaxy_%28with_h-alpha%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/1024px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Webb%27s_First_Deep_Field_%28full_size%2C_WS%29.jpg/1280px-Webb%27s_First_Deep_Field_%28full_size%2C_WS%29.jpg',
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy M51 — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
   ],
   Planets: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1280px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1280px-Saturn_during_Equinox.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/1280px-OSIRIS_Mars_true_color.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Venus-real_color.jpg/1024px-Venus-real_color.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Neptune_-_Voyager_2_%2829347980845%29_flatten_crop.jpg/1280px-Neptune_-_Voyager_2_%2829347980845%29_flatten_crop.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Uranus2.jpg/1024px-Uranus2.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA21983.jpg',   // Jupiter Great Red Spot — Juno 2017
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA00400.jpg',   // Pale Blue Dot — Voyager 1 1990
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA21474.jpg',   // Jupiter full disk — Juno
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA18073.jpg',   // Saturn — Cassini
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA16239.jpg',   // Mars — Curiosity 2012
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA00271.jpg',   // Venus — Magellan
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA01378.jpg',   // Neptune — Voyager 2
   ],
   Moon: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1280px-FullMoon2010.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1280px-NASA-Apollo8-Dec24-Earthrise.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/AS11-40-5931.jpg/1024px-AS11-40-5931.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Lunar_Reconnaissance_Orbiter_south_pole_mosaic_1500x1500.jpg/1024px-Lunar_Reconnaissance_Orbiter_south_pole_mosaic_1500x1500.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/As16-113-18339.jpg/1280px-As16-113-18339.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Buzz_Aldrin_on_the_Moon.jpg/1024px-Buzz_Aldrin_on_the_Moon.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Lroc_apollo17.jpg/1280px-Lroc_apollo17.jpg',
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA20696.jpg',   // Moon — LRO
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA00113.jpg',   // Earthrise — Apollo 8
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA00405.jpg',   // Moon — Galileo flyby
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA17922.jpg',   // Lunar South Pole — LRO
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA17039.jpg',   // Moon surface detail — LRO
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA00116.jpg',   // Moon — Apollo
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA00568.jpg',   // Lunar surface — Clementine
   ],
   Missions: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/STS-134_International_Space_Station_after_undocking.jpg/1280px-STS-134_International_Space_Station_after_undocking.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Curiosity_Self-Portrait_at_%27Big_Sky%27_Drilling_Site.jpg/1024px-Curiosity_Self-Portrait_at_%27Big_Sky%27_Drilling_Site.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/HST-SM4.jpeg/1280px-HST-SM4.jpeg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Artemis_I_Launch_%28NHQ202211160010%29_%28cropped%29.jpg/1024px-Artemis_I_Launch_%28NHQ202211160010%29_%28cropped%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/SpaceX_Falcon_Heavy_Demo_Mission_%2840126461851%29.jpg/1280px-SpaceX_Falcon_Heavy_Demo_Mission_%2840126461851%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Soyuz_TMA-7_spacecraft2edit1.jpg/1024px-Soyuz_TMA-7_spacecraft2edit1.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/James_Webb_Space_Telescope_2022.jpg/1024px-James_Webb_Space_Telescope_2022.jpg',
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA24426.jpg',   // Perseverance rover landing
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA22226.jpg',   // Curiosity selfie — Mars
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA21551.jpg',   // Cassini Grand Finale
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA18846.jpg',   // Pluto — New Horizons 2015
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA17171.jpg',   // Earth from ISS
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA19400.jpg',   // MAVEN at Mars
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA21263.jpg',   // Juno mission
   ],
   Exoplanets: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Artist%27s_impression_of_the_TRAPPIST-1_planetary_system.jpg/1280px-Artist%27s_impression_of_the_TRAPPIST-1_planetary_system.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Kepler186f-ArtistConcept-20140417.jpg/1280px-Kepler186f-ArtistConcept-20140417.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/HL_Tau_protoplanetary_disk.jpg/1024px-HL_Tau_protoplanetary_disk.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Artist%27s_impression_of_an_exoplanet_transiting_its_star.jpg/1280px-Artist%27s_impression_of_an_exoplanet_transiting_its_star.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Eso1134b.jpg/1280px-Eso1134b.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Artist%27s_impression_of_the_GJ_667C_system.jpg/1280px-Artist%27s_impression_of_the_GJ_667C_system.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/51_Pegasi_b.jpg/1280px-51_Pegasi_b.jpg',
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA20060.jpg',   // TRAPPIST-1 system concept
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA21421.jpg',   // Exoplanet atmosphere concept
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA22093.jpg',   // Exoplanet transit concept
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA19820.jpg',   // Kepler exoplanet concept
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA23002.jpg',   // Hot Jupiter concept
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA21420.jpg',   // Super-Earth concept
+    'https://photojournal.jpl.nasa.gov/jpeg/PIA22941.jpg',   // Exoplanet system concept
   ],
 };
 // Hash article title to a stable integer — used to pick a unique pool image per article
@@ -1160,13 +1160,17 @@ async function fetchFeed(feedInfo) {
     if (!image) {
       // Many WordPress RSS feeds (NASASpaceFlight, SpaceNews, etc.) embed the featured
       // image inside <content:encoded> rather than <description>. Search both.
+      // Also check data-src / data-lazy-src used by lazy-loading plugins.
       const encodedRaw = item.querySelector('encoded')?.textContent || '';
       for (const text of [descRaw, encodedRaw]) {
         if (!text) continue;
-        // Match src="..." or src='...' — covers both quote styles
-        const m = text.match(/src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i)
-               || text.match(/src='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*)'/i);
-        if (m) { image = m[1].split('?')[0]; break; } // strip query strings (wp resize params)
+        const imgExt = /\.(?:jpg|jpeg|png|webp|gif)/i;
+        const m = text.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i)
+               || text.match(/\bsrc='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*)'/i)
+               || text.match(/\bdata-src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i)
+               || text.match(/\bdata-src='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*)'/i)
+               || text.match(/\bdata-lazy-src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i);
+        if (m) { image = m[1].split('?')[0]; break; } // strip WP resize query params
       }
     }
     // If the feed didn't include an image, assign a category-matched fallback
@@ -1346,11 +1350,12 @@ async function loadLiveFeeds() {
       }
     }
 
-    // Deduplicate images — assign category fallback if image already used by another article
+    // Deduplicate images — if two articles share the same image URL, give the duplicate
+    // a different category-matched fallback (avoids repeating the same photo in the feed)
     const seenImages = new Set();
     merged.forEach(a => {
       if (a.image && seenImages.has(a.image)) {
-        a.image = FALLBACK_IMAGES[a.category] || '';
+        a.image = pickFallback(a.category, a.title + '_dup');
       } else if (a.image) {
         seenImages.add(a.image);
       }
@@ -1416,7 +1421,7 @@ const articles = [
     category: "Physics",
     date: "March 27, 2026",
     source: "Universe Today",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDZENoJGVKTmihBaIYCKMmRHofLAhL5e9x-92Qs5gv05P8OnCelkkKp9iSK-JoMXx_r5KvrudLPOYhQRdxWaA1epxe8fNQVeqWIjGNY7r0fQ1NqGTzm02JntYjQrZ0r8QqmJcU3NYAql4MwbcohMqc9ODOqWiORC-2LBCXY96NywY5f23kWPXV6Ti1FxetAPNGCnntoGIyVkcq2SsY58edFbAyAYYoOrHMH7uEzk8xTzryUKf8p8e2OJZcHgKgPY6ektQWdt-LYJLw",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg",
     read_more: "https://www.universetoday.com/articles/a-signal-from-before-the-stars",
     coord: "Coordinate: 04.28.99",
     readTime: "5m",
@@ -1443,7 +1448,7 @@ The next observation window opens in June. Further detections would allow us to 
     category: "Moon",
     date: "March 27, 2026",
     source: "Universe Today",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw",
+    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA17922.jpg",
     read_more: "https://www.universetoday.com/articles/hunting-moon-water-with-neutrons",
     coord: "Coordinate: LUNA-S.01",
     readTime: "4m",
@@ -1470,7 +1475,7 @@ Artemis basecamp planners are watching closely.`,
     category: "Missions",
     date: "March 27, 2026",
     source: "Universe Today",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBr3Cdep1zduetd-LvJXVTk9_kaoaqMUtwGCWMgzUMbBvzJFAcYSBaEQadIvvfu7LNKoO3_6z9Mnbw-Ca-okEHKepqOCnYnFZ8Ocv0J-Qv29DqwoTr2dZrk_m66Hd7dBPyS65oMtt0b-Ld4RDNKo5GcprwMUN0DVSw69uU3ws3mw_BlVtgSy559rhQx82gd9oC7i8FHhgsjbWOPY9ZEmBFgdqJ8Nivv7s8-srXk7lDnOQ-_hhYUpiOoYixlmIaQXeOOkhq6aoH9q7E",
+    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA21551.jpg",
     read_more: "https://www.universetoday.com/articles/hera-aces-a-massive-engine-burn-on-its-way-to-didymos",
     coord: "Coordinate: AST-65803",
     readTime: "4m",
@@ -1497,7 +1502,7 @@ Mission controllers at ESOC in Darmstadt confirmed nominal spacecraft health aft
     category: "Planets",
     date: "March 26, 2026",
     source: "Universe Today",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBkW4TXr9_CREHwuantFGEzh3PQzJFKF5izfZOhdvCNBUylzdVZS1qhNU6zXhKgZ_I41KIVzHwM3FCDihZqKLnvTaUD2B7vFp65MCnNZPaNwWrrDDGTbQuARGqBHwLgX6gF7wanpmuQ0J6Mc60v6zFK-aXQV6RYZGV7Xz-hXf_Q7bA9Oxq4DM98kPqAH7L5heKDE4Pwcwrsvp23WwFespSKaJikb0UZVzWdOys_Fcfs9GmK8LBPuBIV3gwvVANHTd9kTV3tO3LwFuA",
+    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA21983.jpg",
     read_more: "https://www.universetoday.com/articles/jupiters-lightning-could-be-almost-unbelievably-powerful",
     coord: "Coordinate: JUP-45.12N",
     readTime: "5m",
@@ -1524,7 +1529,7 @@ No spacecraft has ever flown deep enough into Jupiter's atmosphere to measure a 
     category: "Planets",
     date: "March 26, 2026",
     source: "Universe Today",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuArDdDx2WJxENakvfoiBiimBM5-pqQrD62BYDq4o7vxVBK8XMLwrHs12oJTzEg9Xf4uiP3CCmEXQth2rQL7JGXIJrBQe1-PR-cWNwYiWhqxHZ-L-X-7ZKUAOWFWAxaSjN5q5XUwU0NkVf4OqG4yBttteM-_1dA2Z3ZNGJkoV8vOmgmRe_5U2UOmT08MIKqLQLdEYSOhUUXTQST5hG7UgAhVAXXIEYXsnuIx9O8eLPa6cbySGYqN_RkzKcFB_flivaSOI93e7H3EUac",
+    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA00271.jpg",
     read_more: "https://www.universetoday.com/articles/venus-hellscape-climate-simulations",
     coord: "Coordinate: VEN-SOL.02",
     readTime: "6m",
@@ -1553,7 +1558,7 @@ The fourth involves a catastrophic impactor in the inner solar system disrupting
     category: "Exoplanets",
     date: "March 25, 2026",
     source: "SpaceNews",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDZENoJGVKTmihBaIYCKMmRHofLAhL5e9x-92Qs5gv05P8OnCelkkKp9iSK-JoMXx_r5KvrudLPOYhQRdxWaA1epxe8fNQVeqWIjGNY7r0fQ1NqGTzm02JntYjQrZ0r8QqmJcU3NYAql4MwbcohMqc9ODOqWiORC-2LBCXY96NywY5f23kWPXV6Ti1FxetAPNGCnntoGIyVkcq2SsY58edFbAyAYYoOrHMH7uEzk8xTzryUKf8p8e2OJZcHgKgPY6ektQWdt-LYJLw",
+    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA20060.jpg",
     read_more: "https://spacenews.com/exoplanet-discovered-habitable-zone",
     coord: "Coordinate: EXO-22.14LY",
     readTime: "5m",
@@ -1623,10 +1628,11 @@ function renderSavedStories() {
     savedStories.map((a, i) => {
       const cc = CAT_COLOR[a.category] || 'text-[#00f0ff]';
       const artIdx = articles.findIndex(x => x.title === a.title);
+      const fb = pickFallback(a.category, a.title);
       return `
       <article onclick="openArticle(${artIdx >= 0 ? artIdx : 0})" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
         <div class="w-32 self-stretch shrink-0 overflow-hidden relative">
-          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image)}" alt="" onerror="this.src='${FALLBACK_IMAGES[a.category]}'"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image)}" alt="" onerror="this.onerror=null;this.src='${fb}'"/>
         </div>
         <div class="flex-1 p-5 flex flex-col justify-between min-w-0">
           <div>
@@ -1710,6 +1716,7 @@ function renderTrending() {
     const rc   = rankColors[Math.min(i, 2)];
     const rb   = rankBg[Math.min(i, 2)];
     const artIdx = articles.indexOf(a);
+    const fb = pickFallback(a.category, a.title);
     return `
     <article onclick="openArticle(${artIdx})" class="group flex items-center gap-5 p-4 bg-surface-container-low/50 border border-white/5 rounded-xl hover:bg-surface-container-low hover:border-[#00f0ff]/15 transition-all cursor-pointer">
       <!-- Rank -->
@@ -1718,7 +1725,7 @@ function renderTrending() {
       </div>
       <!-- Thumbnail -->
       <div class="w-16 h-12 shrink-0 rounded-lg overflow-hidden hidden sm:block">
-        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image)}" alt="" onerror="this.src='${FALLBACK_IMAGES[a.category]}'"/>
+        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image)}" alt="" onerror="this.onerror=null;this.src='${fb}'"/>
       </div>
       <!-- Content -->
       <div class="flex-1 min-w-0">
