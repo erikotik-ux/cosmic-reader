@@ -18,10 +18,10 @@
     background-image: radial-gradient(circle at 2px 2px, rgba(219, 252, 255, 0.15) 1px, transparent 0);
     background-size: 40px 40px;
   }
-  .planet-glow-primary   { box-shadow: 0 0 20px 4px rgba(0,240,255,0.14), 0 0 55px 10px rgba(0,240,255,0.06); }
-  .planet-glow-secondary { box-shadow: 0 0 20px 4px rgba(215,59,0,0.18),  0 0 55px 10px rgba(215,59,0,0.08); }
-  .planet-glow-tertiary  { box-shadow: 0 0 20px 4px rgba(180,130,255,0.14),0 0 55px 10px rgba(180,130,255,0.06); }
-  .planet-glow-exo       { box-shadow: 0 0 16px 3px rgba(219,252,255,0.12),0 0 45px 8px  rgba(219,252,255,0.05); }
+  .planet-glow-primary   { box-shadow: 0 0 12px 2px rgba(0,240,255,0.10); }
+  .planet-glow-secondary { box-shadow: 0 0 12px 2px rgba(215,59,0,0.13); }
+  .planet-glow-tertiary  { box-shadow: 0 0 12px 2px rgba(180,130,255,0.10); }
+  .planet-glow-exo       { box-shadow: 0 0 10px 2px rgba(219,252,255,0.08); }
   .glass-panel {
     backdrop-filter: blur(20px);
     background: rgba(19, 19, 19, 0.5);
@@ -226,32 +226,16 @@
 
       <!-- SVG FIRST so it renders behind all planet nodes -->
       <svg id="constellation-svg" class="absolute inset-0 w-full h-full pointer-events-none" style="left:0;top:0;">
-        <defs>
-          <filter id="lineGlow" x="-30%" y="-300%" width="160%" height="700%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <!-- Glow layer (soft, wide blur) -->
-        <line id="cl0g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl1g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl2g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl3g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl4g" stroke="#00f0ff" stroke-width="5"   stroke-opacity="0.08" filter="url(#lineGlow)" x1="0" y1="0" x2="0" y2="0"/>
-        <!-- Core lines (hair-thin, sharp) -->
-        <line id="cl0"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl1"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl2"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl3"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl4"  stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.45" x1="0" y1="0" x2="0" y2="0"/>
+        <!-- Clean hair-thin lines, no glow -->
+        <line id="cl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl4" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
 
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:22%; left:18%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(22% - 25px); left:calc(18% + 30px);" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -322,7 +306,13 @@
     </div>
 
     <!-- ═══ MOBILE: vertical stacked planets ═══ -->
-    <div class="md:hidden w-full h-full overflow-y-auto pointer-events-auto flex flex-col items-start gap-6 pt-24 pb-28 px-4">
+    <div id="mobile-galaxy" class="md:hidden w-full h-full overflow-y-auto pointer-events-auto flex flex-col items-start gap-6 pt-24 pb-28 px-4 relative">
+      <!-- Mobile SVG lines — drawn behind planets via JS -->
+      <svg id="mobile-constellation-svg" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;" height="0">
+        <line id="mcl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="mcl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="mcl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
+      </svg>
       <!-- Planet 1: Planets & Exoplanets — left offset -->
       <div class="planet-node self-start ml-6 pointer-events-auto" onclick="openArticle(0)">
         <div class="relative">
@@ -1067,7 +1057,9 @@ async function fetchFeed(feedInfo) {
       const imgMatch = descRaw.match(/src="([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/i);
       if (imgMatch) image = imgMatch[1];
     }
-    // Do NOT assign a fallback here — articles with no real image will be filtered out below
+    // If the feed didn't include an image, assign a category-matched fallback
+    // so we don't silently drop good articles just because their RSS is image-free
+    if (!image) image = FALLBACK_IMAGES[category] || '';
     const readTime = Math.max(1, Math.ceil(body.split(' ').length / 200));
     return {
       id: idx, title, excerpt, body,
@@ -1084,7 +1076,7 @@ async function fetchFeed(feedInfo) {
     };
   }).filter(a => {
     if (!a.category) return false;
-    // Must have a real hero image from the feed
+    // Image must exist — either from the feed or the category fallback assigned above
     if (!a.image || !a.image.startsWith('http')) return false;
     // Must have a valid, working link
     if (!a.read_more || !/^https?:\/\/.+\..+/i.test(a.read_more)) return false;
@@ -1680,6 +1672,7 @@ function navigate(viewName) {
   }
   if (viewName === 'map') {
     setTimeout(drawConstellationLines, 50);
+    setTimeout(drawMobileConstellationLines, 80);
   }
   if (viewName === 'saved') {
     renderSavedStories();
@@ -1868,13 +1861,6 @@ function drawConstellationLines() {
     line.setAttribute('y1', y1);
     line.setAttribute('x2', x2);
     line.setAttribute('y2', y2);
-    const glow = document.getElementById('cl' + i + 'g');
-    if (glow) {
-      glow.setAttribute('x1', x1);
-      glow.setAttribute('y1', y1);
-      glow.setAttribute('x2', x2);
-      glow.setAttribute('y2', y2);
-    }
   });
 }
 
@@ -1955,15 +1941,78 @@ async function deployProbe() {
   }, 8000);
 }
 
+// ── Mobile Constellation Lines ────────────────────────────
+function drawMobileConstellationLines() {
+  const container = document.getElementById('mobile-galaxy');
+  const svg = document.getElementById('mobile-constellation-svg');
+  if (!container || !svg) return;
+  // Only visible on mobile — skip if hidden
+  if (getComputedStyle(container).display === 'none') return;
+
+  const nodes = Array.from(container.querySelectorAll('.planet-node'));
+  if (nodes.length < 2) return;
+
+  // Size SVG to cover full scrollable content height
+  const scrollH = container.scrollHeight;
+  svg.setAttribute('height', scrollH);
+
+  const cRect = container.getBoundingClientRect();
+  const scrollTop = container.scrollTop;
+
+  // Planet centers in SVG coordinate space (scroll-content relative)
+  const centers = nodes.map(n => {
+    const sphere = n.querySelector('.planet-sphere');
+    if (!sphere) return null;
+    const r = sphere.getBoundingClientRect();
+    return {
+      x:  r.left + r.width  / 2 - cRect.left,
+      y:  r.top  + r.height / 2 - cRect.top + scrollTop,
+      rx: r.width  / 2,
+      ry: r.height / 2
+    };
+  }).filter(Boolean);
+
+  // Zigzag chain: 0→1, 1→2, 2→3
+  const pairs = [[0,1],[1,2],[2,3]];
+  const GAP = 10;
+
+  pairs.forEach(([a, b], i) => {
+    const line = document.getElementById('mcl' + i);
+    if (!line || !centers[a] || !centers[b]) return;
+    const dx = centers[b].x - centers[a].x;
+    const dy = centers[b].y - centers[a].y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (!dist) return;
+    const ux = dx / dist, uy = dy / dist;
+    line.setAttribute('x1', (centers[a].x + ux * (centers[a].rx + GAP)).toFixed(1));
+    line.setAttribute('y1', (centers[a].y + uy * (centers[a].ry + GAP)).toFixed(1));
+    line.setAttribute('x2', (centers[b].x - ux * (centers[b].rx + GAP)).toFixed(1));
+    line.setAttribute('y2', (centers[b].y - uy * (centers[b].ry + GAP)).toFixed(1));
+  });
+}
+
 // ── Boot ──────────────────────────────────────────────────
 // Render fallback articles with pagination right away, then load live
 renderCurrentPage();
 loadLiveFeeds();
 
 // Draw constellation lines after layout settles, and on resize
-window.addEventListener('load', () => setTimeout(drawConstellationLines, 100));
-window.addEventListener('resize', drawConstellationLines);
+window.addEventListener('load', () => {
+  setTimeout(drawConstellationLines, 100);
+  setTimeout(drawMobileConstellationLines, 150);
+});
+window.addEventListener('resize', () => {
+  drawConstellationLines();
+  drawMobileConstellationLines();
+});
 setTimeout(drawConstellationLines, 200);
+setTimeout(drawMobileConstellationLines, 250);
+
+// Redraw mobile lines on scroll (planet positions shift in SVG space)
+document.addEventListener('DOMContentLoaded', () => {
+  const mg = document.getElementById('mobile-galaxy');
+  if (mg) mg.addEventListener('scroll', drawMobileConstellationLines);
+});
 </script>
 </body>
 </html>
