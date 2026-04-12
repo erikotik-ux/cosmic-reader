@@ -1091,35 +1091,6 @@ function imgFail(el) {
   el.src = pickFallback(el.dataset.cat || '', el.dataset.title || '');
 }
 
-// 2-step fallback chain:
-//   Step 1 — image from RSS fails → try NASA/ESA pool URL (fb)
-//   Step 2 — pool URL also fails  → use an SVG data-URI (guaranteed, no network needed)
-// This ensures something always displays even if external CDNs are unreachable.
-const _SVG_COLORS = {
-  Physics:'210,55%,7%', Planets:'140,50%,6%', Moon:'230,45%,7%',
-  Missions:'265,50%,6%', Exoplanets:'185,55%,6%'
-};
-function _svgPlaceholder(cat) {
-  const c = _SVG_COLORS[cat] || '220,40%,6%';
-  return 'data:image/svg+xml,' + encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720"><defs>` +
-    `<radialGradient id="g"><stop offset="0%" stop-color="hsl(${c})"/>` +
-    `<stop offset="100%" stop-color="hsl(220,30%,3%)"/></radialGradient></defs>` +
-    `<rect width="1280" height="720" fill="url(#g)"/></svg>`
-  );
-}
-function imgChain(el, fb, cat) {
-  if (el.src !== fb && fb) {
-    // First failure: try the pool fallback URL
-    el.onerror = () => imgChain(el, '', cat);
-    el.src = fb;
-  } else {
-    // Second failure: guaranteed SVG placeholder (no network needed)
-    el.onerror = null;
-    el.src = _svgPlaceholder(cat);
-  }
-}
-
 // Returns null if no space/science keyword matches — used to filter non-space articles
 function guessCategory(title, tags) {
   const txt = (title + ' ' + tags).toLowerCase();
@@ -1246,7 +1217,7 @@ function renderFeed(list) {
     if (style === 'hero') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
         <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
-        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image)}" alt="" onerror="this.onerror=null;this.src='${fb}'"/>
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
           <h2 class="text-3xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight max-w-2xl">${escHtml(a.title)}</h2>
@@ -1276,7 +1247,7 @@ function renderFeed(list) {
     if (style === 'medium') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
         <div class="relative h-52 md:h-auto overflow-hidden">
-          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image)}" alt="" onerror="this.onerror=null;this.src='${fb}'"/>
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
         </div>
         <div class="p-7 flex flex-col justify-center">
@@ -1291,7 +1262,7 @@ function renderFeed(list) {
     return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
         <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
-          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image)}" alt="" onerror="this.onerror=null;this.src='${fb}'"/>
         </div>
         <div class="flex-grow min-w-0">
           <div class="flex items-center gap-2 mb-1">
@@ -1661,7 +1632,7 @@ function renderSavedStories() {
       return `
       <article onclick="openArticle(${artIdx >= 0 ? artIdx : 0})" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
         <div class="w-32 self-stretch shrink-0 overflow-hidden relative">
-          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image)}" alt="" onerror="this.onerror=null;this.src='${fb}'"/>
         </div>
         <div class="flex-1 p-5 flex flex-col justify-between min-w-0">
           <div>
@@ -1754,7 +1725,7 @@ function renderTrending() {
       </div>
       <!-- Thumbnail -->
       <div class="w-16 h-12 shrink-0 rounded-lg overflow-hidden hidden sm:block">
-        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image)}" alt="" onerror="this.onerror=null;this.src='${fb}'"/>
       </div>
       <!-- Content -->
       <div class="flex-1 min-w-0">
@@ -1847,13 +1818,8 @@ function openArticle(idx) {
     saveIcon.style.color = '';
   }
 
-  const _dfb = pickFallback(a.category, a.title);
-  const _dImg = document.getElementById('detail-bg');
-  const _dImg2 = document.getElementById('detail-img');
-  _dImg.onerror = () => imgChain(_dImg, _dfb, a.category);
-  _dImg2.onerror = () => imgChain(_dImg2, _dfb, a.category);
-  _dImg.src = a.image;
-  _dImg2.src = a.image;
+  document.getElementById('detail-bg').src = a.image;
+  document.getElementById('detail-img').src = a.image;
   document.getElementById('detail-title').textContent = a.title;
   document.getElementById('detail-excerpt').textContent = a.excerpt;
   document.getElementById('detail-source').textContent = 'Source: ' + a.source;
@@ -1879,10 +1845,7 @@ function openReading(idx) {
   document.getElementById('read-author').textContent = 'Cosmic Reader AI';
   document.getElementById('read-time').textContent = Math.ceil(a.body.split(' ').length / 200) + ' min read';
   document.getElementById('read-source-label').textContent = a.source;
-  const _rfb = pickFallback(a.category, a.title);
-  const _rImg = document.getElementById('read-img');
-  _rImg.onerror = () => imgChain(_rImg, _rfb, a.category);
-  _rImg.src = a.image;
+  document.getElementById('read-img').src = a.image;
   document.getElementById('read-caption').textContent = 'Visual reference — ' + a.category + ' Sector';
   document.getElementById('read-link').href = a.read_more;
 
