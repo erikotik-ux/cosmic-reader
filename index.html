@@ -76,6 +76,20 @@
     75%   { transform: rotate(270deg) translateX(165px) rotate(-270deg); opacity: 0.04; }
     100%  { transform: rotate(360deg) translateX(165px) rotate(-360deg); opacity: 0.85; }
   }
+  /* ── True 3-D orbit: tilted ring spins via rotateZ, dot rides it ── */
+  @keyframes spin3d {
+    from { transform: translate(-50%, -50%) rotateX(68deg) rotateZ(0deg); }
+    to   { transform: translate(-50%, -50%) rotateX(68deg) rotateZ(360deg); }
+  }
+  /* Container: centered at planet midpoint, preserves 3D for depth-sorting dot vs sphere */
+  .orbit-3d {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    transform-style: preserve-3d;
+    animation: spin3d 6s linear infinite;
+  }
+  /* Flat mobile dots keep original keyframes */
   .orbit-dot-1  { animation: orbit 6s linear infinite; }
   .orbit-dot-sf { animation: orbitSF 7s linear infinite; }
   .orbit-dot-2  { animation: orbit2 9s linear infinite; }
@@ -244,14 +258,18 @@
 
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
       <div class="planet-node absolute pointer-events-auto" style="top:calc(22% - 45px); left:calc(18% + 45px);" onclick="openArticle(0)">
-        <div class="relative">
+        <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
           </div>
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-            <div class="orbit-dot-1 absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="margin:-4px;"></div>
-            <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="margin:-3px;"></div>
+          <!-- outer ring: 130px radius orbit, 6s -->
+          <div class="orbit-3d" style="animation-duration:6s;">
+            <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:126px;"></div>
+          </div>
+          <!-- inner ring: 100px radius orbit, 9s, 180° offset -->
+          <div class="orbit-3d" style="animation-duration:9s;animation-delay:-4.5s;">
+            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:97px;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -262,13 +280,14 @@
 
       <!-- PLANET: Space Missions (Center-Bottom) -->
       <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openArticle(2)">
-        <div class="relative">
+        <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMnN9BwZpcWWpf9YG_q64YeYGqLh1XpUdRRmrpBIujls243Mrua5-DkyLsrqc3927rmj1LInuu3fN4v2hCZv-87D-8ZdJV_5B6xdbZIojD0T2nFi8UquyRbroY7a24ZKJVv2EnxhkbGy9kvtZCb8Bl_a_UsRIxFb4mOqodXrFdNrqZpPTwGIeVYb4LXAbjHvF4QJ3xKEjI0XuTESRPSPPqB41c-z0Mnbbh3D0FvNu92YEQqiP_uOk2G5t0DV_n-4G3Tm9tmELIwEk" alt="Mars planet"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-            <div class="orbit-dot-sf absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="margin:-6px;"></div>
+          <!-- 3D orbit: 165px radius, 7s -->
+          <div class="orbit-3d" style="animation-duration:7s;">
+            <div class="absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="top:-6px;left:159px;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -279,13 +298,14 @@
 
       <!-- PLANET: Physics & Cosmos (Top Right) -->
       <div class="planet-node absolute pointer-events-auto" style="top:20%; left:calc(62% - 30px);" onclick="openArticle(0)">
-        <div class="relative">
+        <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
           </div>
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-            <div class="orbit-dot-3 absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="margin:-4px;"></div>
+          <!-- 3D orbit: 115px radius, 12s -->
+          <div class="orbit-3d" style="animation-duration:12s;animation-delay:-3s;">
+            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:111px;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -296,13 +316,14 @@
 
       <!-- PLANET: Moon (Left-Center) -->
       <div class="planet-node absolute pointer-events-auto" style="top:54%; left:8%;" onclick="openArticle(1)">
-        <div class="relative">
+        <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
             <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw" alt="Lunar ops"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
           </div>
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
-            <div class="orbit-dot-2 absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="margin:-3px;animation-duration:5s;"></div>
+          <!-- 3D orbit: 100px radius, 5s -->
+          <div class="orbit-3d" style="animation-duration:5s;">
+            <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="top:-3px;left:97px;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -1000,7 +1021,6 @@ const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missi
 // different image, preventing the same placeholder from repeating across the feed.
 const FALLBACK_POOL = {
   Physics: [
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuDZENoJGVKTmihBaIYCKMmRHofLAhL5e9x-92Qs5gv05P8OnCelkkKp9iSK-JoMXx_r5KvrudLPOYhQRdxWaA1epxe8fNQVeqWIjGNY7r0fQ1NqGTzm02JntYjQrZ0r8QqmJcU3NYAql4MwbcohMqc9ODOqWiORC-2LBCXY96NywY5f23kWPXV6Ti1FxetAPNGCnntoGIyVkcq2SsY58edFbAyAYYoOrHMH7uEzk8xTzryUKf8p8e2OJZcHgKgPY6ektQWdt-LYJLw',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Black_hole_-_Messier_87_crop_max_res.jpg/1280px-Black_hole_-_Messier_87_crop_max_res.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1280px-Crab_Nebula.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Pillars_of_Creation_%28NIRCam_Image%29.jpg/1024px-Pillars_of_Creation_%28NIRCam_Image%29.jpg',
@@ -1011,7 +1031,6 @@ const FALLBACK_POOL = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Webb%27s_First_Deep_Field_%28full_size%2C_WS%29.jpg/1280px-Webb%27s_First_Deep_Field_%28full_size%2C_WS%29.jpg',
   ],
   Planets: [
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBkW4TXr9_CREHwuantFGEzh3PQzJFKF5izfZOhdvCNBUylzdVZS1qhNU6zXhKgZ_I41KIVzHwM3FCDihZqKLnvTaUD2B7vFp65MCnNZPaNwWrrDDGTbQuARGqBHwLgX6gF7wanpmuQ0J6Mc60v6zFK-aXQV6RYZGV7Xz-hXf_Q7bA9Oxq4DM98kPqAH7L5heKDE4Pwcwrsvp23WwFespSKaJikb0UZVzWdOys_Fcfs9GmK8LBPuBIV3gwvVANHTd9kTV3tO3LwFuA',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1280px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1280px-Saturn_during_Equinox.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/1280px-OSIRIS_Mars_true_color.jpg',
@@ -1021,7 +1040,6 @@ const FALLBACK_POOL = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
   ],
   Moon: [
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1280px-FullMoon2010.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1280px-NASA-Apollo8-Dec24-Earthrise.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/AS11-40-5931.jpg/1024px-AS11-40-5931.jpg',
@@ -1031,7 +1049,6 @@ const FALLBACK_POOL = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Lroc_apollo17.jpg/1280px-Lroc_apollo17.jpg',
   ],
   Missions: [
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBr3Cdep1zduetd-LvJXVTk9_kaoaqMUtwGCWMgzUMbBvzJFAcYSBaEQadIvvfu7LNKoO3_6z9Mnbw-Ca-okEHKepqOCnYnFZ8Ocv0J-Qv29DqwoTr2dZrk_m66Hd7dBPyS65oMtt0b-Ld4RDNKo5GcprwMUN0DVSw69uU3ws3mw_BlVtgSy559rhQx82gd9oC7i8FHhgsjbWOPY9ZEmBFgdqJ8Nivv7s8-srXk7lDnOQ-_hhYUpiOoYixlmIaQXeOOkhq6aoH9q7E',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/STS-134_International_Space_Station_after_undocking.jpg/1280px-STS-134_International_Space_Station_after_undocking.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Curiosity_Self-Portrait_at_%27Big_Sky%27_Drilling_Site.jpg/1024px-Curiosity_Self-Portrait_at_%27Big_Sky%27_Drilling_Site.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/HST-SM4.jpeg/1280px-HST-SM4.jpeg',
@@ -1041,7 +1058,6 @@ const FALLBACK_POOL = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/James_Webb_Space_Telescope_2022.jpg/1024px-James_Webb_Space_Telescope_2022.jpg',
   ],
   Exoplanets: [
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuArDdDx2WJxENakvfoiBiimBM5-pqQrD62BYDq4o7vxVBK8XMLwrHs12oJTzEg9Xf4uiP3CCmEXQth2rQL7JGXIJrBQe1-PR-cWNwYiWhqxHZ-L-X-7ZKUAOWFWAxaSjN5q5XUwU0NkVf4OqG4yBttteM-_1dA2Z3ZNGJkoV8vOmgmRe_5U2UOmT08MIKqLQLdEYSOhUUXTQST5hG7UgAhVAXXIEYXsnuIx9O8eLPa6cbySGYqN_RkzKcFB_flivaSOI93e7H3EUac',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Artist%27s_impression_of_the_TRAPPIST-1_planetary_system.jpg/1280px-Artist%27s_impression_of_the_TRAPPIST-1_planetary_system.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Kepler186f-ArtistConcept-20140417.jpg/1280px-Kepler186f-ArtistConcept-20140417.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/HL_Tau_protoplanetary_disk.jpg/1024px-HL_Tau_protoplanetary_disk.jpg',
@@ -1059,8 +1075,14 @@ function _hashTitle(s) {
 }
 function pickFallback(category, title) {
   const pool = FALLBACK_POOL[category];
-  if (!pool || !pool.length) return FALLBACK_IMAGES[category] || '';
+  if (!pool || !pool.length) return '';
   return pool[_hashTitle(title) % pool.length];
+}
+// Called via onerror on article img tags — swaps a broken src to a pool fallback.
+// Using data-cat / data-title avoids quote-escaping issues in inline onerror attributes.
+function imgFail(el) {
+  el.onerror = null; // prevent infinite loop if fallback also fails
+  el.src = pickFallback(el.dataset.cat || '', el.dataset.title || '');
 }
 
 // Returns null if no space/science keyword matches — used to filter non-space articles
@@ -1172,11 +1194,11 @@ function renderFeed(list) {
 
   function cardHtml(a, i, colClass, style) {
     const cc = CAT_COLOR[a.category] || 'text-[#00f0ff]';
-    const fb = FALLBACK_IMAGES[a.category];
+    const imgAttrs = `data-cat="${escHtml(a.category)}" data-title="${escHtml(a.title)}" onerror="imgFail(this)"`;
     if (style === 'hero') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
         <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
-        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image)}" alt="" onerror="this.src='${fb}'"/>
+        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image)}" alt="" ${imgAttrs}/>
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
           <h2 class="text-3xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight max-w-2xl">${escHtml(a.title)}</h2>
@@ -1206,7 +1228,7 @@ function renderFeed(list) {
     if (style === 'medium') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
         <div class="relative h-52 md:h-auto overflow-hidden">
-          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image)}" alt="" onerror="this.src='${fb}'"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image)}" alt="" ${imgAttrs}/>
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
         </div>
         <div class="p-7 flex flex-col justify-center">
@@ -1221,7 +1243,7 @@ function renderFeed(list) {
     return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
         <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
-          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image)}" alt="" onerror="this.src='${fb}'"/>
+          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image)}" alt="" ${imgAttrs}/>
         </div>
         <div class="flex-grow min-w-0">
           <div class="flex items-center gap-2 mb-1">
