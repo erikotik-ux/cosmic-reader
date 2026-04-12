@@ -18,10 +18,10 @@
     background-image: radial-gradient(circle at 2px 2px, rgba(219, 252, 255, 0.15) 1px, transparent 0);
     background-size: 40px 40px;
   }
-  .planet-glow-primary   { box-shadow: 0 0 40px 8px rgba(0,240,255,0.22), 0 0 100px 20px rgba(0,240,255,0.10), 0 0 180px 40px rgba(0,240,255,0.05); }
-  .planet-glow-secondary { box-shadow: 0 0 40px 8px rgba(215,59,0,0.28),  0 0 100px 20px rgba(215,59,0,0.13),  0 0 180px 40px rgba(215,59,0,0.06); }
-  .planet-glow-tertiary  { box-shadow: 0 0 40px 8px rgba(180,130,255,0.22),0 0 100px 20px rgba(180,130,255,0.10),0 0 180px 40px rgba(180,130,255,0.05); }
-  .planet-glow-exo       { box-shadow: 0 0 35px 6px rgba(219,252,255,0.18),0 0 80px  16px rgba(219,252,255,0.08),0 0 140px 30px rgba(219,252,255,0.04); }
+  .planet-glow-primary   { box-shadow: 0 0 20px 4px rgba(0,240,255,0.14), 0 0 55px 10px rgba(0,240,255,0.06); }
+  .planet-glow-secondary { box-shadow: 0 0 20px 4px rgba(215,59,0,0.18),  0 0 55px 10px rgba(215,59,0,0.08); }
+  .planet-glow-tertiary  { box-shadow: 0 0 20px 4px rgba(180,130,255,0.14),0 0 55px 10px rgba(180,130,255,0.06); }
+  .planet-glow-exo       { box-shadow: 0 0 16px 3px rgba(219,252,255,0.12),0 0 45px 8px  rgba(219,252,255,0.05); }
   .glass-panel {
     backdrop-filter: blur(20px);
     background: rgba(19, 19, 19, 0.5);
@@ -251,7 +251,7 @@
       </svg>
 
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:13%; left:18%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:22%; left:18%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -286,7 +286,7 @@
       </div>
 
       <!-- PLANET: Physics & Cosmos (Top Right) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:14%; left:62%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:20%; left:62%;" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
@@ -448,65 +448,66 @@
     </div>
   </div>
 
-  <!-- ── Mobile Bottom Nav ── -->
-  <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
-    <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/></svg>
-      <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
-    </button>
-    <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('feed')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span class="font-label text-[9px] uppercase tracking-widest">Feed</span>
-    </button>
-    <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('saved')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      <span class="font-label text-[9px] uppercase tracking-widest">Saved</span>
-    </button>
-    <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('trending')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-      <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
-    </button>
-  </nav>
+</main>
 
-  <!-- ── Ticker Overlay ── -->
-  <div class="fixed bottom-14 md:bottom-0 left-0 w-full glass-panel h-10 border-t border-outline-variant/10 z-20 flex items-center overflow-hidden md:pl-64">
-    <div class="flex items-center gap-8 whitespace-nowrap animate-marquee" style="width:max-content;">
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Breaking: LIGO detects gravitational wave from pre-stellar black hole</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Update: ESA Hera completes massive deep-space engine burn toward Didymos</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Alert: Jupiter lightning measured at 1 million× Earth's power</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-[#dbfcff] rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Discovery: NASA neutron instrument hunting hidden ice at lunar south pole</span>
-      </div>
-      <!-- Repeat for seamless loop -->
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Breaking: LIGO detects gravitational wave from pre-stellar black hole</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Update: ESA Hera completes massive deep-space engine burn toward Didymos</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Alert: Jupiter lightning measured at 1 million× Earth's power</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-[#dbfcff] rounded-full animate-pulse"></span>
-        <span class="font-label text-[10px] uppercase text-on-surface-variant">Discovery: NASA neutron instrument hunting hidden ice at lunar south pole</span>
-      </div>
+<!-- ── Mobile Bottom Nav (outside all views — always visible) ── -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
+  <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/></svg>
+    <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
+  </button>
+  <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('feed')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span class="font-label text-[9px] uppercase tracking-widest">Feed</span>
+  </button>
+  <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('saved')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <span class="font-label text-[9px] uppercase tracking-widest">Saved</span>
+  </button>
+  <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('trending')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
+  </button>
+</nav>
+
+<!-- ── Ticker Overlay (outside all views — always visible) ── -->
+<div class="fixed bottom-14 md:bottom-0 left-0 w-full glass-panel h-10 border-t border-outline-variant/10 z-20 flex items-center overflow-hidden md:pl-64">
+  <div class="flex items-center gap-8 whitespace-nowrap animate-marquee" style="width:max-content;">
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Breaking: LIGO detects gravitational wave from pre-stellar black hole</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Update: ESA Hera completes massive deep-space engine burn toward Didymos</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Alert: Jupiter lightning measured at 1 million× Earth's power</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-[#dbfcff] rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Discovery: NASA neutron instrument hunting hidden ice at lunar south pole</span>
+    </div>
+    <!-- Repeat for seamless loop -->
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Breaking: LIGO detects gravitational wave from pre-stellar black hole</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Update: ESA Hera completes massive deep-space engine burn toward Didymos</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Alert: Jupiter lightning measured at 1 million× Earth's power</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-[#dbfcff] rounded-full animate-pulse"></span>
+      <span class="font-label text-[10px] uppercase text-on-surface-variant">Discovery: NASA neutron instrument hunting hidden ice at lunar south pole</span>
     </div>
   </div>
-</main>
+</div>
 
 
 <!-- ═══════════════════════════════════════════════════════ -->
