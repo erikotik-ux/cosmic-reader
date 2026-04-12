@@ -1148,18 +1148,26 @@ async function fetchFeed(feedInfo) {
     const tags    = catEls.map(c => c.textContent).join(' ');
     const PURE_SPACE_SOURCES = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
     const category = guessCategory(title, tags) || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions' : null);
-    // Image: try media:content, then enclosure, then og in content
+    // Image: try media:content → enclosure → img in description → img in content:encoded
     let image = '';
     const mc = item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'content')[0]
              || item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'thumbnail')[0];
     if (mc) image = mc.getAttribute('url') || '';
     if (!image) {
       const enc = item.querySelector('enclosure');
-      if (enc) image = enc.getAttribute('url') || '';
+      if (enc && /image/i.test(enc.getAttribute('type') || 'image')) image = enc.getAttribute('url') || '';
     }
     if (!image) {
-      const imgMatch = descRaw.match(/src="([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/i);
-      if (imgMatch) image = imgMatch[1];
+      // Many WordPress RSS feeds (NASASpaceFlight, SpaceNews, etc.) embed the featured
+      // image inside <content:encoded> rather than <description>. Search both.
+      const encodedRaw = item.querySelector('encoded')?.textContent || '';
+      for (const text of [descRaw, encodedRaw]) {
+        if (!text) continue;
+        // Match src="..." or src='...' — covers both quote styles
+        const m = text.match(/src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i)
+               || text.match(/src='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*)'/i);
+        if (m) { image = m[1].split('?')[0]; break; } // strip query strings (wp resize params)
+      }
     }
     // If the feed didn't include an image, assign a category-matched fallback
     // so we don't silently drop good articles just because their RSS is image-free
