@@ -288,7 +288,7 @@
       <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openArticle(2)">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
-            <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; object-position: center 30%;" src="https://live.staticflickr.com/65535/50838482198_4b2d65cf49_b.jpg" alt="SpaceX rocket landing"/>
+            <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; object-position: center 30%;" src="https://live.staticflickr.com/1460/24382360351_c996749874_b.jpg" alt="SpaceX rocket landing"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <!-- 3D orbit: 165px radius, 7s -->
@@ -324,7 +324,7 @@
       <div class="planet-node absolute pointer-events-auto" style="top:54%; left:8%;" onclick="openArticle(1)">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%;" src="https://photojournal.jpl.nasa.gov/jpeg/PIA20696.jpg" alt="Moon"/>
+            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%;" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
           </div>
           <!-- 3D orbit: 100px radius, 5s -->
@@ -370,7 +370,7 @@
       <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openArticle(2)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
-            <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; object-position: center 30%;" src="https://live.staticflickr.com/65535/50838482198_4b2d65cf49_b.jpg" alt="SpaceX rocket landing"/>
+            <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; object-position: center 30%;" src="https://live.staticflickr.com/1460/24382360351_c996749874_b.jpg" alt="SpaceX rocket landing"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
@@ -404,7 +404,7 @@
       <div class="planet-node self-end mr-10 pointer-events-auto" onclick="openArticle(1)">
         <div class="relative">
           <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%;" src="https://photojournal.jpl.nasa.gov/jpeg/PIA20696.jpg" alt="Moon"/>
+            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%;" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
@@ -1026,51 +1026,51 @@ const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missi
 // pickFallback() hashes the article title so each article consistently gets a
 // different image, preventing the same placeholder from repeating across the feed.
 const FALLBACK_POOL = {
-  // All images: NASA/ESA/JPL public domain — no Wikipedia/Wikimedia
+  // All images: ESA Hubble CDN + NASA Flickr — confirmed hotlink-friendly, no JPL Photojournal
   Physics: [
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy M51 — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble ultra deep field
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
   ],
   Planets: [
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA21983.jpg',   // Jupiter Great Red Spot — Juno 2017
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA00400.jpg',   // Pale Blue Dot — Voyager 1 1990
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA21474.jpg',   // Jupiter full disk — Juno
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA18073.jpg',   // Saturn — Cassini
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA16239.jpg',   // Mars — Curiosity 2012
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA00271.jpg',   // Venus — Magellan
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA01378.jpg',   // Neptune — Voyager 2
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
   ],
   Moon: [
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA20696.jpg',   // Moon — LRO
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA00113.jpg',   // Earthrise — Apollo 8
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA00405.jpg',   // Moon — Galileo flyby
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA17922.jpg',   // Lunar South Pole — LRO
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA17039.jpg',   // Moon surface detail — LRO
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA00116.jpg',   // Moon — Apollo
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA00568.jpg',   // Lunar surface — Clementine
+    'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',               // NASA Supermoon 2016 — Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
   ],
   Missions: [
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA24426.jpg',   // Perseverance rover landing
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA22226.jpg',   // Curiosity selfie — Mars
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA21551.jpg',   // Cassini Grand Finale
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA18846.jpg',   // Pluto — New Horizons 2015
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA17171.jpg',   // Earth from ISS
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA19400.jpg',   // MAVEN at Mars
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA21263.jpg',   // Juno mission
+    'https://live.staticflickr.com/1460/24382360351_c996749874_b.jpg',               // Falcon 9 landing — SpaceX Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
   ],
   Exoplanets: [
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA20060.jpg',   // TRAPPIST-1 system concept
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA21421.jpg',   // Exoplanet atmosphere concept
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA22093.jpg',   // Exoplanet transit concept
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA19820.jpg',   // Kepler exoplanet concept
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA23002.jpg',   // Hot Jupiter concept
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA21420.jpg',   // Super-Earth concept
-    'https://photojournal.jpl.nasa.gov/jpeg/PIA22941.jpg',   // Exoplanet system concept
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
   ],
 };
 // Hash article title to a stable integer — used to pick a unique pool image per article
@@ -1477,7 +1477,7 @@ The next observation window opens in June. Further detections would allow us to 
     category: "Moon",
     date: "March 27, 2026",
     source: "Universe Today",
-    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA17922.jpg",
+    image: "https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg",
     read_more: "https://www.universetoday.com/articles/hunting-moon-water-with-neutrons",
     coord: "Coordinate: LUNA-S.01",
     readTime: "4m",
@@ -1504,7 +1504,7 @@ Artemis basecamp planners are watching closely.`,
     category: "Missions",
     date: "March 27, 2026",
     source: "Universe Today",
-    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA21551.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg",
     read_more: "https://www.universetoday.com/articles/hera-aces-a-massive-engine-burn-on-its-way-to-didymos",
     coord: "Coordinate: AST-65803",
     readTime: "4m",
@@ -1531,7 +1531,7 @@ Mission controllers at ESOC in Darmstadt confirmed nominal spacecraft health aft
     category: "Planets",
     date: "March 26, 2026",
     source: "Universe Today",
-    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA21983.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg",
     read_more: "https://www.universetoday.com/articles/jupiters-lightning-could-be-almost-unbelievably-powerful",
     coord: "Coordinate: JUP-45.12N",
     readTime: "5m",
@@ -1558,7 +1558,7 @@ No spacecraft has ever flown deep enough into Jupiter's atmosphere to measure a 
     category: "Planets",
     date: "March 26, 2026",
     source: "Universe Today",
-    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA00271.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg",
     read_more: "https://www.universetoday.com/articles/venus-hellscape-climate-simulations",
     coord: "Coordinate: VEN-SOL.02",
     readTime: "6m",
@@ -1587,7 +1587,7 @@ The fourth involves a catastrophic impactor in the inner solar system disrupting
     category: "Exoplanets",
     date: "March 25, 2026",
     source: "SpaceNews",
-    image: "https://photojournal.jpl.nasa.gov/jpeg/PIA20060.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg",
     read_more: "https://spacenews.com/exoplanet-discovered-habitable-zone",
     coord: "Coordinate: EXO-22.14LY",
     readTime: "5m",
