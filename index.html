@@ -290,7 +290,7 @@
       <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openArticle(2)">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; object-position: center 35%;" src="https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg" alt="Starship launching from Mars"/>
+            <img class="w-full h-full object-contain opacity-95 mix-blend-screen" style="border-radius:50%; transform:scale(0.9) translateZ(0);" src="https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg" alt="Starship SN8 High-Altitude Flight Test"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <!-- 3D orbit: 165px radius, 7s -->
@@ -340,12 +340,56 @@
         </div>
       </div>
 
-      <!-- PLANET: AI & Tech (Far Right, mid-height) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:38%; left:78%;" onclick="openArticle(0)">
+      <!-- PLANET: AI & Tech (Bottom) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:68%; left:68%;" onclick="openArticle(0)">
         <div class="relative" style="transform-style: preserve-3d;">
-          <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001830 0%, #000c18 55%, #000408 100%); box-shadow: 0 0 12px 2px rgba(56,189,248,0.12);">
-            <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%;" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg" alt="AI Tech planet"/>
-            <div class="absolute inset-0 bg-gradient-to-tr from-[#001830]/40 to-transparent"></div>
+          <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%); box-shadow: 0 0 16px 4px rgba(56,189,248,0.18);">
+            <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" style="border-radius:50%;">
+              <defs>
+                <radialGradient id="bg-ai-d" cx="45%" cy="40%" r="65%">
+                  <stop offset="0%" stop-color="#001e3c"/>
+                  <stop offset="60%" stop-color="#000d1a"/>
+                  <stop offset="100%" stop-color="#000408"/>
+                </radialGradient>
+                <filter id="glow-ai-d" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <circle cx="80" cy="80" r="80" fill="url(#bg-ai-d)"/>
+              <!-- Neural network edges -->
+              <g stroke="#38bdf8" stroke-opacity="0.22" stroke-width="0.7" fill="none">
+                <line x1="50" y1="38" x2="80" y2="58"/><line x1="80" y1="58" x2="108" y2="42"/>
+                <line x1="108" y1="42" x2="128" y2="68"/><line x1="128" y1="68" x2="112" y2="95"/>
+                <line x1="112" y1="95" x2="80" y2="58"/><line x1="80" y1="58" x2="56" y2="80"/>
+                <line x1="56" y1="80" x2="36" y2="68"/><line x1="36" y1="68" x2="50" y2="38"/>
+                <line x1="56" y1="80" x2="72" y2="108"/><line x1="72" y1="108" x2="100" y2="118"/>
+                <line x1="100" y1="118" x2="112" y2="95"/><line x1="72" y1="108" x2="46" y2="114"/>
+                <line x1="46" y1="114" x2="36" y2="68"/><line x1="80" y1="80" x2="80" y2="58"/>
+                <line x1="80" y1="80" x2="112" y2="95"/><line x1="80" y1="80" x2="56" y2="80"/>
+                <line x1="80" y1="80" x2="72" y2="108"/><line x1="128" y1="68" x2="132" y2="100"/>
+                <line x1="132" y1="100" x2="112" y2="95"/><line x1="100" y1="118" x2="82" y2="132"/>
+                <line x1="82" y1="132" x2="46" y2="114"/><line x1="24" y1="88" x2="36" y2="68"/>
+                <line x1="24" y1="88" x2="46" y2="114"/>
+              </g>
+              <!-- Glowing nodes -->
+              <g filter="url(#glow-ai-d)">
+                <circle cx="80" cy="80" r="5.5" fill="#38bdf8" opacity="0.95"/>
+                <circle cx="80" cy="58" r="3.5" fill="#38bdf8" opacity="0.9"/>
+                <circle cx="112" cy="95" r="3.5" fill="#0ea5e9" opacity="0.88"/>
+                <circle cx="56" cy="80" r="3" fill="#7dd3fc" opacity="0.85"/>
+                <circle cx="72" cy="108" r="3" fill="#38bdf8" opacity="0.82"/>
+                <circle cx="50" cy="38" r="2" fill="#7dd3fc" opacity="0.75"/>
+                <circle cx="108" cy="42" r="2.5" fill="#7dd3fc" opacity="0.72"/>
+                <circle cx="128" cy="68" r="2" fill="#7dd3fc" opacity="0.70"/>
+                <circle cx="36" cy="68" r="2" fill="#7dd3fc" opacity="0.65"/>
+                <circle cx="100" cy="118" r="2" fill="#7dd3fc" opacity="0.70"/>
+                <circle cx="46" cy="114" r="2" fill="#7dd3fc" opacity="0.65"/>
+                <circle cx="132" cy="100" r="1.5" fill="#7dd3fc" opacity="0.60"/>
+                <circle cx="82" cy="132" r="1.5" fill="#7dd3fc" opacity="0.60"/>
+                <circle cx="24" cy="88" r="1.5" fill="#7dd3fc" opacity="0.60"/>
+              </g>
+            </svg>
           </div>
           <!-- 3D orbit: 105px radius, 13s -->
           <div class="orbit-3d" style="animation-duration:13s;animation-delay:-6s;">
@@ -391,7 +435,7 @@
       <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openArticle(2)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; object-position: center 35%;" src="https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg" alt="Starship launching from Mars"/>
+            <img class="w-full h-full object-contain opacity-95 mix-blend-screen" style="border-radius:50%; transform:scale(0.9) translateZ(0);" src="https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg" alt="Starship SN8 High-Altitude Flight Test"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
@@ -441,9 +485,51 @@
       <!-- Planet 5: AI & Tech — left offset -->
       <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openArticle(0)">
         <div class="relative">
-          <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001830 0%, #000c18 55%, #000408 100%); box-shadow: 0 0 10px 2px rgba(56,189,248,0.12);">
-            <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg" alt="AI Tech planet"/>
-            <div class="absolute inset-0 bg-gradient-to-tr from-[#001830]/40 to-transparent"></div>
+          <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%); box-shadow: 0 0 12px 3px rgba(56,189,248,0.18);">
+            <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" style="border-radius:50%;">
+              <defs>
+                <radialGradient id="bg-ai-m" cx="45%" cy="40%" r="65%">
+                  <stop offset="0%" stop-color="#001e3c"/>
+                  <stop offset="60%" stop-color="#000d1a"/>
+                  <stop offset="100%" stop-color="#000408"/>
+                </radialGradient>
+                <filter id="glow-ai-m" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <circle cx="80" cy="80" r="80" fill="url(#bg-ai-m)"/>
+              <g stroke="#38bdf8" stroke-opacity="0.22" stroke-width="0.7" fill="none">
+                <line x1="50" y1="38" x2="80" y2="58"/><line x1="80" y1="58" x2="108" y2="42"/>
+                <line x1="108" y1="42" x2="128" y2="68"/><line x1="128" y1="68" x2="112" y2="95"/>
+                <line x1="112" y1="95" x2="80" y2="58"/><line x1="80" y1="58" x2="56" y2="80"/>
+                <line x1="56" y1="80" x2="36" y2="68"/><line x1="36" y1="68" x2="50" y2="38"/>
+                <line x1="56" y1="80" x2="72" y2="108"/><line x1="72" y1="108" x2="100" y2="118"/>
+                <line x1="100" y1="118" x2="112" y2="95"/><line x1="72" y1="108" x2="46" y2="114"/>
+                <line x1="46" y1="114" x2="36" y2="68"/><line x1="80" y1="80" x2="80" y2="58"/>
+                <line x1="80" y1="80" x2="112" y2="95"/><line x1="80" y1="80" x2="56" y2="80"/>
+                <line x1="80" y1="80" x2="72" y2="108"/><line x1="128" y1="68" x2="132" y2="100"/>
+                <line x1="132" y1="100" x2="112" y2="95"/><line x1="100" y1="118" x2="82" y2="132"/>
+                <line x1="82" y1="132" x2="46" y2="114"/><line x1="24" y1="88" x2="36" y2="68"/>
+                <line x1="24" y1="88" x2="46" y2="114"/>
+              </g>
+              <g filter="url(#glow-ai-m)">
+                <circle cx="80" cy="80" r="5.5" fill="#38bdf8" opacity="0.95"/>
+                <circle cx="80" cy="58" r="3.5" fill="#38bdf8" opacity="0.9"/>
+                <circle cx="112" cy="95" r="3.5" fill="#0ea5e9" opacity="0.88"/>
+                <circle cx="56" cy="80" r="3" fill="#7dd3fc" opacity="0.85"/>
+                <circle cx="72" cy="108" r="3" fill="#38bdf8" opacity="0.82"/>
+                <circle cx="50" cy="38" r="2" fill="#7dd3fc" opacity="0.75"/>
+                <circle cx="108" cy="42" r="2.5" fill="#7dd3fc" opacity="0.72"/>
+                <circle cx="128" cy="68" r="2" fill="#7dd3fc" opacity="0.70"/>
+                <circle cx="36" cy="68" r="2" fill="#7dd3fc" opacity="0.65"/>
+                <circle cx="100" cy="118" r="2" fill="#7dd3fc" opacity="0.70"/>
+                <circle cx="46" cy="114" r="2" fill="#7dd3fc" opacity="0.65"/>
+                <circle cx="132" cy="100" r="1.5" fill="#7dd3fc" opacity="0.60"/>
+                <circle cx="82" cy="132" r="1.5" fill="#7dd3fc" opacity="0.60"/>
+                <circle cx="24" cy="88" r="1.5" fill="#7dd3fc" opacity="0.60"/>
+              </g>
+            </svg>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
             <div class="orbit-dot-1 absolute w-1.5 h-1.5 bg-[#38bdf8] rounded-full shadow-[0_0_10px_rgba(56,189,248,0.9)]" style="margin:-3px;animation-duration:13s;"></div>
@@ -731,7 +817,7 @@
         <!-- Data Row: Venus -->
         <article data-category="AI & Tech" onclick="openArticle(5)" class="md:col-span-12 bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
           <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
-            <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg" alt="AI Tech"/>
+            <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg" alt="AI Tech"/>
           </div>
           <div class="flex-grow">
             <div class="flex items-center gap-2 mb-1">
@@ -1057,7 +1143,7 @@ const FALLBACK_IMAGES = {
   Planets:    'https://lh3.googleusercontent.com/aida-public/AB6AXuBkW4TXr9_CREHwuantFGEzh3PQzJFKF5izfZOhdvCNBUylzdVZS1qhNU6zXhKgZ_I41KIVzHwM3FCDihZqKLnvTaUD2B7vFp65MCnNZPaNwWrrDDGTbQuARGqBHwLgX6gF7wanpmuQ0J6Mc60v6zFK-aXQV6RYZGV7Xz-hXf_Q7bA9Oxq4DM98kPqAH7L5heKDE4Pwcwrsvp23WwFespSKaJikb0UZVzWdOys_Fcfs9GmK8LBPuBIV3gwvVANHTd9kTV3tO3LwFuA',
   Moon:       'https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw',
   Missions:   'https://lh3.googleusercontent.com/aida-public/AB6AXuBr3Cdep1zduetd-LvJXVTk9_kaoaqMUtwGCWMgzUMbBvzJFAcYSBaEQadIvvfu7LNKoO3_6z9Mnbw-Ca-okEHKepqOCnYnFZ8Ocv0J-Qv29DqwoTr2dZrk_m66Hd7dBPyS65oMtt0b-Ld4RDNKo5GcprwMUN0DVSw69uU3ws3mw_BlVtgSy559rhQx82gd9oC7i8FHhgsjbWOPY9ZEmBFgdqJ8Nivv7s8-srXk7lDnOQ-_hhYUpiOoYixlmIaQXeOOkhq6aoH9q7E',
-  'AI & Tech': 'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',
+  'AI & Tech': 'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',
 };
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
 const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
@@ -1104,13 +1190,13 @@ const FALLBACK_POOL = {
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
   ],
   'AI & Tech': [
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — bright blues/teals (tech aesthetic)
+    'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',               // Starship SN8 flight — SpaceX Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST (blues/teals)
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A jet — HST
+    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',               // SpaceX Starship — Flickr
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
   ],
 };
 // Hash article title to a stable integer — used to pick a unique pool image per article
@@ -1394,6 +1480,101 @@ function renderFeed(list) {
   if (countEl) countEl.textContent = String(total);
 }
 
+// ── Scrape The Rundown AI (no RSS — beehiiv archive page) ──
+async function scrapeRundownFeed() {
+  const targetUrl = 'https://www.therundown.ai/archive';
+  let html = '';
+  // Try each CORS proxy until we get back valid HTML containing article links
+  for (const proxyFn of RSS_PROXIES) {
+    try {
+      const res = await fetch(proxyFn(targetUrl), { signal: AbortSignal.timeout(15000) });
+      const t = await res.text();
+      // Accept if we get meaningful HTML back (either /p/ links or therundown mention)
+      if (t.length > 500 && (t.includes('/p/') || t.includes('therundown') || t.includes('rundown'))) {
+        html = t; break;
+      }
+    } catch(e) { /* try next proxy */ }
+  }
+  if (!html) return [];
+
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+
+  // Collect all <a> tags that link to individual posts (/p/ path pattern)
+  const allLinks = Array.from(doc.querySelectorAll('a[href]'));
+  const postLinks = allLinks.filter(a => {
+    const h = a.getAttribute('href') || '';
+    return h.includes('/p/') && !h.includes('#') && !h.includes('?ref=');
+  });
+
+  const seen = new Set();
+  const items = [];
+
+  for (const link of postLinks) {
+    const rawHref = link.getAttribute('href') || '';
+    const fullHref = rawHref.startsWith('http')
+      ? rawHref
+      : 'https://www.therundown.ai' + (rawHref.startsWith('/') ? rawHref : '/' + rawHref);
+
+    // Deduplicate by URL
+    const urlKey = fullHref.split('?')[0].replace(/\/$/, '');
+    if (seen.has(urlKey)) continue;
+    seen.add(urlKey);
+
+    // Extract title — check headings inside the link first, then the link text itself
+    const heading = link.querySelector('h1, h2, h3, h4, h5, h6');
+    let title = (heading ? heading.textContent : link.textContent).replace(/\s+/g, ' ').trim();
+    // Skip nav links, buttons, or very short stubs
+    if (!title || title.length < 12 || /^(subscribe|sign in|log in|archive|home|read more)$/i.test(title)) continue;
+
+    // Extract image — look inside the link for <img> tags
+    const imgEl = link.querySelector('img');
+    let image = '';
+    if (imgEl) {
+      image = imgEl.getAttribute('src') || imgEl.getAttribute('data-src') || imgEl.getAttribute('data-lazy-src') || '';
+      // Resolve relative image URLs
+      if (image && !image.startsWith('http')) image = 'https://www.therundown.ai' + image;
+      // Skip tiny icons/avatars (usually < 200 chars in URL or very small dimensions)
+      if (image && (image.includes('favicon') || image.includes('logo') || image.includes('avatar'))) image = '';
+    }
+    // Also search for beehiiv CDN images in the surrounding container
+    if (!image) {
+      const container = link.closest('article, li, div') || link.parentElement;
+      if (container) {
+        const containerImg = container.querySelector('img:not([src*="avatar"]):not([src*="favicon"])');
+        if (containerImg) image = containerImg.getAttribute('src') || containerImg.getAttribute('data-src') || '';
+      }
+    }
+    if (!image) image = pickFallback('AI & Tech', title);
+
+    // Extract excerpt from sibling/child <p> elements
+    const descEl = link.querySelector('p') || (link.parentElement && link.parentElement.querySelector('p'));
+    const excerpt = descEl ? descEl.textContent.replace(/\s+/g, ' ').trim().slice(0, 280) : '';
+
+    items.push({
+      id: items.length,
+      title,
+      excerpt: excerpt || 'Latest AI news and analysis from The Rundown AI.',
+      body:    excerpt || 'Read the full article on The Rundown AI.',
+      category: 'AI & Tech',
+      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      source: 'The Rundown AI',
+      image,
+      read_more: fullHref,
+      coord: 'Live — The Rundown AI',
+      readTime: '3m',
+      stats: [
+        { label: 'Category',  val: 'AI & Tech',      color: 'text-primary'   },
+        { label: 'Source',    val: 'The Rundown AI', color: 'text-secondary' },
+        { label: 'Published', val: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), color: 'text-tertiary' },
+        { label: 'Read Time', val: '3 min',          color: 'text-primary'   },
+      ]
+    });
+    if (items.length >= 10) break;
+  }
+
+  return items;
+}
+
 // ── Load Live Feeds ────────────────────────────────────────
 async function loadLiveFeeds() {
   const statusEl  = document.getElementById('feed-status');
@@ -1401,12 +1582,21 @@ async function loadLiveFeeds() {
   if (statusEl) statusEl.classList.remove('hidden');
 
   try {
-    const results = await Promise.allSettled(FEEDS.map(f => fetchFeed(f)));
+    // Fetch all RSS feeds AND scrape The Rundown AI in parallel
+    const [results, rundownArticles] = await Promise.all([
+      Promise.allSettled(FEEDS.map(f => fetchFeed(f))),
+      scrapeRundownFeed().catch(() => [])
+    ]);
 
-    // Collect per-source buckets (only fulfilled)
+    // Collect per-source buckets (only fulfilled RSS results)
     const buckets = results
       .map((r, i) => r.status === 'fulfilled' ? r.value : [])
       .filter(b => b.length > 0);
+
+    // Add The Rundown AI scraped articles as an extra bucket if we got any
+    if (rundownArticles.length > 0) {
+      buckets.push(rundownArticles);
+    }
 
     // Round-robin interleave all sources up to 40 articles
     const merged = [];
@@ -1627,8 +1817,8 @@ The fourth involves a catastrophic impactor in the inner solar system disrupting
     category: "AI & Tech",
     date: "April 10, 2026",
     source: "Ben's Bites",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg",
-    read_more: "https://bensbites.beehiiv.com",
+    image: "https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg",
+    read_more: "https://www.bensbites.com",
     coord: "Signal: AI-FRONTIER-01",
     readTime: "4m",
     body: `A new generation of large language models has crossed a threshold that researchers once considered decades away. Multiple frontier labs — including Anthropic, OpenAI, and Google DeepMind — have independently reported benchmark scores that match or exceed human expert performance across medicine, law, mathematics, and scientific reasoning.
