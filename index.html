@@ -260,6 +260,7 @@
         <line id="cl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
         <line id="cl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
         <line id="cl4" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl5" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
 
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
@@ -287,8 +288,8 @@
       <!-- PLANET: Space Missions (Center-Bottom) -->
       <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openArticle(2)">
         <div class="relative" style="transform-style: preserve-3d;">
-          <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; object-position: center 55%;" src="https://live.staticflickr.com/65535/50192510273_472b0531f7_b.jpg" alt="Starship SN5 launch fire"/>
+          <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
+            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; object-position: center 35%;" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship on Mars"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <!-- 3D orbit: 165px radius, 7s -->
@@ -324,7 +325,7 @@
       <div class="planet-node absolute pointer-events-auto" style="top:54%; left:8%;" onclick="openArticle(1)">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.25) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
+            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
           </div>
           <!-- 3D orbit: 100px radius, 5s -->
@@ -338,6 +339,24 @@
         </div>
       </div>
 
+      <!-- PLANET: AI & Tech (Right-Center, below Physics & Cosmos) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:52%; left:calc(62% + 10px);" onclick="openArticle(0)">
+        <div class="relative" style="transform-style: preserve-3d;">
+          <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001830 0%, #000c18 55%, #000408 100%); box-shadow: 0 0 12px 2px rgba(56,189,248,0.12);">
+            <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg" alt="AI Tech planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#001830]/40 to-transparent"></div>
+          </div>
+          <!-- 3D orbit: 105px radius, 13s -->
+          <div class="orbit-3d" style="animation-duration:13s;animation-delay:-6s;">
+            <div class="absolute w-2 h-2 bg-[#38bdf8] rounded-full shadow-[0_0_12px_rgba(56,189,248,1)]" style="top:-4px;left:101px;animation:unspin3d 13s linear -6s infinite;"></div>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#7dd3fc]">AI &amp; Tech</span>
+          <span class="block text-xs text-on-surface-variant font-label">Models &amp; Intelligence</span>
+        </div>
+      </div>
+
     </div>
 
     <!-- ═══ MOBILE: vertical stacked planets ═══ -->
@@ -347,6 +366,7 @@
         <line id="mcl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
         <line id="mcl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
         <line id="mcl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
       <!-- Planet 1: Planets & Exoplanets — left offset -->
       <div class="planet-node self-start ml-6 pointer-events-auto" onclick="openArticle(0)">
@@ -369,8 +389,8 @@
       <!-- Planet 2: Space Missions — right offset -->
       <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openArticle(2)">
         <div class="relative">
-          <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1200 0%, #1e0a00 55%, #0e0500 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; object-position: center 55%;" src="https://live.staticflickr.com/65535/50192510273_472b0531f7_b.jpg" alt="Starship SN5 launch fire"/>
+          <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
+            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; object-position: center 35%;" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship on Mars"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
@@ -404,7 +424,7 @@
       <div class="planet-node self-end mr-10 pointer-events-auto" onclick="openArticle(1)">
         <div class="relative">
           <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
-            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.25) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
+            <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
@@ -414,6 +434,23 @@
         <div class="mt-3 text-center">
           <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Moon</span>
           <span class="block text-xs text-on-surface-variant font-label">Active Signals</span>
+        </div>
+      </div>
+
+      <!-- Planet 5: AI & Tech — left offset -->
+      <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openArticle(0)">
+        <div class="relative">
+          <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001830 0%, #000c18 55%, #000408 100%); box-shadow: 0 0 10px 2px rgba(56,189,248,0.12);">
+            <img class="w-full h-full object-cover opacity-75 mix-blend-screen" style="border-radius:50%;" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg" alt="AI Tech planet"/>
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#001830]/40 to-transparent"></div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
+            <div class="orbit-dot-1 absolute w-1.5 h-1.5 bg-[#38bdf8] rounded-full shadow-[0_0_10px_rgba(56,189,248,0.9)]" style="margin:-3px;animation-duration:13s;"></div>
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#7dd3fc]">AI &amp; Tech</span>
+          <span class="block text-xs text-on-surface-variant font-label">Models &amp; Intelligence</span>
         </div>
       </div>
     </div>
@@ -574,7 +611,7 @@
         <button onclick="filterFeed('Physics')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Physics</button>
         <button onclick="filterFeed('Moon')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Moon</button>
         <button onclick="filterFeed('Missions')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Missions</button>
-        <button onclick="filterFeed('Exoplanets')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Exoplanets</button>
+        <button onclick="filterFeed('AI & Tech')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">AI &amp; Tech</button>
       </div>
 
       <!-- Bento Grid -->
@@ -691,16 +728,16 @@
         </article>
 
         <!-- Data Row: Venus -->
-        <article data-category="Exoplanets" onclick="openArticle(5)" class="md:col-span-12 bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
+        <article data-category="AI & Tech" onclick="openArticle(5)" class="md:col-span-12 bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
           <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
-            <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArDdDx2WJxENakvfoiBiimBM5-pqQrD62BYDq4o7vxVBK8XMLwrHs12oJTzEg9Xf4uiP3CCmEXQth2rQL7JGXIJrBQe1-PR-cWNwYiWhqxHZ-L-X-7ZKUAOWFWAxaSjN5q5XUwU0NkVf4OqG4yBttteM-_1dA2Z3ZNGJkoV8vOmgmRe_5U2UOmT08MIKqLQLdEYSOhUUXTQST5hG7UgAhVAXXIEYXsnuIx9O8eLPa6cbySGYqN_RkzKcFB_flivaSOI93e7H3EUac" alt="Exoplanet"/>
+            <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg" alt="AI Tech"/>
           </div>
           <div class="flex-grow">
             <div class="flex items-center gap-2 mb-1">
-              <span class="material-symbols-outlined text-[#ffb5a0] text-sm">travel_explore</span>
-              <h4 class="font-headline font-bold text-[#dbfcff]">Exoplanet Discovered in Habitable Zone of Nearby Red Dwarf</h4>
+              <span class="material-symbols-outlined text-[#7dd3fc] text-sm">smart_toy</span>
+              <h4 class="font-headline font-bold text-[#dbfcff]">AI Models Reach New Frontier: Reasoning at Human Expert Level</h4>
             </div>
-            <p class="text-xs text-[#dbfcff]/40 font-body">James Webb Space Telescope atmospheric readings reveal potential water vapor signatures on newly catalogued world 22 light-years from Earth.</p>
+            <p class="text-xs text-[#dbfcff]/40 font-body">Foundation models from leading labs demonstrate breakthrough performance on scientific benchmarks, opening new possibilities for automated discovery.</p>
           </div>
           <div class="flex items-center gap-10 shrink-0 pr-2">
             <div class="hidden lg:block text-right">
@@ -1004,9 +1041,11 @@ const FEEDS = [
   { url: 'https://spacenews.com/feed/',                   source: 'SpaceNews' },
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
   { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
+  { url: 'https://bensbites.beehiiv.com/feed',            source: "Ben's Bites" },
+  { url: 'https://theairundown.beehiiv.com/feed',         source: 'The AI Rundown' },
 ];
 const KEYWORD_CATS = [
-  [['exoplanet','habitable zone','james webb','jwst','red dwarf','transit spectrum','gj ','kepler','tess'],'Exoplanets'],
+  [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity'],'AI & Tech'],
   [['moon','lunar','artemis','south pole crater','lend ','lro ','lcross'],'Moon'],
   [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid belt','solar system','planet','lightning storm'],'Planets'],
   [['nasa','esa','spacex','rocket','starship','launch','mission','spacecraft','probe','sls','falcon','hera','dart','voyager','cassini','juno','new horizons'],'Missions'],
@@ -1017,10 +1056,10 @@ const FALLBACK_IMAGES = {
   Planets:    'https://lh3.googleusercontent.com/aida-public/AB6AXuBkW4TXr9_CREHwuantFGEzh3PQzJFKF5izfZOhdvCNBUylzdVZS1qhNU6zXhKgZ_I41KIVzHwM3FCDihZqKLnvTaUD2B7vFp65MCnNZPaNwWrrDDGTbQuARGqBHwLgX6gF7wanpmuQ0J6Mc60v6zFK-aXQV6RYZGV7Xz-hXf_Q7bA9Oxq4DM98kPqAH7L5heKDE4Pwcwrsvp23WwFespSKaJikb0UZVzWdOys_Fcfs9GmK8LBPuBIV3gwvVANHTd9kTV3tO3LwFuA',
   Moon:       'https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw',
   Missions:   'https://lh3.googleusercontent.com/aida-public/AB6AXuBr3Cdep1zduetd-LvJXVTk9_kaoaqMUtwGCWMgzUMbBvzJFAcYSBaEQadIvvfu7LNKoO3_6z9Mnbw-Ca-okEHKepqOCnYnFZ8Ocv0J-Qv29DqwoTr2dZrk_m66Hd7dBPyS65oMtt0b-Ld4RDNKo5GcprwMUN0DVSw69uU3ws3mw_BlVtgSy559rhQx82gd9oC7i8FHhgsjbWOPY9ZEmBFgdqJ8Nivv7s8-srXk7lDnOQ-_hhYUpiOoYixlmIaQXeOOkhq6aoH9q7E',
-  Exoplanets: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArDdDx2WJxENakvfoiBiimBM5-pqQrD62BYDq4o7vxVBK8XMLwrHs12oJTzEg9Xf4uiP3CCmEXQth2rQL7JGXIJrBQe1-PR-cWNwYiWhqxHZ-L-X-7ZKUAOWFWAxaSjN5q5XUwU0NkVf4OqG4yBttteM-_1dA2Z3ZNGJkoV8vOmgmRe_5U2UOmT08MIKqLQLdEYSOhUUXTQST5hG7UgAhVAXXIEYXsnuIx9O8eLPa6cbySGYqN_RkzKcFB_flivaSOI93e7H3EUac',
+  'AI & Tech': 'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',
 };
-const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', Exoplanets:'text-tertiary' };
-const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', Exoplanets:'travel_explore' };
+const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
+const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
 
 // Pool of 8-10 varied images per category — used when a feed provides no image.
 // pickFallback() hashes the article title so each article consistently gets a
@@ -1055,7 +1094,7 @@ const FALLBACK_POOL = {
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
   ],
   Missions: [
-    'https://live.staticflickr.com/65535/50192510273_472b0531f7_b.jpg',             // Starship SN5 launch fire — SpaceX Flickr
+    'https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg',             // Starship on Mars concept art — SpaceX Flickr
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
@@ -1063,10 +1102,10 @@ const FALLBACK_POOL = {
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
   ],
-  Exoplanets: [
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
+  'AI & Tech': [
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field (neural network aesthetic)
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A jet — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
@@ -1097,7 +1136,7 @@ function imgFail(el) {
 // This ensures something always displays even if external CDNs are unreachable.
 const _SVG_COLORS = {
   Physics:'210,55%,7%', Planets:'140,50%,6%', Moon:'230,45%,7%',
-  Missions:'265,50%,6%', Exoplanets:'185,55%,6%'
+  Missions:'265,50%,6%', 'AI & Tech':'200,60%,6%'
 };
 function _svgPlaceholder(cat) {
   const c = _SVG_COLORS[cat] || '220,40%,6%';
@@ -1582,29 +1621,29 @@ The fourth involves a catastrophic impactor in the inner solar system disrupting
   },
   {
     id: 5,
-    title: "Exoplanet Discovered in Habitable Zone of Nearby Red Dwarf",
-    excerpt: "James Webb Space Telescope atmospheric readings reveal potential water vapor signatures on a newly catalogued world 22 light-years from Earth — placing it firmly within the habitable zone of its red dwarf host star.",
-    category: "Exoplanets",
-    date: "March 25, 2026",
-    source: "SpaceNews",
+    title: "AI Models Reach New Frontier: Reasoning at Human Expert Level",
+    excerpt: "Foundation models from leading AI labs demonstrate breakthrough performance on scientific and professional benchmarks, signalling a new era of machine intelligence that may fundamentally reshape knowledge work.",
+    category: "AI & Tech",
+    date: "April 10, 2026",
+    source: "Ben's Bites",
     image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg",
-    read_more: "https://spacenews.com/exoplanet-discovered-habitable-zone",
-    coord: "Coordinate: EXO-22.14LY",
-    readTime: "5m",
-    body: `The search for a pale blue dot beyond our solar system has taken a significant step forward. Astronomers using the James Webb Space Telescope have announced the detection of atmospheric signatures consistent with water vapour on a rocky exoplanet orbiting the red dwarf star GJ 4102, located just 22 light-years away.
+    read_more: "https://bensbites.beehiiv.com",
+    coord: "Signal: AI-FRONTIER-01",
+    readTime: "4m",
+    body: `A new generation of large language models has crossed a threshold that researchers once considered decades away. Multiple frontier labs — including Anthropic, OpenAI, and Google DeepMind — have independently reported benchmark scores that match or exceed human expert performance across medicine, law, mathematics, and scientific reasoning.
 
-The planet, designated GJ 4102b, is approximately 1.3 Earth radii and orbits in the classical habitable zone — the region where liquid water could theoretically exist on a planetary surface. Its orbital period is 18.4 days, standard for a world around a cooler, smaller star.
+The results represent more than incremental progress. Unlike earlier improvements that relied purely on scale, the latest generation employs novel training paradigms including extended chain-of-thought reasoning, reinforcement learning from verifiable outcomes, and synthetic data generation that allows models to effectively teach themselves.
 
-The water vapour detection comes from transmission spectroscopy — measuring how starlight filters through the planet's atmosphere as it transits across the face of GJ 4102. JWST's Near Infrared Spectrograph (NIRSpec) identified absorption features at wavelengths consistent with H₂O molecules.
+What makes the current moment significant is the breadth of capability. Previous milestones were narrow — a model defeating a chess grandmaster, or passing a bar exam in isolation. Today's systems demonstrate transfer across domains that previously required years of specialised human training.
 
-Critically, the team notes that the same spectral features could theoretically be produced by other compounds. Confirmation will require additional transit observations. The team plans to use 80 more hours of JWST time in Cycle 4 to characterise the atmosphere fully.
+The practical implications are already being felt across industries. AI-assisted drug discovery pipelines are compressing timelines from years to months. Legal research tools are surfacing precedents that junior associates would have missed. Materials science labs are using AI to propose novel compounds for synthesis.
 
-If the water vapour detection is confirmed, GJ 4102b would become one of the most compelling targets for astrobiology research ever identified. Red dwarf systems are among the most common in the galaxy — meaning habitable worlds around them could be extraordinarily abundant.`,
+Critics note that benchmark performance does not always translate cleanly to real-world deployment. Issues of reliability, hallucination, and safety alignment remain active research problems. But the momentum is unmistakable — and the labs show no signs of slowing.`,
     stats: [
-      { label: "Planet Radius", val: "1.3 R⊕", color: "text-primary" },
-      { label: "Distance", val: "22 LY", color: "text-secondary" },
-      { label: "Orbital Period", val: "18.4 days", color: "text-tertiary" },
-      { label: "Instrument", val: "JWST/NIRSpec", color: "text-primary" }
+      { label: "Benchmark", val: "Expert+", color: "text-[#7dd3fc]" },
+      { label: "Labs Active", val: "12+", color: "text-secondary" },
+      { label: "Domains", val: "Cross-domain", color: "text-tertiary" },
+      { label: "Source", val: "Ben's Bites", color: "text-[#7dd3fc]" }
     ]
   }
 ];
@@ -1974,7 +2013,7 @@ function drawConstellationLines() {
   const desktopGalaxy = document.getElementById('desktop-galaxy');
   if (!desktopGalaxy) return;
   const nodes = Array.from(desktopGalaxy.querySelectorAll('.planet-node'));
-  if (nodes.length < 4) return;
+  if (nodes.length < 5) return;
 
   // CRITICAL: reference must be desktopGalaxy, not view-map.
   // The SVG has absolute inset-0 inside desktopGalaxy, so its (0,0) is
@@ -1994,8 +2033,8 @@ function drawConstellationLines() {
     };
   }).filter(Boolean);
 
-  // Planet DOM order: 0=Planets(teal), 1=SpaceFrontier(orange), 2=Physics(purple), 3=LunarOps(moon)
-  const pairs = [[0,2],[0,1],[1,2],[0,3],[3,1]];
+  // Planet DOM order: 0=Planets(teal), 1=SpaceFrontier(orange), 2=Physics(purple), 3=Moon, 4=AI&Tech(blue)
+  const pairs = [[0,2],[0,1],[1,2],[0,3],[3,1],[2,4]];
   const ORBIT_GAP = 16; // px beyond sphere edge
 
   pairs.forEach(([a, b], i) => {
@@ -2129,8 +2168,8 @@ function drawMobileConstellationLines() {
     };
   }).filter(Boolean);
 
-  // Zigzag chain: 0→1, 1→2, 2→3
-  const pairs = [[0,1],[1,2],[2,3]];
+  // Zigzag chain: 0→1, 1→2, 2→3, 3→4
+  const pairs = [[0,1],[1,2],[2,3],[3,4]];
   const GAP = 10;
 
   pairs.forEach(([a, b], i) => {
