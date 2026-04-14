@@ -290,7 +290,7 @@
       <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openArticle(2)">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
-            <img class="w-full h-full object-contain opacity-95 mix-blend-screen" style="border-radius:50%; transform:scale(0.9) translateZ(0);" src="https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg" alt="Starship SN8 High-Altitude Flight Test"/>
+            <img class="w-full h-full object-cover opacity-95 mix-blend-screen" style="border-radius:50%; object-position: center center;" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship artist rendering"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <!-- 3D orbit: 165px radius, 7s -->
@@ -341,55 +341,12 @@
       </div>
 
       <!-- PLANET: AI & Tech (Bottom) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:68%; left:68%;" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(68% - 35px); left:68%;" onclick="openArticle(0)">
         <div class="relative" style="transform-style: preserve-3d;">
-          <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%); box-shadow: 0 0 16px 4px rgba(56,189,248,0.18);">
-            <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" style="border-radius:50%;">
-              <defs>
-                <radialGradient id="bg-ai-d" cx="45%" cy="40%" r="65%">
-                  <stop offset="0%" stop-color="#001e3c"/>
-                  <stop offset="60%" stop-color="#000d1a"/>
-                  <stop offset="100%" stop-color="#000408"/>
-                </radialGradient>
-                <filter id="glow-ai-d" x="-60%" y="-60%" width="220%" height="220%">
-                  <feGaussianBlur stdDeviation="2.5" result="blur"/>
-                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <circle cx="80" cy="80" r="80" fill="url(#bg-ai-d)"/>
-              <!-- Neural network edges -->
-              <g stroke="#38bdf8" stroke-opacity="0.22" stroke-width="0.7" fill="none">
-                <line x1="50" y1="38" x2="80" y2="58"/><line x1="80" y1="58" x2="108" y2="42"/>
-                <line x1="108" y1="42" x2="128" y2="68"/><line x1="128" y1="68" x2="112" y2="95"/>
-                <line x1="112" y1="95" x2="80" y2="58"/><line x1="80" y1="58" x2="56" y2="80"/>
-                <line x1="56" y1="80" x2="36" y2="68"/><line x1="36" y1="68" x2="50" y2="38"/>
-                <line x1="56" y1="80" x2="72" y2="108"/><line x1="72" y1="108" x2="100" y2="118"/>
-                <line x1="100" y1="118" x2="112" y2="95"/><line x1="72" y1="108" x2="46" y2="114"/>
-                <line x1="46" y1="114" x2="36" y2="68"/><line x1="80" y1="80" x2="80" y2="58"/>
-                <line x1="80" y1="80" x2="112" y2="95"/><line x1="80" y1="80" x2="56" y2="80"/>
-                <line x1="80" y1="80" x2="72" y2="108"/><line x1="128" y1="68" x2="132" y2="100"/>
-                <line x1="132" y1="100" x2="112" y2="95"/><line x1="100" y1="118" x2="82" y2="132"/>
-                <line x1="82" y1="132" x2="46" y2="114"/><line x1="24" y1="88" x2="36" y2="68"/>
-                <line x1="24" y1="88" x2="46" y2="114"/>
-              </g>
-              <!-- Glowing nodes -->
-              <g filter="url(#glow-ai-d)">
-                <circle cx="80" cy="80" r="5.5" fill="#38bdf8" opacity="0.95"/>
-                <circle cx="80" cy="58" r="3.5" fill="#38bdf8" opacity="0.9"/>
-                <circle cx="112" cy="95" r="3.5" fill="#0ea5e9" opacity="0.88"/>
-                <circle cx="56" cy="80" r="3" fill="#7dd3fc" opacity="0.85"/>
-                <circle cx="72" cy="108" r="3" fill="#38bdf8" opacity="0.82"/>
-                <circle cx="50" cy="38" r="2" fill="#7dd3fc" opacity="0.75"/>
-                <circle cx="108" cy="42" r="2.5" fill="#7dd3fc" opacity="0.72"/>
-                <circle cx="128" cy="68" r="2" fill="#7dd3fc" opacity="0.70"/>
-                <circle cx="36" cy="68" r="2" fill="#7dd3fc" opacity="0.65"/>
-                <circle cx="100" cy="118" r="2" fill="#7dd3fc" opacity="0.70"/>
-                <circle cx="46" cy="114" r="2" fill="#7dd3fc" opacity="0.65"/>
-                <circle cx="132" cy="100" r="1.5" fill="#7dd3fc" opacity="0.60"/>
-                <circle cx="82" cy="132" r="1.5" fill="#7dd3fc" opacity="0.60"/>
-                <circle cx="24" cy="88" r="1.5" fill="#7dd3fc" opacity="0.60"/>
-              </g>
-            </svg>
+          <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%); box-shadow: 0 0 16px 4px rgba(56,189,248,0.22);">
+            <img class="w-full h-full object-cover mix-blend-screen" style="border-radius:50%; object-position: center 8%; transform: scale(1.15) translateZ(0); opacity:0.92;" src="https://live.staticflickr.com/65535/55148849705_2134476a97_b.jpg" alt="AI robot head"/>
+            <!-- Vignette: dark at edges, transparent at head-centre so face stays sharp -->
+            <div class="absolute inset-0" style="border-radius:50%; background: radial-gradient(circle at 50% 32%, transparent 30%, rgba(0,10,28,0.55) 72%, rgba(0,6,18,0.85) 100%);"></div>
           </div>
           <!-- 3D orbit: 105px radius, 13s -->
           <div class="orbit-3d" style="animation-duration:13s;animation-delay:-6s;">
@@ -435,7 +392,7 @@
       <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openArticle(2)">
         <div class="relative">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
-            <img class="w-full h-full object-contain opacity-95 mix-blend-screen" style="border-radius:50%; transform:scale(0.9) translateZ(0);" src="https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg" alt="Starship SN8 High-Altitude Flight Test"/>
+            <img class="w-full h-full object-cover opacity-95 mix-blend-screen" style="border-radius:50%; object-position: center center;" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship artist rendering"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
@@ -485,51 +442,9 @@
       <!-- Planet 5: AI & Tech — left offset -->
       <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openArticle(0)">
         <div class="relative">
-          <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%); box-shadow: 0 0 12px 3px rgba(56,189,248,0.18);">
-            <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" style="border-radius:50%;">
-              <defs>
-                <radialGradient id="bg-ai-m" cx="45%" cy="40%" r="65%">
-                  <stop offset="0%" stop-color="#001e3c"/>
-                  <stop offset="60%" stop-color="#000d1a"/>
-                  <stop offset="100%" stop-color="#000408"/>
-                </radialGradient>
-                <filter id="glow-ai-m" x="-60%" y="-60%" width="220%" height="220%">
-                  <feGaussianBlur stdDeviation="2.5" result="blur"/>
-                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <circle cx="80" cy="80" r="80" fill="url(#bg-ai-m)"/>
-              <g stroke="#38bdf8" stroke-opacity="0.22" stroke-width="0.7" fill="none">
-                <line x1="50" y1="38" x2="80" y2="58"/><line x1="80" y1="58" x2="108" y2="42"/>
-                <line x1="108" y1="42" x2="128" y2="68"/><line x1="128" y1="68" x2="112" y2="95"/>
-                <line x1="112" y1="95" x2="80" y2="58"/><line x1="80" y1="58" x2="56" y2="80"/>
-                <line x1="56" y1="80" x2="36" y2="68"/><line x1="36" y1="68" x2="50" y2="38"/>
-                <line x1="56" y1="80" x2="72" y2="108"/><line x1="72" y1="108" x2="100" y2="118"/>
-                <line x1="100" y1="118" x2="112" y2="95"/><line x1="72" y1="108" x2="46" y2="114"/>
-                <line x1="46" y1="114" x2="36" y2="68"/><line x1="80" y1="80" x2="80" y2="58"/>
-                <line x1="80" y1="80" x2="112" y2="95"/><line x1="80" y1="80" x2="56" y2="80"/>
-                <line x1="80" y1="80" x2="72" y2="108"/><line x1="128" y1="68" x2="132" y2="100"/>
-                <line x1="132" y1="100" x2="112" y2="95"/><line x1="100" y1="118" x2="82" y2="132"/>
-                <line x1="82" y1="132" x2="46" y2="114"/><line x1="24" y1="88" x2="36" y2="68"/>
-                <line x1="24" y1="88" x2="46" y2="114"/>
-              </g>
-              <g filter="url(#glow-ai-m)">
-                <circle cx="80" cy="80" r="5.5" fill="#38bdf8" opacity="0.95"/>
-                <circle cx="80" cy="58" r="3.5" fill="#38bdf8" opacity="0.9"/>
-                <circle cx="112" cy="95" r="3.5" fill="#0ea5e9" opacity="0.88"/>
-                <circle cx="56" cy="80" r="3" fill="#7dd3fc" opacity="0.85"/>
-                <circle cx="72" cy="108" r="3" fill="#38bdf8" opacity="0.82"/>
-                <circle cx="50" cy="38" r="2" fill="#7dd3fc" opacity="0.75"/>
-                <circle cx="108" cy="42" r="2.5" fill="#7dd3fc" opacity="0.72"/>
-                <circle cx="128" cy="68" r="2" fill="#7dd3fc" opacity="0.70"/>
-                <circle cx="36" cy="68" r="2" fill="#7dd3fc" opacity="0.65"/>
-                <circle cx="100" cy="118" r="2" fill="#7dd3fc" opacity="0.70"/>
-                <circle cx="46" cy="114" r="2" fill="#7dd3fc" opacity="0.65"/>
-                <circle cx="132" cy="100" r="1.5" fill="#7dd3fc" opacity="0.60"/>
-                <circle cx="82" cy="132" r="1.5" fill="#7dd3fc" opacity="0.60"/>
-                <circle cx="24" cy="88" r="1.5" fill="#7dd3fc" opacity="0.60"/>
-              </g>
-            </svg>
+          <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%); box-shadow: 0 0 12px 3px rgba(56,189,248,0.22);">
+            <img class="w-full h-full object-cover mix-blend-screen" style="border-radius:50%; object-position: center 8%; transform: scale(1.15) translateZ(0); opacity:0.92;" src="https://live.staticflickr.com/65535/55148849705_2134476a97_b.jpg" alt="AI robot head"/>
+            <div class="absolute inset-0" style="border-radius:50%; background: radial-gradient(circle at 50% 32%, transparent 30%, rgba(0,10,28,0.55) 72%, rgba(0,6,18,0.85) 100%);"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
             <div class="orbit-dot-1 absolute w-1.5 h-1.5 bg-[#38bdf8] rounded-full shadow-[0_0_10px_rgba(56,189,248,0.9)]" style="margin:-3px;animation-duration:13s;"></div>
