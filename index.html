@@ -1053,7 +1053,7 @@
         <!-- Large Feature Card (col-8) -->
         <article data-category="Physics" onclick="openArticle(0)" class="md:col-span-8 bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
           <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
-          <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZENoJGVKTmihBaIYCKMmRHofLAhL5e9x-92Qs5gv05P8OnCelkkKp9iSK-JoMXx_r5KvrudLPOYhQRdxWaA1epxe8fNQVeqWIjGNY7r0fQ1NqGTzm02JntYjQrZ0r8QqmJcU3NYAql4MwbcohMqc9ODOqWiORC-2LBCXY96NywY5f23kWPXV6Ti1FxetAPNGCnntoGIyVkcq2SsY58edFbAyAYYoOrHMH7uEzk8xTzryUKf8p8e2OJZcHgKgPY6ektQWdt-LYJLw" alt="Black hole signal"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg" alt="Gravitational waves eject black hole — Hubble"/>
           <div class="absolute top-5 left-5 z-20 flex items-center gap-2">
             <div class="w-9 h-9 rounded-full bg-[#00f0ff]/20 backdrop-blur-md flex items-center justify-center border border-[#00f0ff]/40">
               <span class="material-symbols-outlined text-[#00f0ff] text-base">radio_button_checked</span>
@@ -1115,7 +1115,7 @@
         <!-- Medium Feature Card (col-8) -->
         <article data-category="Missions" onclick="openArticle(2)" class="md:col-span-8 grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
           <div class="relative h-52 md:h-auto overflow-hidden">
-            <img class="article-img absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr3Cdep1zduetd-LvJXVTk9_kaoaqMUtwGCWMgzUMbBvzJFAcYSBaEQadIvvfu7LNKoO3_6z9Mnbw-Ca-okEHKepqOCnYnFZ8Ocv0J-Qv29DqwoTr2dZrk_m66Hd7dBPyS65oMtt0b-Ld4RDNKo5GcprwMUN0DVSw69uU3ws3mw_BlVtgSy559rhQx82gd9oC7i8FHhgsjbWOPY9ZEmBFgdqJ8Nivv7s8-srXk7lDnOQ-_hhYUpiOoYixlmIaQXeOOkhq6aoH9q7E" alt="Hera asteroid"/>
+            <img class="article-img absolute inset-0 w-full h-full object-cover" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg" alt="Hubble images DART impact ejecta at Dimorphos"/>
             <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
           </div>
           <div class="p-7 flex flex-col justify-center">
@@ -1131,7 +1131,7 @@
         <!-- Data Row: Jupiter -->
         <article data-category="Planets" onclick="openArticle(3)" class="md:col-span-12 bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
           <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
-            <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkW4TXr9_CREHwuantFGEzh3PQzJFKF5izfZOhdvCNBUylzdVZS1qhNU6zXhKgZ_I41KIVzHwM3FCDihZqKLnvTaUD2B7vFp65MCnNZPaNwWrrDDGTbQuARGqBHwLgX6gF7wanpmuQ0J6Mc60v6zFK-aXQV6RYZGV7Xz-hXf_Q7bA9Oxq4DM98kPqAH7L5heKDE4Pwcwrsvp23WwFespSKaJikb0UZVzWdOys_Fcfs9GmK8LBPuBIV3gwvVANHTd9kTV3tO3LwFuA" alt="Jupiter"/>
+            <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg" alt="Jupiter 2019 portrait — Hubble OPAL"/>
           </div>
           <div class="flex-grow">
             <div class="flex items-center gap-2 mb-1">
@@ -1473,11 +1473,11 @@ const KEYWORD_CATS = [
   [['black hole','gravitational wave','ligo','neutron star','dark matter','dark energy','quantum','galaxy','nebula','cosmos','big bang','telescope','hubble','spectrum','radiation','particle','physics'],'Physics'],
 ];
 const FALLBACK_IMAGES = {
-  Physics:    'https://lh3.googleusercontent.com/aida-public/AB6AXuDZENoJGVKTmihBaIYCKMmRHofLAhL5e9x-92Qs5gv05P8OnCelkkKp9iSK-JoMXx_r5KvrudLPOYhQRdxWaA1epxe8fNQVeqWIjGNY7r0fQ1NqGTzm02JntYjQrZ0r8QqmJcU3NYAql4MwbcohMqc9ODOqWiORC-2LBCXY96NywY5f23kWPXV6Ti1FxetAPNGCnntoGIyVkcq2SsY58edFbAyAYYoOrHMH7uEzk8xTzryUKf8p8e2OJZcHgKgPY6ektQWdt-LYJLw',
-  Planets:    'https://lh3.googleusercontent.com/aida-public/AB6AXuBkW4TXr9_CREHwuantFGEzh3PQzJFKF5izfZOhdvCNBUylzdVZS1qhNU6zXhKgZ_I41KIVzHwM3FCDihZqKLnvTaUD2B7vFp65MCnNZPaNwWrrDDGTbQuARGqBHwLgX6gF7wanpmuQ0J6Mc60v6zFK-aXQV6RYZGV7Xz-hXf_Q7bA9Oxq4DM98kPqAH7L5heKDE4Pwcwrsvp23WwFespSKaJikb0UZVzWdOys_Fcfs9GmK8LBPuBIV3gwvVANHTd9kTV3tO3LwFuA',
-  Moon:       'https://lh3.googleusercontent.com/aida-public/AB6AXuBm8ZPyRJeybz6GkYNCIjE1BCtApXgx5I83s4hSS7qHMisMLfe04qRr53UGRIRs_EII6ygOdlhTGrKS81BiVor7dBs9fMQ0dO6M78GfFNNAbsUaXH78FbVzeIMwclgMfK1sINyLwaQQAP3xZXWbgZSxi460BCD0AzVKSdIcwIU0V9v4XWv3_Dy_uvUkbyBZAds7_T0lo-wfzxXHg5Z79q3WYT-pEV4CQohRN9P91aUPXh0O0lMlIJTakX5u5HSE-Igw3N1RilvFfRw',
-  Missions:   'https://lh3.googleusercontent.com/aida-public/AB6AXuBr3Cdep1zduetd-LvJXVTk9_kaoaqMUtwGCWMgzUMbBvzJFAcYSBaEQadIvvfu7LNKoO3_6z9Mnbw-Ca-okEHKepqOCnYnFZ8Ocv0J-Qv29DqwoTr2dZrk_m66Hd7dBPyS65oMtt0b-Ld4RDNKo5GcprwMUN0DVSw69uU3ws3mw_BlVtgSy559rhQx82gd9oC7i8FHhgsjbWOPY9ZEmBFgdqJ8Nivv7s8-srXk7lDnOQ-_hhYUpiOoYixlmIaQXeOOkhq6aoH9q7E',
-  'AI & Tech': 'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',
+  Physics:    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',  // Hubble: gravitational waves eject black hole
+  Planets:    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg',  // Hubble: Jupiter 2019 OPAL portrait
+  Moon:       'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',             // NASA Supermoon 2016 — Flickr
+  Missions:   'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg', // Hubble: DART impact ejecta at Dimorphos
+  'AI & Tech': 'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',           // AI/Tech visualization — Flickr
 };
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
 const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
@@ -1488,49 +1488,46 @@ const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missi
 const FALLBACK_POOL = {
   // All images: ESA Hubble CDN + NASA Flickr — confirmed hotlink-friendly, no JPL Photojournal
   Physics: [
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',   // Hubble: gravitational waves eject black hole (2017)
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy M51 — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble ultra deep field
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy M51 — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A jet — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',   // Butterfly Nebula — HST
   ],
   Planets: [
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg',   // Jupiter 2019 — Hubble OPAL portrait
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1917a.jpg',   // Saturn 2019 — Hubble OPAL portrait
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9516g.jpg',    // Venus cloud tops — Hubble UV (1995)
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
   ],
   Moon: [
-    'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',               // NASA Supermoon 2016 — Flickr
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',    // Hubble deep field
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
+    'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',              // NASA Supermoon 2016 — Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field (dark/stellar)
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A — HST
   ],
   Missions: [
-    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',             // Starship launching from Mars — SpaceX Flickr
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',    // Whirlpool Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg',   // Hubble images DART ejecta at Dimorphos (2022)
+    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',              // SpaceX Starship — Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',   // Hubble: gravitational waves/black hole
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A — HST
     'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
   ],
   'AI & Tech': [
-    'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',               // Starship SN8 flight — SpaceX Flickr
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',    // Carina Nebula — HST (blues/teals)
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',    // Centaurus A jet — HST
-    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',               // SpaceX Starship — Flickr
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',    // Butterfly Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg',    // Andromeda Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
+    'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',              // AI/Tech visualization — Flickr
+    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',              // SpaceX Starship — Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A jet — HST (data-flow feel)
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
   ],
 };
 // Hash article title to a stable integer — used to pick a unique pool image per article
@@ -2014,7 +2011,7 @@ const articles = [
     category: "Physics",
     date: "March 27, 2026",
     source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg",
     read_more: "https://www.universetoday.com/articles/a-signal-from-before-the-stars",
     coord: "Coordinate: 04.28.99",
     readTime: "5m",
@@ -2068,7 +2065,7 @@ Artemis basecamp planners are watching closely.`,
     category: "Missions",
     date: "March 27, 2026",
     source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg",
     read_more: "https://www.universetoday.com/articles/hera-aces-a-massive-engine-burn-on-its-way-to-didymos",
     coord: "Coordinate: AST-65803",
     readTime: "4m",
@@ -2095,7 +2092,7 @@ Mission controllers at ESOC in Darmstadt confirmed nominal spacecraft health aft
     category: "Planets",
     date: "March 26, 2026",
     source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1501a.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg",
     read_more: "https://www.universetoday.com/articles/jupiters-lightning-could-be-almost-unbelievably-powerful",
     coord: "Coordinate: JUP-45.12N",
     readTime: "5m",
@@ -2122,7 +2119,7 @@ No spacecraft has ever flown deep enough into Jupiter's atmosphere to measure a 
     category: "Planets",
     date: "March 26, 2026",
     source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9516g.jpg",
     read_more: "https://www.universetoday.com/articles/venus-hellscape-climate-simulations",
     coord: "Coordinate: VEN-SOL.02",
     readTime: "6m",
