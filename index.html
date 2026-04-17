@@ -345,7 +345,7 @@
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%;background:#02050f;">
             <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
-            <div class="absolute inset-0 pointer-events-none" style="border-radius:50%;background:radial-gradient(circle at 30% 26%,rgba(125,211,252,0.07) 0%,transparent 55%);"></div>
+            <div class="absolute inset-0 pointer-events-none" style="border-radius:50%;background:radial-gradient(circle at 30% 26%,rgba(125,211,252,0.06) 0%,transparent 50%);"></div>
             <script>(function(){
   var wrap=document.currentScript&&document.currentScript.parentElement;
   if(!wrap)return;
@@ -364,15 +364,15 @@
   function go(sz){
     var ctx=canvas.getContext('2d');
     var cx=sz/2,cy=sz/2,R=sz*.43;
-    var NL=6,NM=12,TILT=0.40;
+    var NL=9,NM=16,TILT=0.40;
     /* seeded RNG */
     var seed=54321;
     function rand(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
-    /* which panels are open (showing inner star) */
+    /* which panels are open (showing inner glow) */
     var open=[];
     for(var l=1;l<NL-1;l++)
       for(var m=0;m<NM;m++)
-        if(rand()<0.50*Math.sin(((l+0.5)/NL)*Math.PI))
+        if(rand()<0.48*Math.sin(((l+0.5)/NL)*Math.PI))
           open.push([l,m]);
     /* sphere projection */
     function pt(phi,th,rot){
@@ -382,57 +382,54 @@
       var cr=Math.cos(rot),sr=Math.sin(rot);
       return{sx:cx+R*(x*cr+z2*sr),sy:cy-R*y2,z:-x*sr+z2*cr};
     }
-    /* smooth quad polygon */
-    function quadPoly(l,m,rot,S){
+    /* draw polygon from corner points */
+    function fillQuad(l,m,rot){
       var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
       var th1=(m/NM)*Math.PI*2,th2=((m+1)/NM)*Math.PI*2;
-      var poly=[];
+      var S=3,poly=[];
       for(var k=0;k<=S;k++)poly.push(pt(phi1,th1+(th2-th1)*k/S,rot));
       for(var k=1;k<=S;k++)poly.push(pt(phi1+(phi2-phi1)*k/S,th2,rot));
       for(var k=S-1;k>=0;k--)poly.push(pt(phi2,th1+(th2-th1)*k/S,rot));
       for(var k=S-1;k>=1;k--)poly.push(pt(phi1+(phi2-phi1)*k/S,th1,rot));
-      return poly;
-    }
-    function fillPoly(poly){
       ctx.beginPath();ctx.moveTo(poly[0].sx,poly[0].sy);
       for(var i=1;i<poly.length;i++)ctx.lineTo(poly[i].sx,poly[i].sy);
       ctx.closePath();
+      return poly;
     }
-    function strokeLine(a,b){ctx.beginPath();ctx.moveTo(a.sx,a.sy);ctx.lineTo(b.sx,b.sy);ctx.stroke();}
     var rot=0,pulse=0;
     function draw(){
       ctx.clearRect(0,0,sz*dpr,sz*dpr);
       ctx.save();ctx.scale(dpr,dpr);
       pulse+=0.018;
       var p=0.5+0.5*Math.sin(pulse);
-      /* ── ENERGY CORE ────────────────────────────── */
-      var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.50);
-      cg.addColorStop(0,'rgba(255,255,240,'+(0.92+p*0.08)+')');
-      cg.addColorStop(0.18,'rgba(255,210,80,'+(0.62+p*0.12)+')');
-      cg.addColorStop(0.45,'rgba(200,120,20,'+(0.22+p*0.06)+')');
-      cg.addColorStop(0.80,'rgba(80,40,5,0.05)');
+      /* ── ENERGY CORE (blue #7dd3fc) ─────────────── */
+      var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.70);
+      cg.addColorStop(0,'rgba(240,250,255,'+(0.95+p*0.05)+')');
+      cg.addColorStop(0.10,'rgba(200,240,255,'+(0.80+p*0.10)+')');
+      cg.addColorStop(0.25,'rgba(125,211,252,'+(0.55+p*0.10)+')');
+      cg.addColorStop(0.50,'rgba(80,170,220,'+(0.22+p*0.06)+')');
+      cg.addColorStop(0.80,'rgba(30,100,160,0.06)');
       cg.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=cg;
-      ctx.beginPath();ctx.arc(cx,cy,R*0.50,0,Math.PI*2);ctx.fill();
-      /* outer corona bleed */
-      var og=ctx.createRadialGradient(cx,cy,R*0.35,cx,cy,R*0.82);
-      og.addColorStop(0,'rgba(160,90,10,'+(0.08+p*0.04)+')');
-      og.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=og;
-      ctx.beginPath();ctx.arc(cx,cy,R*0.82,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(cx,cy,R*0.70,0,Math.PI*2);ctx.fill();
+      /* outer halo */
+      var hg=ctx.createRadialGradient(cx,cy,R*0.40,cx,cy,R*0.92);
+      hg.addColorStop(0,'rgba(80,170,220,'+(0.09+p*0.04)+')');
+      hg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=hg;
+      ctx.beginPath();ctx.arc(cx,cy,R*0.92,0,Math.PI*2);ctx.fill();
       /* ── BACK HEMISPHERE ────────────────────────── */
-      /* back open panels - faint warm bleed */
+      /* back open panels — flat tint, no radial pool */
       for(var i=0;i<open.length;i++){
         var l=open[i][0],m=open[i][1];
         var mid=pt(((l+0.5)/NL)*Math.PI,((m+0.5)/NM)*Math.PI*2,rot);
         if(mid.z>0)continue;
-        var br=Math.abs(mid.z)*Math.sin(((l+0.5)/NL)*Math.PI)*0.45;
-        var poly=quadPoly(l,m,rot,3);
-        fillPoly(poly);
-        ctx.fillStyle='rgba(200,130,25,'+br+')';ctx.fill();
+        var br=Math.abs(mid.z)*Math.sin(((l+0.5)/NL)*Math.PI)*0.30;
+        fillQuad(l,m,rot);
+        ctx.fillStyle='rgba(50,140,200,'+br+')';ctx.fill();
       }
       /* back meridians */
-      ctx.lineWidth=0.38;
+      ctx.lineWidth=0.35;
       for(var m=0;m<NM;m++){
         var th=(m/NM)*Math.PI*2;
         ctx.beginPath();var f=true;
@@ -441,10 +438,10 @@
           if(pp.z>0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        ctx.strokeStyle='rgba(50,140,200,0.16)';ctx.stroke();
+        ctx.strokeStyle='rgba(50,140,200,0.15)';ctx.stroke();
       }
       /* back lat rings */
-      ctx.lineWidth=0.32;
+      ctx.lineWidth=0.30;
       for(var l=1;l<NL;l++){
         var phi=(l/NL)*Math.PI;
         ctx.beginPath();var f=true;
@@ -453,10 +450,10 @@
           if(pp.z>0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        ctx.strokeStyle='rgba(40,120,180,'+(0.12*Math.sin((l/NL)*Math.PI))+')';ctx.stroke();
+        ctx.strokeStyle='rgba(40,120,180,'+(0.11*Math.sin((l/NL)*Math.PI))+')';ctx.stroke();
       }
-      /* back diagonal bracing */
-      ctx.lineWidth=0.22;
+      /* back diagonals */
+      ctx.lineWidth=0.20;
       for(var l=1;l<NL-1;l++){
         for(var m=0;m<NM;m++){
           var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
@@ -464,11 +461,10 @@
           var pA=pt(phi1,th2,rot),pB=pt(phi2,th1,rot);
           if(pA.z>0||pB.z>0)continue;
           ctx.beginPath();ctx.moveTo(pA.sx,pA.sy);ctx.lineTo(pB.sx,pB.sy);
-          ctx.strokeStyle='rgba(35,110,165,0.10)';ctx.stroke();
+          ctx.strokeStyle='rgba(35,105,160,0.09)';ctx.stroke();
         }
       }
-      /* ── FRONT HEMISPHERE ───────────────────────── */
-      /* front open panels - warm amber glow */
+      /* ── FRONT OPEN PANELS — flat fill, no radial pool ── */
       for(var i=0;i<open.length;i++){
         var l=open[i][0],m=open[i][1];
         var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
@@ -476,16 +472,12 @@
         var mid=pt((phi1+phi2)/2,(th1+th2)/2,rot);
         if(mid.z<0.04)continue;
         var br=mid.z*Math.sin((phi1+phi2)/2);
-        var poly=quadPoly(l,m,rot,4);
-        fillPoly(poly);
-        var pg=ctx.createRadialGradient(mid.sx,mid.sy,0,mid.sx,mid.sy,sz*0.075);
-        pg.addColorStop(0,'rgba(255,215,70,'+(br*(0.78+p*0.22))+')');
-        pg.addColorStop(0.45,'rgba(220,140,18,'+(br*(0.52+p*0.15))+')');
-        pg.addColorStop(1,'rgba(100,50,5,'+(br*0.08)+')');
-        ctx.fillStyle=pg;ctx.fill();
+        fillQuad(l,m,rot);
+        /* uniform blue tint — no circular pooling */
+        ctx.fillStyle='rgba(100,195,245,'+(br*(0.18+p*0.08))+')';ctx.fill();
       }
-      /* front meridians - blue structural beams */
-      ctx.lineWidth=1.15;
+      /* ── FRONT MERIDIANS ───────────────────────── */
+      ctx.lineWidth=1.05;
       for(var m=0;m<NM;m++){
         var th=(m/NM)*Math.PI*2;
         ctx.beginPath();var f=true;
@@ -494,11 +486,11 @@
           if(pp.z<0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        var brt=Math.max(0,Math.cos(th+rot))*0.30+0.25;
+        var brt=Math.max(0,Math.cos(th+rot))*0.28+0.24;
         ctx.strokeStyle='rgba(125,211,252,'+brt+')';ctx.stroke();
       }
       /* front lat rings */
-      ctx.lineWidth=0.95;
+      ctx.lineWidth=0.88;
       for(var l=1;l<NL;l++){
         var phi=(l/NL)*Math.PI;
         ctx.beginPath();var f=true;
@@ -507,10 +499,10 @@
           if(pp.z<0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        ctx.strokeStyle='rgba(125,211,252,'+(Math.sin((l/NL)*Math.PI)*0.38)+')';ctx.stroke();
+        ctx.strokeStyle='rgba(125,211,252,'+(Math.sin((l/NL)*Math.PI)*0.35)+')';ctx.stroke();
       }
-      /* front diagonal bracing - geodesic triangulation */
-      ctx.lineWidth=0.52;
+      /* front diagonals — geodesic triangulation */
+      ctx.lineWidth=0.48;
       for(var l=1;l<NL-1;l++){
         for(var m=0;m<NM;m++){
           var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
@@ -519,20 +511,20 @@
           if(pA.z<0.03||pB.z<0.03)continue;
           var br=(pA.z+pB.z)*0.5*Math.sin((phi1+phi2)/2);
           ctx.beginPath();ctx.moveTo(pA.sx,pA.sy);ctx.lineTo(pB.sx,pB.sy);
-          ctx.strokeStyle='rgba(100,185,235,'+(br*0.30)+')';ctx.stroke();
+          ctx.strokeStyle='rgba(100,185,235,'+(br*0.28)+')';ctx.stroke();
         }
       }
-      /* ── RIM + EDGE ─────────────────────────────── */
-      var rim=ctx.createRadialGradient(cx,cy,R*0.70,cx,cy,R*1.03);
+      /* ── RIM VIGNETTE ──────────────────────────── */
+      var rim=ctx.createRadialGradient(cx,cy,R*0.68,cx,cy,R*1.03);
       rim.addColorStop(0,'rgba(0,0,0,0)');
       rim.addColorStop(1,'rgba(0,3,14,0.90)');
       ctx.fillStyle=rim;
       ctx.beginPath();ctx.arc(cx,cy,R*1.04,0,Math.PI*2);ctx.fill();
-      /* subtle blue edge glow */
-      var edge=ctx.createRadialGradient(cx,cy,R*0.87,cx,cy,R*1.0);
+      /* blue edge glow */
+      var edge=ctx.createRadialGradient(cx,cy,R*0.86,cx,cy,R*1.0);
       edge.addColorStop(0,'rgba(0,0,0,0)');
-      edge.addColorStop(0.65,'rgba(50,145,210,0.10)');
-      edge.addColorStop(1,'rgba(125,211,252,0.20)');
+      edge.addColorStop(0.6,'rgba(50,145,210,0.10)');
+      edge.addColorStop(1,'rgba(125,211,252,0.22)');
       ctx.fillStyle=edge;
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
       ctx.restore();
@@ -635,7 +627,7 @@
         <div class="relative">
           <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%;background:#02050f;">
             <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
-            <div class="absolute inset-0 pointer-events-none" style="border-radius:50%;background:radial-gradient(circle at 30% 26%,rgba(125,211,252,0.07) 0%,transparent 55%);"></div>
+            <div class="absolute inset-0 pointer-events-none" style="border-radius:50%;background:radial-gradient(circle at 30% 26%,rgba(125,211,252,0.06) 0%,transparent 50%);"></div>
             <script>(function(){
   var wrap=document.currentScript&&document.currentScript.parentElement;
   if(!wrap)return;
@@ -654,15 +646,15 @@
   function go(sz){
     var ctx=canvas.getContext('2d');
     var cx=sz/2,cy=sz/2,R=sz*.43;
-    var NL=6,NM=12,TILT=0.40;
+    var NL=9,NM=16,TILT=0.40;
     /* seeded RNG */
     var seed=54321;
     function rand(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
-    /* which panels are open (showing inner star) */
+    /* which panels are open (showing inner glow) */
     var open=[];
     for(var l=1;l<NL-1;l++)
       for(var m=0;m<NM;m++)
-        if(rand()<0.50*Math.sin(((l+0.5)/NL)*Math.PI))
+        if(rand()<0.48*Math.sin(((l+0.5)/NL)*Math.PI))
           open.push([l,m]);
     /* sphere projection */
     function pt(phi,th,rot){
@@ -672,57 +664,54 @@
       var cr=Math.cos(rot),sr=Math.sin(rot);
       return{sx:cx+R*(x*cr+z2*sr),sy:cy-R*y2,z:-x*sr+z2*cr};
     }
-    /* smooth quad polygon */
-    function quadPoly(l,m,rot,S){
+    /* draw polygon from corner points */
+    function fillQuad(l,m,rot){
       var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
       var th1=(m/NM)*Math.PI*2,th2=((m+1)/NM)*Math.PI*2;
-      var poly=[];
+      var S=3,poly=[];
       for(var k=0;k<=S;k++)poly.push(pt(phi1,th1+(th2-th1)*k/S,rot));
       for(var k=1;k<=S;k++)poly.push(pt(phi1+(phi2-phi1)*k/S,th2,rot));
       for(var k=S-1;k>=0;k--)poly.push(pt(phi2,th1+(th2-th1)*k/S,rot));
       for(var k=S-1;k>=1;k--)poly.push(pt(phi1+(phi2-phi1)*k/S,th1,rot));
-      return poly;
-    }
-    function fillPoly(poly){
       ctx.beginPath();ctx.moveTo(poly[0].sx,poly[0].sy);
       for(var i=1;i<poly.length;i++)ctx.lineTo(poly[i].sx,poly[i].sy);
       ctx.closePath();
+      return poly;
     }
-    function strokeLine(a,b){ctx.beginPath();ctx.moveTo(a.sx,a.sy);ctx.lineTo(b.sx,b.sy);ctx.stroke();}
     var rot=0,pulse=0;
     function draw(){
       ctx.clearRect(0,0,sz*dpr,sz*dpr);
       ctx.save();ctx.scale(dpr,dpr);
       pulse+=0.018;
       var p=0.5+0.5*Math.sin(pulse);
-      /* ── ENERGY CORE ────────────────────────────── */
-      var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.50);
-      cg.addColorStop(0,'rgba(255,255,240,'+(0.92+p*0.08)+')');
-      cg.addColorStop(0.18,'rgba(255,210,80,'+(0.62+p*0.12)+')');
-      cg.addColorStop(0.45,'rgba(200,120,20,'+(0.22+p*0.06)+')');
-      cg.addColorStop(0.80,'rgba(80,40,5,0.05)');
+      /* ── ENERGY CORE (blue #7dd3fc) ─────────────── */
+      var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.70);
+      cg.addColorStop(0,'rgba(240,250,255,'+(0.95+p*0.05)+')');
+      cg.addColorStop(0.10,'rgba(200,240,255,'+(0.80+p*0.10)+')');
+      cg.addColorStop(0.25,'rgba(125,211,252,'+(0.55+p*0.10)+')');
+      cg.addColorStop(0.50,'rgba(80,170,220,'+(0.22+p*0.06)+')');
+      cg.addColorStop(0.80,'rgba(30,100,160,0.06)');
       cg.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=cg;
-      ctx.beginPath();ctx.arc(cx,cy,R*0.50,0,Math.PI*2);ctx.fill();
-      /* outer corona bleed */
-      var og=ctx.createRadialGradient(cx,cy,R*0.35,cx,cy,R*0.82);
-      og.addColorStop(0,'rgba(160,90,10,'+(0.08+p*0.04)+')');
-      og.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=og;
-      ctx.beginPath();ctx.arc(cx,cy,R*0.82,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(cx,cy,R*0.70,0,Math.PI*2);ctx.fill();
+      /* outer halo */
+      var hg=ctx.createRadialGradient(cx,cy,R*0.40,cx,cy,R*0.92);
+      hg.addColorStop(0,'rgba(80,170,220,'+(0.09+p*0.04)+')');
+      hg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=hg;
+      ctx.beginPath();ctx.arc(cx,cy,R*0.92,0,Math.PI*2);ctx.fill();
       /* ── BACK HEMISPHERE ────────────────────────── */
-      /* back open panels - faint warm bleed */
+      /* back open panels — flat tint, no radial pool */
       for(var i=0;i<open.length;i++){
         var l=open[i][0],m=open[i][1];
         var mid=pt(((l+0.5)/NL)*Math.PI,((m+0.5)/NM)*Math.PI*2,rot);
         if(mid.z>0)continue;
-        var br=Math.abs(mid.z)*Math.sin(((l+0.5)/NL)*Math.PI)*0.45;
-        var poly=quadPoly(l,m,rot,3);
-        fillPoly(poly);
-        ctx.fillStyle='rgba(200,130,25,'+br+')';ctx.fill();
+        var br=Math.abs(mid.z)*Math.sin(((l+0.5)/NL)*Math.PI)*0.30;
+        fillQuad(l,m,rot);
+        ctx.fillStyle='rgba(50,140,200,'+br+')';ctx.fill();
       }
       /* back meridians */
-      ctx.lineWidth=0.38;
+      ctx.lineWidth=0.35;
       for(var m=0;m<NM;m++){
         var th=(m/NM)*Math.PI*2;
         ctx.beginPath();var f=true;
@@ -731,10 +720,10 @@
           if(pp.z>0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        ctx.strokeStyle='rgba(50,140,200,0.16)';ctx.stroke();
+        ctx.strokeStyle='rgba(50,140,200,0.15)';ctx.stroke();
       }
       /* back lat rings */
-      ctx.lineWidth=0.32;
+      ctx.lineWidth=0.30;
       for(var l=1;l<NL;l++){
         var phi=(l/NL)*Math.PI;
         ctx.beginPath();var f=true;
@@ -743,10 +732,10 @@
           if(pp.z>0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        ctx.strokeStyle='rgba(40,120,180,'+(0.12*Math.sin((l/NL)*Math.PI))+')';ctx.stroke();
+        ctx.strokeStyle='rgba(40,120,180,'+(0.11*Math.sin((l/NL)*Math.PI))+')';ctx.stroke();
       }
-      /* back diagonal bracing */
-      ctx.lineWidth=0.22;
+      /* back diagonals */
+      ctx.lineWidth=0.20;
       for(var l=1;l<NL-1;l++){
         for(var m=0;m<NM;m++){
           var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
@@ -754,11 +743,10 @@
           var pA=pt(phi1,th2,rot),pB=pt(phi2,th1,rot);
           if(pA.z>0||pB.z>0)continue;
           ctx.beginPath();ctx.moveTo(pA.sx,pA.sy);ctx.lineTo(pB.sx,pB.sy);
-          ctx.strokeStyle='rgba(35,110,165,0.10)';ctx.stroke();
+          ctx.strokeStyle='rgba(35,105,160,0.09)';ctx.stroke();
         }
       }
-      /* ── FRONT HEMISPHERE ───────────────────────── */
-      /* front open panels - warm amber glow */
+      /* ── FRONT OPEN PANELS — flat fill, no radial pool ── */
       for(var i=0;i<open.length;i++){
         var l=open[i][0],m=open[i][1];
         var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
@@ -766,16 +754,12 @@
         var mid=pt((phi1+phi2)/2,(th1+th2)/2,rot);
         if(mid.z<0.04)continue;
         var br=mid.z*Math.sin((phi1+phi2)/2);
-        var poly=quadPoly(l,m,rot,4);
-        fillPoly(poly);
-        var pg=ctx.createRadialGradient(mid.sx,mid.sy,0,mid.sx,mid.sy,sz*0.075);
-        pg.addColorStop(0,'rgba(255,215,70,'+(br*(0.78+p*0.22))+')');
-        pg.addColorStop(0.45,'rgba(220,140,18,'+(br*(0.52+p*0.15))+')');
-        pg.addColorStop(1,'rgba(100,50,5,'+(br*0.08)+')');
-        ctx.fillStyle=pg;ctx.fill();
+        fillQuad(l,m,rot);
+        /* uniform blue tint — no circular pooling */
+        ctx.fillStyle='rgba(100,195,245,'+(br*(0.18+p*0.08))+')';ctx.fill();
       }
-      /* front meridians - blue structural beams */
-      ctx.lineWidth=1.15;
+      /* ── FRONT MERIDIANS ───────────────────────── */
+      ctx.lineWidth=1.05;
       for(var m=0;m<NM;m++){
         var th=(m/NM)*Math.PI*2;
         ctx.beginPath();var f=true;
@@ -784,11 +768,11 @@
           if(pp.z<0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        var brt=Math.max(0,Math.cos(th+rot))*0.30+0.25;
+        var brt=Math.max(0,Math.cos(th+rot))*0.28+0.24;
         ctx.strokeStyle='rgba(125,211,252,'+brt+')';ctx.stroke();
       }
       /* front lat rings */
-      ctx.lineWidth=0.95;
+      ctx.lineWidth=0.88;
       for(var l=1;l<NL;l++){
         var phi=(l/NL)*Math.PI;
         ctx.beginPath();var f=true;
@@ -797,10 +781,10 @@
           if(pp.z<0){f=true;continue;}
           if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
         }
-        ctx.strokeStyle='rgba(125,211,252,'+(Math.sin((l/NL)*Math.PI)*0.38)+')';ctx.stroke();
+        ctx.strokeStyle='rgba(125,211,252,'+(Math.sin((l/NL)*Math.PI)*0.35)+')';ctx.stroke();
       }
-      /* front diagonal bracing - geodesic triangulation */
-      ctx.lineWidth=0.52;
+      /* front diagonals — geodesic triangulation */
+      ctx.lineWidth=0.48;
       for(var l=1;l<NL-1;l++){
         for(var m=0;m<NM;m++){
           var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
@@ -809,20 +793,20 @@
           if(pA.z<0.03||pB.z<0.03)continue;
           var br=(pA.z+pB.z)*0.5*Math.sin((phi1+phi2)/2);
           ctx.beginPath();ctx.moveTo(pA.sx,pA.sy);ctx.lineTo(pB.sx,pB.sy);
-          ctx.strokeStyle='rgba(100,185,235,'+(br*0.30)+')';ctx.stroke();
+          ctx.strokeStyle='rgba(100,185,235,'+(br*0.28)+')';ctx.stroke();
         }
       }
-      /* ── RIM + EDGE ─────────────────────────────── */
-      var rim=ctx.createRadialGradient(cx,cy,R*0.70,cx,cy,R*1.03);
+      /* ── RIM VIGNETTE ──────────────────────────── */
+      var rim=ctx.createRadialGradient(cx,cy,R*0.68,cx,cy,R*1.03);
       rim.addColorStop(0,'rgba(0,0,0,0)');
       rim.addColorStop(1,'rgba(0,3,14,0.90)');
       ctx.fillStyle=rim;
       ctx.beginPath();ctx.arc(cx,cy,R*1.04,0,Math.PI*2);ctx.fill();
-      /* subtle blue edge glow */
-      var edge=ctx.createRadialGradient(cx,cy,R*0.87,cx,cy,R*1.0);
+      /* blue edge glow */
+      var edge=ctx.createRadialGradient(cx,cy,R*0.86,cx,cy,R*1.0);
       edge.addColorStop(0,'rgba(0,0,0,0)');
-      edge.addColorStop(0.65,'rgba(50,145,210,0.10)');
-      edge.addColorStop(1,'rgba(125,211,252,0.20)');
+      edge.addColorStop(0.6,'rgba(50,145,210,0.10)');
+      edge.addColorStop(1,'rgba(125,211,252,0.22)');
       ctx.fillStyle=edge;
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
       ctx.restore();
