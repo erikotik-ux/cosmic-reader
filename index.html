@@ -516,7 +516,7 @@
       }
       /* energy nodes at grid intersections — subtle, depth-driven */
       ctx.shadowColor='rgba(125,211,252,0.70)';
-      ctx.shadowBlur=2.5;
+      ctx.shadowBlur=5;
       for(var l=1;l<NL;l++){
         var phi=(l/NL)*Math.PI;
         for(var m=0;m<NM;m++){
@@ -524,8 +524,8 @@
           if(pp.z<0.08)continue;
           var br=pp.z*Math.sin(phi);
           ctx.beginPath();
-          ctx.arc(pp.sx,pp.sy,0.62+br*0.38,0,Math.PI*2);
-          ctx.fillStyle='rgba(125,211,252,'+(br*0.62)+')';
+          ctx.arc(pp.sx,pp.sy,1.5+br*0.9,0,Math.PI*2);
+          ctx.fillStyle='rgba(125,211,252,'+(br*0.88)+')';
           ctx.fill();
         }
       }
@@ -822,7 +822,7 @@
       }
       /* energy nodes at grid intersections — subtle, depth-driven */
       ctx.shadowColor='rgba(125,211,252,0.70)';
-      ctx.shadowBlur=2.5;
+      ctx.shadowBlur=5;
       for(var l=1;l<NL;l++){
         var phi=(l/NL)*Math.PI;
         for(var m=0;m<NM;m++){
@@ -830,8 +830,8 @@
           if(pp.z<0.08)continue;
           var br=pp.z*Math.sin(phi);
           ctx.beginPath();
-          ctx.arc(pp.sx,pp.sy,0.62+br*0.38,0,Math.PI*2);
-          ctx.fillStyle='rgba(125,211,252,'+(br*0.62)+')';
+          ctx.arc(pp.sx,pp.sy,1.5+br*0.9,0,Math.PI*2);
+          ctx.fillStyle='rgba(125,211,252,'+(br*0.88)+')';
           ctx.fill();
         }
       }
