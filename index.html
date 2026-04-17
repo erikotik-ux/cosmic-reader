@@ -344,7 +344,7 @@
       <div class="planet-node absolute pointer-events-auto" style="top:calc(68% - 105px); left:calc(73% + 55px);" onclick="openArticle(0)">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%);">
-            <img class="w-full h-full object-cover mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 3px) calc(50% + 30px); transform: scale(3.5) translateZ(0); opacity:0.95;" src="https://live.staticflickr.com/65535/54296195911_172235dcd7_b.jpg" alt="AI cyber portal"/>
+            <img class="w-full h-full object-cover mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 2px) calc(50% + 30px); transform: scale(3.5) translateZ(0); opacity:0.95;" src="https://live.staticflickr.com/65535/54296195911_172235dcd7_b.jpg" alt="AI cyber portal"/>
             <!-- Vignette: soft edge fade, keep cyber circle sharp at centre -->
             <div class="absolute inset-0" style="border-radius:50%; background: radial-gradient(circle at 50% 50%, transparent 35%, rgba(0,10,28,0.45) 75%, rgba(0,6,18,0.80) 100%);"></div>
           </div>
@@ -443,7 +443,7 @@
       <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openArticle(0)">
         <div class="relative">
           <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #001e3c 0%, #000d1a 55%, #000408 100%);">
-            <img class="w-full h-full object-cover mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 3px) calc(50% + 30px); transform: scale(3.5) translateZ(0); opacity:0.95;" src="https://live.staticflickr.com/65535/54296195911_172235dcd7_b.jpg" alt="AI cyber portal"/>
+            <img class="w-full h-full object-cover mix-blend-screen" style="border-radius:50%; object-position: calc(50% - 7px) calc(50% + 10px); transform: scale(3.5) translateZ(0); opacity:0.95;" src="https://live.staticflickr.com/65535/54296195911_172235dcd7_b.jpg" alt="AI cyber portal"/>
             <div class="absolute inset-0" style="border-radius:50%; background: radial-gradient(circle at 50% 50%, transparent 35%, rgba(0,10,28,0.45) 75%, rgba(0,6,18,0.80) 100%);"></div>
           </div>
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0">
@@ -534,8 +534,16 @@
   </button>
 </nav>
 
+<!-- ── Back to Feed button (body-level so fixed pos works on mobile Safari) ── -->
+<div id="back-btn" style="display:none;" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0 z-50">
+  <button onclick="navigate('feed')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95 whitespace-nowrap">
+    <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
+    <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Feed</span>
+  </button>
+</div>
+
 <!-- ── Ticker Overlay (outside all views — always visible) ── -->
-<div class="fixed bottom-14 md:bottom-0 left-0 w-full glass-panel h-10 border-t border-outline-variant/10 z-20 flex items-center overflow-hidden md:pl-64">
+<div class="fixed bottom-14 md:bottom-0 left-0 w-full glass-panel h-10 border-t border-outline-variant/10 z-20 hidden md:flex items-center overflow-hidden md:pl-64">
   <div class="flex items-center gap-8 whitespace-nowrap animate-marquee" style="width:max-content;">
     <div class="flex items-center gap-2">
       <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
@@ -864,13 +872,6 @@
     </div>
   </div>
 
-  <!-- Back button -->
-  <div class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0 z-50">
-    <button onclick="navigate('feed')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95 whitespace-nowrap">
-      <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
-      <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Feed</span>
-    </button>
-  </div>
 </main>
 
 
@@ -1955,6 +1956,9 @@ function navigate(viewName) {
     mnavEl.classList.remove('text-white/40');
   }
   currentView = viewName;
+  // Show Back button only on detail view
+  const backBtn = document.getElementById('back-btn');
+  if (backBtn) backBtn.style.display = (viewName === 'detail') ? 'block' : 'none';
 
   // Update breadcrumb
   const labels = { map:'Galaxy Map', feed:'My Feed', detail:'Signal Detail', reading:'Full Transmission', saved:'Saved Stories', trending:'Trending' };
