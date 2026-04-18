@@ -1462,8 +1462,7 @@ const FEEDS = [
   { url: 'https://spacenews.com/feed/',                   source: 'SpaceNews' },
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
   { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
-  { url: 'https://techcrunch.com/feed/',                  source: 'TechCrunch' },
-  { url: 'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml', source: 'The Verge' },
+  { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
 ];
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','tldr ai','hugging face','stability ai','midjourney','xai','grok'],'AI & Tech'],
@@ -1633,7 +1632,7 @@ async function fetchFeed(feedInfo) {
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
     const PURE_SPACE_SOURCES = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
-    const PURE_AI_SOURCES    = ['TechCrunch','The Verge'];
+    const PURE_AI_SOURCES    = ['Ars Technica'];
     const category = guessCategory(title, tags)
       || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
       || (PURE_AI_SOURCES.includes(feedInfo.source)    ? 'AI & Tech'  : null);
