@@ -1633,12 +1633,24 @@ async function fetchFeed(feedInfo) {
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
     const PURE_SPACE_SOURCES = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
-    const category = guessCategory(title, tags) || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions' : null);
-    // Image: try media:content → enclosure → img in description → img in content:encoded
+    const PURE_AI_SOURCES    = ['TechCrunch','The Verge'];
+    const category = guessCategory(title, tags)
+      || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
+      || (PURE_AI_SOURCES.includes(feedInfo.source)    ? 'AI & Tech'  : null);
+    // Image: try media:content → namespace-agnostic url scan → enclosure → img in description → img in content:encoded
     let image = '';
+    // 1. Namespace-aware (works when proxy preserves XML namespaces)
     const mc = item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'content')[0]
              || item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'thumbnail')[0];
     if (mc) image = mc.getAttribute('url') || '';
+    // 2. Namespace-agnostic fallback (works when proxy strips/mangles namespace URIs — e.g. TechCrunch via corsproxy)
+    if (!image) {
+      const allEls = Array.from(item.getElementsByTagName('*'));
+      for (const el of allEls) {
+        const u = el.getAttribute('url') || el.getAttribute('href') || '';
+        if (/^https?:.*\.(?:jpg|jpeg|png|webp|gif)/i.test(u)) { image = u.split('?')[0]; break; }
+      }
+    }
     if (!image) {
       const enc = item.querySelector('enclosure');
       if (enc && /image/i.test(enc.getAttribute('type') || 'image')) image = enc.getAttribute('url') || '';
