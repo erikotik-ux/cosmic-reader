@@ -47,62 +47,64 @@
     100% { transform: translateX(-50%); }
   }
   .animate-marquee { animation: marquee 30s linear infinite; }
-  /* ── Per-planet 3-D orbit keyframes — unique tilt & direction per orbit ── */
-  /* Naming: spin3d-{tilt}{dir} / unspin3d-{tilt}{dir}   f=forward CCW, r=reverse CW */
+  /* ── Per-planet 3-D orbit keyframes — same 68° tilt, unique clock orientation ── */
+  /* rotateZ(α) before rotateX rotates the orbital plane to the desired clock angle:  */
+  /* Moon 3→9 (α=0°), Planets 4→10 (α=30°), Space 5→11 (α=60°),                    */
+  /* AI 7→1 (α=120°), Physics 8→2 (α=150°)                                           */
 
-  /* Planets outer — 68° tilt, forward */
-  @keyframes spin3d-68f {
+  /* Moon — α=0° (3→9 clock), forward */
+  @keyframes orb-0f {
     from { transform: translate(-50%,-50%) rotateX(68deg) rotateZ(0deg); }
     to   { transform: translate(-50%,-50%) rotateX(68deg) rotateZ(360deg); }
   }
-  @keyframes unspin3d-68f {
+  @keyframes unorb-0f {
     from { transform: rotateZ(0deg)    rotateX(-68deg); }
     to   { transform: rotateZ(-360deg) rotateX(-68deg); }
   }
-  /* Planets inner — 35° tilt, reverse */
-  @keyframes spin3d-35r {
-    from { transform: translate(-50%,-50%) rotateX(35deg) rotateZ(0deg); }
-    to   { transform: translate(-50%,-50%) rotateX(35deg) rotateZ(-360deg); }
+  /* Planets outer — α=30° (4→10 clock), forward */
+  @keyframes orb-30f {
+    from { transform: translate(-50%,-50%) rotateZ(30deg) rotateX(68deg) rotateZ(0deg); }
+    to   { transform: translate(-50%,-50%) rotateZ(30deg) rotateX(68deg) rotateZ(360deg); }
   }
-  @keyframes unspin3d-35r {
-    from { transform: rotateZ(0deg)   rotateX(-35deg); }
-    to   { transform: rotateZ(360deg) rotateX(-35deg); }
+  @keyframes unorb-30f {
+    from { transform: rotateZ(0deg)    rotateX(-68deg) rotateZ(-30deg); }
+    to   { transform: rotateZ(-360deg) rotateX(-68deg) rotateZ(-30deg); }
   }
-  /* Space Missions — 52° tilt, forward */
-  @keyframes spin3d-52f {
-    from { transform: translate(-50%,-50%) rotateX(52deg) rotateZ(0deg); }
-    to   { transform: translate(-50%,-50%) rotateX(52deg) rotateZ(360deg); }
+  /* Planets inner — α=30° (4→10 clock), reverse */
+  @keyframes orb-30r {
+    from { transform: translate(-50%,-50%) rotateZ(30deg) rotateX(68deg) rotateZ(0deg); }
+    to   { transform: translate(-50%,-50%) rotateZ(30deg) rotateX(68deg) rotateZ(-360deg); }
   }
-  @keyframes unspin3d-52f {
-    from { transform: rotateZ(0deg)    rotateX(-52deg); }
-    to   { transform: rotateZ(-360deg) rotateX(-52deg); }
+  @keyframes unorb-30r {
+    from { transform: rotateZ(0deg)   rotateX(-68deg) rotateZ(-30deg); }
+    to   { transform: rotateZ(360deg) rotateX(-68deg) rotateZ(-30deg); }
   }
-  /* Physics & Cosmos — 22° tilt, reverse (nearly equatorial) */
-  @keyframes spin3d-22r {
-    from { transform: translate(-50%,-50%) rotateX(22deg) rotateZ(0deg); }
-    to   { transform: translate(-50%,-50%) rotateX(22deg) rotateZ(-360deg); }
+  /* Space Missions — α=60° (5→11 clock), forward */
+  @keyframes orb-60f {
+    from { transform: translate(-50%,-50%) rotateZ(60deg) rotateX(68deg) rotateZ(0deg); }
+    to   { transform: translate(-50%,-50%) rotateZ(60deg) rotateX(68deg) rotateZ(360deg); }
   }
-  @keyframes unspin3d-22r {
-    from { transform: rotateZ(0deg)   rotateX(-22deg); }
-    to   { transform: rotateZ(360deg) rotateX(-22deg); }
+  @keyframes unorb-60f {
+    from { transform: rotateZ(0deg)    rotateX(-68deg) rotateZ(-60deg); }
+    to   { transform: rotateZ(-360deg) rotateX(-68deg) rotateZ(-60deg); }
   }
-  /* Moon — 78° tilt, forward (nearly polar) */
-  @keyframes spin3d-78f {
-    from { transform: translate(-50%,-50%) rotateX(78deg) rotateZ(0deg); }
-    to   { transform: translate(-50%,-50%) rotateX(78deg) rotateZ(360deg); }
+  /* AI & Tech — α=120° (7→1 clock), forward */
+  @keyframes orb-120f {
+    from { transform: translate(-50%,-50%) rotateZ(120deg) rotateX(68deg) rotateZ(0deg); }
+    to   { transform: translate(-50%,-50%) rotateZ(120deg) rotateX(68deg) rotateZ(360deg); }
   }
-  @keyframes unspin3d-78f {
-    from { transform: rotateZ(0deg)    rotateX(-78deg); }
-    to   { transform: rotateZ(-360deg) rotateX(-78deg); }
+  @keyframes unorb-120f {
+    from { transform: rotateZ(0deg)    rotateX(-68deg) rotateZ(-120deg); }
+    to   { transform: rotateZ(-360deg) rotateX(-68deg) rotateZ(-120deg); }
   }
-  /* AI & Tech satellite — 48° tilt, reverse */
-  @keyframes spin3d-48r {
-    from { transform: translate(-50%,-50%) rotateX(48deg) rotateZ(0deg); }
-    to   { transform: translate(-50%,-50%) rotateX(48deg) rotateZ(-360deg); }
+  /* Physics & Cosmos — α=150° (8→2 clock), forward */
+  @keyframes orb-150f {
+    from { transform: translate(-50%,-50%) rotateZ(150deg) rotateX(68deg) rotateZ(0deg); }
+    to   { transform: translate(-50%,-50%) rotateZ(150deg) rotateX(68deg) rotateZ(360deg); }
   }
-  @keyframes unspin3d-48r {
-    from { transform: rotateZ(0deg)   rotateX(-48deg); }
-    to   { transform: rotateZ(360deg) rotateX(-48deg); }
+  @keyframes unorb-150f {
+    from { transform: rotateZ(0deg)    rotateX(-68deg) rotateZ(-150deg); }
+    to   { transform: rotateZ(-360deg) rotateX(-68deg) rotateZ(-150deg); }
   }
   /* Container: centered at planet midpoint, preserves 3D — animation set inline per planet */
   .orbit-3d {
@@ -283,12 +285,12 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
           </div>
           <!-- outer ring: 68° tilt forward, 6s -->
-          <div class="orbit-3d" style="animation:spin3d-68f 6s linear infinite;">
-            <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:126px;animation:unspin3d-68f 6s linear infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-30f 6s linear infinite;">
+            <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:126px;animation:unorb-30f 6s linear infinite;"></div>
           </div>
           <!-- inner ring: 35° tilt reverse, 9s, offset -->
-          <div class="orbit-3d" style="animation:spin3d-35r 9s linear -4.5s infinite;">
-            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:97px;animation:unspin3d-35r 9s linear -4.5s infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-30r 9s linear -4.5s infinite;">
+            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:97px;animation:unorb-30r 9s linear -4.5s infinite;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -305,8 +307,8 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <!-- 52° tilt forward, 7s -->
-          <div class="orbit-3d" style="animation:spin3d-52f 7s linear infinite;">
-            <div class="absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="top:-6px;left:159px;animation:unspin3d-52f 7s linear infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
+            <div class="absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="top:-6px;left:159px;animation:unorb-60f 7s linear infinite;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -323,8 +325,8 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
           </div>
           <!-- 22° tilt reverse, 12s -->
-          <div class="orbit-3d" style="animation:spin3d-22r 12s linear -3s infinite;">
-            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:111px;animation:unspin3d-22r 12s linear -3s infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-150f 12s linear -3s infinite;">
+            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:111px;animation:unorb-150f 12s linear -3s infinite;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -341,8 +343,8 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
           </div>
           <!-- 78° tilt forward (nearly polar), 5s -->
-          <div class="orbit-3d" style="animation:spin3d-78f 5s linear infinite;">
-            <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="top:-3px;left:97px;animation:unspin3d-78f 5s linear infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-0f 5s linear infinite;">
+            <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="top:-3px;left:97px;animation:unorb-0f 5s linear infinite;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -563,8 +565,8 @@
 })();</script>
           </div>
           <!-- 48° tilt reverse, 13s -->
-          <div class="orbit-3d" style="animation:spin3d-48r 13s linear -5s infinite;">
-            <div style="position:absolute;top:-3px;left:85px;animation:unspin3d-48r 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
+          <div class="orbit-3d" style="animation:orb-120f 13s linear -5s infinite;">
+            <div style="position:absolute;top:-3px;left:85px;animation:unorb-120f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
               <div style="width:5px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
               <div style="width:4px;height:4px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 8px 2px rgba(125,211,252,0.85);"></div>
               <div style="width:5px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
@@ -596,12 +598,12 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
           </div>
           <!-- 68° tilt forward, 6s -->
-          <div class="orbit-3d" style="animation:spin3d-68f 6s linear infinite;">
-            <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:90px;animation:unspin3d-68f 6s linear infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-30f 6s linear infinite;">
+            <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:90px;animation:unorb-30f 6s linear infinite;"></div>
           </div>
           <!-- 35° tilt reverse, 9s -->
-          <div class="orbit-3d" style="animation:spin3d-35r 9s linear -4.5s infinite;">
-            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:72px;animation:unspin3d-35r 9s linear -4.5s infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-30r 9s linear -4.5s infinite;">
+            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:72px;animation:unorb-30r 9s linear -4.5s infinite;"></div>
           </div>
         </div>
         <div class="mt-3 text-center">
@@ -618,8 +620,8 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
           </div>
           <!-- 52° tilt forward, 7s -->
-          <div class="orbit-3d" style="animation:spin3d-52f 7s linear infinite;">
-            <div class="absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="top:-6px;left:110px;animation:unspin3d-52f 7s linear infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
+            <div class="absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="top:-6px;left:110px;animation:unorb-60f 7s linear infinite;"></div>
           </div>
         </div>
         <div class="mt-3 text-center">
@@ -636,8 +638,8 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
           </div>
           <!-- 22° tilt reverse, 12s -->
-          <div class="orbit-3d" style="animation:spin3d-22r 12s linear -3s infinite;">
-            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:100px;animation:unspin3d-22r 12s linear -3s infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-150f 12s linear -3s infinite;">
+            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:100px;animation:unorb-150f 12s linear -3s infinite;"></div>
           </div>
         </div>
         <div class="mt-3 text-center">
@@ -654,8 +656,8 @@
             <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
           </div>
           <!-- 78° tilt forward (nearly polar), 5s -->
-          <div class="orbit-3d" style="animation:spin3d-78f 5s linear infinite;">
-            <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="top:-3px;left:75px;animation:unspin3d-78f 5s linear infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-0f 5s linear infinite;">
+            <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="top:-3px;left:75px;animation:unorb-0f 5s linear infinite;"></div>
           </div>
         </div>
         <div class="mt-3 text-center">
@@ -876,8 +878,8 @@
 })();</script>
           </div>
           <!-- 48° tilt reverse, 13s -->
-          <div class="orbit-3d" style="animation:spin3d-48r 13s linear -5s infinite;">
-            <div style="position:absolute;top:-3px;left:80px;animation:unspin3d-48r 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
+          <div class="orbit-3d" style="animation:orb-120f 13s linear -5s infinite;">
+            <div style="position:absolute;top:-3px;left:80px;animation:unorb-120f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
               <div style="width:4px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
               <div style="width:3px;height:3px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 6px rgba(125,211,252,0.90);"></div>
               <div style="width:4px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
