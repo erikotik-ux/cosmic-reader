@@ -289,8 +289,8 @@
             <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:126px;animation:unorb-30f 6s linear infinite;"></div>
           </div>
           <!-- inner ring: 35° tilt reverse, 9s, offset -->
-          <div class="orbit-3d" style="animation:orb-30r 9s linear -4.5s infinite;">
-            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:97px;animation:unorb-30r 9s linear -4.5s infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-30f 9s linear -4.5s infinite;">
+            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:97px;animation:unorb-30f 9s linear -4.5s infinite;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -308,7 +308,28 @@
           </div>
           <!-- 52° tilt forward, 7s -->
           <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
-            <div class="absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="top:-6px;left:159px;animation:unorb-60f 7s linear infinite;"></div>
+            <svg width="11" height="24" viewBox="0 0 11 24" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-12px;left:154px;animation:unorb-60f 7s linear infinite;filter:drop-shadow(0 0 4px rgba(215,59,0,1)) drop-shadow(0 0 9px rgba(215,59,0,0.45));">
+              <!-- Nose cone -->
+              <path d="M5.5 0 C3 0 2 2.5 2 4 L9 4 C9 2.5 8 0 5.5 0Z" fill="#c9c9c9"/>
+              <!-- Body -->
+              <rect x="2" y="4" width="7" height="12" rx="0.5" fill="#d6d6d6"/>
+              <!-- Body highlight -->
+              <rect x="3.2" y="4" width="1.2" height="12" fill="rgba(255,255,255,0.25)"/>
+              <!-- Forward canard left -->
+              <polygon points="2,6 0,9 2,10" fill="#b0b0b0"/>
+              <!-- Forward canard right -->
+              <polygon points="9,6 11,9 9,10" fill="#b0b0b0"/>
+              <!-- Aft flap left -->
+              <polygon points="2,14 0,20 2,18" fill="#999"/>
+              <!-- Aft flap right -->
+              <polygon points="9,14 11,20 9,18" fill="#999"/>
+              <!-- Engine skirt -->
+              <rect x="3.5" y="16" width="4" height="1.5" rx="0.5" fill="#777"/>
+              <!-- Engine plume -->
+              <ellipse cx="5.5" cy="19.5" rx="2.2" ry="1.5" fill="rgba(215,90,20,0.95)"/>
+              <ellipse cx="5.5" cy="21.5" rx="1.5" ry="1.2" fill="rgba(255,140,40,0.7)"/>
+              <ellipse cx="5.5" cy="23" rx="0.9" ry="0.8" fill="rgba(255,200,80,0.5)"/>
+            </svg>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -326,7 +347,7 @@
           </div>
           <!-- 22° tilt reverse, 12s -->
           <div class="orbit-3d" style="animation:orb-150f 12s linear -3s infinite;">
-            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:111px;animation:unorb-150f 12s linear -3s infinite;"></div>
+            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:140px;animation:unorb-150f 12s linear -3s infinite;"></div>
           </div>
         </div>
         <div class="mt-4 text-center">
@@ -566,10 +587,10 @@
           </div>
           <!-- 48° tilt reverse, 13s -->
           <div class="orbit-3d" style="animation:orb-120f 13s linear -5s infinite;">
-            <div style="position:absolute;top:-3px;left:85px;animation:unorb-120f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
-              <div style="width:5px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
-              <div style="width:4px;height:4px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 8px 2px rgba(125,211,252,0.85);"></div>
-              <div style="width:5px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
+            <div style="position:absolute;top:-4px;left:83px;animation:unorb-120f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
+              <div style="width:8px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
+              <div style="width:6px;height:6px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 10px 3px rgba(125,211,252,0.85);"></div>
+              <div style="width:8px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
             </div>
           </div>
         </div>
@@ -602,8 +623,8 @@
             <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:90px;animation:unorb-30f 6s linear infinite;"></div>
           </div>
           <!-- 35° tilt reverse, 9s -->
-          <div class="orbit-3d" style="animation:orb-30r 9s linear -4.5s infinite;">
-            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:72px;animation:unorb-30r 9s linear -4.5s infinite;"></div>
+          <div class="orbit-3d" style="animation:orb-30f 9s linear -4.5s infinite;">
+            <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:72px;animation:unorb-30f 9s linear -4.5s infinite;"></div>
           </div>
         </div>
         <div class="mt-3 text-center">
@@ -621,7 +642,28 @@
           </div>
           <!-- 52° tilt forward, 7s -->
           <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
-            <div class="absolute w-3 h-3 bg-secondary rounded-full shadow-[0_0_16px_rgba(215,59,0,1)]" style="top:-6px;left:110px;animation:unorb-60f 7s linear infinite;"></div>
+            <svg width="11" height="24" viewBox="0 0 11 24" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-12px;left:105px;animation:unorb-60f 7s linear infinite;filter:drop-shadow(0 0 4px rgba(215,59,0,1)) drop-shadow(0 0 9px rgba(215,59,0,0.45));">
+              <!-- Nose cone -->
+              <path d="M5.5 0 C3 0 2 2.5 2 4 L9 4 C9 2.5 8 0 5.5 0Z" fill="#c9c9c9"/>
+              <!-- Body -->
+              <rect x="2" y="4" width="7" height="12" rx="0.5" fill="#d6d6d6"/>
+              <!-- Body highlight -->
+              <rect x="3.2" y="4" width="1.2" height="12" fill="rgba(255,255,255,0.25)"/>
+              <!-- Forward canard left -->
+              <polygon points="2,6 0,9 2,10" fill="#b0b0b0"/>
+              <!-- Forward canard right -->
+              <polygon points="9,6 11,9 9,10" fill="#b0b0b0"/>
+              <!-- Aft flap left -->
+              <polygon points="2,14 0,20 2,18" fill="#999"/>
+              <!-- Aft flap right -->
+              <polygon points="9,14 11,20 9,18" fill="#999"/>
+              <!-- Engine skirt -->
+              <rect x="3.5" y="16" width="4" height="1.5" rx="0.5" fill="#777"/>
+              <!-- Engine plume -->
+              <ellipse cx="5.5" cy="19.5" rx="2.2" ry="1.5" fill="rgba(215,90,20,0.95)"/>
+              <ellipse cx="5.5" cy="21.5" rx="1.5" ry="1.2" fill="rgba(255,140,40,0.7)"/>
+              <ellipse cx="5.5" cy="23" rx="0.9" ry="0.8" fill="rgba(255,200,80,0.5)"/>
+            </svg>
           </div>
         </div>
         <div class="mt-3 text-center">
@@ -639,7 +681,7 @@
           </div>
           <!-- 22° tilt reverse, 12s -->
           <div class="orbit-3d" style="animation:orb-150f 12s linear -3s infinite;">
-            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:100px;animation:unorb-150f 12s linear -3s infinite;"></div>
+            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:128px;animation:unorb-150f 12s linear -3s infinite;"></div>
           </div>
         </div>
         <div class="mt-3 text-center">
@@ -879,10 +921,10 @@
           </div>
           <!-- 48° tilt reverse, 13s -->
           <div class="orbit-3d" style="animation:orb-120f 13s linear -5s infinite;">
-            <div style="position:absolute;top:-3px;left:80px;animation:unorb-120f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
-              <div style="width:4px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
-              <div style="width:3px;height:3px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 6px rgba(125,211,252,0.90);"></div>
-              <div style="width:4px;height:1.5px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
+            <div style="position:absolute;top:-4px;left:78px;animation:unorb-120f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
+              <div style="width:7px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
+              <div style="width:5px;height:5px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 8px 2px rgba(125,211,252,0.90);"></div>
+              <div style="width:7px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
             </div>
           </div>
         </div>
