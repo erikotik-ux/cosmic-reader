@@ -229,21 +229,11 @@
   </div>
   <nav class="flex flex-col gap-1">
     <a id="nav-map" onclick="navigate('map')" class="sidebar-link active flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 cursor-pointer select-none">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-        <circle cx="10" cy="10" r="2.2" fill="currentColor"/>
-        <path d="M11.5 8 C13 6 15 4.5 17 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M8.5 12 C7 14 5 15.5 3 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M13 6.5 C15 5 17 4.5 18.5 5" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
-        <path d="M7 13.5 C5 15 3 15.5 1.5 15" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
-        <circle cx="17.5" cy="3.5" r="1" fill="currentColor" opacity="0.75"/>
-        <circle cx="2.5" cy="16.5" r="1" fill="currentColor" opacity="0.75"/>
-        <circle cx="16" cy="6.5" r="0.6" fill="currentColor" opacity="0.4"/>
-        <circle cx="4" cy="13.5" r="0.6" fill="currentColor" opacity="0.4"/>
-      </svg>
+      <span class="material-symbols-outlined">radar</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Galaxy Map</span>
     </a>
     <a id="nav-feed" onclick="navigate('feed')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
-      <span class="material-symbols-outlined">auto_awesome_motion</span>
+      <span class="material-symbols-outlined">satellite_alt</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">My Feed</span>
     </a>
     <a id="nav-saved" onclick="navigate('saved')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
@@ -996,21 +986,11 @@
 <!-- ── Mobile Bottom Nav (outside all views — always visible) ── -->
 <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
   <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
-    <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="10" cy="10" r="2.2" fill="currentColor"/>
-      <path d="M11.5 8 C13 6 15 4.5 17 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M8.5 12 C7 14 5 15.5 3 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M13 6.5 C15 5 17 4.5 18.5 5" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
-      <path d="M7 13.5 C5 15 3 15.5 1.5 15" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
-      <circle cx="17.5" cy="3.5" r="1" fill="currentColor" opacity="0.75"/>
-      <circle cx="2.5" cy="16.5" r="1" fill="currentColor" opacity="0.75"/>
-      <circle cx="16" cy="6.5" r="0.6" fill="currentColor" opacity="0.4"/>
-      <circle cx="4" cy="13.5" r="0.6" fill="currentColor" opacity="0.4"/>
-    </svg>
+    <span class="material-symbols-outlined" style="font-size:22px">radar</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
   </button>
   <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('feed')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span class="material-symbols-outlined" style="font-size:22px">satellite_alt</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Feed</span>
   </button>
   <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('saved')">
