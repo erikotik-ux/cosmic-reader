@@ -317,13 +317,13 @@
           <!-- 52° tilt forward, 7s -->
           <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
             <svg width="11" height="22" viewBox="0 0 11 22" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-11px;left:153px;transform:rotateZ(180deg);">
-              <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#d73b00"/>
-              <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#d73b00"/>
-              <polygon points="2,6 -0.5,9.5 2,10.5" fill="#d73b00"/>
-              <polygon points="9,6 11.5,9.5 9,10.5" fill="#d73b00"/>
-              <polygon points="2,13 -0.5,21 2,17" fill="#d73b00"/>
-              <polygon points="9,13 11.5,21 9,17" fill="#d73b00"/>
-              <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#d73b00"/>
+              <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#ffb5a0"/>
+              <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#ffb5a0"/>
+              <polygon points="2,6 -0.5,9.5 2,10.5" fill="#ffb5a0"/>
+              <polygon points="9,6 11.5,9.5 9,10.5" fill="#ffb5a0"/>
+              <polygon points="2,13 -0.5,21 2,17" fill="#ffb5a0"/>
+              <polygon points="9,13 11.5,21 9,17" fill="#ffb5a0"/>
+              <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#ffb5a0"/>
             </svg>
           </div>
           <canvas class="pw-canvas" data-color="215,59,0"></canvas>
@@ -643,13 +643,13 @@
           <!-- 52° tilt forward, 7s -->
           <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
             <svg width="11" height="22" viewBox="0 0 11 22" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-11px;left:100px;transform:rotateZ(180deg);">
-              <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#d73b00"/>
-              <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#d73b00"/>
-              <polygon points="2,6 -0.5,9.5 2,10.5" fill="#d73b00"/>
-              <polygon points="9,6 11.5,9.5 9,10.5" fill="#d73b00"/>
-              <polygon points="2,13 -0.5,21 2,17" fill="#d73b00"/>
-              <polygon points="9,13 11.5,21 9,17" fill="#d73b00"/>
-              <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#d73b00"/>
+              <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#ffb5a0"/>
+              <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#ffb5a0"/>
+              <polygon points="2,6 -0.5,9.5 2,10.5" fill="#ffb5a0"/>
+              <polygon points="9,6 11.5,9.5 9,10.5" fill="#ffb5a0"/>
+              <polygon points="2,13 -0.5,21 2,17" fill="#ffb5a0"/>
+              <polygon points="9,13 11.5,21 9,17" fill="#ffb5a0"/>
+              <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#ffb5a0"/>
             </svg>
           </div>
           <canvas class="pw-canvas" data-color="215,59,0"></canvas>
@@ -2835,15 +2835,21 @@ document.addEventListener('DOMContentLoaded', () => {
         var dx = gx - cx, dy = gy - cy;
         var dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < R0 * 1.1) continue;  // no dots inside planet
-        dots.push({ x: gx, y: gy, d: dist });
+        // Radial falloff: 1 at planet surface, 0 at canvas edge
+        var FADE_R = S * 0.46;
+        var fade = Math.max(0, 1 - Math.max(0, dist - R0) / (FADE_R - R0));
+        fade = fade * fade;  // quadratic for softer centre, faster edge fade
+        dots.push({ x: gx, y: gy, d: dist, f: fade });
       }
     }
 
     // ── Draw idle base dots (static — called once & after waves finish) ──────
     function drawBase() {
       ctx.clearRect(0, 0, S, S);
-      ctx.fillStyle = 'rgba(' + col + ',0.07)';
       for (var i = 0; i < dots.length; i++) {
+        var a = 0.04 * dots[i].f;
+        if (a < 0.003) continue;
+        ctx.fillStyle = 'rgba(' + col + ',' + a + ')';
         ctx.beginPath();
         ctx.arc(dots[i].x, dots[i].y, dr, 0, Math.PI * 2);
         ctx.fill();
@@ -2875,8 +2881,8 @@ document.addEventListener('DOMContentLoaded', () => {
           var diff  = dots[i].d - w.r;
           var gauss = Math.exp(-(diff * diff) / (2 * SIG * SIG));
           if (gauss < 0.03) continue;
-          var alpha = gauss * w.life * 0.90;
-          var size  = dr + gauss * dr * 3.0 * w.life;
+          var alpha = gauss * w.life * 0.55 * dots[i].f;
+          var size  = dr + gauss * dr * 1.8 * w.life;
           ctx.beginPath();
           ctx.arc(dots[i].x, dots[i].y, size, 0, Math.PI * 2);
           ctx.fillStyle = 'rgba(' + col + ',' + alpha + ')';
