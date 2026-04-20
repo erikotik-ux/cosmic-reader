@@ -230,15 +230,15 @@
   <nav class="flex flex-col gap-1">
     <a id="nav-map" onclick="navigate('map')" class="sidebar-link active flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 cursor-pointer select-none">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-        <ellipse cx="10" cy="10" rx="2.8" ry="1.4" fill="currentColor" transform="rotate(-35 10 10)"/>
-        <path d="M11.8 8.2 C13.5 6 15.5 4.2 17.5 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M8.2 11.8 C6.5 14 4.5 15.8 2.5 16.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M13 7 C14.5 5.5 16.5 4.8 18 5.2" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
-        <path d="M7 13 C5.5 14.5 3.5 15.2 2 14.8" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
-        <circle cx="17" cy="3.5" r="0.9" fill="currentColor" opacity="0.7"/>
-        <circle cx="3" cy="16.5" r="0.9" fill="currentColor" opacity="0.7"/>
-        <circle cx="16" cy="6.5" r="0.5" fill="currentColor" opacity="0.4"/>
-        <circle cx="4" cy="13.5" r="0.5" fill="currentColor" opacity="0.4"/>
+        <circle cx="10" cy="10" r="2.2" fill="currentColor"/>
+        <path d="M11.5 8 C13 6 15 4.5 17 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M8.5 12 C7 14 5 15.5 3 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M13 6.5 C15 5 17 4.5 18.5 5" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
+        <path d="M7 13.5 C5 15 3 15.5 1.5 15" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
+        <circle cx="17.5" cy="3.5" r="1" fill="currentColor" opacity="0.75"/>
+        <circle cx="2.5" cy="16.5" r="1" fill="currentColor" opacity="0.75"/>
+        <circle cx="16" cy="6.5" r="0.6" fill="currentColor" opacity="0.4"/>
+        <circle cx="4" cy="13.5" r="0.6" fill="currentColor" opacity="0.4"/>
       </svg>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Galaxy Map</span>
     </a>
@@ -295,7 +295,7 @@
       </svg>
 
       <!-- PLANET: Planets & Exoplanets (Top Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(22% - 45px); left:calc(18% + 45px);" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(22% - 45px); left:calc(18% + 45px);" onclick="openCategoryArticle('Planets')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -318,7 +318,7 @@
       </div>
 
       <!-- PLANET: Space Missions (Center-Bottom) -->
-      <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openArticle(2)">
+      <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openCategoryArticle('Missions')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
             <img class="w-full h-full object-cover opacity-95 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship artist rendering"/>
@@ -345,7 +345,7 @@
       </div>
 
       <!-- PLANET: Physics & Cosmos (Top Right) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openCategoryArticle('Physics')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
@@ -364,7 +364,7 @@
       </div>
 
       <!-- PLANET: Moon (Left-Center) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(54% - 15px); left:calc(8% - 10px);" onclick="openArticle(1)">
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(54% - 15px); left:calc(8% - 10px);" onclick="openCategoryArticle('Moon')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
             <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
@@ -383,7 +383,7 @@
       </div>
 
       <!-- PLANET: AI & Tech (Bottom) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(68% - 105px); left:calc(73% + 55px);" onclick="openArticle(0)">
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(68% - 105px); left:calc(73% + 55px);" onclick="openCategoryArticle('AI & Tech')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%;background:#02050f;">
             <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
@@ -621,7 +621,7 @@
         <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
       <!-- Planet 1: Planets & Exoplanets — left offset -->
-      <div class="planet-node self-start ml-6 pointer-events-auto" onclick="openArticle(0)">
+      <div class="planet-node self-start ml-6 pointer-events-auto" onclick="openCategoryArticle('Planets')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -644,7 +644,7 @@
       </div>
 
       <!-- Planet 2: Space Missions — right offset -->
-      <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openArticle(2)">
+      <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openCategoryArticle('Missions')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
             <img class="w-full h-full object-cover opacity-95 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship artist rendering"/>
@@ -671,7 +671,7 @@
       </div>
 
       <!-- Planet 3: Physics & Cosmos — center-left -->
-      <div class="planet-node self-start ml-10 pointer-events-auto" onclick="openArticle(0)">
+      <div class="planet-node self-start ml-10 pointer-events-auto" onclick="openCategoryArticle('Physics')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-40 h-40 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
@@ -690,7 +690,7 @@
       </div>
 
       <!-- Planet 4: Moon — right offset -->
-      <div class="planet-node self-end mr-10 pointer-events-auto" onclick="openArticle(1)">
+      <div class="planet-node self-end mr-10 pointer-events-auto" onclick="openCategoryArticle('Moon')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
             <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
@@ -709,7 +709,7 @@
       </div>
 
       <!-- Planet 5: AI & Tech — left offset -->
-      <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openArticle(0)">
+      <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openCategoryArticle('AI & Tech')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%;background:#02050f;">
             <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
@@ -997,15 +997,15 @@
 <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
   <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
     <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="10" cy="10" rx="2.8" ry="1.4" fill="currentColor" transform="rotate(-35 10 10)"/>
-      <path d="M11.8 8.2 C13.5 6 15.5 4.2 17.5 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M8.2 11.8 C6.5 14 4.5 15.8 2.5 16.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M13 7 C14.5 5.5 16.5 4.8 18 5.2" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
-      <path d="M7 13 C5.5 14.5 3.5 15.2 2 14.8" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
-      <circle cx="17" cy="3.5" r="0.9" fill="currentColor" opacity="0.7"/>
-      <circle cx="3" cy="16.5" r="0.9" fill="currentColor" opacity="0.7"/>
-      <circle cx="16" cy="6.5" r="0.5" fill="currentColor" opacity="0.4"/>
-      <circle cx="4" cy="13.5" r="0.5" fill="currentColor" opacity="0.4"/>
+      <circle cx="10" cy="10" r="2.2" fill="currentColor"/>
+      <path d="M11.5 8 C13 6 15 4.5 17 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M8.5 12 C7 14 5 15.5 3 16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M13 6.5 C15 5 17 4.5 18.5 5" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
+      <path d="M7 13.5 C5 15 3 15.5 1.5 15" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" opacity="0.45"/>
+      <circle cx="17.5" cy="3.5" r="1" fill="currentColor" opacity="0.75"/>
+      <circle cx="2.5" cy="16.5" r="1" fill="currentColor" opacity="0.75"/>
+      <circle cx="16" cy="6.5" r="0.6" fill="currentColor" opacity="0.4"/>
+      <circle cx="4" cy="13.5" r="0.6" fill="currentColor" opacity="0.4"/>
     </svg>
     <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
   </button>
@@ -2481,6 +2481,11 @@ function navigate(viewName) {
 }
 
 // ── Open Article Detail ───────────────────────────────────
+function openCategoryArticle(category) {
+  const idx = articles.findIndex(a => a.category === category);
+  if (idx >= 0) openArticle(idx);
+}
+
 function openArticle(idx) {
   currentArticle = idx;
   const a = articles[idx];
