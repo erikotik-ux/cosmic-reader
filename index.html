@@ -229,7 +229,17 @@
   </div>
   <nav class="flex flex-col gap-1">
     <a id="nav-map" onclick="navigate('map')" class="sidebar-link active flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 cursor-pointer select-none">
-      <span class="material-symbols-outlined">galaxy</span>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <ellipse cx="10" cy="10" rx="2.8" ry="1.4" fill="currentColor" transform="rotate(-35 10 10)"/>
+        <path d="M11.8 8.2 C13.5 6 15.5 4.2 17.5 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M8.2 11.8 C6.5 14 4.5 15.8 2.5 16.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M13 7 C14.5 5.5 16.5 4.8 18 5.2" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        <path d="M7 13 C5.5 14.5 3.5 15.2 2 14.8" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        <circle cx="17" cy="3.5" r="0.9" fill="currentColor" opacity="0.7"/>
+        <circle cx="3" cy="16.5" r="0.9" fill="currentColor" opacity="0.7"/>
+        <circle cx="16" cy="6.5" r="0.5" fill="currentColor" opacity="0.4"/>
+        <circle cx="4" cy="13.5" r="0.5" fill="currentColor" opacity="0.4"/>
+      </svg>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Galaxy Map</span>
     </a>
     <a id="nav-feed" onclick="navigate('feed')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
@@ -986,7 +996,17 @@
 <!-- ── Mobile Bottom Nav (outside all views — always visible) ── -->
 <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
   <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
-    <span class="material-symbols-outlined" style="font-size:22px">galaxy</span>
+    <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="10" cy="10" rx="2.8" ry="1.4" fill="currentColor" transform="rotate(-35 10 10)"/>
+      <path d="M11.8 8.2 C13.5 6 15.5 4.2 17.5 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M8.2 11.8 C6.5 14 4.5 15.8 2.5 16.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M13 7 C14.5 5.5 16.5 4.8 18 5.2" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+      <path d="M7 13 C5.5 14.5 3.5 15.2 2 14.8" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+      <circle cx="17" cy="3.5" r="0.9" fill="currentColor" opacity="0.7"/>
+      <circle cx="3" cy="16.5" r="0.9" fill="currentColor" opacity="0.7"/>
+      <circle cx="16" cy="6.5" r="0.5" fill="currentColor" opacity="0.4"/>
+      <circle cx="4" cy="13.5" r="0.5" fill="currentColor" opacity="0.4"/>
+    </svg>
     <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
   </button>
   <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('feed')">
@@ -1530,7 +1550,7 @@ const FALLBACK_IMAGES = {
   'AI & Tech': 'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',           // AI/Tech visualization — Flickr
 };
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
-const CAT_ICON    = { Physics:'pulsar', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
+const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
 
 // Pool of 8-10 varied images per category — used when a feed provides no image.
 // pickFallback() hashes the article title so each article consistently gets a
