@@ -229,7 +229,7 @@
   </div>
   <nav class="flex flex-col gap-1">
     <a id="nav-map" onclick="navigate('map')" class="sidebar-link active flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 cursor-pointer select-none">
-      <span class="material-symbols-outlined">language</span>
+      <span class="material-symbols-outlined">galaxy</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Galaxy Map</span>
     </a>
     <a id="nav-feed" onclick="navigate('feed')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
@@ -241,7 +241,7 @@
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Saved Stories</span>
     </a>
     <a id="nav-trending" onclick="navigate('trending')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
-      <span class="material-symbols-outlined">shutter_speed</span>
+      <span class="material-symbols-outlined">local_fire_department</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Trending</span>
     </a>
   </nav>
@@ -303,7 +303,7 @@
         </div>
         <div class="mt-4 text-center">
           <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-primary-fixed-dim">Planets</span>
-          <span class="block text-xs text-on-surface-variant font-label">4 Active Signals</span>
+          <span class="block text-xs text-on-surface-variant font-label">Worlds Beyond</span>
         </div>
       </div>
 
@@ -368,7 +368,7 @@
         </div>
         <div class="mt-4 text-center">
           <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Moon</span>
-          <span class="block text-xs text-on-surface-variant font-label">Active Signals</span>
+          <span class="block text-xs text-on-surface-variant font-label">Lunar Dispatch</span>
         </div>
       </div>
 
@@ -629,7 +629,7 @@
         </div>
         <div class="mt-3 text-center">
           <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-primary-fixed-dim">Planets</span>
-          <span class="block text-xs text-on-surface-variant font-label">4 Active Signals</span>
+          <span class="block text-xs text-on-surface-variant font-label">Worlds Beyond</span>
         </div>
       </div>
 
@@ -694,7 +694,7 @@
         </div>
         <div class="mt-3 text-center">
           <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Moon</span>
-          <span class="block text-xs text-on-surface-variant font-label">Active Signals</span>
+          <span class="block text-xs text-on-surface-variant font-label">Lunar Dispatch</span>
         </div>
       </div>
 
@@ -986,7 +986,7 @@
 <!-- ── Mobile Bottom Nav (outside all views — always visible) ── -->
 <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
   <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/></svg>
+    <span class="material-symbols-outlined" style="font-size:22px">galaxy</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
   </button>
   <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('feed')">
@@ -998,7 +998,7 @@
     <span class="font-label text-[9px] uppercase tracking-widest">Saved</span>
   </button>
   <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('trending')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    <span class="material-symbols-outlined" style="font-size:22px">local_fire_department</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
   </button>
 </nav>
@@ -1294,7 +1294,7 @@
           </div>
           <h1 id="detail-title" class="font-headline text-3xl md:text-4xl font-bold text-on-surface leading-tight mb-4 tracking-tighter"></h1>
           <div class="flex items-center gap-2 mb-6">
-            <span class="material-symbols-outlined text-primary text-sm">rocket_launch</span>
+            <span id="detail-cat-icon" class="material-symbols-outlined text-primary text-sm">rocket_launch</span>
             <span id="detail-source" class="font-headline text-xs tracking-wide text-on-surface-variant"></span>
             <span class="mx-2 text-outline-variant">•</span>
             <span id="detail-date" class="font-headline text-xs tracking-wide text-on-surface-variant"></span>
@@ -1530,7 +1530,7 @@ const FALLBACK_IMAGES = {
   'AI & Tech': 'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',           // AI/Tech visualization — Flickr
 };
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
-const CAT_ICON    = { Physics:'science', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
+const CAT_ICON    = { Physics:'pulsar', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
 
 // Pool of 8-10 varied images per category — used when a feed provides no image.
 // pickFallback() hashes the article title so each article consistently gets a
@@ -2485,6 +2485,7 @@ function openArticle(idx) {
   document.getElementById('detail-source').textContent = 'Source: ' + a.source;
   document.getElementById('detail-date').textContent = a.date;
   document.getElementById('detail-tag').textContent = a.category + ' — Transmission Received';
+  document.getElementById('detail-cat-icon').textContent = CAT_ICON[a.category] || 'article';
   document.getElementById('detail-coord').textContent = a.coord;
   document.getElementById('stat1-val').textContent = a.category;
   document.getElementById('stat2-val').textContent = a.source;
