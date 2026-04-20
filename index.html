@@ -316,76 +316,14 @@
           </div>
           <!-- 52° tilt forward, 7s -->
           <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
-            <svg width="13" height="32" viewBox="0 0 13 32" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-16px;left:153px;filter:drop-shadow(0 0 5px rgba(215,59,0,1)) drop-shadow(0 0 10px rgba(215,59,0,0.5));transform:rotateZ(180deg);">
-              <defs>
-                <!-- Cylindrical body: near-black edges, bright central highlight -->
-                <linearGradient id="sfb-d" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"  stop-color="#0e0e0e"/>
-                  <stop offset="14%" stop-color="#6a6a6a"/>
-                  <stop offset="32%" stop-color="#e8e8e8"/>
-                  <stop offset="44%" stop-color="#ffffff"/>
-                  <stop offset="58%" stop-color="#d4d4d4"/>
-                  <stop offset="80%" stop-color="#5a5a5a"/>
-                  <stop offset="100%" stop-color="#0e0e0e"/>
-                </linearGradient>
-                <!-- Shadow overlay: darkens both edges for roundness -->
-                <linearGradient id="sfsh-d" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"  stop-color="#000" stop-opacity="0.55"/>
-                  <stop offset="30%" stop-color="#000" stop-opacity="0"/>
-                  <stop offset="70%" stop-color="#000" stop-opacity="0"/>
-                  <stop offset="100%" stop-color="#000" stop-opacity="0.50"/>
-                </linearGradient>
-                <!-- Dome nose: off-center specular -->
-                <radialGradient id="sfn-d" cx="30%" cy="20%" r="58%">
-                  <stop offset="0%"  stop-color="#ffffff"/>
-                  <stop offset="30%" stop-color="#e8e8e8"/>
-                  <stop offset="65%" stop-color="#a8a8a8"/>
-                  <stop offset="100%" stop-color="#404040"/>
-                </radialGradient>
-                <!-- Plume: hot white core → orange → dark red → transparent -->
-                <linearGradient id="sfp-d" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%"  stop-color="#fff5c0" stop-opacity="0.98"/>
-                  <stop offset="14%" stop-color="#ffb030" stop-opacity="0.9"/>
-                  <stop offset="40%" stop-color="#d74000" stop-opacity="0.7"/>
-                  <stop offset="72%" stop-color="#8b1800" stop-opacity="0.35"/>
-                  <stop offset="100%" stop-color="#500000" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <!-- Nose cone -->
-              <path d="M6.5,0 C3.8,0 2.5,2.5 2.5,4.5 L10.5,4.5 C10.5,2.5 9.2,0 6.5,0Z" fill="url(#sfn-d)"/>
-              <!-- Body base -->
-              <rect x="2.5" y="4.5" width="8" height="13" rx="0.4" fill="url(#sfb-d)"/>
-              <!-- Shadow overlay for roundness -->
-              <rect x="2.5" y="4.5" width="8" height="13" rx="0.4" fill="url(#sfsh-d)"/>
-              <!-- Narrow specular strip (secondary highlight) -->
-              <rect x="4.6" y="4.5" width="0.7" height="13" fill="rgba(255,255,255,0.22)" rx="0.2"/>
-              <!-- Weld rings -->
-              <line x1="2.7" y1="8"  x2="10.3" y2="8"  stroke="rgba(0,0,0,0.22)" stroke-width="0.55"/>
-              <line x1="2.7" y1="11" x2="10.3" y2="11" stroke="rgba(0,0,0,0.22)" stroke-width="0.55"/>
-              <line x1="2.7" y1="14" x2="10.3" y2="14" stroke="rgba(0,0,0,0.22)" stroke-width="0.55"/>
-              <!-- Forward canard left — shadow side (darker) -->
-              <polygon points="2.5,6.5 -0.5,10 2.5,11.5" fill="#3a3a3a"/>
-              <polygon points="2.5,6.5 2.5,11.5 3.3,11.5 3.3,6.5" fill="#aaaaaa"/>
-              <!-- Forward canard right — light side -->
-              <polygon points="10.5,6.5 13.5,10 10.5,11.5" fill="#909090"/>
-              <polygon points="9.7,6.5 10.5,6.5 10.5,11.5 9.7,11.5" fill="#d0d0d0"/>
-              <!-- Aft flap left — shadow side -->
-              <polygon points="2.5,15 -0.5,23 2.5,21" fill="#282828"/>
-              <polygon points="2.5,15 2.5,21 3.3,21 3.3,15" fill="#888"/>
-              <!-- Aft flap right — light side -->
-              <polygon points="10.5,15 13.5,23 10.5,21" fill="#707070"/>
-              <polygon points="9.7,15 10.5,15 10.5,21 9.7,21" fill="#aaaaaa"/>
-              <!-- Engine cluster -->
-              <rect x="3.8" y="17.5" width="5.4" height="1.8" rx="0.5" fill="#1a1a1a"/>
-              <!-- Nozzle bell (curved) -->
-              <path d="M4.2,19.3 Q6.5,18.8 8.8,19.3 L8.2,20.5 Q6.5,20 4.8,20.5Z" fill="#111"/>
-              <!-- Nozzle rim highlight -->
-              <path d="M4.5,19.4 Q6.5,19.0 8.5,19.4" stroke="rgba(255,255,255,0.18)" stroke-width="0.4" fill="none"/>
-              <!-- Plume -->
-              <path d="M4.5,20.5 Q6.5,21.8 8.5,20.5 Q8,26 6.5,32 Q5,26 4.5,20.5Z" fill="url(#sfp-d)"/>
-              <!-- Plume hot core -->
-              <ellipse cx="6.5" cy="21.2" rx="1.7" ry="1.0" fill="rgba(255,255,220,0.98)"/>
-              <ellipse cx="6.5" cy="22.4" rx="1.0" ry="0.65" fill="rgba(255,215,80,0.75)"/>
+            <svg width="11" height="22" viewBox="0 0 11 22" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-11px;left:153px;transform:rotateZ(180deg);">
+              <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#d73b00"/>
+              <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#d73b00"/>
+              <polygon points="2,6 -0.5,9.5 2,10.5" fill="#d73b00"/>
+              <polygon points="9,6 11.5,9.5 9,10.5" fill="#d73b00"/>
+              <polygon points="2,13 -0.5,21 2,17" fill="#d73b00"/>
+              <polygon points="9,13 11.5,21 9,17" fill="#d73b00"/>
+              <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#d73b00"/>
             </svg>
           </div>
           <canvas class="pw-canvas" data-color="215,59,0"></canvas>
@@ -704,70 +642,14 @@
           </div>
           <!-- 52° tilt forward, 7s -->
           <div class="orbit-3d" style="animation:orb-60f 7s linear infinite;">
-            <svg width="13" height="32" viewBox="0 0 13 32" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-16px;left:100px;filter:drop-shadow(0 0 5px rgba(215,59,0,1)) drop-shadow(0 0 10px rgba(215,59,0,0.5));transform:rotateZ(180deg);">
-              <defs>
-                <linearGradient id="sfb-m" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"  stop-color="#0e0e0e"/>
-                  <stop offset="14%" stop-color="#6a6a6a"/>
-                  <stop offset="32%" stop-color="#e8e8e8"/>
-                  <stop offset="44%" stop-color="#ffffff"/>
-                  <stop offset="58%" stop-color="#d4d4d4"/>
-                  <stop offset="80%" stop-color="#5a5a5a"/>
-                  <stop offset="100%" stop-color="#0e0e0e"/>
-                </linearGradient>
-                <linearGradient id="sfsh-m" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"  stop-color="#000" stop-opacity="0.55"/>
-                  <stop offset="30%" stop-color="#000" stop-opacity="0"/>
-                  <stop offset="70%" stop-color="#000" stop-opacity="0"/>
-                  <stop offset="100%" stop-color="#000" stop-opacity="0.50"/>
-                </linearGradient>
-                <radialGradient id="sfn-m" cx="30%" cy="20%" r="58%">
-                  <stop offset="0%"  stop-color="#ffffff"/>
-                  <stop offset="30%" stop-color="#e8e8e8"/>
-                  <stop offset="65%" stop-color="#a8a8a8"/>
-                  <stop offset="100%" stop-color="#404040"/>
-                </radialGradient>
-                <linearGradient id="sfp-m" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%"  stop-color="#fff5c0" stop-opacity="0.98"/>
-                  <stop offset="14%" stop-color="#ffb030" stop-opacity="0.9"/>
-                  <stop offset="40%" stop-color="#d74000" stop-opacity="0.7"/>
-                  <stop offset="72%" stop-color="#8b1800" stop-opacity="0.35"/>
-                  <stop offset="100%" stop-color="#500000" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <!-- Nose cone -->
-              <path d="M6.5,0 C3.8,0 2.5,2.5 2.5,4.5 L10.5,4.5 C10.5,2.5 9.2,0 6.5,0Z" fill="url(#sfn-m)"/>
-              <!-- Body base -->
-              <rect x="2.5" y="4.5" width="8" height="13" rx="0.4" fill="url(#sfb-m)"/>
-              <!-- Shadow overlay for roundness -->
-              <rect x="2.5" y="4.5" width="8" height="13" rx="0.4" fill="url(#sfsh-m)"/>
-              <!-- Specular strip -->
-              <rect x="4.6" y="4.5" width="0.7" height="13" fill="rgba(255,255,255,0.22)" rx="0.2"/>
-              <!-- Weld rings -->
-              <line x1="2.7" y1="8"  x2="10.3" y2="8"  stroke="rgba(0,0,0,0.22)" stroke-width="0.55"/>
-              <line x1="2.7" y1="11" x2="10.3" y2="11" stroke="rgba(0,0,0,0.22)" stroke-width="0.55"/>
-              <line x1="2.7" y1="14" x2="10.3" y2="14" stroke="rgba(0,0,0,0.22)" stroke-width="0.55"/>
-              <!-- Forward canard left — shadow side -->
-              <polygon points="2.5,6.5 -0.5,10 2.5,11.5" fill="#3a3a3a"/>
-              <polygon points="2.5,6.5 2.5,11.5 3.3,11.5 3.3,6.5" fill="#aaaaaa"/>
-              <!-- Forward canard right — light side -->
-              <polygon points="10.5,6.5 13.5,10 10.5,11.5" fill="#909090"/>
-              <polygon points="9.7,6.5 10.5,6.5 10.5,11.5 9.7,11.5" fill="#d0d0d0"/>
-              <!-- Aft flap left — shadow side -->
-              <polygon points="2.5,15 -0.5,23 2.5,21" fill="#282828"/>
-              <polygon points="2.5,15 2.5,21 3.3,21 3.3,15" fill="#888"/>
-              <!-- Aft flap right — light side -->
-              <polygon points="10.5,15 13.5,23 10.5,21" fill="#707070"/>
-              <polygon points="9.7,15 10.5,15 10.5,21 9.7,21" fill="#aaaaaa"/>
-              <!-- Engine cluster -->
-              <rect x="3.8" y="17.5" width="5.4" height="1.8" rx="0.5" fill="#1a1a1a"/>
-              <path d="M4.2,19.3 Q6.5,18.8 8.8,19.3 L8.2,20.5 Q6.5,20 4.8,20.5Z" fill="#111"/>
-              <path d="M4.5,19.4 Q6.5,19.0 8.5,19.4" stroke="rgba(255,255,255,0.18)" stroke-width="0.4" fill="none"/>
-              <!-- Plume -->
-              <path d="M4.5,20.5 Q6.5,21.8 8.5,20.5 Q8,26 6.5,32 Q5,26 4.5,20.5Z" fill="url(#sfp-m)"/>
-              <!-- Plume hot core -->
-              <ellipse cx="6.5" cy="21.2" rx="1.7" ry="1.0" fill="rgba(255,255,220,0.98)"/>
-              <ellipse cx="6.5" cy="22.4" rx="1.0" ry="0.65" fill="rgba(255,215,80,0.75)"/>
+            <svg width="11" height="22" viewBox="0 0 11 22" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-11px;left:100px;transform:rotateZ(180deg);">
+              <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#d73b00"/>
+              <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#d73b00"/>
+              <polygon points="2,6 -0.5,9.5 2,10.5" fill="#d73b00"/>
+              <polygon points="9,6 11.5,9.5 9,10.5" fill="#d73b00"/>
+              <polygon points="2,13 -0.5,21 2,17" fill="#d73b00"/>
+              <polygon points="9,13 11.5,21 9,17" fill="#d73b00"/>
+              <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#d73b00"/>
             </svg>
           </div>
           <canvas class="pw-canvas" data-color="215,59,0"></canvas>
@@ -2918,7 +2800,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-// ── Planet Particle Wave System ─────────────────────────────────────────────
+// ── Planet Dotted-Grid Gravitational Wave System ─────────────────────────────
 (function(){
   var DPR = Math.min(window.devicePixelRatio || 1, 2);
 
@@ -2928,46 +2810,75 @@ document.addEventListener('DOMContentLoaded', () => {
     var d      = (sphere ? sphere.offsetWidth : 0) || 144;
     if (d < 10) { requestAnimationFrame(function(){ initCanvas(canvas); }); return; }
 
-    var col  = canvas.dataset.color;   // "R,G,B"
-    var Sc   = d * 3;                  // CSS size
-    var S    = Sc * DPR;               // canvas resolution
+    var col = canvas.dataset.color;   // "R,G,B"
+    var Sc  = Math.round(d * 4);      // CSS size — 4× planet for wave travel room
+    var S   = Sc * DPR;
     canvas.width  = S;
     canvas.height = S;
     canvas.style.width  = Sc + 'px';
     canvas.style.height = Sc + 'px';
 
-    var ctx  = canvas.getContext('2d');
-    var cx   = S / 2, cy = S / 2;
-    var R0   = (d / 2) * DPR;         // planet radius in canvas px
+    var ctx = canvas.getContext('2d');
+    var cx  = S / 2, cy = S / 2;
+    var R0  = (d / 2) * DPR;         // planet radius in canvas px
 
-    var waves = [], hover = false, raf = null, tick = 0;
+    // ── Build dot grid centred on planet ────────────────────────────────────
+    var sp = 11 * DPR;               // grid spacing
+    var dr = 1.2 * DPR;             // base dot radius
+    var dots = [];
+    var halfW = Math.ceil(S / 2 / sp) + 1;
+    for (var ci = -halfW; ci <= halfW; ci++) {
+      for (var ri = -halfW; ri <= halfW; ri++) {
+        var gx = cx + ci * sp;
+        var gy = cy + ri * sp;
+        if (gx < 0 || gx > S || gy < 0 || gy > S) continue;
+        var dx = gx - cx, dy = gy - cy;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < R0 * 1.1) continue;  // no dots inside planet
+        dots.push({ x: gx, y: gy, d: dist });
+      }
+    }
+
+    // ── Draw idle base dots (static — called once & after waves finish) ──────
+    function drawBase() {
+      ctx.clearRect(0, 0, S, S);
+      ctx.fillStyle = 'rgba(' + col + ',0.07)';
+      for (var i = 0; i < dots.length; i++) {
+        ctx.beginPath();
+        ctx.arc(dots[i].x, dots[i].y, dr, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    drawBase();
+
+    // ── Wave state ───────────────────────────────────────────────────────────
+    var SIG  = 14 * DPR;    // wave ring gaussian σ (controls ring thickness)
+    var SPD  = 1.8 * DPR;   // expansion speed px/frame
+    var MAXR = S * 0.53;    // radius at which wave starts fading fast
+    var waves = [], hover = false, raf = null, INT = null;
 
     function spawnWave() {
-      var N = 52, pts = [];
-      for (var i = 0; i < N; i++) {
-        var a = (i / N) * Math.PI * 2;
-        pts.push({ a: a, j: (Math.random() - 0.5) * DPR * 4,
-                   sz: (0.7 + Math.random() * 1.6) * DPR });
-      }
-      waves.push({ r: R0, life: 1.0, pts: pts });
+      waves.push({ r: R0, life: 1.0 });
     }
 
     function frame() {
-      ctx.clearRect(0, 0, S, S);
-      tick++;
-      if (hover && tick % 52 === 0) spawnWave();
+      // Redraw base grid each frame
+      drawBase();
 
+      // Update & draw each wave ring
       waves = waves.filter(function(w) {
-        w.r    += 1.9 * DPR;
-        w.life -= 0.0075;
+        w.r    += SPD;
+        w.life -= (w.r > MAXR) ? 0.040 : 0.0045;
         if (w.life <= 0) return false;
-        var alpha = w.life * 0.82;
-        for (var i = 0; i < w.pts.length; i++) {
-          var p = w.pts[i];
-          var x = cx + Math.cos(p.a) * (w.r + p.j);
-          var y = cy + Math.sin(p.a) * (w.r + p.j);
+
+        for (var i = 0; i < dots.length; i++) {
+          var diff  = dots[i].d - w.r;
+          var gauss = Math.exp(-(diff * diff) / (2 * SIG * SIG));
+          if (gauss < 0.03) continue;
+          var alpha = gauss * w.life * 0.90;
+          var size  = dr + gauss * dr * 3.0 * w.life;
           ctx.beginPath();
-          ctx.arc(x, y, p.sz * w.life, 0, Math.PI * 2);
+          ctx.arc(dots[i].x, dots[i].y, size, 0, Math.PI * 2);
           ctx.fillStyle = 'rgba(' + col + ',' + alpha + ')';
           ctx.fill();
         }
@@ -2977,6 +2888,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (waves.length > 0 || hover) {
         raf = requestAnimationFrame(frame);
       } else {
+        drawBase();   // restore idle state
         raf = null;
       }
     }
@@ -2985,9 +2897,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (hover) return;
       hover = true;
       spawnWave();
+      INT = setInterval(spawnWave, 1500);
       if (!raf) raf = requestAnimationFrame(frame);
     }
-    function stop() { hover = false; }
+    function stop() {
+      hover = false;
+      if (INT) { clearInterval(INT); INT = null; }
+    }
 
     node.addEventListener('mouseenter',  start);
     node.addEventListener('mouseleave',  stop);
@@ -2996,7 +2912,6 @@ document.addEventListener('DOMContentLoaded', () => {
     node.addEventListener('touchcancel', stop,  { passive: true });
   }
 
-  // Init all canvases after layout is ready
   function initAll() {
     document.querySelectorAll('.pw-canvas').forEach(initCanvas);
   }
@@ -3004,8 +2919,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAll);
   } else {
-    // Small delay to ensure planet spheres have rendered sizes
-    setTimeout(initAll, 100);
+    setTimeout(initAll, 120);
   }
 })();
 </script>
