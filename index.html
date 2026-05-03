@@ -126,18 +126,18 @@
   @media (max-width: 767px) {
     /* Planets scroll: snap each planet into the safe zone */
     #mobile-galaxy {
-      scroll-snap-type: y proximity;
-      scroll-padding-top: 6rem;    /* matches pt-24 (96px) */
-      scroll-padding-bottom: 3.5rem; /* matches h-14 bottom nav (56px) */
+      scroll-snap-type: y mandatory;
+      scroll-padding-top: 8rem;    /* 128px — clears fixed header */
+      scroll-padding-bottom: 4rem; /* 64px — clears bottom nav */
     }
     #mobile-galaxy .planet-node {
       scroll-snap-align: center;
-      scroll-margin-top: 6rem;
+      scroll-margin-top: 8rem;
     }
     /* Article/content scroll containers: keep items inside the safe zone */
     .mobile-safe-scroll {
-      scroll-padding-top: 5rem;    /* matches pt-20 (80px) */
-      scroll-padding-bottom: 3.5rem; /* matches h-14 bottom nav (56px) */
+      scroll-padding-top: 6rem;    /* 96px — clears fixed header */
+      scroll-padding-bottom: 4rem; /* 64px — clears bottom nav */
     }
   }
   .drop-cap-para::first-letter {
@@ -620,7 +620,7 @@
     </div>
 
     <!-- ═══ MOBILE: vertical stacked planets ═══ -->
-    <div id="mobile-galaxy" class="md:hidden w-full h-full overflow-y-auto pointer-events-auto flex flex-col items-start gap-6 pt-24 pb-28 px-4 relative">
+    <div id="mobile-galaxy" class="md:hidden w-full h-full overflow-y-auto pointer-events-auto flex flex-col items-start gap-6 pt-32 pb-32 px-4 relative">
       <!-- Mobile SVG lines — drawn behind planets via JS -->
       <svg id="mobile-constellation-svg" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;" height="0">
         <line id="mcl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
@@ -1073,7 +1073,7 @@
 <!-- VIEW 2: MY FEED (Bento Grid)                            -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-feed" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 pb-28 md:pb-10">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-7xl mx-auto px-6 py-10">
 
       <!-- Hero Header -->
@@ -1289,7 +1289,7 @@
   </div>
   <div class="fixed inset-0 bg-[#131313]/70 z-0"></div>
 
-  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 pb-28 md:pb-10">
+  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <!-- Discovery HUD -->
       <div class="glass-panel relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-outline-variant/15 rounded-lg" style="box-shadow:0 0 30px rgba(0,240,255,0.12);">
@@ -1370,7 +1370,7 @@
   <div id="reading-progress-track" class="fixed top-[72px] left-0 md:left-64 right-0 h-0.5 bg-surface-container-highest z-50">
     <div id="reading-progress" class="h-full bg-primary-container shadow-[0_0_8px_rgba(0,240,255,0.8)] w-1/4 reading-progress-bar"></div>
   </div>
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 pb-28 md:pb-24" id="reading-scroll-area">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-24" id="reading-scroll-area">
     <div class="max-w-7xl mx-auto px-6 md:pr-16 py-10">
 
       <!-- Article Header -->
@@ -1469,7 +1469,7 @@
 <!-- VIEW 5: SAVED STORIES                                   -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-saved" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 pb-28 md:pb-10">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <div class="mb-8 flex items-end justify-between gap-4">
         <div>
@@ -1493,7 +1493,7 @@
 <!-- VIEW 6: TRENDING                                        -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-trending" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 pb-28 md:pb-10">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-4">
         <div>
