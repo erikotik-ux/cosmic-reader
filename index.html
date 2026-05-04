@@ -130,6 +130,8 @@
       scroll-padding-top: 8rem;    /* 128px — clears fixed header */
       scroll-padding-bottom: 4rem; /* 64px — clears bottom nav */
       padding-top: 8rem !important; /* pt-32 not in compiled Tailwind */
+      overflow-x: hidden;          /* prevent horizontal scroll on touch */
+      touch-action: pan-y;         /* lock touch to vertical panning only */
       /* NOTE: padding-bottom is intentionally omitted here —
          Chrome ignores padding-bottom inside overflow-y:auto flex containers.
          The ::after spacer below is the cross-browser fix. */
