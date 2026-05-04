@@ -129,6 +129,8 @@
       scroll-snap-type: y mandatory;
       scroll-padding-top: 8rem;    /* 128px — clears fixed header */
       scroll-padding-bottom: 4rem; /* 64px — clears bottom nav */
+      padding-top: 8rem !important;
+      padding-bottom: 8rem !important;
     }
     #mobile-galaxy .planet-node {
       scroll-snap-align: center;
@@ -136,8 +138,11 @@
     }
     /* Article/content scroll containers: keep items inside the safe zone */
     .mobile-safe-scroll {
-      scroll-padding-top: 6rem;    /* 96px — clears fixed header */
-      scroll-padding-bottom: 4rem; /* 64px — clears bottom nav */
+      scroll-padding-top: 6rem;      /* 96px — clears fixed header */
+      scroll-padding-bottom: 4rem;   /* 64px — clears bottom nav */
+      /* pb-28 is NOT in compiled Tailwind — force it here */
+      padding-top: 6rem !important;  /* 96px — clears ~64px fixed header */
+      padding-bottom: 7rem !important; /* 112px — clears 56px bottom nav */
     }
   }
   .drop-cap-para::first-letter {
