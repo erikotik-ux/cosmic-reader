@@ -14,10 +14,7 @@
   .material-symbols-filled {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
-  .star-field {
-    background-image: radial-gradient(circle at 2px 2px, rgba(219, 252, 255, 0.15) 1px, transparent 0);
-    background-size: 40px 40px;
-  }
+  .star-field { /* dot grid removed — canvas starfield handles this now */ }
   .planet-glow-primary   { box-shadow: 0 0 12px 2px rgba(0,240,255,0.10); }
   .planet-glow-secondary { box-shadow: 0 0 12px 2px rgba(215,59,0,0.13); }
   .planet-glow-tertiary  { box-shadow: 0 0 12px 2px rgba(180,130,255,0.10); }
@@ -32,15 +29,18 @@
     background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent);
   }
   .reading-glow { box-shadow: 0 0 100px 20px rgba(0, 240, 255, 0.03); }
-  .star-bg {
-    background-image:
-      radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-      radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)),
-      radial-gradient(2px 2px at 50px 160px, #ffffff, rgba(0,0,0,0)),
-      radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0,0,0,0));
-    background-repeat: repeat;
-    background-size: 200px 200px;
-    opacity: 0.08;
+  #star-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    animation: star-breathe 10s ease-in-out infinite;
+  }
+  @keyframes star-breathe {
+    0%, 100% { opacity: 0.65; }
+    50%       { opacity: 1;    }
   }
   @keyframes marquee {
     0% { transform: translateX(0); }
@@ -299,8 +299,8 @@
 <!-- VIEW 1: GALAXY MAP                                      -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-map" class="view active relative h-screen w-full overflow-hidden star-field">
-  <!-- Star background overlay -->
-  <div class="fixed inset-0 star-bg pointer-events-none"></div>
+  <!-- Star background — rendered by initStarfield() -->
+  <canvas id="star-canvas" aria-hidden="true"></canvas>
 
   <!-- Ambient glows -->
   <div class="absolute top-1/4 left-20 w-96 h-96 bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
@@ -2690,6 +2690,61 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+// ── Starfield ─────────────────────────────────────────────
+function initStarfield() {
+  const canvas = document.getElementById('star-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function draw() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // How many stars scales with screen area so mobile/desktop both look right
+    const total = Math.floor((canvas.width * canvas.height) / 3200);
+
+    for (let i = 0; i < total; i++) {
+      const x  = Math.random() * canvas.width;
+      const y  = Math.random() * canvas.height;
+      // 85% tiny (0.2–0.8px), 12% small (0.8–1.5px), 3% bright (1.5–2.2px)
+      const rnd = Math.random();
+      const r   = rnd < 0.85 ? Math.random() * 0.6 + 0.2
+                : rnd < 0.97 ? Math.random() * 0.7 + 0.8
+                :               Math.random() * 0.7 + 1.5;
+      const opacity = Math.random() * 0.55 + 0.15;
+      // ~15% of stars get a slight cyan tint to match the app palette
+      const isCyan  = Math.random() < 0.15;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = isCyan
+        ? `rgba(180,240,255,${opacity})`
+        : `rgba(255,255,255,${opacity})`;
+      ctx.fill();
+    }
+
+    // A handful of brighter stars with a soft radial glow
+    const brightCount = Math.max(4, Math.floor(total * 0.025));
+    for (let i = 0; i < brightCount; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, 4);
+      g.addColorStop(0, 'rgba(219,252,255,0.9)');
+      g.addColorStop(0.4, 'rgba(219,252,255,0.3)');
+      g.addColorStop(1,   'rgba(219,252,255,0)');
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+  }
+
+  draw();
+  // Redraw on resize so stars fill the new dimensions
+  window.addEventListener('resize', draw);
+}
+initStarfield();
 
 // ── Reading Progress ──────────────────────────────────────
 function setupReadingProgress() {
