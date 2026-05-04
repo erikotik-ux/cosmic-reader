@@ -1542,10 +1542,9 @@
 // ── RSS Feed Config ────────────────────────────────────────
 // Multiple proxies tried in order — if one fails the next is used
 const RSS_PROXIES = [
-  url => `/api/rss?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
   { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
@@ -1685,11 +1684,52 @@ function stripHtml(s) {
 }
 
 async function fetchFeed(feedInfo) {
-  // Try each proxy in order until one returns valid XML
+  const SPACE_SRCS = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+
+  // ── Primary: rss2json.com — purpose-built RSS service, returns clean JSON ──
+  try {
+    const res = await fetch(
+      `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedInfo.url)}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    const json = await res.json();
+    if (json.status === 'ok' && json.items?.length > 0) {
+      return json.items.slice(0, 15).map((item, idx) => {
+        const title = stripHtml(item.title || '');
+        if (!title || title.length < 10 || /^(subscribe|sign in|log in|archive|home|read more)$/i.test(title)) return null;
+        const read_more = item.link || item.guid || '#';
+        if (!/^https?:\/\/.+\..+/i.test(read_more)) return null;
+        const descRaw  = item.content || item.description || '';
+        const excerpt  = stripHtml(descRaw).slice(0, 280).replace(/\s+/g,' ').trim();
+        const body     = stripHtml(descRaw).slice(0, 2000);
+        const date     = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
+        const tags     = (item.categories || []).join(' ');
+        const category = guessCategory(title, tags) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
+        let image = item.thumbnail || item.enclosure?.link || '';
+        if (!image || !/^https?:/.test(image)) image = pickFallback(category, title);
+        const readTime = Math.max(1, Math.ceil((body || excerpt).split(' ').length / 200));
+        return {
+          id: idx, title, excerpt, body: body || excerpt,
+          category, date, source: feedInfo.source,
+          image, read_more,
+          coord: 'Live — ' + feedInfo.source,
+          readTime: readTime + 'm',
+          stats: [
+            { label: 'Category',  val: category,           color: 'text-primary'   },
+            { label: 'Source',    val: feedInfo.source,    color: 'text-secondary' },
+            { label: 'Published', val: date,               color: 'text-tertiary'  },
+            { label: 'Read Time', val: readTime + ' min',  color: 'text-primary'   },
+          ]
+        };
+      }).filter(Boolean);
+    }
+  } catch(e) { /* fall through to XML proxies */ }
+
+  // ── Fallback: XML via CORS proxies ────────────────────────────────────────
   let text = '';
   for (const proxyFn of RSS_PROXIES) {
     try {
-      const res = await fetch(proxyFn(feedInfo.url), { signal: AbortSignal.timeout(12000) });
+      const res = await fetch(proxyFn(feedInfo.url), { signal: AbortSignal.timeout(8000) });
       const t = await res.text();
       if (t.includes('<item') || t.includes('<entry')) { text = t; break; }
     } catch(e) { /* try next proxy */ }
