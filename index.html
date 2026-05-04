@@ -129,20 +129,37 @@
       scroll-snap-type: y mandatory;
       scroll-padding-top: 8rem;    /* 128px — clears fixed header */
       scroll-padding-bottom: 4rem; /* 64px — clears bottom nav */
-      padding-top: 8rem !important;
-      padding-bottom: 8rem !important;
+      padding-top: 8rem !important; /* pt-32 not in compiled Tailwind */
+      /* NOTE: padding-bottom is intentionally omitted here —
+         Chrome ignores padding-bottom inside overflow-y:auto flex containers.
+         The ::after spacer below is the cross-browser fix. */
+    }
+    /* Cross-browser bottom spacer for planet scroll container.
+       Chrome ignores padding-bottom on overflow flex containers but
+       does extend scroll height for ::after pseudo-elements. */
+    #mobile-galaxy::after {
+      content: '';
+      display: block;
+      min-height: 8rem; /* 128px — clears bottom nav with room */
+      flex-shrink: 0;
+      width: 100%;
     }
     #mobile-galaxy .planet-node {
       scroll-snap-align: center;
       scroll-margin-top: 8rem;
     }
-    /* Article/content scroll containers: keep items inside the safe zone */
+    /* Article/content scroll containers */
     .mobile-safe-scroll {
       scroll-padding-top: 6rem;      /* 96px — clears fixed header */
       scroll-padding-bottom: 4rem;   /* 64px — clears bottom nav */
-      /* pb-28 is NOT in compiled Tailwind — force it here */
-      padding-top: 6rem !important;  /* 96px — clears ~64px fixed header */
-      padding-bottom: 7rem !important; /* 112px — clears 56px bottom nav */
+      padding-top: 6rem !important;  /* pt-24 compiled but !important ensures it */
+      /* Same Chrome bug: padding-bottom ignored — use ::after spacer instead */
+    }
+    /* Cross-browser bottom spacer for article scroll containers */
+    .mobile-safe-scroll::after {
+      content: '';
+      display: block;
+      height: 7rem; /* 112px — clears 56px bottom nav with room */
     }
   }
   .drop-cap-para::first-letter {
