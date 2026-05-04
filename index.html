@@ -332,6 +332,7 @@
       transition: border-color 0.25s, box-shadow 0.25s;
       position: relative;
       overflow: hidden;
+      text-decoration: none;
     }
     .cat-card::before {
       content: '';
@@ -556,21 +557,6 @@
       color: rgba(100,116,117,0.7);
       letter-spacing: 0.05em;
     }
-    .footer-brackets {
-      display: flex;
-      gap: 0.75rem;
-      opacity: 0.15;
-    }
-    .footer-brackets div {
-      width: 12px; height: 12px;
-      border-color: #00f0ff;
-      border-style: solid;
-      border-width: 0;
-    }
-    .footer-brackets div:nth-child(1) { border-top-width: 1px; border-left-width: 1px; }
-    .footer-brackets div:nth-child(2) { border-top-width: 1px; border-right-width: 1px; }
-    .footer-brackets div:nth-child(3) { border-bottom-width: 1px; border-left-width: 1px; }
-    .footer-brackets div:nth-child(4) { border-bottom-width: 1px; border-right-width: 1px; }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -605,9 +591,9 @@
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="#">Missions</a></li>
-    <li><a href="#">Intelligence</a></li>
-    <li><a href="#">Archives</a></li>
+    <li><a href="app.html?cat=Missions">Missions</a></li>
+    <li><a href="#signup">Intelligence</a></li>
+    <li><a href="app.html">Archives</a></li>
   </ul>
   <a href="app.html" class="btn-primary">Enter Terminal</a>
 </nav>
@@ -651,26 +637,26 @@
 <section class="category-strip">
   <p class="label-caps strip-label">Intelligence Sectors</p>
   <div class="category-grid">
-    <div class="cat-card">
+    <a class="cat-card" href="app.html?cat=Physics">
       <span class="material-symbols-outlined">science</span>
       <span class="cat-name">Physics</span>
-    </div>
-    <div class="cat-card">
+    </a>
+    <a class="cat-card" href="app.html?cat=Planets">
       <span class="material-symbols-outlined">public</span>
       <span class="cat-name">Planets</span>
-    </div>
-    <div class="cat-card">
+    </a>
+    <a class="cat-card" href="app.html?cat=Moon">
       <span class="material-symbols-outlined">brightness_2</span>
       <span class="cat-name">Moon</span>
-    </div>
-    <div class="cat-card">
+    </a>
+    <a class="cat-card" href="app.html?cat=Missions">
       <span class="material-symbols-outlined">rocket_launch</span>
       <span class="cat-name">Missions</span>
-    </div>
-    <div class="cat-card">
+    </a>
+    <a class="cat-card" href="app.html?cat=AI+%26+Tech">
       <span class="material-symbols-outlined">memory</span>
       <span class="cat-name">AI &amp; Tech</span>
-    </div>
+    </a>
   </div>
 </section>
 
@@ -686,18 +672,19 @@
       <div class="corner br"></div>
       <div class="breaking-badge">Breaking News</div>
       <img
+        id="teaser-img"
         src="https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=800&q=80"
         alt="Deep space intelligence"
         class="teaser-img"
       />
     </div>
     <div class="teaser-text">
-      <span class="label-caps teaser-tag">Archive_Report_772</span>
-      <h2 class="teaser-headline">Signals from the Void: AI Deciphers Pulsar Anomalies</h2>
-      <p class="teaser-body">
-        Our deep-space intelligence units have identified consistent patterns within the Sagittarius cluster. What was once thought to be background radiation is now revealed as a high-fidelity data stream from an unknown origin.
+      <span id="teaser-tag" class="label-caps teaser-tag">Live_Signal</span>
+      <h2 id="teaser-headline" class="teaser-headline">Loading latest transmission…</h2>
+      <p id="teaser-body" class="teaser-body">
+        Fetching the latest signal from deep space intelligence networks…
       </p>
-      <a href="app.html" class="teaser-link">
+      <a id="teaser-link" href="app.html" class="teaser-link">
         Decrypt Intelligence
         <span class="material-symbols-outlined">arrow_forward</span>
       </a>
@@ -739,9 +726,6 @@
     <li><a href="#">Terminal Terms</a></li>
   </ul>
   <p class="footer-copy">© 2124 Cosmic Reader Terminal. All rights reserved.</p>
-  <div class="footer-brackets">
-    <div></div><div></div><div></div><div></div>
-  </div>
 </footer>
 
 <script>
@@ -802,6 +786,65 @@
       btn.style.color = '';
     }, 3000);
   }
+
+  // ── Live breaking-news teaser ──────────────────────────────────────────────
+  // Pulls the latest article from NASASpaceFlight via rss2json and populates
+  // the teaser section with a real headline, body excerpt, and image.
+  (async function loadBreakingNews() {
+    const FEEDS_TO_TRY = [
+      'https://www.nasaspaceflight.com/feed/',
+      'https://spacenews.com/feed/',
+      'https://www.universetoday.com/feed/',
+    ];
+    for (const feedUrl of FEEDS_TO_TRY) {
+      try {
+        const res = await fetch(
+          `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`,
+          { signal: AbortSignal.timeout(6000) }
+        );
+        const data = await res.json();
+        if (data.status !== 'ok' || !data.items?.length) continue;
+
+        const item = data.items[0];
+
+        // Headline
+        const headlineEl = document.getElementById('teaser-headline');
+        if (headlineEl && item.title) headlineEl.textContent = item.title;
+
+        // Body excerpt — strip HTML tags
+        const bodyEl = document.getElementById('teaser-body');
+        if (bodyEl) {
+          const raw = (item.description || item.content || '').replace(/<[^>]+>/g, '').trim();
+          bodyEl.textContent = raw.length > 220 ? raw.slice(0, 220).trimEnd() + '…' : raw || 'Read the full transmission in the terminal.';
+        }
+
+        // Tag — formatted date
+        const tagEl = document.getElementById('teaser-tag');
+        if (tagEl && item.pubDate) {
+          const d = new Date(item.pubDate);
+          tagEl.textContent = `LIVE_${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).replace(/,?\s/g,'_').toUpperCase()}`;
+        }
+
+        // Image — thumbnail → content img regex → keep Unsplash fallback
+        let img = item.thumbnail || '';
+        if (!img || !/^https?:/.test(img)) {
+          const html = item.content || item.description || '';
+          const m = html.match(/src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
+          if (m) img = m[1].split('?')[0];
+        }
+        if (img && /^https?:/.test(img)) {
+          const imgEl = document.getElementById('teaser-img');
+          if (imgEl) { imgEl.src = img; imgEl.alt = item.title || 'Latest space news'; }
+        }
+
+        // Link — direct to article
+        const linkEl = document.getElementById('teaser-link');
+        if (linkEl && item.link) linkEl.href = item.link;
+
+        break; // success — stop trying feeds
+      } catch(e) { /* try next feed */ }
+    }
+  })();
 </script>
 </body>
 </html>

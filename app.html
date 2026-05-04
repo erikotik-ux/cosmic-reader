@@ -2097,6 +2097,13 @@ async function loadLiveFeeds() {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
       }
+
+      // ── Deep-link: honour ?cat=Physics etc. from homepage sector cards ──
+      const deepCat = new URLSearchParams(location.search).get('cat');
+      if (deepCat) {
+        navigate('feed');
+        setTimeout(() => filterFeed(deepCat), 150);
+      }
     } else {
       if (statusTxt) statusTxt.textContent = 'Using cached signals (network unavailable)';
       setTimeout(() => statusEl && statusEl.classList.add('hidden'), 3000);
