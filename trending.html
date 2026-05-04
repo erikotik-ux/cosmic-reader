@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trending Signals — Cosmic Reader</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="cosmic-reader.css"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1515; color: #dce4e5; font-family: 'Space Grotesk', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+  /* Star canvas */
+  #star-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; animation: star-breathe 10s ease-in-out infinite; }
+  @keyframes star-breathe { 0%,100%{opacity:0.55}50%{opacity:0.9} }
+
+  /* Top nav */
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(8,15,16,0.7); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,240,255,0.08);
+  }
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+  .back-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: rgba(219,252,255,0.5); text-decoration: none;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: color 0.2s; border: 1px solid rgba(219,252,255,0.1);
+    padding: 0.4rem 0.9rem; border-radius: 2rem;
+  }
+  .back-btn:hover { color: #00f0ff; border-color: rgba(0,240,255,0.3); }
+  .nav-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+  .nav-brand img { width: 28px; height: 28px; filter: drop-shadow(0 0 5px rgba(0,240,255,0.4)); }
+  .nav-brand-text span { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; }
+  .nav-brand-text span:first-child { color: #00f0ff; }
+  .nav-brand-text span:last-child { color: rgba(219,252,255,0.5); }
+  .btn-enter {
+    background: transparent; border: 1px solid #00f0ff; color: #00f0ff;
+    padding: 0.45rem 1.2rem; font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; display: inline-block; border-radius: 2px;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .btn-enter:hover { background: rgba(0,240,255,0.08); box-shadow: 0 0 18px rgba(0,240,255,0.2); }
+
+  /* Main layout */
+  .main-content { position: relative; z-index: 1; padding: 5.5rem 1.5rem 6rem; max-width: 900px; margin: 0 auto; }
+
+  /* Preview banner */
+  .preview-banner {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(0,240,255,0.04); border: 1px solid rgba(0,240,255,0.12);
+    padding: 0.65rem 1.2rem; border-radius: 0.5rem; margin-bottom: 2rem; gap: 1rem;
+  }
+  .preview-banner p { font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(219,252,255,0.5); }
+  .preview-banner a {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+    color: #00f0ff; text-decoration: none; white-space: nowrap;
+  }
+
+  /* Trending header */
+  .trending-header { margin-bottom: 2rem; }
+  .trending-header .eyebrow { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,181,160,0.6); display: block; margin-bottom: 0.5rem; }
+  .trending-header h1 { font-size: clamp(2rem,4vw,3rem); font-weight: 700; letter-spacing: -0.02em; color: #dbfcff; }
+  .trending-header p { color: rgba(219,252,255,0.4); font-size: 0.875rem; margin-top: 0.5rem; max-width: 28rem; }
+  .live-badge { display: flex; align-items: center; gap: 0.5rem; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #ffb5a0; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+  /* Trending list items */
+  .trending-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .trending-item {
+    display: flex; align-items: center; gap: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: rgba(26,30,30,0.5); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 0.75rem;
+    transition: background 0.2s, border-color 0.2s;
+    text-decoration: none; color: inherit;
+  }
+  .trending-item:hover { background: rgba(26,30,30,0.85); border-color: rgba(0,240,255,0.15); }
+  .rank-badge {
+    width: 2.5rem; height: 2.5rem; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 0.5rem; border: 1px solid;
+    background: rgba(26,30,30,0.8);
+  }
+  .rank-badge span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.875rem; }
+  .rank-1 { border-color: rgba(255,181,160,0.3); }
+  .rank-1 span { color: #ffb5a0; }
+  .rank-2 { border-color: rgba(0,240,255,0.3); }
+  .rank-2 span { color: #00f0ff; }
+  .rank-3 { border-color: rgba(252,242,255,0.2); }
+  .rank-3 span { color: #fcf2ff; }
+  .rank-other { border-color: rgba(219,252,255,0.08); }
+  .rank-other span { color: rgba(219,252,255,0.2); }
+  .thumb { width: 4rem; height: 3rem; flex-shrink: 0; border-radius: 0.4rem; overflow: hidden; display: none; }
+  @media(min-width:480px){ .thumb { display: block; } }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); transition: filter 0.4s; }
+  .trending-item:hover .thumb img { filter: grayscale(0); }
+  .item-body { flex: 1; min-width: 0; }
+  .item-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap; }
+  .cat-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; }
+  .dot-sep { color: rgba(219,252,255,0.2); font-size: 0.6rem; }
+  .src-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(219,252,255,0.3); }
+  .item-title { font-weight: 700; color: #dbfcff; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-date { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(219,252,255,0.2); display: none; }
+  @media(min-width:640px){ .item-date { display: block; } }
+  .arrow-icon { color: #00f0ff; opacity: 0; flex-shrink: 0; transition: opacity 0.2s; font-size: 1.1rem; }
+  .trending-item:hover .arrow-icon { opacity: 1; }
+
+  /* Sign-up sticky footer */
+  .signup-footer {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+    background: rgba(10,14,14,0.95); backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(0,240,255,0.1);
+    padding: 0.85rem 2rem;
+    display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .signup-footer p { font-size: 0.75rem; color: rgba(219,252,255,0.5); letter-spacing: 0.08em; }
+  .signup-footer a { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #00f0ff; text-decoration: none; border: 1px solid rgba(0,240,255,0.3); padding: 0.4rem 1rem; border-radius: 2rem; transition: background 0.2s; }
+  .signup-footer a:hover { background: rgba(0,240,255,0.08); }
+  .loading-state { padding: 3rem 1rem; text-align: center; color: rgba(219,252,255,0.3); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<canvas id="star-canvas" aria-hidden="true"></canvas>
+
+<!-- Top Nav -->
+<header class="top-bar">
+  <div class="nav-left">
+    <a href="index.html" class="back-btn">
+      <span class="material-symbols-outlined" style="font-size:14px">arrow_back</span>
+      Home
+    </a>
+    <a href="index.html" class="nav-brand">
+      <img src="assets/cr-logo-new.svg" alt="Cosmic Reader"/>
+      <div class="nav-brand-text">
+        <span>Cosmic</span>
+        <span>Reader</span>
+      </div>
+    </a>
+  </div>
+  <a href="app.html" class="btn-enter">Enter Terminal</a>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+
+  <!-- Preview Banner -->
+  <div class="preview-banner">
+    <p>Previewing live space signals. Sign up for the full Cosmic Reader terminal experience.</p>
+    <a href="index.html#signup">Get Early Access →</a>
+  </div>
+
+  <!-- Header -->
+  <div class="trending-header" style="display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;">
+    <div>
+      <span class="eyebrow">Last 48 Hours</span>
+      <h1>Trending Signals</h1>
+      <p>The freshest transmissions ranked by recency across all active feeds.</p>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,181,160,0.6);">Live Rankings</span>
+    </div>
+  </div>
+
+  <!-- Trending List -->
+  <div class="trending-list" id="trending-list">
+    <div class="loading-state">Loading live signals…</div>
+  </div>
+
+</main>
+
+<!-- Signup Footer -->
+<footer class="signup-footer">
+  <p>Want to save articles, filter by category, and unlock the full terminal?</p>
+  <a href="index.html#signup">Get Early Access</a>
+</footer>
+
+<script>
+// ── RSS Config ────────────────────────────────────────────────
+const RSS_PROXIES = [
+  url => `/api/rss?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+];
+const FEEDS = [
+  { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
+  { url: 'https://www.universetoday.com/feed/',           source: 'Universe Today' },
+  { url: 'https://spacenews.com/feed/',                   source: 'SpaceNews' },
+  { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
+  { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
+  { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
+];
+const KEYWORD_CATS = [
+  [['openai','anthropic','gpt','gemini','llm','artificial intelligence','machine learning','neural network','chatgpt','generative ai','semiconductor','microchip','gpu','cpu','nvidia','smartphone','software','hardware','cybersecurity','hacker','malware'],'AI & Tech'],
+  [['moon','lunar','artemis','south pole','crater'],'Moon'],
+  [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid','solar system','planet'],'Planets'],
+  [['nasa','esa','spacex','rocket','starship','launch','mission','spacecraft','probe','falcon','sls'],'Missions'],
+  [['black hole','gravitational wave','neutron star','dark matter','dark energy','quantum','galaxy','nebula','big bang','telescope','hubble','physics'],'Physics'],
+];
+const CAT_COLOR = { Physics:'#ffb5a0', Planets:'#00f0ff', Moon:'#dbfcff', Missions:'#00f0ff', 'AI & Tech':'#7dd3fc' };
+const CAT_ICON  = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
+const FALLBACK_POOL = {
+  Physics: ['https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg','https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg'],
+  Planets: ['https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg','https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1917a.jpg'],
+  Moon:    ['https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg'],
+  Missions:['https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg'],
+  'AI & Tech':['https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg'],
+};
+
+function _hashTitle(s) { let h=0; for(let i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0;} return Math.abs(h); }
+function pickFallback(cat, title) { const p=FALLBACK_POOL[cat]; if(!p||!p.length)return ''; return p[_hashTitle(title)%p.length]; }
+function guessCategory(title, tags) { const txt=(title+' '+tags).toLowerCase(); for(const[kws,cat]of KEYWORD_CATS){for(const kw of kws){if(txt.includes(kw))return cat;}} return null; }
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function stripHtml(s) { return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').trim(); }
+
+async function fetchFeed(feedInfo) {
+  const SPACE_SRCS = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+  try {
+    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedInfo.url)}`, { signal: AbortSignal.timeout(8000) });
+    const json = await res.json();
+    if (json.status === 'ok' && json.items?.length > 0) {
+      return json.items.slice(0, 12).map((item, idx) => {
+        const title = stripHtml(item.title || '');
+        if (!title || title.length < 10) return null;
+        const link = item.link || item.guid || '#';
+        if (!/^https?:\/\/.+\..+/i.test(link)) return null;
+        const descRaw = item.content || item.description || '';
+        const excerpt = stripHtml(descRaw).slice(0, 220).trim();
+        const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+        const tags = (item.categories || []).join(' ');
+        const category = guessCategory(title, tags) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
+        let image = item.thumbnail || item.enclosure?.link || '';
+        if (!image || !/^https?:/.test(image)) {
+          const html = item.content || item.description || '';
+          const m = html.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
+          if (m) image = m[1].split('?')[0];
+        }
+        if (!image || !/^https?:/.test(image)) image = pickFallback(category, title);
+        return { title, excerpt, category, date, source: feedInfo.source, image, link };
+      }).filter(Boolean);
+    }
+  } catch(e) { /* fall through */ }
+
+  let text = '';
+  for (const proxyFn of RSS_PROXIES) {
+    try {
+      const res = await fetch(proxyFn(feedInfo.url), { signal: AbortSignal.timeout(7000) });
+      const t = await res.text();
+      if (t.includes('<item') || t.includes('<entry')) { text = t; break; }
+    } catch(e) {}
+  }
+  if (!text) return [];
+  const sanitized = text.replace(/&(?!(?:[a-zA-Z][a-zA-Z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);)/g, '&amp;');
+  let doc = new DOMParser().parseFromString(sanitized, 'application/xml');
+  if (doc.querySelector('parsererror')) doc = new DOMParser().parseFromString(text, 'text/html');
+  const items = Array.from(doc.querySelectorAll('item, entry'));
+  return items.slice(0,12).map(item => {
+    const title = stripHtml(item.querySelector('title')?.textContent || '');
+    const linkEl = item.querySelector('link');
+    const link = (linkEl?.getAttribute('href') || linkEl?.textContent?.trim() || '#').replace(/\s+/g,'');
+    const descRaw = item.querySelector('description')?.textContent || item.querySelector('summary')?.textContent || '';
+    const excerpt = stripHtml(descRaw).slice(0,220).trim();
+    const pubDate = item.querySelector('pubDate')?.textContent || item.querySelector('published')?.textContent || '';
+    const date = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    const tags = Array.from(item.querySelectorAll('category')).map(c=>c.textContent).join(' ');
+    const PURE_SPACE = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+    const category = guessCategory(title, tags) || (PURE_SPACE.includes(feedInfo.source) ? 'Missions' : null);
+    let image = '';
+    const allEls = Array.from(item.getElementsByTagName('*'));
+    for (const el of allEls) {
+      const u = el.getAttribute('url') || el.getAttribute('href') || '';
+      if (/^https?:.*\.(?:jpg|jpeg|png|webp|gif)/i.test(u)) { image = u.split('?')[0]; break; }
+    }
+    if (!image) {
+      const m = descRaw.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
+      if (m) image = m[1].split('?')[0];
+    }
+    if (!image) image = pickFallback(category, title);
+    return { title, excerpt, category, date, source: feedInfo.source, image, link };
+  }).filter(a => a.category && a.title.length > 10 && /^https?:/.test(a.link));
+}
+
+let allArticles = [];
+
+function renderTrending() {
+  const container = document.getElementById('trending-list');
+  if (!allArticles.length) {
+    container.innerHTML = '<div class="loading-state">Waiting for live signals…</div>';
+    return;
+  }
+  const ranked = allArticles.slice(0, 20);
+  container.innerHTML = ranked.map((a, i) => {
+    const rank = i + 1;
+    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+    const rankLabel = rank <= 3 ? '#' + rank : rank;
+    const cc = CAT_COLOR[a.category] || '#00f0ff';
+    const ic = CAT_ICON[a.category] || 'article';
+    const fb = pickFallback(a.category, a.title);
+    return `
+    <a href="${escHtml(a.link)}" target="_blank" rel="noopener" class="trending-item">
+      <div class="rank-badge ${rankClass}"><span>${rankLabel}</span></div>
+      <div class="thumb">
+        <img src="${escHtml(a.image)}" alt="" onerror="this.src='${fb}';this.onerror=null;"/>
+      </div>
+      <div class="item-body">
+        <div class="item-meta">
+          <span class="material-symbols-outlined" style="font-size:12px;color:${cc}">${ic}</span>
+          <span class="cat-label" style="color:${cc}">${a.category}</span>
+          <span class="dot-sep">·</span>
+          <span class="src-label">${escHtml(a.source)}</span>
+        </div>
+        <div class="item-title">${escHtml(a.title)}</div>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem;">
+        <span class="item-date">${a.date || 'Recent'}</span>
+      </div>
+      <span class="material-symbols-outlined arrow-icon">arrow_forward</span>
+    </a>`;
+  }).join('');
+}
+
+async function loadFeeds() {
+  try {
+    const results = await Promise.allSettled(FEEDS.map(f => fetchFeed(f)));
+    const buckets = results.map(r => r.status === 'fulfilled' ? r.value : []).filter(b => b.length > 0);
+    const merged = [];
+    const maxLen = Math.max(...buckets.map(b => b.length), 0);
+    for (let i = 0; i < maxLen && merged.length < 30; i++) {
+      for (const bucket of buckets) {
+        if (i < bucket.length && merged.length < 30) merged.push(bucket[i]);
+      }
+    }
+    allArticles = merged;
+    renderTrending();
+  } catch(e) {
+    document.getElementById('trending-list').innerHTML = '<div class="loading-state">Could not load signals — try again later.</div>';
+  }
+}
+
+// ── Star canvas ───────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('star-canvas');
+  const ctx = canvas.getContext('2d');
+  function draw() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const total = Math.floor((canvas.width * canvas.height) / 2800);
+    for (let i = 0; i < total; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const r = Math.random() * 1.1;
+      const opacity = Math.random() * 0.55 + 0.1;
+      const isCyan = Math.random() < 0.12;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = isCyan ? `rgba(180,240,255,${opacity})` : `rgba(255,255,255,${opacity})`;
+      ctx.fill();
+    }
+  }
+  draw();
+  window.addEventListener('resize', draw);
+})();
+
+loadFeeds();
+</script>
+</body>
+</html>
