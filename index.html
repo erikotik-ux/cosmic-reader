@@ -126,39 +126,34 @@
   @media (max-width: 767px) {
     /* Planets scroll container */
     #mobile-galaxy {
-      overflow-x: hidden;     /* clip horizontal — prevents planets drifting left on swipe */
-      touch-action: pan-y;    /* browser only handles vertical touch panning */
-      /* snap: START alignment so each planet's top lands at scroll-padding-top.
-         With padding-top == scroll-padding-top (both 6rem), scroll=0 is already
-         a valid snap position — no correction jump on page load or view re-entry. */
-      scroll-snap-type: y mandatory;
-      scroll-padding-top: 6rem;    /* 96px — matches padding-top below */
+      overflow-x: hidden;          /* clip horizontal — prevents planets drifting left */
+      touch-action: pan-y;         /* browser only handles vertical touch panning */
+      /* proximity (not mandatory) — snaps when close to a planet but doesn't
+         force-snap to the END of the container, which caused the last planet
+         to float high with a huge empty gap below it. */
+      scroll-snap-type: y proximity;
+      scroll-padding-top: 8rem;    /* 128px — matches padding-top so scroll=0 is valid */
       scroll-padding-bottom: 4rem; /* 64px — clears 56px bottom nav */
-      padding-top: 6rem !important; /* 96px — first planet starts ~28px below header */
-      /* Note: padding-bottom omitted — Chrome ignores it in overflow flex containers.
-         The ::after spacer below is the reliable cross-browser fix. */
+      padding-top: 8rem !important; /* 128px — first planet 60px below ~68px header */
     }
     /* Cross-browser bottom spacer — Chrome ignores padding-bottom in overflow
        flex containers, but DOES extend scroll height for ::after elements. */
     #mobile-galaxy::after {
       content: '';
       display: block;
-      min-height: 5rem; /* 80px — comfortably clears 56px bottom nav */
+      min-height: 5rem; /* 80px — clears 56px bottom nav */
       flex-shrink: 0;
       width: 100%;
     }
-    /* Each planet snaps by its TOP edge to the scroll-padding-top boundary.
-       Predictable: top of planet always lands at ~96px from viewport top (~28px
-       below the ~68px fixed header). Removed scroll-margin-top — not needed
-       with start alignment since scroll-padding-top handles the offset. */
+    /* Each planet snaps by its TOP edge to the scroll-padding-top line */
     #mobile-galaxy .planet-node {
       scroll-snap-align: start;
     }
     /* Article/content scroll containers */
     .mobile-safe-scroll {
-      scroll-padding-top: 6rem;       /* 96px — clears fixed header */
+      scroll-padding-top: 8rem;       /* 128px — clears fixed header */
       scroll-padding-bottom: 4rem;    /* 64px — clears bottom nav */
-      padding-top: 6rem !important;   /* 96px — clears ~68px fixed header */
+      padding-top: 8rem !important;   /* 128px — clears ~68px fixed header with room */
     }
     /* Same Chrome bottom-padding bug — use ::after spacer */
     .mobile-safe-scroll::after {
