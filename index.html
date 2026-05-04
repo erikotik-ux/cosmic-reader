@@ -2613,9 +2613,15 @@ function filterFeed(category) {
 // ── Integrity Bar ─────────────────────────────────────────
 function updateIntegrity(liveCount) {
   const total = FEEDS.length;
-  const pct = total > 0 ? Math.round((liveCount / total) * 100) : 0;
   const bar = document.getElementById('integrity-bar');
   const label = document.getElementById('integrity-pct');
+  if (liveCount === 0) {
+    // Feeds couldn't load — show indeterminate state, not "0%"
+    if (bar) bar.style.width = '0%';
+    if (label) label.textContent = '—%';
+    return;
+  }
+  const pct = Math.round((liveCount / total) * 100);
   if (bar) bar.style.width = pct + '%';
   if (label) label.textContent = pct + '%';
 }
