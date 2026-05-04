@@ -1002,16 +1002,16 @@
     <div class="glass-panel px-3 py-2 border border-outline-variant/15 rounded-lg flex items-center gap-3">
       <span class="font-label text-[9px] text-primary/60 uppercase whitespace-nowrap">Sys. Integrity</span>
       <div class="flex-1 h-1 bg-surface-container-lowest rounded-full overflow-hidden">
-        <div class="h-full bg-primary w-4/5 rounded-full"></div>
+        <div id="integrity-bar" class="h-full bg-primary rounded-full" style="width:80%"></div>
       </div>
-      <span class="font-label text-[9px] text-on-surface-variant whitespace-nowrap">80%</span>
+      <span id="integrity-pct" class="font-label text-[9px] text-on-surface-variant whitespace-nowrap">—%</span>
     </div>
     <!-- Local Time + Active Feeds — side by side -->
     <div class="flex gap-2">
       <div class="glass-panel p-3 border border-outline-variant/15 rounded-lg flex-1">
         <span class="font-label text-[9px] text-tertiary/60 uppercase block mb-0.5">Local Time</span>
         <span id="clock" class="font-headline text-base tracking-widest text-[#dbfcff] clock-display">00:00:00</span>
-        <span class="font-label text-[8px] text-on-surface-variant block uppercase tracking-tighter">UTC</span>
+        <span class="font-label text-[8px] text-on-surface-variant block uppercase tracking-tighter">Local</span>
       </div>
       <div class="glass-panel p-3 border border-outline-variant/15 rounded-lg flex-1">
         <span class="font-label text-[9px] text-secondary/60 uppercase block mb-0.5">Active Feeds</span>
@@ -2057,6 +2057,7 @@ async function loadLiveFeeds() {
     const liveCount = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
     const feedCountEl = document.getElementById('hud-feed-count');
     if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length;
+    updateIntegrity(liveCount);
 
     if (merged.length > 0) {
       articles.length = 0;
@@ -2609,12 +2610,22 @@ function filterFeed(category) {
   renderCurrentPage();
 }
 
+// ── Integrity Bar ─────────────────────────────────────────
+function updateIntegrity(liveCount) {
+  const total = FEEDS.length;
+  const pct = total > 0 ? Math.round((liveCount / total) * 100) : 0;
+  const bar = document.getElementById('integrity-bar');
+  const label = document.getElementById('integrity-pct');
+  if (bar) bar.style.width = pct + '%';
+  if (label) label.textContent = pct + '%';
+}
+
 // ── Clock ─────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
-  const h = String(now.getUTCHours()).padStart(2,'0');
-  const m = String(now.getUTCMinutes()).padStart(2,'0');
-  const s = String(now.getUTCSeconds()).padStart(2,'0');
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
   const el = document.getElementById('clock');
   if (el) el.textContent = h + ':' + m + ':' + s;
 }
@@ -2737,6 +2748,7 @@ async function deployProbe() {
     const liveCount = buckets.length;
     const feedCountEl = document.getElementById('hud-feed-count');
     if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length;
+    updateIntegrity(liveCount);
 
     if (merged.length > 0) {
       articles.length = 0;
