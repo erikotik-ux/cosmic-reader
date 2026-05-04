@@ -60,14 +60,15 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 50;
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
       padding: 1.25rem 4rem;
       background: rgba(8, 15, 16, 0.55);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(0, 240, 255, 0.08);
     }
+    nav.top-bar > .btn-primary { justify-self: end; }
     .nav-brand {
       display: flex;
       align-items: center;
@@ -619,44 +620,9 @@
     </a>
   </div>
 
-  <!-- HUD decoration -->
-  <div class="hero-hud">
-    <div class="hud-bar"></div>
-    <span class="label-caps" style="color: rgba(0,240,255,0.5);">Orbital_Station_01</span>
-  </div>
-
   <!-- Scroll indicator -->
   <div class="scroll-hint">
     <span class="material-symbols-outlined">keyboard_arrow_down</span>
-  </div>
-</section>
-
-<div class="scanner-divider"></div>
-
-<!-- ── Category Strip ── -->
-<section class="category-strip">
-  <p class="label-caps strip-label">Intelligence Sectors</p>
-  <div class="category-grid">
-    <a class="cat-card" href="app.html?cat=Physics">
-      <span class="material-symbols-outlined">science</span>
-      <span class="cat-name">Physics</span>
-    </a>
-    <a class="cat-card" href="app.html?cat=Planets">
-      <span class="material-symbols-outlined">public</span>
-      <span class="cat-name">Planets</span>
-    </a>
-    <a class="cat-card" href="app.html?cat=Moon">
-      <span class="material-symbols-outlined">brightness_2</span>
-      <span class="cat-name">Moon</span>
-    </a>
-    <a class="cat-card" href="app.html?cat=Missions">
-      <span class="material-symbols-outlined">rocket_launch</span>
-      <span class="cat-name">Missions</span>
-    </a>
-    <a class="cat-card" href="app.html?cat=AI+%26+Tech">
-      <span class="material-symbols-outlined">memory</span>
-      <span class="cat-name">AI &amp; Tech</span>
-    </a>
   </div>
 </section>
 
