@@ -107,6 +107,9 @@
       list-style: none;
     }
     .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
       color: rgba(219,252,255,0.45);
       text-decoration: none;
       font-size: 0.7rem;
@@ -116,6 +119,10 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: #00f0ff; }
+    .nav-links a .material-symbols-outlined {
+      font-size: 15px;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
     .btn-primary {
       background: transparent;
       border: 1px solid var(--primary-container);
@@ -592,9 +599,9 @@
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="galaxy-map.html">Galaxy Map</a></li>
-    <li><a href="transmissions.html">Transmissions</a></li>
-    <li><a href="trending.html">Trending</a></li>
+    <li><a href="galaxy-map.html"><span class="material-symbols-outlined">radar</span>Galaxy Map</a></li>
+    <li><a href="transmissions.html"><span class="material-symbols-outlined">satellite_alt</span>Transmissions</a></li>
+    <li><a href="trending.html"><span class="material-symbols-outlined">local_fire_department</span>Trending</a></li>
   </ul>
   <a href="app.html" class="btn-primary">Enter Terminal</a>
 </nav>
