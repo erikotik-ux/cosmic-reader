@@ -1705,7 +1705,18 @@ async function fetchFeed(feedInfo) {
         const date     = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
         const tags     = (item.categories || []).join(' ');
         const category = guessCategory(title, tags) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
+        // 1. rss2json thumbnail field
         let image = item.thumbnail || item.enclosure?.link || '';
+        // 2. Scan the content HTML for embedded <img src="..."> (WordPress featured images
+        //    live here, not in the thumbnail field — common for NASASpaceFlight, SpaceNews etc.)
+        if (!image || !/^https?:/.test(image)) {
+          const html = item.content || item.description || '';
+          const m = html.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i)
+                 || html.match(/\bdata-src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i)
+                 || html.match(/\bsrc='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*?)'/i);
+          if (m) image = m[1].split('?')[0];
+        }
+        // 3. Category-matched fallback so no article is ever imageless
         if (!image || !/^https?:/.test(image)) image = pickFallback(category, title);
         const readTime = Math.max(1, Math.ceil((body || excerpt).split(' ').length / 200));
         return {
@@ -2095,6 +2106,8 @@ async function loadLiveFeeds() {
 
     // Count live feeds — show real number if >0, else keep showing configured count
     const liveCount = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
+    console.log('[CosmicReader] feed results:', results.map((r,i) => FEEDS[i]?.source + ':' + (r.status==='fulfilled' ? r.value.length + ' articles' : 'FAILED')));
+    console.log('[CosmicReader] liveCount:', liveCount);
     const feedCountEl = document.getElementById('hud-feed-count');
     if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length;
     updateIntegrity(liveCount);
