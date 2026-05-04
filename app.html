@@ -1514,6 +1514,7 @@
 // ── RSS Feed Config ────────────────────────────────────────
 // Multiple proxies tried in order — if one fails the next is used
 const RSS_PROXIES = [
+  url => `/api/rss?url=${encodeURIComponent(url)}`,                            // Vercel serverless — most reliable, runs on same host
   url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
