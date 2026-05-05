@@ -203,6 +203,65 @@
   /* Feed loading skeleton pulse */
   @keyframes skelPulse { 0%,100%{opacity:.3} 50%{opacity:.7} }
   .skel { animation: skelPulse 1.4s ease-in-out infinite; background: rgba(0,240,255,0.06); border-radius:4px; }
+
+  /* ── Animated CR Logo (Mini — nav use) ── */
+  .cr-logo-mini {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+  .cr-planet {
+    position: absolute;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 37% 33%,
+        rgba(230, 255, 255, 1.0)   0%,
+        rgba(0,   240, 255, 0.95) 11%,
+        rgba(0,   200, 240, 0.85) 26%,
+        rgba(0,   120, 185, 0.72) 46%,
+        rgba(0,    50, 110, 0.50) 63%,
+        rgba(0,    15,  45, 0.25) 78%,
+        transparent                92%
+      );
+    pointer-events: none;
+    z-index: 0;
+    animation: cr-planet-pulse 8s ease-in-out infinite;
+  }
+  .cr-logo-mini .cr-planet {
+    inset: -20%;
+    filter:
+      drop-shadow(0 0 7px rgba(0,240,255,0.85))
+      drop-shadow(0 0 18px rgba(0,200,255,0.50));
+  }
+  .cr-letterform {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 2;
+    animation: cr-glow 5s ease-in-out infinite;
+  }
+  .cr-logo-mini .cr-letterform {
+    filter: drop-shadow(0 0 6px rgba(0,240,255,0.65));
+  }
+  @keyframes cr-planet-pulse {
+    0%, 100% { opacity: 0.82; }
+    50%       { opacity: 1.00; }
+  }
+  @keyframes cr-glow {
+    0%, 100% {
+      filter:
+        drop-shadow(0 0 11px rgba(0,240,255,0.58))
+        drop-shadow(0 0 30px rgba(0,240,255,0.26));
+    }
+    50% {
+      filter:
+        drop-shadow(0 0 22px rgba(0,240,255,1.00))
+        drop-shadow(0 0 55px rgba(0,240,255,0.50));
+    }
+  }
 </style>
 </head>
 <body class="bg-background text-on-surface font-body overflow-hidden">
@@ -212,7 +271,10 @@
   <div class="flex items-center gap-8">
     <!-- Cosmic Reader Logo — links back to homepage -->
     <a href="index.html" class="select-none flex items-center gap-2.5 group no-underline" title="Cosmic Reader — Home">
-      <img src="assets/cr-logo-new.svg" alt="Cosmic Reader" width="36" height="36" class="drop-shadow-[0_0_8px_rgba(0,240,255,0.4)]" style="filter: drop-shadow(0 0 6px rgba(0,240,255,0.35));">
+      <div class="cr-logo-mini">
+        <div class="cr-planet"></div>
+        <img src="assets/cr-logo-new.svg" alt="Cosmic Reader" class="cr-letterform" />
+      </div>
       <div class="flex flex-col leading-none">
         <span class="text-[11px] font-headline font-bold tracking-[0.25em] uppercase text-[#00f0ff] drop-shadow-[0_0_8px_rgba(0,240,255,0.6)] group-hover:text-white transition-colors">Cosmic</span>
         <span class="text-[11px] font-headline font-bold tracking-[0.25em] uppercase text-[#dbfcff]/70 group-hover:text-[#dbfcff] transition-colors">Reader</span>
