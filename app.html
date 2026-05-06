@@ -218,11 +218,10 @@
     left: 16%;
     top: 16%;
     border-radius: 50%;
-    background-image: url('assets/planet.png');
-    background-size: cover;
-    background-position: center;
+    object-fit: cover;
     pointer-events: none;
     z-index: 0;
+    display: block;
     animation: cr-planet-pulse 8s ease-in-out infinite;
   }
   .cr-logo-mini .cr-planet {
@@ -262,7 +261,7 @@
     <!-- Cosmic Reader Logo — links back to homepage -->
     <a href="index.html" class="select-none flex items-center gap-2.5 group no-underline" title="Cosmic Reader — Home">
       <div class="cr-logo-mini">
-        <div class="cr-planet"></div>
+        <img src="assets/planet.png" alt="" class="cr-planet" />
         <img src="assets/cr-logo-new.svg" alt="Cosmic Reader" class="cr-letterform" />
       </div>
       <div class="flex flex-col leading-none">

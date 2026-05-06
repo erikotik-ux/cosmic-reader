@@ -208,15 +208,12 @@
       left: 16%;
       top: 16%;
       border-radius: 50%;
-      background-image: url('assets/planet.png');
-      background-size: cover;
-      background-position: center;
+      object-fit: cover;
       animation: cr-planet-pulse 8s ease-in-out infinite;
       z-index: 0;
       pointer-events: none;
+      display: block;
     }
-    .cr-planet::before { display: none; }
-    .cr-planet::after  { display: none; }
     .cr-letterform {
       position: absolute;
       inset: 0;
@@ -648,7 +645,7 @@
 <nav class="top-bar">
   <a href="index.html" class="nav-brand">
     <div class="cr-logo-mini">
-      <div class="cr-planet"></div>
+      <img src="assets/planet.png" alt="" class="cr-planet" />
       <img src="assets/cr-logo-new.svg" alt="Cosmic Reader Logo" class="cr-letterform" />
     </div>
     <div class="nav-brand-text">
@@ -670,7 +667,7 @@
 
   <!-- Center Logo — CR letterform floating above glowing planet -->
   <div class="hero-logo-wrap">
-    <div class="cr-planet"></div>
+    <img src="assets/planet.png" alt="" class="cr-planet" />
     <img src="assets/cr-logo-new.svg" alt="Cosmic Reader" class="cr-letterform" />
   </div>
 
