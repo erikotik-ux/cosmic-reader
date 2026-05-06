@@ -206,15 +206,19 @@
     /* Planet layer — dark indigo/navy sphere */
     .cr-planet {
       position: absolute;
-      inset: -14%;
+      /* Sized to fit inside the C bowl — ~57% of wrapper, offset slightly right */
+      width: 57%;
+      height: 57%;
+      left: 23%;
+      top: 22%;
       border-radius: 50%;
       background:
         radial-gradient(circle at 38% 32%,
-          rgba(110, 115, 200, 0.65)  0%,   /* subtle specular */
-          rgba( 50,  55, 160, 0.80) 18%,   /* mid blue-violet */
-          rgba( 20,  20,  80, 0.92) 42%,   /* deep indigo */
-          rgba(  8,   8,  35, 0.97) 65%,   /* near black */
-          rgba(  2,   2,  12, 1.00) 85%,   /* black */
+          rgba(110, 115, 200, 0.65)  0%,
+          rgba( 50,  55, 160, 0.80) 18%,
+          rgba( 20,  20,  80, 0.92) 42%,
+          rgba(  8,   8,  35, 0.97) 65%,
+          rgba(  2,   2,  12, 1.00) 85%,
           rgba(  0,   0,   0, 1.00) 100%
         );
       box-shadow:
