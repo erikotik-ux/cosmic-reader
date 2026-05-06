@@ -205,22 +205,23 @@
       position: absolute;
       width: 57%;
       height: 57%;
-      left: 23%;
-      top: 22%;
+      left: 21%;
+      top: 24%;
       border-radius: 50%;
-      background:
-        radial-gradient(circle at 38% 32%,
-          rgba(110, 115, 200, 0.65)  0%,
-          rgba( 50,  55, 160, 0.80) 18%,
-          rgba( 20,  20,  80, 0.92) 42%,
-          rgba(  8,   8,  35, 0.97) 65%,
-          rgba(  2,   2,  12, 1.00) 85%,
-          rgba(  0,   0,   0, 1.00) 100%
-        );
+      background: radial-gradient(circle at 9% 52%,
+        rgba(160, 240, 255, 1.00)  0%,
+        rgba(  0, 210, 248, 1.00)  4%,
+        rgba(  0, 150, 190, 0.90) 10%,
+        rgba(  0,  55,  85, 0.97) 18%,
+        rgba(  0,  10,  22, 1.00) 30%,
+        rgba(  0,   2,   8, 1.00) 50%,
+        rgba(  0,   0,   2, 1.00) 72%,
+        rgba(  0,   0,   0, 1.00) 100%
+      );
       box-shadow:
-        0 0 28px rgba( 80,  90, 210, 0.30),
-        0 0 70px rgba( 60,  70, 190, 0.14),
-        inset 0 0 30px rgba(0, 0, 20, 0.6);
+        0 0 16px rgba(0, 195, 240, 0.22),
+        0 0 45px rgba(0, 170, 215, 0.10),
+        inset 0 0 22px rgba(0, 0, 5, 0.92);
       animation: cr-planet-pulse 8s ease-in-out infinite;
       z-index: 0;
       pointer-events: none;
@@ -230,12 +231,12 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: radial-gradient(circle at 38% 32%,
-        transparent              55%,
-        rgba( 70,  80, 190, 0.10) 68%,
-        rgba( 90, 100, 220, 0.22) 80%,
-        rgba( 70,  85, 200, 0.10) 90%,
-        transparent              100%
+      background: radial-gradient(circle at 9% 52%,
+        transparent               50%,
+        rgba( 0, 140, 185, 0.07)  65%,
+        rgba( 0, 185, 225, 0.18)  80%,
+        rgba( 0, 160, 200, 0.07)  90%,
+        transparent               100%
       );
     }
     .cr-planet::after {
@@ -244,10 +245,10 @@
       inset: -5%;
       border-radius: 50%;
       background: radial-gradient(circle,
-        transparent              70%,
-        rgba( 80,  90, 210, 0.08) 80%,
-        rgba(100, 110, 230, 0.14) 90%,
-        transparent              100%
+        transparent               72%,
+        rgba(0, 170, 215, 0.06)   83%,
+        rgba(0, 200, 242, 0.12)   92%,
+        transparent               100%
       );
       animation: cr-atmo 6s ease-in-out infinite alternate;
     }
@@ -270,11 +271,11 @@
     .cr-logo-mini .cr-planet {
       width: 57%;
       height: 57%;
-      left: 23%;
-      top: 22%;
+      left: 21%;
+      top: 24%;
       box-shadow:
-        0 0 10px rgba(80, 90, 210, 0.35),
-        0 0 25px rgba(60, 70, 190, 0.18);
+        0 0 10px rgba(0, 195, 240, 0.35),
+        0 0 25px rgba(0, 170, 215, 0.18);
     }
     .cr-logo-mini .cr-planet::before { display: none; }
     .cr-logo-mini .cr-letterform {
