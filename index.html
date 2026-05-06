@@ -203,58 +203,53 @@
       animation: cr-atmo 6s ease-in-out infinite alternate;
     }
 
-    /* Planet layer — CSS glowing sphere */
+    /* Planet layer — dark indigo/navy sphere */
     .cr-planet {
       position: absolute;
       inset: -14%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 37% 33%,
-          rgba(230, 255, 255, 1.0)   0%,
-          rgba(0,   240, 255, 0.95) 11%,
-          rgba(0,   200, 240, 0.85) 26%,
-          rgba(0,   120, 185, 0.72) 46%,
-          rgba(0,    50, 110, 0.50) 63%,
-          rgba(0,    15,  45, 0.25) 78%,
-          transparent                92%
+        radial-gradient(circle at 38% 32%,
+          rgba(110, 115, 200, 0.65)  0%,   /* subtle specular */
+          rgba( 50,  55, 160, 0.80) 18%,   /* mid blue-violet */
+          rgba( 20,  20,  80, 0.92) 42%,   /* deep indigo */
+          rgba(  8,   8,  35, 0.97) 65%,   /* near black */
+          rgba(  2,   2,  12, 1.00) 85%,   /* black */
+          rgba(  0,   0,   0, 1.00) 100%
         );
-      filter:
-        blur(0.6px)
-        drop-shadow(0 0 22px rgba(0,240,255,0.78))
-        drop-shadow(0 0 60px rgba(0,200,255,0.40))
-        drop-shadow(0 0 130px rgba(0,150,255,0.18));
+      box-shadow:
+        0 0 28px rgba( 80,  90, 210, 0.30),
+        0 0 70px rgba( 60,  70, 190, 0.14),
+        inset 0 0 30px rgba(0, 0, 20, 0.6);
       animation: cr-planet-pulse 8s ease-in-out infinite;
       z-index: 0;
       pointer-events: none;
     }
-    /* Drifting surface highlight */
+    /* Atmospheric rim glow */
     .cr-planet::before {
       content: '';
       position: absolute;
-      width: 38%;
-      height: 38%;
-      top: 48%;
-      left: 54%;
+      inset: 0;
       border-radius: 50%;
-      background: radial-gradient(circle,
-        rgba(0,240,255,0.20) 0%,
-        transparent 68%
+      background: radial-gradient(circle at 38% 32%,
+        transparent              55%,
+        rgba( 70,  80, 190, 0.10) 68%,
+        rgba( 90, 100, 220, 0.22) 80%,
+        rgba( 70,  85, 200, 0.10) 90%,
+        transparent              100%
       );
-      animation: cr-surface 28s linear infinite;
-      transform-origin: -28% 52%;
     }
-    /* Atmospheric halo ring */
+    /* Outer atmospheric halo */
     .cr-planet::after {
       content: '';
       position: absolute;
-      inset: -7%;
+      inset: -5%;
       border-radius: 50%;
       background: radial-gradient(circle,
-        transparent              72%,
-        rgba(0,240,255,0.05)    80%,
-        rgba(0,240,255,0.13)    88%,
-        rgba(0,200,255,0.04)    95%,
-        transparent             100%
+        transparent              70%,
+        rgba( 80,  90, 210, 0.08) 80%,
+        rgba(100, 110, 230, 0.14) 90%,
+        transparent              100%
       );
       animation: cr-atmo 6s ease-in-out infinite alternate;
     }
@@ -267,9 +262,7 @@
       height: 100%;
       object-fit: contain;
       z-index: 2;
-      filter:
-        drop-shadow(0 0 14px rgba(0,240,255,0.70))
-        drop-shadow(0 0 38px rgba(0,240,255,0.32));
+      filter: drop-shadow(0 0 6px rgba(255,255,255,0.25));
       animation: cr-glow 5s ease-in-out infinite;
     }
 
@@ -282,14 +275,13 @@
     }
     .cr-logo-mini .cr-planet {
       inset: -20%;
-      filter:
-        drop-shadow(0 0 7px rgba(0,240,255,0.85))
-        drop-shadow(0 0 18px rgba(0,200,255,0.50));
-      animation: cr-planet-pulse 8s ease-in-out infinite;
+      box-shadow:
+        0 0 10px rgba(80, 90, 210, 0.35),
+        0 0 25px rgba(60, 70, 190, 0.18);
     }
     .cr-logo-mini .cr-planet::before { display: none; }
     .cr-logo-mini .cr-letterform {
-      filter: drop-shadow(0 0 6px rgba(0,240,255,0.65));
+      filter: drop-shadow(0 0 3px rgba(255,255,255,0.20));
       animation: cr-glow 5s ease-in-out infinite;
     }
 
@@ -299,28 +291,16 @@
       50%       { transform: translateY(-14px); }
     }
     @keyframes cr-planet-pulse {
-      0%, 100% { opacity: 0.82; }
+      0%, 100% { opacity: 0.88; }
       50%       { opacity: 1.00; }
     }
-    @keyframes cr-surface {
-      from { transform: rotate(0deg);   }
-      to   { transform: rotate(360deg); }
-    }
     @keyframes cr-atmo {
-      from { opacity: 0.45; }
-      to   { opacity: 1.00; }
+      from { opacity: 0.5; }
+      to   { opacity: 1.0; }
     }
     @keyframes cr-glow {
-      0%, 100% {
-        filter:
-          drop-shadow(0 0 11px rgba(0,240,255,0.58))
-          drop-shadow(0 0 30px rgba(0,240,255,0.26));
-      }
-      50% {
-        filter:
-          drop-shadow(0 0 22px rgba(0,240,255,1.00))
-          drop-shadow(0 0 55px rgba(0,240,255,0.50));
-      }
+      0%, 100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.20)); }
+      50%       { filter: drop-shadow(0 0 10px rgba(255,255,255,0.40)); }
     }
 
     .hero-eyebrow {
