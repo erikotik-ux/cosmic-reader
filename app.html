@@ -212,24 +212,42 @@
     flex-shrink: 0;
   }
   .cr-planet {
-    position: absolute;
-    width: 68%;
-    height: 68%;
-    left: calc(25% - 2px);
-    top: 16%;
-    border-radius: 50%;
-    object-fit: cover;
+    position: absolute !important;
+    width: 68% !important;
+    height: 68% !important;
+    left: calc(25% - 2px) !important;
+    top: 16% !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
     pointer-events: none;
     z-index: 0;
-    display: block;
+    display: block !important;
     animation: cr-planet-pulse 8s ease-in-out infinite;
   }
   .cr-logo-mini .cr-planet {
+    width: calc(68% - 2px) !important;
+    height: calc(68% - 2px) !important;
+    left: calc(25% - 1px) !important;
+    top: 16% !important;
+    box-shadow: none;
+  }
+  .cr-planet-wrap {
+    position: absolute;
     width: calc(68% - 2px);
     height: calc(68% - 2px);
     left: calc(25% - 1px);
     top: 16%;
-    box-shadow: none;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+    animation: cr-planet-pulse 8s ease-in-out infinite;
+  }
+  .cr-planet-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    display: block;
   }
   .cr-letterform {
     position: absolute;
@@ -261,7 +279,9 @@
     <!-- Cosmic Reader Logo — links back to homepage -->
     <a href="index.html" class="select-none flex items-center gap-2.5 group no-underline" title="Cosmic Reader — Home">
       <div class="cr-logo-mini">
-        <img src="assets/planet.png" alt="" class="cr-planet" />
+        <div class="cr-planet-wrap">
+          <img src="assets/planet.png" alt="" class="cr-planet-img" />
+        </div>
         <img src="assets/cr-logo-new.svg" alt="Cosmic Reader" class="cr-letterform" />
       </div>
       <div class="flex flex-col leading-none">
