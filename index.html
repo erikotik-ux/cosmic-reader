@@ -206,57 +206,20 @@
     /* Planet layer — dark indigo/navy sphere */
     .cr-planet {
       position: absolute;
-      width: 57%;
-      height: 57%;
-      left: 21%;
-      top: 24%;
+      width: 68%;
+      height: 68%;
+      left: 16%;
+      top: 16%;
       border-radius: 50%;
-      background: radial-gradient(circle at 9% 52%,
-        rgba(160, 240, 255, 1.00)  0%,
-        rgba(  0, 210, 248, 1.00)  4%,
-        rgba(  0, 150, 190, 0.90) 10%,
-        rgba(  0,  55,  85, 0.97) 18%,
-        rgba(  0,  10,  22, 1.00) 30%,
-        rgba(  0,   2,   8, 1.00) 50%,
-        rgba(  0,   0,   2, 1.00) 72%,
-        rgba(  0,   0,   0, 1.00) 100%
-      );
-      box-shadow:
-        0 0 16px rgba(0, 195, 240, 0.22),
-        0 0 45px rgba(0, 170, 215, 0.10),
-        inset 0 0 22px rgba(0, 0, 5, 0.92);
+      background-image: url('assets/planet.png');
+      background-size: cover;
+      background-position: center;
       animation: cr-planet-pulse 8s ease-in-out infinite;
       z-index: 0;
       pointer-events: none;
     }
-    /* Atmospheric rim glow */
-    .cr-planet::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: radial-gradient(circle at 9% 52%,
-        transparent               50%,
-        rgba( 0, 140, 185, 0.07)  65%,
-        rgba( 0, 185, 225, 0.18)  80%,
-        rgba( 0, 160, 200, 0.07)  90%,
-        transparent               100%
-      );
-    }
-    /* Outer atmospheric halo */
-    .cr-planet::after {
-      content: '';
-      position: absolute;
-      inset: -5%;
-      border-radius: 50%;
-      background: radial-gradient(circle,
-        transparent               72%,
-        rgba(0, 170, 215, 0.06)   83%,
-        rgba(0, 200, 242, 0.12)   92%,
-        transparent               100%
-      );
-      animation: cr-atmo 6s ease-in-out infinite alternate;
-    }
+    .cr-planet::before { display: none; }
+    .cr-planet::after  { display: none; }
 
     /* SVG letterform on top */
     .cr-letterform {
@@ -278,13 +241,11 @@
       flex-shrink: 0;
     }
     .cr-logo-mini .cr-planet {
-      width: 57%;
-      height: 57%;
-      left: 21%;
-      top: 24%;
-      box-shadow:
-        0 0 10px rgba(0, 195, 240, 0.35),
-        0 0 25px rgba(0, 170, 215, 0.18);
+      width: 68%;
+      height: 68%;
+      left: 16%;
+      top: 16%;
+      box-shadow: none;
     }
     .cr-logo-mini .cr-planet::before { display: none; }
     .cr-logo-mini .cr-letterform {
