@@ -634,6 +634,162 @@
       footer { padding: 2.5rem 1.5rem; }
       .footer-links { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
     }
+
+    /* ── Auth Modal ── */
+    .auth-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(8,15,16,0.88);
+      backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-overlay.open { display: flex; }
+    .auth-panel {
+      position: relative;
+      width: min(440px, 92vw);
+      background: #0d1515;
+      border: 1px solid rgba(0,240,255,0.18);
+      border-radius: 16px;
+      padding: 2.5rem 2.5rem 2rem;
+      box-shadow: 0 0 60px rgba(0,240,255,0.07);
+    }
+    .auth-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none; border: none;
+      color: rgba(185,202,203,0.5);
+      cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      line-height: 1;
+      padding: 0.25rem 0.5rem;
+      transition: color 0.2s;
+    }
+    .auth-close:hover { color: #00f0ff; }
+    .auth-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(0,240,255,0.6);
+      margin-bottom: 0.5rem;
+    }
+    .auth-headline {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--on-surface);
+      margin-bottom: 1.75rem;
+    }
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .auth-tab {
+      background: none;
+      border: none;
+      color: rgba(185,202,203,0.4);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0.5rem 1rem 0.75rem;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .auth-tab.active {
+      color: #00f0ff;
+      border-bottom-color: #00f0ff;
+    }
+    .auth-google {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: var(--on-surface);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.75rem;
+      transition: background 0.2s, border-color 0.2s;
+      margin-bottom: 1.25rem;
+    }
+    .auth-google:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.22); }
+    .auth-google svg { flex-shrink: 0; }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+    .auth-divider span {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(185,202,203,0.3);
+    }
+    .auth-field {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(59,73,75,0.6);
+      border-radius: 8px;
+      color: var(--primary-container);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .auth-field::placeholder { color: rgba(59,73,75,0.9); }
+    .auth-field:focus { border-color: rgba(0,240,255,0.45); }
+    .auth-submit {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(0,240,255,0.08));
+      border: 1px solid rgba(0,240,255,0.35);
+      border-radius: 8px;
+      color: #00f0ff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0.875rem;
+      margin-top: 0.25rem;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .auth-submit:hover { background: rgba(0,240,255,0.2); border-color: rgba(0,240,255,0.6); }
+    .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .auth-msg {
+      margin-top: 0.875rem;
+      font-size: 0.72rem;
+      text-align: center;
+      min-height: 1.1em;
+      letter-spacing: 0.04em;
+    }
+    .auth-msg.error { color: #ff6b6b; }
+    .auth-msg.success { color: #00f0ff; }
   </style>
 </head>
 <body>
@@ -658,7 +814,7 @@
     <li><a href="transmissions.html"><span class="material-symbols-outlined">satellite_alt</span>Transmissions</a></li>
     <li><a href="trending.html"><span class="material-symbols-outlined">local_fire_department</span>Trending</a></li>
   </ul>
-  <a href="app.html" class="btn-primary">Enter Terminal</a>
+  <button onclick="openAuthModal()" class="btn-primary">Enter Terminal</button>
 </nav>
 
 <!-- ── Hero ── -->
@@ -676,7 +832,7 @@
   <p class="hero-subtitle">The Universe, Decoded Daily.</p>
 
   <div class="hero-cta-row">
-    <a href="#signup" class="btn-primary">Get Early Access</a>
+    <a href="#" onclick="openAuthModal();return false;" class="btn-primary">Get Early Access</a>
     <a href="app.html" class="btn-ghost">
       Enter Terminal
       <span class="material-symbols-outlined">arrow_forward</span>
@@ -757,6 +913,60 @@
   <p class="footer-copy">© 2124 Cosmic Reader Terminal. All rights reserved.</p>
 </footer>
 
+<!-- ── Supabase SDK ── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ── Auth Modal ── -->
+<div id="auth-overlay" class="auth-overlay" onclick="if(event.target===this)closeAuthModal()">
+  <div class="auth-panel">
+    <button class="auth-close" onclick="closeAuthModal()">✕</button>
+    <p class="auth-eyebrow">Cosmic Reader</p>
+    <h2 class="auth-headline">Access Terminal</h2>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button id="tab-signin" class="auth-tab active" onclick="setAuthTab('signin')">Sign In</button>
+      <button id="tab-signup" class="auth-tab" onclick="setAuthTab('signup')">Create Account</button>
+    </div>
+
+    <!-- OAuth buttons -->
+    <button class="auth-google" onclick="signInWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z"/></svg>
+      Continue with Google
+    </button>
+    <button class="auth-google" onclick="signInWithGitHub()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      Continue with GitHub
+    </button>
+    <button class="auth-google" onclick="signInWithTwitter()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      Continue with X
+    </button>
+
+    <div class="auth-divider"><span>or</span></div>
+
+    <!-- Sign In form -->
+    <div id="auth-signin-form">
+      <form onsubmit="handleSignIn(event)">
+        <input id="signin-email" class="auth-field" type="email" placeholder="Email address" required />
+        <input id="signin-password" class="auth-field" type="password" placeholder="Password" required />
+        <button id="signin-btn" class="auth-submit" type="submit">Access Terminal</button>
+      </form>
+    </div>
+
+    <!-- Sign Up form -->
+    <div id="auth-signup-form" style="display:none">
+      <form onsubmit="handleSignUp(event)">
+        <input id="signup-email-new" class="auth-field" type="email" placeholder="Email address" required />
+        <input id="signup-password-new" class="auth-field" type="password" placeholder="Password (min 6 characters)" minlength="6" required />
+        <button id="signup-btn" class="auth-submit" type="submit">Create Account</button>
+      </form>
+    </div>
+
+    <p id="auth-msg" class="auth-msg"></p>
+  </div>
+</div>
+
 <script>
   // ── Starfield ────────────────────────────────────────────
   (function initStarfield() {
@@ -800,20 +1010,109 @@
     window.addEventListener('resize', draw);
   })();
 
-  // ── Sign-up handler (placeholder — wire to Supabase later) ──
+  // ── Supabase Auth ─────────────────────────────────────────
+  const SUPA_URL = 'https://hckgxwcppqrtanjdmrhi.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA';
+  const _supabase = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+  // Redirect to dashboard if already signed in
+  _supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) window.location.replace('app.html');
+  });
+
+  // Listen for OAuth redirect callbacks
+  _supabase.auth.onAuthStateChange((event, session) => {
+    if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
+      window.location.replace('app.html');
+    }
+  });
+
+  // ── Modal helpers ──────────────────────────────────────────
+  function openAuthModal(tab) {
+    document.getElementById('auth-overlay').classList.add('open');
+    setAuthTab(tab || 'signin');
+    clearAuthMsg();
+  }
+  function closeAuthModal() {
+    document.getElementById('auth-overlay').classList.remove('open');
+  }
+  function setAuthTab(tab) {
+    document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    document.getElementById('auth-signin-form').style.display = tab === 'signin' ? 'block' : 'none';
+    document.getElementById('auth-signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+    clearAuthMsg();
+  }
+  function setAuthMsg(msg, type) {
+    const el = document.getElementById('auth-msg');
+    el.textContent = msg;
+    el.className = 'auth-msg ' + (type || '');
+  }
+  function clearAuthMsg() { setAuthMsg('', ''); }
+
+  // ── OAuth providers ────────────────────────────────────────
+  async function signInWithGoogle() {
+    const { error } = await _supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/app.html' }
+    });
+    if (error) setAuthMsg(error.message, 'error');
+  }
+  async function signInWithGitHub() {
+    const { error } = await _supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: { redirectTo: window.location.origin + '/app.html' }
+    });
+    if (error) setAuthMsg(error.message, 'error');
+  }
+  async function signInWithTwitter() {
+    const { error } = await _supabase.auth.signInWithOAuth({
+      provider: 'twitter',
+      options: { redirectTo: window.location.origin + '/app.html' }
+    });
+    if (error) setAuthMsg(error.message, 'error');
+  }
+
+  // ── Email Sign In ──────────────────────────────────────────
+  async function handleSignIn(e) {
+    e.preventDefault();
+    const btn = document.getElementById('signin-btn');
+    const email = document.getElementById('signin-email').value.trim();
+    const password = document.getElementById('signin-password').value;
+    btn.disabled = true; btn.textContent = 'Connecting...';
+    const { error } = await _supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setAuthMsg(error.message, 'error');
+      btn.disabled = false; btn.textContent = 'Access Terminal';
+    }
+    // onAuthStateChange handles redirect on success
+  }
+
+  // ── Email Sign Up ──────────────────────────────────────────
+  async function handleSignUp(e) {
+    e.preventDefault();
+    const btn = document.getElementById('signup-btn');
+    const email = document.getElementById('signup-email-new').value.trim();
+    const password = document.getElementById('signup-password-new').value;
+    btn.disabled = true; btn.textContent = 'Transmitting...';
+    const { error } = await _supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: window.location.origin + '/app.html' }
+    });
+    if (error) {
+      setAuthMsg(error.message, 'error');
+      btn.disabled = false; btn.textContent = 'Create Account';
+    } else {
+      setAuthMsg('Check your email to confirm your account.', 'success');
+      btn.disabled = false; btn.textContent = 'Create Account';
+    }
+  }
+
+  // ── Legacy newsletter signup handler (keep for the signup section) ──
   function handleSignup(e) {
     e.preventDefault();
-    const email = document.getElementById('signup-email').value.trim();
-    if (!email) return;
-    const form   = e.target;
-    const btn    = form.querySelector('.signup-submit');
-    btn.textContent = 'Transmitted ✓';
-    btn.style.color = '#00f0ff';
-    form.querySelector('.signup-input').value = '';
-    setTimeout(() => {
-      btn.innerHTML = 'Connect <span class="material-symbols-outlined">sensors</span>';
-      btn.style.color = '';
-    }, 3000);
+    openAuthModal('signup');
   }
 
   // ── Live breaking-news teaser ──────────────────────────────────────────────

@@ -7,6 +7,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="cosmic-reader.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── Auth guard — redirect to home.html if not signed in ──
+  (async function() {
+    const _sb = supabase.createClient(
+      'https://hckgxwcppqrtanjdmrhi.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA'
+    );
+    window._supabase = _sb;
+    const { data: { session } } = await _sb.auth.getSession();
+    if (!session) { window.location.replace('home.html'); return; }
+    window._crUser = session.user;
+  })();
+</script>
 <style>
   .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -300,7 +314,15 @@
       <span class="material-symbols-outlined text-[#00f0ff] text-lg">search</span>
       <input class="bg-transparent border-none focus:ring-0 text-xs font-headline text-[#dbfcff] placeholder-[#dbfcff]/40 w-48 outline-none" placeholder="Search constellations..." type="text"/>
     </div>
-    <button class="material-symbols-outlined text-[#dbfcff] p-2 hover:bg-[#dbfcff]/5 rounded-full transition-all scale-95 active:scale-90">account_circle</button>
+    <div class="relative" id="user-menu-wrap">
+      <button onclick="toggleUserMenu()" class="material-symbols-outlined text-[#dbfcff] p-2 hover:bg-[#dbfcff]/5 rounded-full transition-all scale-95 active:scale-90">account_circle</button>
+      <div id="user-menu" style="display:none" class="absolute right-0 top-full mt-2 w-52 bg-[#0d1515] border border-[#00f0ff]/18 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden z-50">
+        <div class="px-4 py-3 border-b border-white/6">
+          <p id="user-email-display" class="text-[11px] font-headline tracking-widest text-[#dbfcff]/50 truncate uppercase"></p>
+        </div>
+        <button onclick="signOut()" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#ff6b6b]/80 hover:bg-white/5 transition-colors">Sign Out</button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -3151,6 +3173,30 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initAll, 120);
   }
 })();
+</script>
+
+<script>
+  // ── User menu ─────────────────────────────────────────────
+  function toggleUserMenu() {
+    const menu = document.getElementById('user-menu');
+    const isOpen = menu.style.display === 'block';
+    menu.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) {
+      const email = window._crUser?.email || '';
+      document.getElementById('user-email-display').textContent = email;
+    }
+  }
+  // Close menu when clicking outside
+  document.addEventListener('click', e => {
+    if (!document.getElementById('user-menu-wrap')?.contains(e.target)) {
+      const menu = document.getElementById('user-menu');
+      if (menu) menu.style.display = 'none';
+    }
+  });
+  async function signOut() {
+    await window._supabase.auth.signOut();
+    window.location.replace('home.html');
+  }
 </script>
 </body>
 </html>
