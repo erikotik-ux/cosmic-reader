@@ -6,6 +6,7 @@
   <title>Cosmic Reader — The Universe, Decoded Daily</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -913,9 +914,6 @@
   <p class="footer-copy">© 2124 Cosmic Reader Terminal. All rights reserved.</p>
 </footer>
 
-<!-- ── Supabase SDK ── -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <!-- ── Auth Modal ── -->
 <div id="auth-overlay" class="auth-overlay" onclick="if(event.target===this)closeAuthModal()">
   <div class="auth-panel">
@@ -1015,16 +1013,9 @@
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA';
   const _supabase = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-  // Redirect to dashboard if already signed in
+  // Redirect to dashboard only if a valid session already exists
   _supabase.auth.getSession().then(({ data: { session } }) => {
     if (session) window.location.replace('app.html');
-  });
-
-  // Listen for OAuth redirect callbacks
-  _supabase.auth.onAuthStateChange((event, session) => {
-    if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
-      window.location.replace('app.html');
-    }
   });
 
   // ── Modal helpers ──────────────────────────────────────────
@@ -1084,8 +1075,9 @@
     if (error) {
       setAuthMsg(error.message, 'error');
       btn.disabled = false; btn.textContent = 'Access Terminal';
+    } else {
+      window.location.replace('app.html');
     }
-    // onAuthStateChange handles redirect on success
   }
 
   // ── Email Sign Up ──────────────────────────────────────────
