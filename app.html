@@ -310,9 +310,16 @@
     </nav>
   </div>
   <div class="flex items-center gap-4">
-    <div class="hidden md:flex bg-[#131313]/60 border border-[#00f0ff]/20 rounded-full px-4 py-1.5 items-center gap-2 focus-within:border-[#00f0ff] transition-all">
-      <span class="material-symbols-outlined text-[#00f0ff] text-lg">search</span>
-      <input class="bg-transparent border-none focus:ring-0 text-xs font-headline text-[#dbfcff] placeholder-[#dbfcff]/40 w-48 outline-none" placeholder="Search constellations..." type="text"/>
+    <div class="hidden md:flex relative" id="search-wrap">
+      <div class="bg-[#131313]/60 border border-[#00f0ff]/20 rounded-full px-4 py-1.5 flex items-center gap-2 focus-within:border-[#00f0ff] transition-all">
+        <span class="material-symbols-outlined text-[#00f0ff] text-lg">search</span>
+        <input id="search-input" class="bg-transparent border-none focus:ring-0 text-xs font-headline text-[#dbfcff] placeholder-[#dbfcff]/40 w-48 outline-none" placeholder="Search articles..." type="text" autocomplete="off" oninput="handleSearch(this.value)" onkeydown="searchKeyNav(event)"/>
+        <button id="search-clear" onclick="clearSearch()" class="material-symbols-outlined text-[#dbfcff]/30 hover:text-[#dbfcff] text-base transition-all" style="display:none">close</button>
+      </div>
+      <!-- Search results dropdown -->
+      <div id="search-results" style="display:none" class="absolute top-full left-0 mt-2 w-96 bg-[#0d1515] border border-[#00f0ff]/20 rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.6)] overflow-hidden z-50 max-h-[480px] overflow-y-auto">
+        <div id="search-results-inner"></div>
+      </div>
     </div>
     <div class="relative" id="user-menu-wrap">
       <button onclick="toggleUserMenu()" class="material-symbols-outlined text-[#dbfcff] p-2 hover:bg-[#dbfcff]/5 rounded-full transition-all scale-95 active:scale-90">account_circle</button>
@@ -1116,44 +1123,7 @@
   </button>
 </div>
 
-<!-- ── Ticker Overlay (outside all views — always visible) ── -->
-<div class="fixed bottom-14 md:bottom-0 left-0 w-full glass-panel h-10 border-t border-outline-variant/10 z-20 hidden md:flex items-center overflow-hidden md:pl-64">
-  <div class="flex items-center gap-8 whitespace-nowrap animate-marquee" style="width:max-content;">
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Breaking: LIGO detects gravitational wave from pre-stellar black hole</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Update: ESA Hera completes massive deep-space engine burn toward Didymos</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Alert: Jupiter lightning measured at 1 million× Earth's power</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-[#dbfcff] rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Discovery: NASA neutron instrument hunting hidden ice at lunar south pole</span>
-    </div>
-    <!-- Repeat for seamless loop -->
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Breaking: LIGO detects gravitational wave from pre-stellar black hole</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Update: ESA Hera completes massive deep-space engine burn toward Didymos</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Alert: Jupiter lightning measured at 1 million× Earth's power</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 bg-[#dbfcff] rounded-full animate-pulse"></span>
-      <span class="font-label text-[10px] uppercase text-on-surface-variant">Discovery: NASA neutron instrument hunting hidden ice at lunar south pole</span>
-    </div>
-  </div>
-</div>
+<!-- Ticker removed -->
 
 
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -2216,6 +2186,92 @@ function updatePrioritySignal(a) {
   if (bodyEl)  bodyEl.textContent  = a.excerpt.slice(0, 200) + (a.excerpt.length > 200 ? '…' : '');
   if (linkEl)  linkEl.href         = a.read_more;
 }
+
+// ── Search ─────────────────────────────────────────────────
+let _searchIdx = -1;
+
+function handleSearch(q) {
+  const wrap = document.getElementById('search-results');
+  const inner = document.getElementById('search-results-inner');
+  const clearBtn = document.getElementById('search-clear');
+  _searchIdx = -1;
+
+  clearBtn.style.display = q.length ? '' : 'none';
+
+  if (!q.trim()) { wrap.style.display = 'none'; return; }
+
+  const term = q.trim().toLowerCase();
+  const matches = articles
+    .map((a, i) => ({ a, i }))
+    .filter(({ a }) =>
+      a.title.toLowerCase().includes(term) ||
+      (a.source || '').toLowerCase().includes(term) ||
+      (a.category || '').toLowerCase().includes(term) ||
+      (a.excerpt || '').toLowerCase().includes(term)
+    )
+    .slice(0, 8);
+
+  if (!matches.length) {
+    inner.innerHTML = `<div class="px-5 py-6 text-center text-[#dbfcff]/30 font-headline text-xs uppercase tracking-widest">No results for "${escHtml(q)}"</div>`;
+    wrap.style.display = '';
+    return;
+  }
+
+  const cc = (cat) => CAT_COLOR[cat] || 'text-[#00f0ff]';
+  inner.innerHTML = matches.map(({ a, i }, ri) => {
+    const hi = (str) => str.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark class="bg-[#00f0ff]/20 text-[#00f0ff] rounded px-0.5">$1</mark>');
+    return `<button data-ri="${ri}" onclick="searchOpen(${i})" class="search-result-item w-full text-left px-5 py-3.5 border-b border-white/5 last:border-0 hover:bg-[#00f0ff]/5 transition-colors flex items-start gap-3">
+      <span class="material-symbols-outlined text-[#dbfcff]/30 text-lg mt-0.5">${CAT_ICON[a.category]||'article'}</span>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-headline text-[#dbfcff] leading-snug mb-1 line-clamp-2">${hi(escHtml(a.title))}</p>
+        <p class="text-[10px] font-headline uppercase tracking-widest ${cc(a.category)}">${escHtml(a.category)} · ${escHtml(a.source||'')}</p>
+      </div>
+    </button>`;
+  }).join('');
+  wrap.style.display = '';
+}
+
+function searchOpen(articleIdx) {
+  clearSearch();
+  openArticle(articleIdx);
+}
+
+function clearSearch() {
+  const inp = document.getElementById('search-input');
+  const wrap = document.getElementById('search-results');
+  const clearBtn = document.getElementById('search-clear');
+  if (inp) inp.value = '';
+  if (wrap) wrap.style.display = 'none';
+  if (clearBtn) clearBtn.style.display = 'none';
+  _searchIdx = -1;
+}
+
+function searchKeyNav(e) {
+  const items = document.querySelectorAll('.search-result-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _searchIdx = Math.min(_searchIdx + 1, items.length - 1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _searchIdx = Math.max(_searchIdx - 1, 0);
+  } else if (e.key === 'Enter' && _searchIdx >= 0) {
+    e.preventDefault();
+    items[_searchIdx].click();
+    return;
+  } else if (e.key === 'Escape') {
+    clearSearch();
+    return;
+  }
+  items.forEach((el, i) => el.classList.toggle('bg-[#00f0ff]/5', i === _searchIdx));
+}
+
+// Close search results when clicking outside
+document.addEventListener('click', (e) => {
+  if (!document.getElementById('search-wrap')?.contains(e.target)) {
+    document.getElementById('search-results').style.display = 'none';
+  }
+});
 
 function updateTicker(arts) {
   const tickerInner = document.querySelector('.animate-marquee');
