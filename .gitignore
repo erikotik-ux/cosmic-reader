@@ -15,3 +15,5 @@ Thumbs.db
 
 # Tailwind source (keep config + input.css, skip generated output if rebuilding from source)
 # cosmic-reader.css is intentionally committed so the site works without a build step
+
+.vercel
