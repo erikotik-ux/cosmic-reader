@@ -1585,7 +1585,7 @@ const RSS_PROXIES = [
 const FEEDS = [
   { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
   { url: 'https://www.universetoday.com/feed/',           source: 'Universe Today' },
-  { url: 'https://spacenews.com/feed/',                   source: 'SpaceNews' },
+  // SpaceNews intentionally omits images from RSS — handled via /api/spacenews (WP REST API)
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
   { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
@@ -2121,6 +2121,55 @@ async function scrapeRundownFeed() {
   return items;
 }
 
+// ── SpaceNews via WordPress REST API ──────────────────────
+// SpaceNews intentionally strips images from its RSS feed (only sponsored posts
+// include them). Their WP REST API exposes yoast_head_json.og_image[] which gives
+// us the real featured image for every article. /api/spacenews proxies that call.
+async function fetchSpaceNewsFeed() {
+  try {
+    const res = await fetch('/api/spacenews', { signal: AbortSignal.timeout(12000) });
+    const posts = await res.json();
+    if (!Array.isArray(posts) || posts.length === 0) return [];
+
+    return posts.map((post, idx) => {
+      const title = stripHtml(post.title || '');
+      if (!title || title.length < 10) return null;
+      const read_more = post.link || '#';
+      if (!/^https?:\/\/.+\..+/i.test(read_more)) return null;
+
+      const excerpt   = stripHtml(post.excerpt || '').slice(0, 280).replace(/\s+/g, ' ').trim();
+      const body      = stripHtml(post.excerpt || '').slice(0, 2000);
+      const date      = post.date
+        ? new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+        : '';
+      const category  = guessCategory(title, '') || 'Missions';
+      const image     = (post.image && post.image.startsWith('http'))
+        ? post.image
+        : pickFallback(category, title);
+
+      if (!image || !image.startsWith('http')) return null;
+
+      const readTime = Math.max(1, Math.ceil((body || excerpt).split(' ').length / 200));
+      return {
+        id: idx, title, excerpt, body: body || excerpt,
+        category, date, source: 'SpaceNews',
+        image, read_more,
+        coord: 'Live — SpaceNews',
+        readTime: readTime + 'm',
+        stats: [
+          { label: 'Category',  val: category,        color: 'text-primary'   },
+          { label: 'Source',    val: 'SpaceNews',      color: 'text-secondary' },
+          { label: 'Published', val: date,             color: 'text-tertiary'  },
+          { label: 'Read Time', val: readTime + ' min', color: 'text-primary'  },
+        ]
+      };
+    }).filter(Boolean);
+  } catch(e) {
+    console.warn('[CosmicReader] fetchSpaceNewsFeed failed:', e.message);
+    return [];
+  }
+}
+
 // ── Load Live Feeds ────────────────────────────────────────
 async function loadLiveFeeds() {
   const statusEl  = document.getElementById('feed-status');
@@ -2128,9 +2177,10 @@ async function loadLiveFeeds() {
   if (statusEl) statusEl.classList.remove('hidden');
 
   try {
-    // Fetch all RSS feeds AND scrape The Rundown AI in parallel
-    const [results, rundownArticles] = await Promise.all([
+    // Fetch all RSS feeds, SpaceNews (WP API), and The Rundown AI in parallel
+    const [results, spaceNewsArticles, rundownArticles] = await Promise.all([
       Promise.allSettled(FEEDS.map(f => fetchFeed(f))),
+      fetchSpaceNewsFeed().catch(() => []),
       scrapeRundownFeed().catch(() => [])
     ]);
 
@@ -2138,6 +2188,11 @@ async function loadLiveFeeds() {
     const buckets = results
       .map((r, i) => r.status === 'fulfilled' ? r.value : [])
       .filter(b => b.length > 0);
+
+    // Add SpaceNews (WP API) bucket if we got articles
+    if (spaceNewsArticles.length > 0) {
+      buckets.push(spaceNewsArticles);
+    }
 
     // Add The Rundown AI scraped articles as an extra bucket if we got any
     if (rundownArticles.length > 0) {
@@ -2166,12 +2221,14 @@ async function loadLiveFeeds() {
       }
     });
 
-    // Count live feeds — show real number if >0, else keep showing configured count
-    const liveCount = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
+    // Count live feeds — FEEDS (RSS) + SpaceNews WP API + Rundown
+    const rssLive = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
+    const liveCount = rssLive + (spaceNewsArticles.length > 0 ? 1 : 0) + (rundownArticles.length > 0 ? 1 : 0);
     console.log('[CosmicReader] feed results:', results.map((r,i) => FEEDS[i]?.source + ':' + (r.status==='fulfilled' ? r.value.length + ' articles' : 'FAILED')));
+    console.log('[CosmicReader] SpaceNews (WP API):', spaceNewsArticles.length + ' articles');
     console.log('[CosmicReader] liveCount:', liveCount);
     const feedCountEl = document.getElementById('hud-feed-count');
-    if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length;
+    if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
     updateIntegrity(liveCount);
 
     if (merged.length > 0) {
