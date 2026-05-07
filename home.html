@@ -501,84 +501,101 @@
     .teaser-link:hover { gap: 0.75rem; }
     .teaser-link .material-symbols-outlined { font-size: 16px; }
 
-    /* ── Sign-up section ── */
-    .signup-section {
+    /* ── Why section ── */
+    .why-section {
       position: relative;
       z-index: 1;
       padding: 6rem 4rem;
-      background: rgba(21,29,30,0.3);
+      background: rgba(13,21,21,0.5);
       border-top: 1px solid rgba(255,255,255,0.04);
       overflow: hidden;
     }
-    .signup-bloom {
+    .why-bloom {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(0,219,233,0.05) 0%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 100%, rgba(0,219,233,0.06) 0%, transparent 65%);
       pointer-events: none;
     }
-    .signup-inner {
-      max-width: 560px;
+    .why-inner {
+      max-width: 900px;
       margin: 0 auto;
-      text-align: center;
       position: relative;
       z-index: 1;
     }
-    .signup-headline {
-      font-size: 1.75rem;
-      font-weight: 500;
+    .why-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(0,240,255,0.5);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .why-headline {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 600;
       color: var(--on-surface);
-      margin-bottom: 0.875rem;
+      text-align: center;
+      line-height: 1.25;
+      margin-bottom: 1rem;
     }
-    .signup-body {
+    .why-sub {
       font-size: 1rem;
-      line-height: 1.6;
       color: var(--on-surface-var);
-      margin-bottom: 2.5rem;
+      text-align: center;
+      max-width: 520px;
+      margin: 0 auto 4rem;
+      line-height: 1.65;
     }
-    .signup-form {
-      display: flex;
-      border-bottom: 1px solid rgba(132,148,149,0.3);
-      transition: border-color 0.25s;
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
     }
-    .signup-form:focus-within { border-color: var(--primary-container); }
-    .signup-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--primary-container);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.7rem;
+    .why-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 2rem 1.75rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .why-card:hover {
+      border-color: rgba(0,240,255,0.2);
+      background: rgba(0,240,255,0.03);
+    }
+    .why-card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+    .why-card-title {
+      font-size: 0.9rem;
       font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 1rem 0;
+      color: var(--on-surface);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6rem;
     }
-    .signup-input::placeholder { color: rgba(59,73,75,0.9); }
-    .signup-submit {
-      background: transparent;
-      border: none;
-      color: var(--primary-container);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      cursor: pointer;
-      padding: 1rem 1.25rem;
+    .why-card-body {
+      font-size: 0.82rem;
+      color: var(--on-surface-var);
+      line-height: 1.65;
+    }
+    .why-cta-row {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: color 0.2s;
+      justify-content: center;
+      gap: 1rem;
     }
-    .signup-submit:hover { color: white; }
-    .signup-submit .material-symbols-outlined { font-size: 16px; }
-    .signup-note {
-      margin-top: 1rem;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
+    .why-proof {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(185,202,203,0.3);
+      color: rgba(185,202,203,0.35);
+    }
+    @media (max-width: 768px) {
+      .why-section { padding: 4rem 1.5rem; }
+      .why-grid { grid-template-columns: 1fr; gap: 1rem; }
     }
 
     /* ── Footer ── */
@@ -631,7 +648,6 @@
       .category-grid { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
       .teaser-section { padding: 4rem 1.5rem; }
       .teaser-inner { flex-direction: column; gap: 2.5rem; }
-      .signup-section { padding: 4rem 1.5rem; }
       footer { padding: 2.5rem 1.5rem; }
       .footer-links { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
     }
@@ -880,26 +896,36 @@
 
 <div class="scanner-divider"></div>
 
-<!-- ── Sign-up ── -->
-<section class="signup-section" id="signup">
-  <div class="signup-bloom"></div>
-  <div class="signup-inner">
-    <h3 class="signup-headline">Establish Connection</h3>
-    <p class="signup-body">Subscribe to receive daily transmissions from the digital frontier.</p>
-    <form class="signup-form" onsubmit="handleSignup(event)">
-      <input
-        class="signup-input"
-        type="email"
-        id="signup-email"
-        placeholder="cosmic_identifier@terminal.com"
-        required
-      />
-      <button type="submit" class="signup-submit">
-        Connect
-        <span class="material-symbols-outlined">sensors</span>
-      </button>
-    </form>
-    <p class="signup-note">No noise. Just signal. Unsubscribe anytime.</p>
+<!-- ── Why Join ── -->
+<section class="why-section" id="signup">
+  <div class="why-bloom"></div>
+  <div class="why-inner">
+    <p class="why-eyebrow">Why Cosmic Reader</p>
+    <h2 class="why-headline">The universe doesn't wait.<br/>Neither should your intelligence feed.</h2>
+    <p class="why-sub">Most space news is either buried in journals or dumbed down beyond recognition. Cosmic Reader sits in between — curated, decoded, and delivered at the speed of light.</p>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <span class="why-card-icon">🛰️</span>
+        <p class="why-card-title">Live Signal Feed</p>
+        <p class="why-card-body">Real-time dispatches from NASA, ESA, private missions, and independent observatories — all in one terminal. No doomscrolling required.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-card-icon">🧠</span>
+        <p class="why-card-title">AI-Decoded Intelligence</p>
+        <p class="why-card-body">Dense research papers and mission data translated into plain signal. You get the insight without the noise — in seconds, not hours.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-card-icon">🌌</span>
+        <p class="why-card-title">Your Personal Galaxy Map</p>
+        <p class="why-card-body">Bookmark missions, track launches, follow topics that matter to you. Your cosmic dashboard adapts to what you explore — not the other way around.</p>
+      </div>
+    </div>
+
+    <div class="why-cta-row">
+      <a href="#" onclick="openAuthModal('signup');return false;" class="btn-primary">Create Free Account</a>
+      <span class="why-proof">Free forever · No credit card · Cancel anytime</span>
+    </div>
   </div>
 </section>
 
@@ -1105,6 +1131,12 @@
   function handleSignup(e) {
     e.preventDefault();
     openAuthModal('signup');
+  }
+
+  // ── Auto-open Create Account tab if arriving via #signup link ──
+  if (window.location.hash === '#signup') {
+    openAuthModal('signup');
+    history.replaceState(null, '', window.location.pathname);
   }
 
   // ── Live breaking-news teaser ──────────────────────────────────────────────
