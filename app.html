@@ -291,7 +291,7 @@
 <header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#131313]/40 backdrop-blur-xl border-b border-[#00f0ff]/15 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
   <div class="flex items-center gap-8">
     <!-- Cosmic Reader Logo — links back to homepage -->
-    <a href="home.html" class="select-none flex items-center gap-2.5 group no-underline" title="Cosmic Reader — Home">
+    <a href="app.html" class="select-none flex items-center gap-2.5 group no-underline" title="Cosmic Reader">
       <div class="cr-logo-mini">
         <div class="cr-planet-wrap">
           <img src="assets/planet.png" alt="" class="cr-planet-img" />
@@ -1741,16 +1741,31 @@ async function fetchFeed(feedInfo) {
         const date     = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
         const tags     = (item.categories || []).join(' ');
         const category = guessCategory(title, tags) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
-        // 1. rss2json thumbnail field
-        let image = item.thumbnail || item.enclosure?.link || '';
-        // 2. Scan the content HTML for embedded <img src="..."> (WordPress featured images
-        //    live here, not in the thumbnail field — common for NASASpaceFlight, SpaceNews etc.)
+        // Helper: normalise a raw URL — fix protocol-relative, strip WP resize params but keep CDN ssl param
+        function normaliseImg(u) {
+          if (!u) return '';
+          u = u.trim();
+          if (u.startsWith('//')) u = 'https:' + u;
+          // Strip WP resize/crop params but NOT ssl=1 (needed by some Jetpack CDN URLs)
+          try { const p = new URL(u); p.searchParams.delete('resize'); p.searchParams.delete('fit'); p.searchParams.delete('w'); p.searchParams.delete('h'); return p.href; } catch(e) { return u; }
+        }
+        // 1. rss2json thumbnail / enclosure
+        let image = normaliseImg(item.thumbnail || item.enclosure?.link || '');
+        // 2. Scan the content HTML — rss2json strips <img> from item.content but WordPress
+        //    featured images often survive in item.description. Also check srcset (WP generates these).
         if (!image || !/^https?:/.test(image)) {
-          const html = item.content || item.description || '';
-          const m = html.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i)
-                 || html.match(/\bdata-src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i)
-                 || html.match(/\bsrc='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*?)'/i);
-          if (m) image = m[1].split('?')[0];
+          const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/i;
+          const SRCSET_RE = /srcset=["']([^"']+)["']/i;
+          for (const html of [item.description || '', item.content || '']) {
+            const m = html.match(IMG_RE);
+            if (m) { image = normaliseImg(m[1]); break; }
+            // srcset: pick the largest (last) URL before a comma or end
+            const ss = html.match(SRCSET_RE);
+            if (ss) {
+              const parts = ss[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(Boolean);
+              if (parts.length) { image = normaliseImg(parts[parts.length - 1]); break; }
+            }
+          }
         }
         // 3. Category-matched fallback so no article is ever imageless
         if (!image || !/^https?:/.test(image)) image = pickFallback(category, title);
@@ -1814,38 +1829,46 @@ async function fetchFeed(feedInfo) {
     const category = guessCategory(title, tags)
       || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
       || (PURE_AI_SOURCES.includes(feedInfo.source)    ? 'AI & Tech'  : null);
-    // Image: try media:content → namespace-agnostic url scan → enclosure → img in description → img in content:encoded
+    // Helper: normalise image URL — fix protocol-relative, strip known resize params
+    function _normImg(u) {
+      if (!u) return '';
+      u = u.trim();
+      if (u.startsWith('//')) u = 'https:' + u;
+      try { const p = new URL(u); p.searchParams.delete('resize'); p.searchParams.delete('fit'); p.searchParams.delete('w'); p.searchParams.delete('h'); return p.href; } catch(e) { return u; }
+    }
+    // Image: try media:content → namespace-agnostic url scan → enclosure → img/srcset in description → content:encoded
     let image = '';
     // 1. Namespace-aware (works when proxy preserves XML namespaces)
     const mc = item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'content')[0]
              || item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'thumbnail')[0];
-    if (mc) image = mc.getAttribute('url') || '';
-    // 2. Namespace-agnostic fallback (works when proxy strips/mangles namespace URIs — e.g. TechCrunch via corsproxy)
+    if (mc) image = _normImg(mc.getAttribute('url') || '');
+    // 2. Namespace-agnostic — also handles protocol-relative and CDN URLs
     if (!image) {
       const allEls = Array.from(item.getElementsByTagName('*'));
       for (const el of allEls) {
         const u = el.getAttribute('url') || el.getAttribute('href') || '';
-        if (/^https?:.*\.(?:jpg|jpeg|png|webp|gif)/i.test(u)) { image = u.split('?')[0]; break; }
+        if (/^(?:https?:|\/\/).*\.(?:jpg|jpeg|png|webp|gif)/i.test(u)) { image = _normImg(u); break; }
       }
     }
     if (!image) {
       const enc = item.querySelector('enclosure');
-      if (enc && /image/i.test(enc.getAttribute('type') || 'image')) image = enc.getAttribute('url') || '';
+      if (enc && /image/i.test(enc.getAttribute('type') || 'image')) image = _normImg(enc.getAttribute('url') || '');
     }
     if (!image) {
-      // Many WordPress RSS feeds (NASASpaceFlight, SpaceNews, etc.) embed the featured
-      // image inside <content:encoded> rather than <description>. Search both.
-      // Also check data-src / data-lazy-src used by lazy-loading plugins.
+      // WordPress (SpaceNews, NASASpaceFlight, etc.) embeds featured image in
+      // <content:encoded> and sometimes <description>. Also check srcset (WP uses these).
       const encodedRaw = item.querySelector('encoded')?.textContent || '';
+      const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/i;
+      const SRCSET_RE = /srcset=["']([^"']+)["']/i;
       for (const text of [descRaw, encodedRaw]) {
         if (!text) continue;
-        const imgExt = /\.(?:jpg|jpeg|png|webp|gif)/i;
-        const m = text.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i)
-               || text.match(/\bsrc='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*)'/i)
-               || text.match(/\bdata-src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i)
-               || text.match(/\bdata-src='(https?:[^']+\.(?:jpg|jpeg|png|webp|gif)[^']*)'/i)
-               || text.match(/\bdata-lazy-src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*)"/i);
-        if (m) { image = m[1].split('?')[0]; break; } // strip WP resize query params
+        const m = text.match(IMG_RE);
+        if (m) { image = _normImg(m[1]); break; }
+        const ss = text.match(SRCSET_RE);
+        if (ss) {
+          const parts = ss[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(Boolean);
+          if (parts.length) { image = _normImg(parts[parts.length - 1]); break; }
+        }
       }
     }
     // If the feed didn't include an image, assign a category-matched fallback
