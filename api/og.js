@@ -1,0 +1,50 @@
+export default async function handler(req, res) {
+  const { url } = req.query;
+
+  if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) {
+    return res.status(400).json({ error: 'Invalid URL', image: null });
+  }
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; CosmicReader/1.0; +https://cosmic-reader.vercel.app)',
+        'Accept': 'text/html,application/xhtml+xml,*/*',
+      },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    // Stream only the first 50KB — og:image is always in <head>, no need to load the full page
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let html = '';
+    let bytes = 0;
+    const LIMIT = 50 * 1024;
+
+    while (bytes < LIMIT) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      html += decoder.decode(value, { stream: true });
+      bytes += value.length;
+      // Stop as soon as we've passed </head> or found what we need
+      if (html.includes('</head>') || (html.includes('og:image') && html.indexOf('og:image') < bytes)) break;
+    }
+    reader.cancel().catch(() => {});
+
+    // Extract og:image (try both attribute orderings WordPress uses)
+    const m =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ||
+      html.match(/<meta[^>]+name=["']twitter:image(?::src)?["'][^>]+content=["']([^"']+)["']/i) ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image(?::src)?["']/i);
+
+    const image = m ? m[1].trim() : null;
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    return res.status(200).json({ image });
+  } catch (error) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ image: null, error: error.message });
+  }
+}

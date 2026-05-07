@@ -2021,6 +2021,9 @@ function renderFeed(list) {
   // Update count display
   const countEl = document.querySelector('#view-feed .text-2xl.text-\\[\\#00f0ff\\]');
   if (countEl) countEl.textContent = String(total);
+
+  // Enrich any fallback images by fetching og:image from article pages
+  enrichOgImages();
 }
 
 // ── Scrape The Rundown AI (no RSS — beehiiv archive page) ──
@@ -2208,6 +2211,61 @@ function updatePrioritySignal(a) {
   if (titleEl) titleEl.textContent = a.title;
   if (bodyEl)  bodyEl.textContent  = a.excerpt.slice(0, 200) + (a.excerpt.length > 200 ? '…' : '');
   if (linkEl)  linkEl.href         = a.read_more;
+}
+
+// ── og:image enrichment — fills in images for feeds (e.g. SpaceNews) that omit them from RSS ──
+const _ogCache = {};
+const _ogPending = new Set();
+const _OG_FALLBACK_DOMAINS = ['spacetelescope.org', 'staticflickr.com'];
+
+function _isFallbackImg(src) {
+  try { return _OG_FALLBACK_DOMAINS.some(d => new URL(src).hostname.includes(d)); } catch(e) { return false; }
+}
+
+async function enrichOgImages() {
+  // Find rendered article cards whose image is currently a fallback
+  const articleEls = document.querySelectorAll('#article-grid article[onclick]');
+  const toFetch = [];
+
+  articleEls.forEach(el => {
+    const img = el.querySelector('img.article-img');
+    if (!img) return;
+    const src = img.getAttribute('src') || '';
+    if (!_isFallbackImg(src)) return; // already has a real image
+
+    const m = el.getAttribute('onclick').match(/openArticle\((\d+)\)/);
+    if (!m) return;
+    const idx = parseInt(m[1], 10);
+    const art = articles[idx];
+    if (!art || !art.read_more || art.read_more === '#') return;
+
+    toFetch.push({ img, url: art.read_more, idx });
+  });
+
+  // Fetch in batches of 4 to avoid hammering the endpoint
+  for (let i = 0; i < toFetch.length; i += 4) {
+    await Promise.all(toFetch.slice(i, i + 4).map(async ({ img, url, idx }) => {
+      if (_ogPending.has(url)) return;
+      if (_ogCache[url]) { _applyOgImg(img, _ogCache[url], idx); return; }
+      _ogPending.add(url);
+      try {
+        const res = await fetch(`/api/og?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout(6000) });
+        const { image } = await res.json();
+        if (image && image.startsWith('http')) {
+          _ogCache[url] = image;
+          _applyOgImg(img, image, idx);
+        }
+      } catch(e) { /* leave fallback — network or timeout */ }
+      _ogPending.delete(url);
+    }));
+  }
+}
+
+function _applyOgImg(img, src, idx) {
+  img.src = src;
+  img.onerror = () => { img.onerror = null; }; // if og:image also 404s, leave broken silently
+  // Keep the article data in sync so the detail panel also uses the real image
+  if (articles[idx]) articles[idx].image = src;
 }
 
 // ── Search ─────────────────────────────────────────────────
