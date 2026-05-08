@@ -451,20 +451,111 @@
       <!-- PLANET: Physics & Cosmos (Top Right) -->
       <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openCategoryArticle('Physics')">
         <div class="relative" style="transform-style: preserve-3d;">
-          <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #150030 0%, #09001c 55%, #02000a 100%);">
-            <img class="w-full h-full object-cover opacity-60 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
-            <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/20 to-transparent"></div>
-            <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 82% 20%,rgba(0,210,230,0.09) 0%,transparent 45%);pointer-events:none;"></div>
-            <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 65% 65%, rgba(0,0,0,0.45) 0%, transparent 60%);pointer-events:none;"></div>
+          <div class="relative w-52 h-52 planet-glow-primary" style="border-radius:50%;">
+            <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;"></canvas>
+            <script>(function(){
+  var wrap=document.currentScript&&document.currentScript.parentElement;
+  if(!wrap)return;
+  var canvas=wrap.querySelector('.phys-c');
+  if(!canvas)return;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  function init(){
+    var sp=wrap.offsetWidth||(wrap.classList.contains('w-52')?208:wrap.classList.contains('w-40')?160:208);
+    if(!sp){requestAnimationFrame(init);return;}
+    var R=sp*0.46,W=Math.round(R*3.6),H=Math.round(R*2.55);
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    var ctx=canvas.getContext('2d');
+    ctx.scale(dpr,dpr);
+    var cx=W/2,cy=H/2,t=0;
+    var rxO=R*1.72,ryO=R*0.34,rxI=R*1.08,ryI=R*0.21;
+    var blobs=[
+      {ox:-0.18,oy:-0.12,rx:R*0.95,ry:R*0.72,a:0.22,r:0,g:120,b:195},
+      {ox: 0.20,oy: 0.18,rx:R*0.85,ry:R*0.68,a:0.19,r:0,g: 95,b:165},
+      {ox:-0.08,oy: 0.24,rx:R*0.72,ry:R*0.58,a:0.17,r:20,g:185,b:225},
+      {ox: 0.22,oy:-0.08,rx:R*0.78,ry:R*0.62,a:0.21,r:10,g: 55,b:150},
+      {ox: 0.04,oy:-0.28,rx:R*0.58,ry:R*0.46,a:0.15,r:35,g:165,b:215}
+    ];
+    var stars=[],seed=13579;
+    function rng(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
+    for(var i=0;i<72;i++){
+      var ang=rng()*Math.PI*2,r2=Math.sqrt(rng())*R*0.88;
+      stars.push({x:cx+r2*Math.cos(ang),y:cy+r2*Math.sin(ang),s:rng()*1.1+0.2,ph:rng()*Math.PI*2,b:rng()});
+    }
+    function ring(front){
+      ctx.save();
+      ctx.beginPath();
+      if(front)ctx.rect(0,cy,W,H);else ctx.rect(0,0,W,cy+1);
+      ctx.clip();
+      var p=0.5+0.5*Math.sin(t*0.5);
+      ctx.beginPath();
+      ctx.moveTo(cx+rxO,cy);ctx.ellipse(cx,cy,rxO,ryO,0,0,Math.PI*2);ctx.closePath();
+      ctx.moveTo(cx+rxI,cy);ctx.ellipse(cx,cy,rxI,ryI,0,0,Math.PI*2);ctx.closePath();
+      var a=0.50+p*0.05,lg=ctx.createLinearGradient(cx-rxO,cy,cx+rxO,cy);
+      lg.addColorStop(0.00,'rgba(0,50,110,0.08)');
+      lg.addColorStop(0.12,'rgba(0,120,190,'+(a*0.70)+')');
+      lg.addColorStop(0.28,'rgba(0,180,230,'+(a*0.92)+')');
+      lg.addColorStop(0.42,'rgba(40,220,252,'+a+')');
+      lg.addColorStop(0.50,'rgba(60,230,255,'+(a*1.05)+')');
+      lg.addColorStop(0.58,'rgba(40,220,252,'+a+')');
+      lg.addColorStop(0.72,'rgba(0,180,230,'+(a*0.88)+')');
+      lg.addColorStop(0.88,'rgba(0,120,190,'+(a*0.65)+')');
+      lg.addColorStop(1.00,'rgba(0,50,110,0.08)');
+      ctx.fillStyle=lg;ctx.fill('evenodd');
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(cx+rxI+1.5,cy);ctx.ellipse(cx,cy,rxI+1.5,ryI+0.5,0,0,Math.PI*2);ctx.closePath();
+      ctx.moveTo(cx+rxI-1,cy);ctx.ellipse(cx,cy,rxI-1,ryI-0.4,0,0,Math.PI*2);ctx.closePath();
+      var ig=ctx.createLinearGradient(cx-rxI,cy,cx+rxI,cy);
+      ig.addColorStop(0,'rgba(80,210,255,0.20)');ig.addColorStop(0.5,'rgba(140,238,255,0.55)');ig.addColorStop(1,'rgba(80,210,255,0.20)');
+      ctx.fillStyle=ig;ctx.fill('evenodd');
+      ctx.restore();ctx.restore();
+    }
+    function sphere(){
+      ctx.save();
+      ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
+      var p=0.5+0.5*Math.sin(t*0.5);
+      var bg=ctx.createRadialGradient(cx-R*0.18,cy-R*0.18,0,cx,cy,R);
+      bg.addColorStop(0,'#0b1d32');bg.addColorStop(0.4,'#040c1a');bg.addColorStop(1,'#010408');
+      ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+      blobs.forEach(function(bl){
+        var bx=cx+bl.ox*R*2,by=cy+bl.oy*R*2;
+        ctx.save();ctx.translate(bx,by);ctx.scale(1,bl.ry/bl.rx);
+        var g=ctx.createRadialGradient(0,0,0,0,0,bl.rx),a=bl.a*(0.85+p*0.15);
+        g.addColorStop(0,'rgba('+bl.r+','+bl.g+','+bl.b+','+a+')');
+        g.addColorStop(0.45,'rgba('+bl.r+','+bl.g+','+bl.b+','+(a*0.5)+')');
+        g.addColorStop(0.75,'rgba('+bl.r+','+bl.g+','+bl.b+','+(a*0.2)+')');
+        g.addColorStop(1,'rgba('+bl.r+','+bl.g+','+bl.b+',0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,bl.rx,0,Math.PI*2);ctx.fill();
+        ctx.restore();
+      });
+      stars.forEach(function(s){
+        var tw=0.6+0.4*Math.sin(t*1.5+s.ph);
+        ctx.fillStyle='rgba(200,240,255,'+((0.3+s.b*0.6)*tw)+')';
+        ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();
+      });
+      var hl=ctx.createRadialGradient(cx-R*0.30,cy-R*0.25,0,cx,cy,R*0.75);
+      hl.addColorStop(0,'rgba(0,200,240,0.09)');hl.addColorStop(0.6,'rgba(0,130,190,0.04)');hl.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=hl;ctx.fillRect(0,0,W,H);
+      var ld=ctx.createRadialGradient(cx,cy,R*0.55,cx,cy,R);
+      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.65,'rgba(0,3,15,0.10)');ld.addColorStop(1,'rgba(0,0,12,0.72)');
+      ctx.fillStyle=ld;ctx.fillRect(0,0,W,H);
+      ctx.restore();
+    }
+    function frame(){ctx.clearRect(0,0,W,H);ring(false);sphere();ring(true);t+=0.012;requestAnimationFrame(frame);}
+    frame();
+  }
+  init();
+})();</script>
           </div>
           <!-- 22° tilt reverse, 12s -->
           <div class="orbit-3d" style="animation:orb-30f 12s linear -3s infinite;">
-            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_7px_rgba(150,90,210,0.45)]" style="top:-4px;left:140px;animation:unorb-30f 12s linear -3s infinite;"></div>
+            <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_7px_rgba(0,200,220,0.35)]" style="top:-4px;left:140px;animation:unorb-30f 12s linear -3s infinite;"></div>
           </div>
-          <canvas class="pw-canvas" data-color="180,130,255"></canvas>
+          <canvas class="pw-canvas" data-color="0,200,240"></canvas>
         </div>
         <div class="mt-4 text-center">
-          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-tertiary-fixed-dim">Physics &amp; Cosmos</span>
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-primary-fixed-dim">Physics &amp; Cosmos</span>
           <span class="block text-xs text-on-surface-variant font-label">Gravitational Waves &amp; Beyond</span>
         </div>
       </div>
@@ -782,20 +873,111 @@
       <!-- Planet 3: Physics & Cosmos — center-left -->
       <div class="planet-node self-start ml-10 pointer-events-auto" onclick="openCategoryArticle('Physics')">
         <div class="relative" style="transform-style:preserve-3d;">
-          <div class="planet-sphere relative w-40 h-40 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #150030 0%, #09001c 55%, #02000a 100%);">
-            <img class="w-full h-full object-cover opacity-60 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Nebula planet"/>
-            <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/20 to-transparent"></div>
-            <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 82% 20%,rgba(0,210,230,0.09) 0%,transparent 45%);pointer-events:none;"></div>
-            <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 65% 65%, rgba(0,0,0,0.45) 0%, transparent 60%);pointer-events:none;"></div>
+          <div class="relative w-40 h-40 planet-glow-primary" style="border-radius:50%;">
+            <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;"></canvas>
+            <script>(function(){
+  var wrap=document.currentScript&&document.currentScript.parentElement;
+  if(!wrap)return;
+  var canvas=wrap.querySelector('.phys-c');
+  if(!canvas)return;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  function init(){
+    var sp=wrap.offsetWidth||(wrap.classList.contains('w-52')?208:wrap.classList.contains('w-40')?160:208);
+    if(!sp){requestAnimationFrame(init);return;}
+    var R=sp*0.46,W=Math.round(R*3.6),H=Math.round(R*2.55);
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    var ctx=canvas.getContext('2d');
+    ctx.scale(dpr,dpr);
+    var cx=W/2,cy=H/2,t=0;
+    var rxO=R*1.72,ryO=R*0.34,rxI=R*1.08,ryI=R*0.21;
+    var blobs=[
+      {ox:-0.18,oy:-0.12,rx:R*0.95,ry:R*0.72,a:0.22,r:0,g:120,b:195},
+      {ox: 0.20,oy: 0.18,rx:R*0.85,ry:R*0.68,a:0.19,r:0,g: 95,b:165},
+      {ox:-0.08,oy: 0.24,rx:R*0.72,ry:R*0.58,a:0.17,r:20,g:185,b:225},
+      {ox: 0.22,oy:-0.08,rx:R*0.78,ry:R*0.62,a:0.21,r:10,g: 55,b:150},
+      {ox: 0.04,oy:-0.28,rx:R*0.58,ry:R*0.46,a:0.15,r:35,g:165,b:215}
+    ];
+    var stars=[],seed=13579;
+    function rng(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
+    for(var i=0;i<72;i++){
+      var ang=rng()*Math.PI*2,r2=Math.sqrt(rng())*R*0.88;
+      stars.push({x:cx+r2*Math.cos(ang),y:cy+r2*Math.sin(ang),s:rng()*1.1+0.2,ph:rng()*Math.PI*2,b:rng()});
+    }
+    function ring(front){
+      ctx.save();
+      ctx.beginPath();
+      if(front)ctx.rect(0,cy,W,H);else ctx.rect(0,0,W,cy+1);
+      ctx.clip();
+      var p=0.5+0.5*Math.sin(t*0.5);
+      ctx.beginPath();
+      ctx.moveTo(cx+rxO,cy);ctx.ellipse(cx,cy,rxO,ryO,0,0,Math.PI*2);ctx.closePath();
+      ctx.moveTo(cx+rxI,cy);ctx.ellipse(cx,cy,rxI,ryI,0,0,Math.PI*2);ctx.closePath();
+      var a=0.50+p*0.05,lg=ctx.createLinearGradient(cx-rxO,cy,cx+rxO,cy);
+      lg.addColorStop(0.00,'rgba(0,50,110,0.08)');
+      lg.addColorStop(0.12,'rgba(0,120,190,'+(a*0.70)+')');
+      lg.addColorStop(0.28,'rgba(0,180,230,'+(a*0.92)+')');
+      lg.addColorStop(0.42,'rgba(40,220,252,'+a+')');
+      lg.addColorStop(0.50,'rgba(60,230,255,'+(a*1.05)+')');
+      lg.addColorStop(0.58,'rgba(40,220,252,'+a+')');
+      lg.addColorStop(0.72,'rgba(0,180,230,'+(a*0.88)+')');
+      lg.addColorStop(0.88,'rgba(0,120,190,'+(a*0.65)+')');
+      lg.addColorStop(1.00,'rgba(0,50,110,0.08)');
+      ctx.fillStyle=lg;ctx.fill('evenodd');
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(cx+rxI+1.5,cy);ctx.ellipse(cx,cy,rxI+1.5,ryI+0.5,0,0,Math.PI*2);ctx.closePath();
+      ctx.moveTo(cx+rxI-1,cy);ctx.ellipse(cx,cy,rxI-1,ryI-0.4,0,0,Math.PI*2);ctx.closePath();
+      var ig=ctx.createLinearGradient(cx-rxI,cy,cx+rxI,cy);
+      ig.addColorStop(0,'rgba(80,210,255,0.20)');ig.addColorStop(0.5,'rgba(140,238,255,0.55)');ig.addColorStop(1,'rgba(80,210,255,0.20)');
+      ctx.fillStyle=ig;ctx.fill('evenodd');
+      ctx.restore();ctx.restore();
+    }
+    function sphere(){
+      ctx.save();
+      ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
+      var p=0.5+0.5*Math.sin(t*0.5);
+      var bg=ctx.createRadialGradient(cx-R*0.18,cy-R*0.18,0,cx,cy,R);
+      bg.addColorStop(0,'#0b1d32');bg.addColorStop(0.4,'#040c1a');bg.addColorStop(1,'#010408');
+      ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+      blobs.forEach(function(bl){
+        var bx=cx+bl.ox*R*2,by=cy+bl.oy*R*2;
+        ctx.save();ctx.translate(bx,by);ctx.scale(1,bl.ry/bl.rx);
+        var g=ctx.createRadialGradient(0,0,0,0,0,bl.rx),a=bl.a*(0.85+p*0.15);
+        g.addColorStop(0,'rgba('+bl.r+','+bl.g+','+bl.b+','+a+')');
+        g.addColorStop(0.45,'rgba('+bl.r+','+bl.g+','+bl.b+','+(a*0.5)+')');
+        g.addColorStop(0.75,'rgba('+bl.r+','+bl.g+','+bl.b+','+(a*0.2)+')');
+        g.addColorStop(1,'rgba('+bl.r+','+bl.g+','+bl.b+',0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,bl.rx,0,Math.PI*2);ctx.fill();
+        ctx.restore();
+      });
+      stars.forEach(function(s){
+        var tw=0.6+0.4*Math.sin(t*1.5+s.ph);
+        ctx.fillStyle='rgba(200,240,255,'+((0.3+s.b*0.6)*tw)+')';
+        ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();
+      });
+      var hl=ctx.createRadialGradient(cx-R*0.30,cy-R*0.25,0,cx,cy,R*0.75);
+      hl.addColorStop(0,'rgba(0,200,240,0.09)');hl.addColorStop(0.6,'rgba(0,130,190,0.04)');hl.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=hl;ctx.fillRect(0,0,W,H);
+      var ld=ctx.createRadialGradient(cx,cy,R*0.55,cx,cy,R);
+      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.65,'rgba(0,3,15,0.10)');ld.addColorStop(1,'rgba(0,0,12,0.72)');
+      ctx.fillStyle=ld;ctx.fillRect(0,0,W,H);
+      ctx.restore();
+    }
+    function frame(){ctx.clearRect(0,0,W,H);ring(false);sphere();ring(true);t+=0.012;requestAnimationFrame(frame);}
+    frame();
+  }
+  init();
+})();</script>
           </div>
           <!-- 22° tilt reverse, 12s -->
           <div class="orbit-3d" style="animation:orb-30f 12s linear -3s infinite;">
-            <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_7px_rgba(150,90,210,0.45)]" style="top:-4px;left:128px;animation:unorb-30f 12s linear -3s infinite;"></div>
+            <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_7px_rgba(0,200,220,0.35)]" style="top:-4px;left:128px;animation:unorb-30f 12s linear -3s infinite;"></div>
           </div>
-          <canvas class="pw-canvas" data-color="180,130,255"></canvas>
+          <canvas class="pw-canvas" data-color="0,200,240"></canvas>
         </div>
         <div class="mt-3 text-center">
-          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-tertiary-fixed-dim">Physics &amp; Cosmos</span>
+          <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-primary-fixed-dim">Physics &amp; Cosmos</span>
           <span class="block text-xs text-on-surface-variant font-label">Gravitational Waves &amp; Beyond</span>
         </div>
       </div>
