@@ -12,10 +12,10 @@
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
   /* ── Glows & base ── */
-  .planet-glow-primary   { box-shadow: 0 0 12px 2px rgba(0,240,255,0.10); }
-  .planet-glow-secondary { box-shadow: 0 0 12px 2px rgba(215,59,0,0.13); }
-  .planet-glow-tertiary  { box-shadow: 0 0 12px 2px rgba(180,130,255,0.10); }
-  .planet-glow-exo       { box-shadow: 0 0 10px 2px rgba(219,252,255,0.08); }
+  .planet-glow-primary   { box-shadow: 0 0 10px 2px rgba(0,200,220,0.07); }
+  .planet-glow-secondary { box-shadow: 0 0 10px 2px rgba(150,80,20,0.09); }
+  .planet-glow-tertiary  { box-shadow: 0 0 10px 2px rgba(130,80,200,0.07); }
+  .planet-glow-exo       { box-shadow: 0 0 8px  2px rgba(140,190,200,0.06); }
   /* ── Star canvas ── */
   #star-canvas {
     position: fixed;
@@ -396,27 +396,28 @@
 
     <!-- SVG behind planets -->
     <svg id="constellation-svg" class="absolute inset-0 w-full h-full pointer-events-none" style="left:0;top:0;">
-      <line id="cl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl4" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl5" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="cl6" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.4" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="cl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="cl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="cl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="cl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="cl4" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="cl5" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="cl6" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
     </svg>
 
     <!-- PLANET: Planets & Exoplanets (Top Left) -->
     <div class="planet-node absolute pointer-events-auto" style="top:calc(22% - 45px); left:calc(18% + 45px);" onclick="openCategoryArticle('Planets')">
       <div class="relative" style="transform-style: preserve-3d;">
-        <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
-          <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Planets"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
+        <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 38% 33%, #002030 0%, #000e18 60%, #00060c 100%);">
+          <img class="w-full h-full object-cover opacity-70 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Planets"/>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 68% 68%, rgba(0,0,0,0.55) 0%, transparent 62%);pointer-events:none;"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(0,170,195,0.07) 0%,transparent 52%);pointer-events:none;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 6s linear infinite;">
-          <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:126px;animation:unorb-30f 6s linear infinite;"></div>
+          <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_7px_rgba(0,200,220,0.45)]" style="top:-4px;left:126px;animation:unorb-30f 6s linear infinite;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 9s linear -4.5s infinite;">
-          <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:97px;animation:unorb-30f 9s linear -4.5s infinite;"></div>
+          <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_5px_rgba(0,200,220,0.30)]" style="top:-3px;left:97px;animation:unorb-30f 9s linear -4.5s infinite;"></div>
         </div>
         <canvas class="pw-canvas" data-color="0,240,255"></canvas>
       </div>
@@ -429,19 +430,20 @@
     <!-- PLANET: Space Missions (Center-Bottom) -->
     <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openCategoryArticle('Missions')">
       <div class="relative" style="transform-style: preserve-3d;">
-        <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
-          <img class="w-full h-full object-cover opacity-95 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Missions"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
+        <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #261000 0%, #130500 55%, #050100 100%);">
+          <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Missions"/>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.60) 100%);pointer-events:none;"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/40"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 7s linear infinite;">
           <svg width="11" height="22" viewBox="0 0 11 22" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-11px;left:153px;transform:rotateZ(180deg);">
-            <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#ffb5a0"/>
-            <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#ffb5a0"/>
-            <polygon points="2,6 -0.5,9.5 2,10.5" fill="#ffb5a0"/>
-            <polygon points="9,6 11.5,9.5 9,10.5" fill="#ffb5a0"/>
-            <polygon points="2,13 -0.5,21 2,17" fill="#ffb5a0"/>
-            <polygon points="9,13 11.5,21 9,17" fill="#ffb5a0"/>
-            <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#ffb5a0"/>
+            <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#b8784a"/>
+            <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#b8784a"/>
+            <polygon points="2,6 -0.5,9.5 2,10.5" fill="#b8784a"/>
+            <polygon points="9,6 11.5,9.5 9,10.5" fill="#b8784a"/>
+            <polygon points="2,13 -0.5,21 2,17" fill="#b8784a"/>
+            <polygon points="9,13 11.5,21 9,17" fill="#b8784a"/>
+            <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#b8784a"/>
           </svg>
         </div>
         <canvas class="pw-canvas" data-color="215,59,0"></canvas>
@@ -455,12 +457,14 @@
     <!-- PLANET: Physics & Cosmos (Top Right) -->
     <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openCategoryArticle('Physics')">
       <div class="relative" style="transform-style: preserve-3d;">
-        <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
-          <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Physics"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
+        <div class="planet-sphere relative w-52 h-52 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #150030 0%, #09001c 55%, #02000a 100%);">
+          <img class="w-full h-full object-cover opacity-60 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Physics"/>
+          <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/20 to-transparent"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 82% 20%,rgba(0,210,230,0.09) 0%,transparent 45%);pointer-events:none;"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 65% 65%, rgba(0,0,0,0.45) 0%, transparent 60%);pointer-events:none;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 12s linear -3s infinite;">
-          <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:140px;animation:unorb-30f 12s linear -3s infinite;"></div>
+          <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_7px_rgba(150,90,210,0.45)]" style="top:-4px;left:140px;animation:unorb-30f 12s linear -3s infinite;"></div>
         </div>
         <canvas class="pw-canvas" data-color="180,130,255"></canvas>
       </div>
@@ -473,12 +477,13 @@
     <!-- PLANET: Moon (Left-Center) -->
     <div class="planet-node absolute pointer-events-auto" style="top:calc(54% - 15px); left:calc(8% - 10px);" onclick="openCategoryArticle('Moon')">
       <div class="relative" style="transform-style: preserve-3d;">
-        <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
-          <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
+        <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #1e1e1e 0%, #111111 55%, #060606 100%);">
+          <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 80% 22%,rgba(0,200,225,0.10) 0%,transparent 42%);pointer-events:none;"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 62% 65%, rgba(0,0,0,0.40) 0%, transparent 58%);pointer-events:none;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-0f 5s linear infinite;">
-          <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="top:-3px;left:97px;animation:unorb-0f 5s linear infinite;"></div>
+          <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_6px_rgba(160,215,225,0.45)]" style="top:-3px;left:97px;animation:unorb-0f 5s linear infinite;"></div>
         </div>
         <canvas class="pw-canvas" data-color="219,252,255"></canvas>
       </div>
@@ -547,11 +552,11 @@
       pulse+=0.018;
       var p=0.5+0.5*Math.sin(pulse);
       var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.70);
-      cg.addColorStop(0,'rgba(240,250,255,'+(0.95+p*0.05)+')');
-      cg.addColorStop(0.10,'rgba(200,240,255,'+(0.80+p*0.10)+')');
-      cg.addColorStop(0.25,'rgba(125,211,252,'+(0.55+p*0.10)+')');
-      cg.addColorStop(0.50,'rgba(80,170,220,'+(0.22+p*0.06)+')');
-      cg.addColorStop(0.80,'rgba(30,100,160,0.06)');
+      cg.addColorStop(0,'rgba(210,235,248,'+(0.68+p*0.04)+')');
+      cg.addColorStop(0.10,'rgba(160,210,235,'+(0.50+p*0.07)+')');
+      cg.addColorStop(0.25,'rgba(95,175,220,'+(0.30+p*0.07)+')');
+      cg.addColorStop(0.50,'rgba(55,130,190,'+(0.13+p*0.04)+')');
+      cg.addColorStop(0.80,'rgba(22,75,140,0.04)');
       cg.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=cg;
       ctx.beginPath();ctx.arc(cx,cy,R*0.70,0,Math.PI*2);ctx.fill();
@@ -682,9 +687,9 @@
         </div>
         <div class="orbit-3d" style="animation:orb-0f 13s linear -5s infinite;">
           <div style="position:absolute;top:-4px;left:83px;animation:unorb-0f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
-            <div style="width:8px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
-            <div style="width:6px;height:6px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 10px 3px rgba(125,211,252,0.85);"></div>
-            <div style="width:8px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
+            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
+            <div style="width:6px;height:6px;background:#52b4d8;border-radius:1px;box-shadow:0 0 6px 2px rgba(95,175,220,0.55);"></div>
+            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
           </div>
         </div>
         <canvas class="pw-canvas" data-color="125,211,252"></canvas>
@@ -700,24 +705,25 @@
   <!-- ═══ MOBILE: vertical stacked planets ═══ -->
   <div id="mobile-galaxy" class="md:hidden w-full h-full overflow-y-auto pointer-events-auto flex flex-col items-start gap-6 pt-32 pb-32 px-4 relative">
     <svg id="mobile-constellation-svg" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;" height="0">
-      <line id="mcl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="mcl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="mcl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
-      <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.35" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="mcl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="mcl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="mcl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
+      <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
     </svg>
 
     <!-- Mobile Planet 1: Planets — left -->
     <div class="planet-node self-start ml-6 pointer-events-auto" onclick="openCategoryArticle('Planets')">
       <div class="relative" style="transform-style:preserve-3d;">
-        <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #003a40 0%, #001a1f 60%, #000e12 100%);">
-          <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Planets"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-primary-container/40 to-transparent"></div>
+        <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 38% 33%, #002030 0%, #000e18 60%, #00060c 100%);">
+          <img class="w-full h-full object-cover opacity-70 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Planets"/>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 68% 68%, rgba(0,0,0,0.55) 0%, transparent 62%);pointer-events:none;"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(0,170,195,0.07) 0%,transparent 52%);pointer-events:none;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 6s linear infinite;">
-          <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_12px_rgba(0,240,255,1)]" style="top:-4px;left:90px;animation:unorb-30f 6s linear infinite;"></div>
+          <div class="absolute w-2 h-2 bg-primary rounded-full shadow-[0_0_7px_rgba(0,200,220,0.45)]" style="top:-4px;left:90px;animation:unorb-30f 6s linear infinite;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 9s linear -4.5s infinite;">
-          <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]" style="top:-3px;left:72px;animation:unorb-30f 9s linear -4.5s infinite;"></div>
+          <div class="absolute w-1.5 h-1.5 bg-primary/70 rounded-full shadow-[0_0_5px_rgba(0,200,220,0.30)]" style="top:-3px;left:72px;animation:unorb-30f 9s linear -4.5s infinite;"></div>
         </div>
         <canvas class="pw-canvas" data-color="0,240,255"></canvas>
       </div>
@@ -730,19 +736,20 @@
     <!-- Mobile Planet 2: Missions — right -->
     <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openCategoryArticle('Missions')">
       <div class="relative" style="transform-style:preserve-3d;">
-        <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a1000 0%, #1e0800 55%, #0a0200 100%);">
-          <img class="w-full h-full object-cover opacity-95 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Missions"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/40 to-transparent"></div>
+        <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #261000 0%, #130500 55%, #050100 100%);">
+          <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Missions"/>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.60) 100%);pointer-events:none;"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/40"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 7s linear infinite;">
           <svg width="11" height="22" viewBox="0 0 11 22" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-11px;left:100px;transform:rotateZ(180deg);">
-            <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#ffb5a0"/>
-            <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#ffb5a0"/>
-            <polygon points="2,6 -0.5,9.5 2,10.5" fill="#ffb5a0"/>
-            <polygon points="9,6 11.5,9.5 9,10.5" fill="#ffb5a0"/>
-            <polygon points="2,13 -0.5,21 2,17" fill="#ffb5a0"/>
-            <polygon points="9,13 11.5,21 9,17" fill="#ffb5a0"/>
-            <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#ffb5a0"/>
+            <path d="M5.5,0 C3,0 2,2.5 2,4 L9,4 C9,2.5 8,0 5.5,0Z" fill="#b8784a"/>
+            <rect x="2" y="4" width="7" height="11" rx="0.5" fill="#b8784a"/>
+            <polygon points="2,6 -0.5,9.5 2,10.5" fill="#b8784a"/>
+            <polygon points="9,6 11.5,9.5 9,10.5" fill="#b8784a"/>
+            <polygon points="2,13 -0.5,21 2,17" fill="#b8784a"/>
+            <polygon points="9,13 11.5,21 9,17" fill="#b8784a"/>
+            <rect x="3.5" y="15" width="4" height="1.8" rx="0.5" fill="#b8784a"/>
           </svg>
         </div>
         <canvas class="pw-canvas" data-color="215,59,0"></canvas>
@@ -756,12 +763,14 @@
     <!-- Mobile Planet 3: Physics — center-left -->
     <div class="planet-node self-start ml-10 pointer-events-auto" onclick="openCategoryArticle('Physics')">
       <div class="relative" style="transform-style:preserve-3d;">
-        <div class="planet-sphere relative w-40 h-40 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #1e0044 0%, #100028 55%, #060010 100%);">
-          <img class="w-full h-full object-cover opacity-70 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Physics"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/30 to-transparent"></div>
+        <div class="planet-sphere relative w-40 h-40 overflow-hidden planet-glow-tertiary" style="border-radius:50%; background:radial-gradient(circle at 42% 38%, #150030 0%, #09001c 55%, #02000a 100%);">
+          <img class="w-full h-full object-cover opacity-60 mix-blend-lighten" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsCdqmbwXKiV5f6RsZUOp20HosHOURs6PfevJ7VJZa2-a4_dODKWpDgrf-U8MFy53Km3gd4On8jMETLdLeMCRrQoBt-0tgh3smlUKURIhJBDoHRWSwf0OIDrOGBeGloA6SPxb5_6nVB16LjdkOod1PUU09N3lu8JJwhI-vGuLnj8cgjwMtMSyXjQv5FGrd0Fw6NTE7Tkki4U3ciC3T8Ju3hA9pMrqlenngpMyV6E2rMKIQRGCGzQqZddENurKuxSrPo5UgVLGM_aQ" alt="Physics"/>
+          <div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/20 to-transparent"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 82% 20%,rgba(0,210,230,0.09) 0%,transparent 45%);pointer-events:none;"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 65% 65%, rgba(0,0,0,0.45) 0%, transparent 60%);pointer-events:none;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-30f 12s linear -3s infinite;">
-          <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_12px_rgba(200,160,255,1)]" style="top:-4px;left:128px;animation:unorb-30f 12s linear -3s infinite;"></div>
+          <div class="absolute w-2 h-2 bg-tertiary rounded-full shadow-[0_0_7px_rgba(150,90,210,0.45)]" style="top:-4px;left:128px;animation:unorb-30f 12s linear -3s infinite;"></div>
         </div>
         <canvas class="pw-canvas" data-color="180,130,255"></canvas>
       </div>
@@ -774,12 +783,13 @@
     <!-- Mobile Planet 4: Moon — right -->
     <div class="planet-node self-end mr-10 pointer-events-auto" onclick="openCategoryArticle('Moon')">
       <div class="relative" style="transform-style:preserve-3d;">
-        <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #2a2a2a 0%, #181818 55%, #0a0a0a 100%);">
-          <img class="w-full h-full object-cover opacity-90 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
-          <div class="absolute inset-0 bg-gradient-to-tr from-[#dbfcff]/10 to-transparent"></div>
+        <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #1e1e1e 0%, #111111 55%, #060606 100%);">
+          <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 80% 22%,rgba(0,200,225,0.10) 0%,transparent 42%);pointer-events:none;"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 62% 65%, rgba(0,0,0,0.40) 0%, transparent 58%);pointer-events:none;"></div>
         </div>
         <div class="orbit-3d" style="animation:orb-0f 5s linear infinite;">
-          <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_10px_rgba(219,252,255,0.9)]" style="top:-3px;left:75px;animation:unorb-0f 5s linear infinite;"></div>
+          <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_6px_rgba(160,215,225,0.45)]" style="top:-3px;left:75px;animation:unorb-0f 5s linear infinite;"></div>
         </div>
         <canvas class="pw-canvas" data-color="219,252,255"></canvas>
       </div>
@@ -847,11 +857,11 @@
       ctx.save();ctx.scale(dpr,dpr);
       pulse+=0.018;var p=0.5+0.5*Math.sin(pulse);
       var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.70);
-      cg.addColorStop(0,'rgba(240,250,255,'+(0.95+p*0.05)+')');
-      cg.addColorStop(0.10,'rgba(200,240,255,'+(0.80+p*0.10)+')');
-      cg.addColorStop(0.25,'rgba(125,211,252,'+(0.55+p*0.10)+')');
-      cg.addColorStop(0.50,'rgba(80,170,220,'+(0.22+p*0.06)+')');
-      cg.addColorStop(0.80,'rgba(30,100,160,0.06)');cg.addColorStop(1,'rgba(0,0,0,0)');
+      cg.addColorStop(0,'rgba(210,235,248,'+(0.68+p*0.04)+')');
+      cg.addColorStop(0.10,'rgba(160,210,235,'+(0.50+p*0.07)+')');
+      cg.addColorStop(0.25,'rgba(95,175,220,'+(0.30+p*0.07)+')');
+      cg.addColorStop(0.50,'rgba(55,130,190,'+(0.13+p*0.04)+')');
+      cg.addColorStop(0.80,'rgba(22,75,140,0.04)');cg.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx,cy,R*0.70,0,Math.PI*2);ctx.fill();
       ctx.lineWidth=1.05;
       for(var m=0;m<NM;m++){
@@ -875,9 +885,9 @@
         </div>
         <div class="orbit-3d" style="animation:orb-0f 13s linear -5s infinite;">
           <div style="position:absolute;top:-4px;left:83px;animation:unorb-0f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
-            <div style="width:8px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
-            <div style="width:6px;height:6px;background:#7dd3fc;border-radius:1px;box-shadow:0 0 10px 3px rgba(125,211,252,0.85);"></div>
-            <div style="width:8px;height:2px;background:rgba(125,211,252,0.60);border-radius:1px;"></div>
+            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
+            <div style="width:6px;height:6px;background:#52b4d8;border-radius:1px;box-shadow:0 0 6px 2px rgba(95,175,220,0.55);"></div>
+            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
           </div>
         </div>
         <canvas class="pw-canvas" data-color="125,211,252"></canvas>
