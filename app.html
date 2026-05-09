@@ -451,12 +451,12 @@
       <!-- PLANET: Physics & Cosmos (Top Right) -->
       <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openCategoryArticle('Physics')">
         <div class="relative" style="transform-style: preserve-3d;">
+          <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
           <div class="planet-sphere relative w-52 h-52 planet-glow-primary" style="border-radius:50%;">
-            <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;"></canvas>
             <script>(function(){
   var wrap=document.currentScript&&document.currentScript.parentElement;
   if(!wrap)return;
-  var canvas=wrap.querySelector('.phys-c');
+  var canvas=wrap.parentElement.querySelector('.phys-c');
   if(!canvas)return;
   var dpr=Math.min(window.devicePixelRatio||1,2);
   function init(){
@@ -913,12 +913,12 @@
       <!-- Planet 3: Physics & Cosmos — center-left -->
       <div class="planet-node self-start ml-10 pointer-events-auto" onclick="openCategoryArticle('Physics')">
         <div class="relative" style="transform-style:preserve-3d;">
+          <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
           <div class="planet-sphere relative w-40 h-40 planet-glow-primary" style="border-radius:50%;">
-            <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;"></canvas>
             <script>(function(){
   var wrap=document.currentScript&&document.currentScript.parentElement;
   if(!wrap)return;
-  var canvas=wrap.querySelector('.phys-c');
+  var canvas=wrap.parentElement.querySelector('.phys-c');
   if(!canvas)return;
   var dpr=Math.min(window.devicePixelRatio||1,2);
   function init(){
