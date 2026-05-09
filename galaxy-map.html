@@ -478,11 +478,11 @@
     var rxO=R*1.88,ryO=R*0.35,rxI=R*1.27,ryI=R*0.235;
     var rxM=rxO*0.90,ryM=ryO*0.90;
     var blobs=[
-      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.25,r:0,g:168,b:178},
-      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.22,r:0,g:100,b:110},
-      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.20,r:20,g:195,b:205},
-      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.24,r:0,g:75,b:85},
-      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.18,r:30,g:175,b:182}
+      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.50,r:0,g:195,b:215},
+      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.42,r:0,g:135,b:158},
+      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.48,r:0,g:225,b:245},
+      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.38,r:0,g:105,b:125},
+      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.45,r:10,g:215,b:232}
     ];
     var stars=[],seed=13579;
     function rng(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
@@ -541,7 +541,7 @@
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
       var p=0.5+0.5*Math.sin(t*0.5);
       var bg=ctx.createRadialGradient(cx-R*0.15,cy-R*0.15,0,cx,cy,R);
-      bg.addColorStop(0,'#041214');bg.addColorStop(0.35,'#020b0c');bg.addColorStop(1,'#010506');
+      bg.addColorStop(0,'#0c2830');bg.addColorStop(0.35,'#071a22');bg.addColorStop(1,'#040e14');
       ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
       blobs.forEach(function(bl){
         var bx=cx+bl.ox*R*2,by=cy+bl.oy*R*2;
@@ -556,21 +556,24 @@
       });
       stars.forEach(function(s){
         var tw=0.6+0.4*Math.sin(t*1.5+s.ph);
-        ctx.fillStyle='rgba(190,245,250,'+((0.25+s.b*0.55)*tw)+')';
+        ctx.fillStyle='rgba(220,255,255,'+((0.42+s.b*0.58)*tw)+')';
         ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();
       });
       var hl=ctx.createRadialGradient(cx-R*0.28,cy-R*0.22,0,cx,cy,R*0.78);
-      hl.addColorStop(0,'rgba(0,170,185,0.10)');hl.addColorStop(0.55,'rgba(0,100,112,0.04)');hl.addColorStop(1,'rgba(0,0,0,0)');
+      hl.addColorStop(0,'rgba(0,210,235,0.22)');hl.addColorStop(0.55,'rgba(0,140,158,0.08)');hl.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=hl;ctx.fillRect(0,0,W,H);
       var sp1=ctx.createRadialGradient(cx-R*0.32,cy-R*0.30,0,cx-R*0.28,cy-R*0.26,R*0.22);
-      sp1.addColorStop(0,'rgba(100,240,250,0.28)');sp1.addColorStop(0.5,'rgba(40,180,195,0.09)');sp1.addColorStop(1,'rgba(0,0,0,0)');
+      sp1.addColorStop(0,'rgba(160,252,255,0.55)');sp1.addColorStop(0.5,'rgba(60,205,225,0.20)');sp1.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp1;ctx.fillRect(0,0,W,H);
       var sp2=ctx.createRadialGradient(cx+R*0.24,cy+R*0.20,0,cx+R*0.20,cy+R*0.17,R*0.16);
-      sp2.addColorStop(0,'rgba(0,155,165,0.12)');sp2.addColorStop(1,'rgba(0,0,0,0)');
+      sp2.addColorStop(0,'rgba(0,195,215,0.24)');sp2.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp2;ctx.fillRect(0,0,W,H);
       var ld=ctx.createRadialGradient(cx,cy,R*0.52,cx,cy,R);
-      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.60,'rgba(0,3,4,0.08)');ld.addColorStop(1,'rgba(0,3,4,0.82)');
+      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.65,'rgba(0,3,4,0.05)');ld.addColorStop(1,'rgba(0,3,4,0.58)');
       ctx.fillStyle=ld;ctx.fillRect(0,0,W,H);
+      var rim=ctx.createRadialGradient(cx,cy,R*0.84,cx,cy,R*1.0);
+      rim.addColorStop(0,'rgba(0,0,0,0)');rim.addColorStop(1,'rgba(0,210,240,0.20)');
+      ctx.fillStyle=rim;ctx.fillRect(0,0,W,H);
       ctx.restore();
     }
     function drawMoon(){
@@ -916,11 +919,11 @@
     var rxO=R*1.88,ryO=R*0.35,rxI=R*1.27,ryI=R*0.235;
     var rxM=rxO*0.90,ryM=ryO*0.90;
     var blobs=[
-      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.25,r:0,g:168,b:178},
-      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.22,r:0,g:100,b:110},
-      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.20,r:20,g:195,b:205},
-      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.24,r:0,g:75,b:85},
-      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.18,r:30,g:175,b:182}
+      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.50,r:0,g:195,b:215},
+      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.42,r:0,g:135,b:158},
+      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.48,r:0,g:225,b:245},
+      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.38,r:0,g:105,b:125},
+      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.45,r:10,g:215,b:232}
     ];
     var stars=[],seed=13579;
     function rng(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
@@ -979,7 +982,7 @@
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
       var p=0.5+0.5*Math.sin(t*0.5);
       var bg=ctx.createRadialGradient(cx-R*0.15,cy-R*0.15,0,cx,cy,R);
-      bg.addColorStop(0,'#041214');bg.addColorStop(0.35,'#020b0c');bg.addColorStop(1,'#010506');
+      bg.addColorStop(0,'#0c2830');bg.addColorStop(0.35,'#071a22');bg.addColorStop(1,'#040e14');
       ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
       blobs.forEach(function(bl){
         var bx=cx+bl.ox*R*2,by=cy+bl.oy*R*2;
@@ -994,21 +997,24 @@
       });
       stars.forEach(function(s){
         var tw=0.6+0.4*Math.sin(t*1.5+s.ph);
-        ctx.fillStyle='rgba(190,245,250,'+((0.25+s.b*0.55)*tw)+')';
+        ctx.fillStyle='rgba(220,255,255,'+((0.42+s.b*0.58)*tw)+')';
         ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();
       });
       var hl=ctx.createRadialGradient(cx-R*0.28,cy-R*0.22,0,cx,cy,R*0.78);
-      hl.addColorStop(0,'rgba(0,170,185,0.10)');hl.addColorStop(0.55,'rgba(0,100,112,0.04)');hl.addColorStop(1,'rgba(0,0,0,0)');
+      hl.addColorStop(0,'rgba(0,210,235,0.22)');hl.addColorStop(0.55,'rgba(0,140,158,0.08)');hl.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=hl;ctx.fillRect(0,0,W,H);
       var sp1=ctx.createRadialGradient(cx-R*0.32,cy-R*0.30,0,cx-R*0.28,cy-R*0.26,R*0.22);
-      sp1.addColorStop(0,'rgba(100,240,250,0.28)');sp1.addColorStop(0.5,'rgba(40,180,195,0.09)');sp1.addColorStop(1,'rgba(0,0,0,0)');
+      sp1.addColorStop(0,'rgba(160,252,255,0.55)');sp1.addColorStop(0.5,'rgba(60,205,225,0.20)');sp1.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp1;ctx.fillRect(0,0,W,H);
       var sp2=ctx.createRadialGradient(cx+R*0.24,cy+R*0.20,0,cx+R*0.20,cy+R*0.17,R*0.16);
-      sp2.addColorStop(0,'rgba(0,155,165,0.12)');sp2.addColorStop(1,'rgba(0,0,0,0)');
+      sp2.addColorStop(0,'rgba(0,195,215,0.24)');sp2.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp2;ctx.fillRect(0,0,W,H);
       var ld=ctx.createRadialGradient(cx,cy,R*0.52,cx,cy,R);
-      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.60,'rgba(0,3,4,0.08)');ld.addColorStop(1,'rgba(0,3,4,0.82)');
+      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.65,'rgba(0,3,4,0.05)');ld.addColorStop(1,'rgba(0,3,4,0.58)');
       ctx.fillStyle=ld;ctx.fillRect(0,0,W,H);
+      var rim=ctx.createRadialGradient(cx,cy,R*0.84,cx,cy,R*1.0);
+      rim.addColorStop(0,'rgba(0,0,0,0)');rim.addColorStop(1,'rgba(0,210,240,0.20)');
+      ctx.fillStyle=rim;ctx.fillRect(0,0,W,H);
       ctx.restore();
     }
     function drawMoon(){
