@@ -341,7 +341,8 @@ function renderArticles() {
     const a = list[i];
     const cc = CAT_COLOR[a.category] || '#00f0ff';
     const ic = CAT_ICON[a.category] || 'article';
-    const fb = escHtml(pickFallback(a.category, a.title));
+    const rawFb = pickFallback(a.category, a.title);
+    const fb = escHtml(rawFb && !rawFb.includes('wsrv.nl') ? 'https://wsrv.nl/?url=' + encodeURIComponent(rawFb) + '&maxage=7d&output=jpg&q=85' : rawFb);
     if (i === 0) {
       // Hero card
       html += `
@@ -413,7 +414,7 @@ async function loadFeeds() {
     // dedupe images
     const seen = new Set();
     allArticles = merged.filter(a => {
-      if (seen.has(a.image)) { a.image = pickFallback(a.category, a.title + '_dup'); }
+      if (seen.has(a.image)) { const r = pickFallback(a.category, a.title + '_dup'); a.image = proxyImg(r); }
       seen.add(a.image); return true;
     });
     renderArticles();

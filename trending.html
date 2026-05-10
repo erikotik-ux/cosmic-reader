@@ -313,12 +313,13 @@ function renderTrending() {
     const rankLabel = rank <= 3 ? '#' + rank : rank;
     const cc = CAT_COLOR[a.category] || '#00f0ff';
     const ic = CAT_ICON[a.category] || 'article';
-    const fb = pickFallback(a.category, a.title);
+    const rawFb = pickFallback(a.category, a.title);
+    const fb = rawFb && !rawFb.includes('wsrv.nl') ? 'https://wsrv.nl/?url=' + encodeURIComponent(rawFb) + '&maxage=7d&output=jpg&q=85' : rawFb;
     return `
     <a href="${escHtml(a.link)}" target="_blank" rel="noopener" class="trending-item">
       <div class="rank-badge ${rankClass}"><span>${rankLabel}</span></div>
       <div class="thumb">
-        <img src="${escHtml(a.image)}" alt="" onerror="this.src='${fb}';this.onerror=null;"/>
+        <img src="${escHtml(a.image)}" alt="" onerror="this.src='${escHtml(fb)}';this.onerror=null;"/>
       </div>
       <div class="item-body">
         <div class="item-meta">

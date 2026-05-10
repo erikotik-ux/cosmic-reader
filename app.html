@@ -1955,15 +1955,17 @@ function pickFallback(category, title) {
 function proxyImg(url) {
   if (!url) return '';
   if (url.startsWith('data:')) return url;
-  if (url.includes('wikimedia.org') || url.includes('wikipedia.org')) return url;
-  // wsrv.nl: free image proxy, strips hotlink headers, adds 7-day browser cache
+  if (url.includes('wsrv.nl')) return url; // already proxied
+  // Route everything (including Wikimedia) through wsrv.nl — direct Wikimedia
+  // requests from browsers get rate-limited (503); wsrv.nl caches and relays them
   return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
 }
 // Called via onerror on article img tags — swaps a broken src to a pool fallback.
 // Using data-cat / data-title avoids quote-escaping issues in inline onerror attributes.
 function imgFail(el) {
   el.onerror = null; // prevent infinite loop if fallback also fails
-  el.src = pickFallback(el.dataset.cat || '', el.dataset.title || '');
+  const raw = pickFallback(el.dataset.cat || '', el.dataset.title || '');
+  el.src = proxyImg(raw);
 }
 
 // 2-step fallback chain:
@@ -1991,7 +1993,11 @@ function imgChain(el, fb, cat) {
   if (!el.dataset.fbTried && fb) {
     el.dataset.fbTried = '1';
     el.onerror = () => imgChain(el, fb, cat);
-    el.src = fb;
+    // Always route fallback through wsrv.nl — direct Wikimedia/CDN requests 503
+    const proxiedFb = (fb.startsWith('data:') || fb.includes('wsrv.nl'))
+      ? fb
+      : 'https://wsrv.nl/?url=' + encodeURIComponent(fb) + '&maxage=7d&output=jpg&q=85';
+    el.src = proxiedFb;
   } else {
     // Fallback already attempted (or no fb URL) → use guaranteed SVG placeholder
     el.onerror = null;
@@ -2737,172 +2743,7 @@ function updateTicker(arts) {
 }
 
 // ── Fallback Article Data (used until RSS loads) ───────────
-const articles = [
-  {
-    id: 0,
-    title: "A Signal From Before the Stars: LIGO's Primordial Black Hole Detection",
-    excerpt: "LIGO picked up a gravitational wave signal from a primordial black hole — smaller than our Sun and potentially older than all stars in the universe. The detection challenges existing models of black hole formation and opens a new window into the pre-stellar epoch.",
-    category: "Physics",
-    date: "March 27, 2026",
-    source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg",
-    read_more: "https://www.universetoday.com/articles/a-signal-from-before-the-stars",
-    coord: "Coordinate: 04.28.99",
-    readTime: "5m",
-    body: `The silence of deep space is a fabrication of the uninitiated. To those with the right instrumentation, the vacuum is a cacophony of rhythmic disturbances. LIGO's latest observation run — designated O4b — has returned something extraordinary.
-
-The gravitational wave signal, catalogued as GW-2026-03B, exhibits a chirp mass of approximately 0.4 solar masses. This is strikingly smaller than any stellar black hole produced by core collapse, suggesting the object formed in the radiation-dominated era of the early universe — before a single star had ignited.
-
-We used to believe these signals were the byproduct of collapsing massive stars. But the GW-2026-03B event contains anomalies that do not align with standard stellar evolution. The mass gap is too significant. The waveform too clean.
-
-If confirmed, this would be the first direct detection of a primordial black hole — a relic of quantum fluctuations in the early universe's density field. These objects have been theorized for decades as a candidate component of dark matter.
-
-The next observation window opens in June. Further detections would allow us to constrain the primordial black hole mass spectrum with unprecedented precision.`,
-    stats: [
-      { label: "Chirp Mass", val: "0.4 M☉", color: "text-primary" },
-      { label: "Confidence Level", val: "98.7%", color: "text-secondary" },
-      { label: "Distance", val: "1.2 Gpc", color: "text-tertiary" },
-      { label: "Observation Run", val: "O4b", color: "text-primary" }
-    ]
-  },
-  {
-    id: 1,
-    title: "Hunting Moon Water With Neutrons",
-    excerpt: "NASA sends a clever instrument that hunts for water without digging, using subatomic particles to sniff out hidden ice deposits at the lunar south pole. The LEND instrument aboard LRO has detected elevated hydrogen signatures consistent with water-ice concentrations near permanently shadowed craters.",
-    category: "Moon",
-    date: "March 27, 2026",
-    source: "Universe Today",
-    image: "https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg",
-    read_more: "https://www.universetoday.com/articles/hunting-moon-water-with-neutrons",
-    coord: "Coordinate: LUNA-S.01",
-    readTime: "4m",
-    body: `The Lunar South Pole holds secrets that could define the future of human spaceflight. Permanently shadowed craters, never touched by sunlight since the Moon formed, may harbor billions of tonnes of water ice — a resource for drinking, fuel, and breathable oxygen.
-
-NASA's Lunar Reconnaissance Orbiter has been quietly scanning the lunar surface with its Lunar Exploration Neutron Detector (LEND) for over a decade. But recent reanalysis of the data has revealed something striking: anomalously high hydrogen concentrations in regions correlating exactly with crater floor shadows.
-
-The technique is elegant. Cosmic rays striking the lunar surface liberate fast neutrons. When those neutrons encounter hydrogen atoms — the key ingredient in water — they slow down dramatically. The LEND instrument detects this slowing as a deficiency in the fast-neutron count, effectively mapping hydrogen density from orbit without ever touching the surface.
-
-The latest data shows pockets of concentration near the crater Haworth and de Gerlache that are orders of magnitude higher than the surrounding terrain. These pockets align with ground-truth measurements from the LCROSS impact mission in 2009, which directly detected water vapor and ice particles.
-
-Artemis basecamp planners are watching closely.`,
-    stats: [
-      { label: "H₂O Concentration", val: "High", color: "text-primary" },
-      { label: "Depth Estimate", val: "~1m", color: "text-secondary" },
-      { label: "Target Crater", val: "Haworth", color: "text-tertiary" },
-      { label: "Instrument", val: "LEND/LRO", color: "text-primary" }
-    ]
-  },
-  {
-    id: 2,
-    title: "Hera Aces Massive Engine Burn to Didymos",
-    excerpt: "ESA's Hera spacecraft successfully completed its most dramatic deep-space orbital maneuver toward the asteroid deflection target. The precision burn adjusted the trajectory by 400 m/s — ensuring Hera arrives at the Didymos binary system on schedule in early 2027.",
-    category: "Missions",
-    date: "March 27, 2026",
-    source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg",
-    read_more: "https://www.universetoday.com/articles/hera-aces-a-massive-engine-burn-on-its-way-to-didymos",
-    coord: "Coordinate: AST-65803",
-    readTime: "4m",
-    body: `Deep space navigation is an exercise in patience and precision. ESA's Hera mission, launched in October 2024, just completed the largest and most consequential engine burn of its voyage — a 400 m/s deep-space manoeuvre that will determine whether it makes its 2027 rendezvous with the Didymos asteroid system.
-
-The burn, lasting over 8 hours, used Hera's 400-Newton main thruster running on hydrazine. The entire sequence had to be executed autonomously: at a distance of over 200 million kilometres, the round-trip communication lag to Earth was nearly 22 minutes, making real-time commanding impossible.
-
-Hera's destination is historic. NASA's DART spacecraft impacted Dimorphos — the moon of asteroid Didymos — in September 2022, successfully altering its orbit. It was humanity's first planetary defence test. But DART couldn't study the aftermath in detail. Hera will.
-
-When Hera arrives, it will orbit Didymos and Dimorphos, deploy two CubeSats called Juventas and Milani into low orbit around Dimorphos, and carry out the first-ever radar imaging of an asteroid's interior structure. The data will tell us whether asteroid deflection is a reliable tool in our planetary defence toolkit.
-
-Mission controllers at ESOC in Darmstadt confirmed nominal spacecraft health after the burn.`,
-    stats: [
-      { label: "Delta-V", val: "400 m/s", color: "text-primary" },
-      { label: "Burn Duration", val: "8.2 hours", color: "text-secondary" },
-      { label: "Target Arrival", val: "Early 2027", color: "text-tertiary" },
-      { label: "Mission Agency", val: "ESA", color: "text-primary" }
-    ]
-  },
-  {
-    id: 3,
-    title: "Jupiter's Lightning Is Up To 1 Million Times More Powerful",
-    excerpt: "Juno observations show Jupiter's lightning triggered by a stealth superstorm could be up to one million times more powerful than Earth's. The storm, located in Jupiter's northern mid-latitudes, shows discharge signatures unlike anything observed in the solar system.",
-    category: "Planets",
-    date: "March 26, 2026",
-    source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg",
-    read_more: "https://www.universetoday.com/articles/jupiters-lightning-could-be-almost-unbelievably-powerful",
-    coord: "Coordinate: JUP-45.12N",
-    readTime: "5m",
-    body: `Lightning on Earth is terrifying by any measure — a bolt discharging up to a billion joules in a fraction of a second. But new data from NASA's Juno spacecraft suggests Jupiter plays in an entirely different league.
-
-Analysis of Juno's microwave radiometer readings from Perijove 44 has revealed a persistent, large-scale storm system hiding beneath Jupiter's cloud canopy. Unlike the visible Great Red Spot, this "stealth superstorm" operates at deeper atmospheric levels, invisible to conventional optical imaging.
-
-What makes it alarming is the electromagnetic discharge signature. The signal from this storm, captured in the 600 MHz band, is approximately one million times stronger than typical Jovian lightning signatures — which are themselves already far more powerful than anything on Earth.
-
-The mechanism differs from terrestrial lightning. On Earth, water ice and liquid water droplets generate charge separation in thunderclouds. On Jupiter, the process involves ammonia acting as a catalyst, interacting with water deep in the troposphere. The result is lightning that can last seconds rather than milliseconds, releasing enormous energy over sustained periods.
-
-No spacecraft has ever flown deep enough into Jupiter's atmosphere to measure a discharge directly. Juno's orbit takes it to approximately 3,500 km above the cloud tops — close enough to detect the electromagnetic fingerprint but not to see the bolt itself.`,
-    stats: [
-      { label: "Power vs Earth", val: "×1,000,000", color: "text-primary" },
-      { label: "Depth", val: "~50 km", color: "text-secondary" },
-      { label: "Storm Type", val: "Superstorm", color: "text-tertiary" },
-      { label: "Instrument", val: "Juno/MWR", color: "text-primary" }
-    ]
-  },
-  {
-    id: 4,
-    title: "How Did Venus Become a Hellscape? 234,000 Simulations Reveal Four Paths",
-    excerpt: "234,000 climate simulations reveal four possible paths to explain why Venus became a scorching inferno while Earth remained habitable. The models suggest the divergence may have occurred as recently as 700 million years ago, triggered by a runaway volcanic resurfacing event.",
-    category: "Planets",
-    date: "March 26, 2026",
-    source: "Universe Today",
-    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9516g.jpg",
-    read_more: "https://www.universetoday.com/articles/venus-hellscape-climate-simulations",
-    coord: "Coordinate: VEN-SOL.02",
-    readTime: "6m",
-    body: `Venus and Earth are twins in almost every physical respect — near-identical mass, size, composition, and distance from the Sun. Yet Venus today is a sulfurous hell where the surface temperature exceeds 465°C and the atmospheric pressure would crush a submarine.
-
-A new modelling study published in Nature Geoscience has run 234,000 climate simulations to understand how this divergence occurred. Four distinct scenarios emerge, all consistent with the available data.
-
-In the first and most likely scenario, a prolonged period of volcanic resurfacing approximately 700 million years ago released enough CO₂ to tip Venus into a runaway greenhouse effect. Unlike Earth, where plate tectonics continuously cycle carbon between the atmosphere and crust, Venus has no active plate tectonics — once carbon was released, it had nowhere to go.
-
-The second scenario involves an early Venus ocean. If Venus once had liquid water on its surface — a possibility the team assigns a 30% likelihood — its proximity to the Sun would have gradually evaporated it. As water vapour rose into the stratosphere, ultraviolet radiation broke it apart into hydrogen (which escaped to space) and oxygen (which oxidized surface rocks).
-
-The third scenario is a tidal locking near-miss: Venus rotates backwards and extremely slowly. Early close encounters with Earth may have stripped angular momentum, slowing its rotation to the point where atmospheric dynamics no longer distributed heat efficiently.
-
-The fourth involves a catastrophic impactor in the inner solar system disrupting the early Venus magnetosphere, exposing it to solar wind stripping.`,
-    stats: [
-      { label: "Simulations Run", val: "234,000", color: "text-primary" },
-      { label: "Surface Temp", val: "465°C", color: "text-secondary" },
-      { label: "Divergence Age", val: "~700 Myr", color: "text-tertiary" },
-      { label: "Journal", val: "Nature Geo.", color: "text-primary" }
-    ]
-  },
-  {
-    id: 5,
-    title: "AI Models Reach New Frontier: Reasoning at Human Expert Level",
-    excerpt: "Foundation models from leading AI labs demonstrate breakthrough performance on scientific and professional benchmarks, signalling a new era of machine intelligence that may fundamentally reshape knowledge work.",
-    category: "AI & Tech",
-    date: "April 10, 2026",
-    source: "Ben's Bites",
-    image: "https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg",
-    read_more: "https://www.bensbites.com",
-    coord: "Signal: AI-FRONTIER-01",
-    readTime: "4m",
-    body: `A new generation of large language models has crossed a threshold that researchers once considered decades away. Multiple frontier labs — including Anthropic, OpenAI, and Google DeepMind — have independently reported benchmark scores that match or exceed human expert performance across medicine, law, mathematics, and scientific reasoning.
-
-The results represent more than incremental progress. Unlike earlier improvements that relied purely on scale, the latest generation employs novel training paradigms including extended chain-of-thought reasoning, reinforcement learning from verifiable outcomes, and synthetic data generation that allows models to effectively teach themselves.
-
-What makes the current moment significant is the breadth of capability. Previous milestones were narrow — a model defeating a chess grandmaster, or passing a bar exam in isolation. Today's systems demonstrate transfer across domains that previously required years of specialised human training.
-
-The practical implications are already being felt across industries. AI-assisted drug discovery pipelines are compressing timelines from years to months. Legal research tools are surfacing precedents that junior associates would have missed. Materials science labs are using AI to propose novel compounds for synthesis.
-
-Critics note that benchmark performance does not always translate cleanly to real-world deployment. Issues of reliability, hallucination, and safety alignment remain active research problems. But the momentum is unmistakable — and the labs show no signs of slowing.`,
-    stats: [
-      { label: "Benchmark", val: "Expert+", color: "text-[#7dd3fc]" },
-      { label: "Labs Active", val: "12+", color: "text-secondary" },
-      { label: "Domains", val: "Cross-domain", color: "text-tertiary" },
-      { label: "Source", val: "Ben's Bites", color: "text-[#7dd3fc]" }
-    ]
-  }
-];
+const articles = []; // Populated by loadLiveFeeds()
 
 // ── Saved Stories ─────────────────────────────────────────
 const savedStories = [];
