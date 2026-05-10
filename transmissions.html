@@ -222,16 +222,40 @@ const KEYWORD_CATS = [
 const CAT_COLOR  = { Physics:'#ffb5a0', Planets:'#00f0ff', Moon:'#dbfcff', Missions:'#00f0ff', 'AI & Tech':'#7dd3fc' };
 const CAT_ICON   = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
 const FALLBACK_POOL = {
-  Physics: ['https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg','https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg','https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg'],
-  Planets: ['https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg','https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1917a.jpg'],
-  Moon:    ['https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg'],
-  Missions:['https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg'],
-  'AI & Tech':['https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg'],
+  Physics: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
+  ],
+  Planets: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1024px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1024px-Saturn_during_Equinox.jpg',
+  ],
+  Moon: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Full_Moon_Luc_Viatour.jpg/1024px-Full_Moon_Luc_Viatour.jpg',
+  ],
+  Missions: [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg',
+  ],
+  'AI & Tech': [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
+  ],
 };
 
 function _hashTitle(s){let h=0;for(let i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0;}return Math.abs(h);}
 function pickFallback(cat,title){const p=FALLBACK_POOL[cat];if(!p||!p.length)return '';return p[_hashTitle(title)%p.length];}
 function guessCategory(title,tags){const txt=(title+' '+tags).toLowerCase();for(const[kws,cat]of KEYWORD_CATS){for(const kw of kws){if(txt.includes(kw))return cat;}}return null;}
+const BLOCKED_HOSTS=['kinsta.cloud','kinsta.app','b-cdn.net'];
+function normaliseImg(u){
+  if(!u)return '';
+  u=u.trim();
+  if(u.startsWith('//'))u='https:'+u;
+  else if(u.startsWith('http:'))u='https'+u.slice(4);
+  try{const p=new URL(u);if(BLOCKED_HOSTS.some(d=>p.hostname===d||p.hostname.endsWith('.'+d)))return '';return p.href;}catch(e){return u;}
+}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function stripHtml(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').trim();}
 
@@ -251,9 +275,9 @@ async function fetchFeed(feedInfo) {
         const date = item.pubDate?new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
         const tags = (item.categories||[]).join(' ');
         const category = guessCategory(title,tags)||(SPACE_SRCS.includes(feedInfo.source)?'Missions':'AI & Tech');
-        let image = item.thumbnail||item.enclosure?.link||'';
-        if (!image||!/^https?:/.test(image)){const html=item.content||item.description||'';const m=html.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);if(m)image=m[1].split('?')[0];}
-        if (!image||!/^https?:/.test(image)) image=pickFallback(category,title);
+        let image = normaliseImg(item.thumbnail||item.enclosure?.link||'');
+        if (!image){const html=item.content||item.description||'';const m=html.match(/\bsrc="((?:https?:|\/\/)[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);if(m)image=normaliseImg(m[1].split('?')[0]);}
+        if (!image) image=pickFallback(category,title);
         return {title,excerpt,category,date,source:feedInfo.source,image,link};
       }).filter(Boolean);
     }
@@ -278,8 +302,8 @@ async function fetchFeed(feedInfo) {
     const category=guessCategory(title,tags)||(PURE_SPACE.includes(feedInfo.source)?'Missions':null);
     let image='';
     const allEls=Array.from(item.getElementsByTagName('*'));
-    for(const el of allEls){const u=el.getAttribute('url')||el.getAttribute('href')||'';if(/^https?:.*\.(?:jpg|jpeg|png|webp|gif)/i.test(u)){image=u.split('?')[0];break;}}
-    if(!image){const m=descRaw.match(/\bsrc="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);if(m)image=m[1].split('?')[0];}
+    for(const el of allEls){const u=el.getAttribute('url')||el.getAttribute('href')||'';if(/^https?:.*\.(?:jpg|jpeg|png|webp|gif)/i.test(u)){image=normaliseImg(u.split('?')[0]);break;}}
+    if(!image){const m=descRaw.match(/\bsrc="((?:https?:|\/\/)[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);if(m)image=normaliseImg(m[1].split('?')[0]);}
     if(!image)image=pickFallback(category,title);
     return {title,excerpt,category,date,source:feedInfo.source,image,link};
   }).filter(a=>a.category&&a.title.length>10&&/^https?:/.test(a.link));
