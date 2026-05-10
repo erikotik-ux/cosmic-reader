@@ -1876,11 +1876,11 @@ const KEYWORD_CATS = [
   [['black hole','gravitational wave','ligo','neutron star','dark matter','dark energy','quantum','galaxy','nebula','cosmos','big bang','telescope','hubble','spectrum','radiation','particle','physics'],'Physics'],
 ];
 const FALLBACK_IMAGES = {
-  Physics:    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',  // Hubble: gravitational waves eject black hole
-  Planets:    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg',  // Hubble: Jupiter 2019 OPAL portrait
-  Moon:       'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',             // NASA Supermoon 2016 — Flickr
-  Missions:   'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg', // Hubble: DART impact ejecta at Dimorphos
-  'AI & Tech': 'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',           // AI/Tech visualization — Flickr
+  Physics:    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
+  Planets:    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1024px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
+  Moon:       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg',
+  Missions:   'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg',
+  'AI & Tech': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg',
 };
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
 const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
@@ -1889,48 +1889,48 @@ const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Mission
 // pickFallback() hashes the article title so each article consistently gets a
 // different image, preventing the same placeholder from repeating across the feed.
 const FALLBACK_POOL = {
-  // All images: ESA Hubble CDN + NASA Flickr — confirmed hotlink-friendly, no JPL Photojournal
+  // All images: Wikimedia Commons — confirmed hotlink-friendly, stable CDN
   Physics: [
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',   // Hubble: gravitational waves eject black hole (2017)
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy M51 — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A jet — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',   // Butterfly Nebula — HST
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/1024px-NGC_4414_%28NASA-med%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Blackhole.png/1024px-Blackhole.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Butterfly_Nebula_from_HST.jpg/1024px-Butterfly_Nebula_from_HST.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
   ],
   Planets: [
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg',   // Jupiter 2019 — Hubble OPAL portrait
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1917a.jpg',   // Saturn 2019 — Hubble OPAL portrait
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9516g.jpg',    // Venus cloud tops — Hubble UV (1995)
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1024px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1024px-Saturn_during_Equinox.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Neptune_Full.jpg/1024px-Neptune_Full.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Whole_Earth%2C_as_seen_from_Apollo_17.jpg/1024px-Whole_Earth%2C_as_seen_from_Apollo_17.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Mariner_10_first_image_of_Mercury.jpg/1024px-Mariner_10_first_image_of_Mercury.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
   ],
   Moon: [
-    'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',              // NASA Supermoon 2016 — Flickr
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field (dark/stellar)
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A — HST
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Full_Moon_Luc_Viatour.jpg/1024px-Full_Moon_Luc_Viatour.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Aldrin_Apollo_11.jpg/1024px-Aldrin_Apollo_11.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Apollo15LunarModule.jpg/1024px-Apollo15LunarModule.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
   ],
   Missions: [
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg',   // Hubble images DART ejecta at Dimorphos (2022)
-    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',              // SpaceX Starship — Flickr
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',   // Hubble: gravitational waves/black hole
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Aldrin_Apollo_11.jpg/1024px-Aldrin_Apollo_11.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
   ],
   'AI & Tech': [
-    'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',              // AI/Tech visualization — Flickr
-    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',              // SpaceX Starship — Flickr
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A jet — HST (data-flow feel)
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
-    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/1024px-NGC_4414_%28NASA-med%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
   ],
 };
 // Hash article title to a stable integer — used to pick a unique pool image per article
