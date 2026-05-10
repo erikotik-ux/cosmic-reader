@@ -215,7 +215,6 @@ const FEEDS = [
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
   { url: 'https://www.teslarati.com/feed/',               source: 'Teslarati' },
   { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
-  { url: 'https://skyandtelescope.org/astronomy-news/feed/', source: 'Sky & Telescope' },
 ];
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','artificial intelligence','machine learning','neural network','chatgpt','generative ai','semiconductor','gpu','cpu','nvidia','smartphone','software','cybersecurity','hacker','malware'],'AI & Tech'],
@@ -295,7 +294,7 @@ async function fetchFeed(feedInfo) {
       if(NO_IMG_SRCS.has(feedInfo.source)){
         await Promise.allSettled(
           articlesList.filter(a=>!a._hasRealImg).map(async a=>{
-            try{const r=await fetch(`/api/og?url=${encodeURIComponent(a.link)}`,{signal:AbortSignal.timeout(5000)});if(r.ok){const d=await r.json();if(d.image)a.image=proxyImg(d.image);}}catch(e){}
+            try{const r=await fetch(`/api/og?url=${encodeURIComponent(a.link)}`,{signal:AbortSignal.timeout(3000)});if(r.ok){const d=await r.json();if(d.image)a.image=proxyImg(d.image);}}catch(e){}
           })
         );
       }
@@ -411,6 +410,16 @@ function renderArticles() {
 }
 
 async function loadFeeds() {
+  // ── Fast path: use articles cached by app.html ──
+  try {
+    const c = JSON.parse(sessionStorage.getItem('cr_cache_v1') || '{}');
+    if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
+      allArticles = c.articles.map(a => ({ ...a, link: a.read_more || a.link })).filter(a => a.link && a.title);
+      renderArticles();
+      return;
+    }
+  } catch(e) {}
+
   try {
     const results = await Promise.allSettled(FEEDS.map(f => fetchFeed(f)));
     // Debug: open DevTools > Console to see which feeds succeeded

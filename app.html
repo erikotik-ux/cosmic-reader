@@ -1869,7 +1869,6 @@ const FEEDS = [
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
   { url: 'https://www.teslarati.com/feed/',               source: 'Teslarati' },
   { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
-  { url: 'https://skyandtelescope.org/astronomy-news/feed/', source: 'Sky & Telescope' },
 ];
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','hugging face','stability ai','midjourney','xai','grok','semiconductor','microchip','processor','gpu','cpu','nvidia','intel','amd','qualcomm','apple silicon','smartphone','software','hardware','github','open source','developer','cloud computing','data center','silicon','app store','operating system','programming','cybersecurity','hacker','hacking','cyber attack','malware','ransomware','data breach','vulnerability','exploit','zero-day','phishing','encryption','ars technica','tech industry','big tech','surveillance','privacy violation'],'AI & Tech'],
@@ -2109,7 +2108,7 @@ async function fetchFeed(feedInfo) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {
             try {
-              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(5000) });
+              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(3000) });
               if (r.ok) { const d = await r.json(); if (d.image) a.image = proxyImg(d.image); }
             } catch(e) {}
           })
@@ -2507,10 +2506,32 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
+const _CR_CACHE_KEY = 'cr_cache_v1';
+const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
+
 async function loadLiveFeeds() {
   const statusEl  = document.getElementById('feed-status');
   const statusTxt = document.getElementById('feed-status-text');
   if (statusEl) statusEl.classList.remove('hidden');
+
+  // ── Fast path: serve from sessionStorage cache ──
+  try {
+    const c = JSON.parse(sessionStorage.getItem(_CR_CACHE_KEY) || '{}');
+    if (c.ts && Date.now() - c.ts < _CR_CACHE_TTL && c.articles?.length) {
+      articles.length = 0;
+      c.articles.forEach(a => articles.push(a));
+      currentPage = 1; currentFilter = 'All';
+      renderCurrentPage();
+      updatePrioritySignal(articles[0]);
+      updateTicker(articles.slice(0, 6));
+      if (currentView === 'trending') renderTrending();
+      if (statusEl) {
+        statusTxt.textContent = '⚡ ' + articles.length + ' signals loaded instantly from cache';
+        setTimeout(() => statusEl.classList.add('hidden'), 2000);
+      }
+      return;
+    }
+  } catch(e) {}
 
   try {
     // Fetch all RSS feeds, SpaceNews (WP API), and The Rundown AI in parallel
@@ -2570,6 +2591,8 @@ async function loadLiveFeeds() {
     if (merged.length > 0) {
       articles.length = 0;
       merged.forEach(a => articles.push(a));
+      // Persist to sessionStorage so trending/transmissions pages load instantly
+      try { sessionStorage.setItem(_CR_CACHE_KEY, JSON.stringify({ ts: Date.now(), articles: merged })); } catch(e) {}
       currentPage = 1;
       currentFilter = 'All';
       renderCurrentPage();
