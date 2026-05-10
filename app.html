@@ -2049,7 +2049,7 @@ async function fetchFeed(feedInfo) {
             const p = new URL(u);
             p.searchParams.delete('resize'); p.searchParams.delete('fit'); p.searchParams.delete('w'); p.searchParams.delete('h');
             // Reject Cloudflare WAF-protected / hotlink-blocked hosting — these return HTML not images
-            const BLOCKED = ['kinsta.cloud','kinsta.app','b-cdn.net'];
+            const BLOCKED = ['kinsta.cloud','kinsta.app'];
             if (BLOCKED.some(d => p.hostname === d || p.hostname.endsWith('.' + d))) return '';
             return p.href;
           } catch(e) { return u; }
@@ -2549,6 +2549,7 @@ async function loadLiveFeeds() {
       renderCurrentPage();
       updatePrioritySignal(articles[0]);
       updateTicker(articles.slice(0, 6));
+      if (currentView === 'trending') renderTrending();
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
