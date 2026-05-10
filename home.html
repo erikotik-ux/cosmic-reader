@@ -1141,14 +1141,65 @@
   }
 
   // ── Live breaking-news teaser ──────────────────────────────────────────────
-  // Pulls the latest article from NASASpaceFlight via rss2json and populates
-  // the teaser section with a real headline, body excerpt, and image.
+  // Picks the freshest article with a real image from our active sources.
+  // Fast path: reads the sessionStorage cache written by app.html (instant).
+  // Slow path: fetches from rss2json if no cache is available.
   (async function loadBreakingNews() {
+
+    function proxyImg(url) {
+      if (!url || url.startsWith('data:') || url.includes('wsrv.nl')) return url;
+      return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
+    }
+
+    function populate({ title, excerpt, description, content, pubDate, date, image, read_more, link, _img }) {
+      const strip = s => (s || '').replace(/<[^>]+>/g, '').trim();
+      const headlineEl = document.getElementById('teaser-headline');
+      if (headlineEl && title) headlineEl.textContent = strip(title);
+
+      const bodyEl = document.getElementById('teaser-body');
+      if (bodyEl) {
+        const raw = strip(excerpt || description || content);
+        bodyEl.textContent = raw.length > 220 ? raw.slice(0, 220).trimEnd() + '…' : raw || 'Read the full transmission.';
+      }
+
+      const tagEl = document.getElementById('teaser-tag');
+      const rawDate = pubDate || date;
+      if (tagEl && rawDate) {
+        const d = new Date(rawDate);
+        if (!isNaN(d)) tagEl.textContent = `LIVE_${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).replace(/,?\s/g,'_').toUpperCase()}`;
+      }
+
+      const linkEl = document.getElementById('teaser-link');
+      const href = read_more || link;
+      if (linkEl && href && /^https?:\/\//.test(href)) linkEl.href = href;
+
+      const rawImg = image || _img || '';
+      if (rawImg && /^https?:/.test(rawImg)) {
+        const imgEl = document.getElementById('teaser-img');
+        if (imgEl) { imgEl.src = proxyImg(rawImg); imgEl.alt = strip(title) || 'Latest space news'; }
+      }
+    }
+
+    // ── Fast path: sessionStorage cache written by app.html ──
+    try {
+      const c = JSON.parse(sessionStorage.getItem('cr_cache_v1') || '{}');
+      if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
+        // Pick first article that has a real (non-Wikimedia) image
+        const pick = c.articles.find(a => a.image && !/wikimedia\.org/.test(a.image)) || c.articles[0];
+        if (pick) { populate(pick); return; }
+      }
+    } catch(e) {}
+
+    // ── Slow path: fetch live from our active feed list ──
     const FEEDS_TO_TRY = [
-      'https://www.nasaspaceflight.com/feed/',
-      'https://spacenews.com/feed/',
+      'https://www.space.com/feeds/all',
       'https://www.universetoday.com/feed/',
+      'https://spacenews.com/feed/',
+      'https://phys.org/rss-feed/space-news/',
+      'https://feeds.arstechnica.com/arstechnica/index',
+      'https://www.teslarati.com/feed/',
     ];
+
     for (const feedUrl of FEEDS_TO_TRY) {
       try {
         const res = await fetch(
@@ -1158,42 +1209,24 @@
         const data = await res.json();
         if (data.status !== 'ok' || !data.items?.length) continue;
 
-        const item = data.items[0];
-
-        // Headline
-        const headlineEl = document.getElementById('teaser-headline');
-        if (headlineEl && item.title) headlineEl.textContent = item.title;
-
-        // Body excerpt — strip HTML tags
-        const bodyEl = document.getElementById('teaser-body');
-        if (bodyEl) {
-          const raw = (item.description || item.content || '').replace(/<[^>]+>/g, '').trim();
-          bodyEl.textContent = raw.length > 220 ? raw.slice(0, 220).trimEnd() + '…' : raw || 'Read the full transmission in the terminal.';
+        // Find the first item in this feed that has a real image
+        let chosen = null;
+        for (const item of data.items.slice(0, 6)) {
+          // Skip audio/video enclosures
+          const encType = item.enclosure?.type || '';
+          const encLink = item.enclosure?.link || '';
+          const encIsImg = /^image/i.test(encType) || (!encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(encLink));
+          let img = item.thumbnail || (encIsImg ? encLink : '');
+          if (!img || !/^https?:/.test(img)) {
+            const html = item.content || item.description || '';
+            const m = html.match(/src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
+            if (m) img = m[1];
+          }
+          if (img && /^https?:/.test(img)) { chosen = { ...item, _img: img }; break; }
         }
+        if (!chosen) chosen = { ...data.items[0] }; // fallback: best article even without image
 
-        // Tag — formatted date
-        const tagEl = document.getElementById('teaser-tag');
-        if (tagEl && item.pubDate) {
-          const d = new Date(item.pubDate);
-          tagEl.textContent = `LIVE_${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).replace(/,?\s/g,'_').toUpperCase()}`;
-        }
-
-        // Image — thumbnail → content img regex → keep Unsplash fallback
-        let img = item.thumbnail || '';
-        if (!img || !/^https?:/.test(img)) {
-          const html = item.content || item.description || '';
-          const m = html.match(/src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
-          if (m) img = m[1].split('?')[0];
-        }
-        if (img && /^https?:/.test(img)) {
-          const imgEl = document.getElementById('teaser-img');
-          if (imgEl) { imgEl.src = img; imgEl.alt = item.title || 'Latest space news'; }
-        }
-
-        // Link — direct to article
-        const linkEl = document.getElementById('teaser-link');
-        if (linkEl && item.link) linkEl.href = item.link;
-
+        populate(chosen);
         break; // success — stop trying feeds
       } catch(e) { /* try next feed */ }
     }
