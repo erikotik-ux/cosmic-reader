@@ -203,6 +203,7 @@ const RSS_PROXIES = [
   url => `/api/rss?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
   { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
@@ -390,6 +391,10 @@ function renderArticles() {
 async function loadFeeds() {
   try {
     const results = await Promise.allSettled(FEEDS.map(f => fetchFeed(f)));
+    // Debug: open DevTools > Console to see which feeds succeeded
+    console.log('[CosmicReader] feed results:', results.map((r,i) =>
+      FEEDS[i].source + ': ' + (r.status === 'fulfilled' ? (r.value?.length||0) + ' articles' : 'FAILED')
+    ).join(' | '));
     const buckets = results.map(r => r.status === 'fulfilled' ? r.value : []).filter(b => b.length > 0);
     const merged = [];
     const maxLen = Math.max(...buckets.map(b => b.length), 0);
