@@ -1867,6 +1867,9 @@ const FEEDS = [
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
   { url: 'https://phys.org/rss-feed/space-news/',         source: 'Phys.org' },
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
+  { url: 'https://www.teslarati.com/feed/',               source: 'Teslarati' },
+  { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
+  { url: 'https://skyandtelescope.org/astronomy-news/feed/', source: 'Sky & Telescope' },
 ];
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','hugging face','stability ai','midjourney','xai','grok','semiconductor','microchip','processor','gpu','cpu','nvidia','intel','amd','qualcomm','apple silicon','smartphone','software','hardware','github','open source','developer','cloud computing','data center','silicon','app store','operating system','programming','cybersecurity','hacker','hacking','cyber attack','malware','ransomware','data breach','vulnerability','exploit','zero-day','phishing','encryption','ars technica','tech industry','big tech','surveillance','privacy violation'],'AI & Tech'],
@@ -2014,7 +2017,7 @@ function stripHtml(s) {
 }
 
 async function fetchFeed(feedInfo) {
-  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
+  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
 
   // ── Primary: rss2json.com — purpose-built RSS service, returns clean JSON ──
   try {
@@ -2128,7 +2131,7 @@ async function fetchFeed(feedInfo) {
     const date    = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
-    const PURE_SPACE_SOURCES = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
+    const PURE_SPACE_SOURCES = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
     const PURE_AI_SOURCES    = [];
     const category = guessCategory(title, tags)
       || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)

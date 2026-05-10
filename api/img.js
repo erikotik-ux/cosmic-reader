@@ -38,6 +38,14 @@ const ALLOWED_HOSTNAMES = [
   'arstechnica.com',
   'arstechnica.net',
   'cdn.arstechnica.net',
+  // Teslarati
+  'teslarati.com',
+  // The Planetary Society
+  'planetary.org',
+  'images.planetary.org',
+  // Sky & Telescope
+  'skyandtelescope.org',
+  'skyandtelescope.com',
   // WordPress Jetpack image CDN (used by many space blogs)
   'i0.wp.com',
   'i1.wp.com',

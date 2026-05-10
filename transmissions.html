@@ -213,6 +213,9 @@ const FEEDS = [
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
   { url: 'https://phys.org/rss-feed/space-news/',         source: 'Phys.org' },
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
+  { url: 'https://www.teslarati.com/feed/',               source: 'Teslarati' },
+  { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
+  { url: 'https://skyandtelescope.org/astronomy-news/feed/', source: 'Sky & Telescope' },
 ];
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','artificial intelligence','machine learning','neural network','chatgpt','generative ai','semiconductor','gpu','cpu','nvidia','smartphone','software','cybersecurity','hacker','malware'],'AI & Tech'],
@@ -263,7 +266,7 @@ function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function stripHtml(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').trim();}
 
 async function fetchFeed(feedInfo) {
-  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
+  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
   try {
     const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedInfo.url)}`,{signal:AbortSignal.timeout(8000)});
     const json = await res.json();
@@ -302,7 +305,7 @@ async function fetchFeed(feedInfo) {
     const pubDate=item.querySelector('pubDate')?.textContent||item.querySelector('published')?.textContent||'';
     const date=pubDate?new Date(pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
     const tags=Array.from(item.querySelectorAll('category')).map(c=>c.textContent).join(' ');
-    const PURE_SPACE=['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
+    const PURE_SPACE=['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
     const category=guessCategory(title,tags)||(PURE_SPACE.includes(feedInfo.source)?'Missions':null);
     let image='';
     const allEls=Array.from(item.getElementsByTagName('*'));
