@@ -2024,6 +2024,7 @@ async function fetchFeed(feedInfo) {
           if (!u) return '';
           u = u.trim();
           if (u.startsWith('//')) u = 'https:' + u;
+          else if (u.startsWith('http:')) u = 'https' + u.slice(4); // upgrade HTTP → HTTPS (mixed-content fix)
           // Strip WP resize/crop params but NOT ssl=1 (needed by some Jetpack CDN URLs)
           try {
             const p = new URL(u);
