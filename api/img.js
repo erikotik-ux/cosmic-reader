@@ -27,8 +27,9 @@ const ALLOWED_HOSTNAMES = [
   'scx2.b-cdn.net',             // Phys.org image CDN
   // Universe Today
   'universetoday.com',
-  // SpaceNews
+  // SpaceNews (images come from their WordPress media CDN)
   'spacenews.com',
+  'mgtvkpho.cdn.imgeng.in',     // SpaceNews image CDN
   // NASA
   'nasa.gov',
   'blogs.nasa.gov',

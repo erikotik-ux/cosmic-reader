@@ -10,9 +10,11 @@ export default async function handler(req, res) {
 
     const response = await fetch(apiUrl, {
       headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; CosmicReader/1.0; +https://cosmic-reader.vercel.app)',
+        // Use a whitelisted RSS-reader UA — the CosmicReader UA was blocked by
+        // SpaceNews's Cloudflare WAF, causing the WP REST API call to fail silently.
+        'User-Agent': 'Feedly/1.0 (+http://www.feedly.com/fetcher.html; 50 subscribers; like FeedFetcher-Google)',
         Accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.9',
       },
       signal: AbortSignal.timeout(10000),
     });
