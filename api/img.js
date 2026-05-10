@@ -18,25 +18,34 @@ const UA_POOL = [
 // Only proxy images from known publisher / space-news domains.
 // This prevents the endpoint from being used as an open image relay.
 const ALLOWED_HOSTNAMES = [
-  'nasaspaceflight.com',   // NASASpaceFlight WordPress images
-  'kinsta.cloud',           // NASASpaceFlight CDN
-  'spaceflightnow.com',    // Spaceflight Now
-  'universetoday.com',     // Universe Today
-  'spacenews.com',         // SpaceNews
-  'nasa.gov',              // NASA
-  'arstechnica.com',       // Ars Technica
-  'arstechnica.net',       // Ars Technica CDN
-  'cdn.arstechnica.net',
-  'cdn.mos.cms.futurecdn.net',  // Space.com CDN
-  'spacepolicyonline.com',
+  // Space.com (replaces NASASpaceFlight)
+  'space.com',
+  'cdn.mos.cms.futurecdn.net',  // Space.com / Future PLC CDN
+  'vanilla.futurecdn.net',
+  // Phys.org (replaces Spaceflight Now)
+  'phys.org',
+  'scx2.b-cdn.net',             // Phys.org image CDN
+  // Universe Today
+  'universetoday.com',
+  // SpaceNews
+  'spacenews.com',
+  // NASA
+  'nasa.gov',
   'blogs.nasa.gov',
   'images.nasa.gov',
-  's.yimg.com',            // Yahoo CDN used by some feeds
-  'i0.wp.com',             // Jetpack image CDN (WordPress sites)
+  // Ars Technica
+  'arstechnica.com',
+  'arstechnica.net',
+  'cdn.arstechnica.net',
+  // WordPress Jetpack image CDN (used by many space blogs)
+  'i0.wp.com',
   'i1.wp.com',
   'i2.wp.com',
   'i3.wp.com',
-  'upload.wikimedia.org',  // Wikimedia fallbacks
+  // Yahoo CDN used by some feeds
+  's.yimg.com',
+  // Wikimedia (direct, but allow proxy too just in case)
+  'upload.wikimedia.org',
 ];
 
 function isAllowed(url) {

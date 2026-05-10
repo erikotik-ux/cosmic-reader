@@ -193,11 +193,11 @@ const RSS_PROXIES = [
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
-  { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
+  { url: 'https://www.space.com/feeds/all',               source: 'Space.com' },
   { url: 'https://www.universetoday.com/feed/',           source: 'Universe Today' },
   { url: 'https://spacenews.com/feed/',                   source: 'SpaceNews' },
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
-  { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
+  { url: 'https://phys.org/rss-feed/space-news/',         source: 'Phys.org' },
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
 ];
 const KEYWORD_CATS = [
@@ -227,7 +227,7 @@ function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'
 function stripHtml(s) { return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').trim(); }
 
 async function fetchFeed(feedInfo) {
-  const SPACE_SRCS = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
   try {
     const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedInfo.url)}`, { signal: AbortSignal.timeout(8000) });
     const json = await res.json();
@@ -277,7 +277,7 @@ async function fetchFeed(feedInfo) {
     const pubDate = item.querySelector('pubDate')?.textContent || item.querySelector('published')?.textContent || '';
     const date = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
     const tags = Array.from(item.querySelectorAll('category')).map(c=>c.textContent).join(' ');
-    const PURE_SPACE = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+    const PURE_SPACE = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
     const category = guessCategory(title, tags) || (PURE_SPACE.includes(feedInfo.source) ? 'Missions' : null);
     let image = '';
     const allEls = Array.from(item.getElementsByTagName('*'));

@@ -1861,11 +1861,11 @@ const RSS_PROXIES = [
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
-  { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
+  { url: 'https://www.space.com/feeds/all',               source: 'Space.com' },
   { url: 'https://www.universetoday.com/feed/',           source: 'Universe Today' },
   // SpaceNews intentionally omits images from RSS — handled via /api/spacenews (WP REST API)
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
-  { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
+  { url: 'https://phys.org/rss-feed/space-news/',         source: 'Phys.org' },
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
 ];
 const KEYWORD_CATS = [
@@ -1944,14 +1944,17 @@ function pickFallback(category, title) {
   if (!pool || !pool.length) return '';
   return pool[_hashTitle(title) % pool.length];
 }
-// Route publisher CDN images through /api/img so they're fetched server-side
-// with whitelisted UAs, bypassing Cloudflare hotlink/WAF blocks (kinsta.cloud etc.)
-// Wikimedia and data: URLs are served directly — they don't need proxying.
+// Route publisher CDN images through wsrv.nl — a dedicated image-proxy CDN
+// that fetches images server-side and re-serves them. Its IPs are not in AWS
+// data-center ranges, so Cloudflare WAF rules that block hosting providers
+// (which break /api/img for kinsta.cloud) don't apply.
+// Wikimedia and data: URLs load directly — no proxy needed.
 function proxyImg(url) {
   if (!url) return '';
   if (url.startsWith('data:')) return url;
   if (url.includes('wikimedia.org') || url.includes('wikipedia.org')) return url;
-  return '/api/img?url=' + encodeURIComponent(url);
+  // wsrv.nl: free image proxy, strips hotlink headers, adds 7-day browser cache
+  return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
 }
 // Called via onerror on article img tags — swaps a broken src to a pool fallback.
 // Using data-cat / data-title avoids quote-escaping issues in inline onerror attributes.
@@ -2011,7 +2014,7 @@ function stripHtml(s) {
 }
 
 async function fetchFeed(feedInfo) {
-  const SPACE_SRCS = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
 
   // ── Primary: rss2json.com — purpose-built RSS service, returns clean JSON ──
   try {
@@ -2125,7 +2128,7 @@ async function fetchFeed(feedInfo) {
     const date    = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
-    const PURE_SPACE_SOURCES = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
+    const PURE_SPACE_SOURCES = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org'];
     const PURE_AI_SOURCES    = [];
     const category = guessCategory(title, tags)
       || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
