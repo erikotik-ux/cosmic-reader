@@ -2033,7 +2033,7 @@ async function fetchFeed(feedInfo) {
     );
     const json = await res.json();
     if (json.status === 'ok' && json.items?.length > 0) {
-      return json.items.slice(0, 15).map((item, idx) => {
+      const articlesList = json.items.slice(0, 15).map((item, idx) => {
         const title = stripHtml(item.title || '');
         if (!title || title.length < 10 || /^(subscribe|sign in|log in|archive|home|read more)$/i.test(title)) return null;
         const read_more = item.link || item.guid || '#';
@@ -2060,11 +2060,15 @@ async function fetchFeed(feedInfo) {
             return p.href;
           } catch(e) { return u; }
         }
-        // 1. rss2json thumbnail / enclosure
-        let image = normaliseImg(item.thumbnail || item.enclosure?.link || '');
+        // 1. rss2json thumbnail / enclosure — skip audio/video enclosures (e.g. Planetary Society podcasts)
+        const _encLink = item.enclosure?.link || '';
+        const _encType = item.enclosure?.type || '';
+        const _encIsImg = /^image/i.test(_encType) || (!_encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(_encLink));
+        let image = normaliseImg(item.thumbnail || (_encIsImg ? _encLink : '') || '');
+        let _hasRealImg = !!(image && /^https?:/.test(image));
         // 2. Scan the content HTML — rss2json strips <img> from item.content but WordPress
         //    featured images often survive in item.description. Also check srcset (WP generates these).
-        if (!image || !/^https?:/.test(image)) {
+        if (!_hasRealImg) {
           const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/i;
           const SRCSET_RE = /srcset=["']([^"']+)["']/i;
           for (const html of [item.description || '', item.content || '']) {
@@ -2077,6 +2081,7 @@ async function fetchFeed(feedInfo) {
               if (parts.length) { image = normaliseImg(parts[parts.length - 1]); break; }
             }
           }
+          if (image && /^https?:/.test(image)) _hasRealImg = true;
         }
         // 3. Category-matched fallback so no article is ever imageless
         if (!image || !/^https?:/.test(image)) image = pickFallback(category, title);
@@ -2086,7 +2091,7 @@ async function fetchFeed(feedInfo) {
         return {
           id: idx, title, excerpt, body: body || excerpt,
           category, date, source: feedInfo.source,
-          image, read_more,
+          image, _hasRealImg, read_more,
           coord: 'Live — ' + feedInfo.source,
           readTime: readTime + 'm',
           stats: [
@@ -2097,6 +2102,21 @@ async function fetchFeed(feedInfo) {
           ]
         };
       }).filter(Boolean);
+      // OG image enrichment — Planetary Society & Sky & Telescope don't include images in their RSS.
+      // Fetch the article's og:image server-side for any article that has no real feed image.
+      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope']);
+      if (NO_IMG_SRCS.has(feedInfo.source)) {
+        await Promise.allSettled(
+          articlesList.filter(a => !a._hasRealImg).map(async a => {
+            try {
+              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(5000) });
+              if (r.ok) { const d = await r.json(); if (d.image) a.image = proxyImg(d.image); }
+            } catch(e) {}
+          })
+        );
+      }
+      articlesList.forEach(a => delete a._hasRealImg);
+      return articlesList;
     }
   } catch(e) { /* fall through to XML proxies */ }
 

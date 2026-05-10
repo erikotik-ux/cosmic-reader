@@ -235,7 +235,7 @@ async function fetchFeed(feedInfo) {
     const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedInfo.url)}`, { signal: AbortSignal.timeout(8000) });
     const json = await res.json();
     if (json.status === 'ok' && json.items?.length > 0) {
-      return json.items.slice(0, 12).map((item, idx) => {
+      const articlesList = json.items.slice(0, 12).map((item, idx) => {
         const title = stripHtml(item.title || '');
         if (!title || title.length < 10) return null;
         const link = item.link || item.guid || '#';
@@ -245,16 +245,34 @@ async function fetchFeed(feedInfo) {
         const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
         const tags = (item.categories || []).join(' ');
         const category = guessCategory(title, tags) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
-        let image = normaliseImg(item.thumbnail || item.enclosure?.link || '');
-        if (!image) {
+        const _encLink = item.enclosure?.link || '';
+        const _encType = item.enclosure?.type || '';
+        const _encIsImg = /^image/i.test(_encType) || (!_encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(_encLink));
+        let image = normaliseImg(item.thumbnail || (_encIsImg ? _encLink : '') || '');
+        let _hasRealImg = !!(image && /^https?:/.test(image));
+        if (!_hasRealImg) {
           const html = item.content || item.description || '';
           const m = html.match(/\bsrc="((?:https?:|\/\/)[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
-          if (m) image = normaliseImg(m[1].split('?')[0]);
+          if (m) { image = normaliseImg(m[1].split('?')[0]); if (image && /^https?:/.test(image)) _hasRealImg = true; }
         }
         if (!image) image = pickFallback(category, title);
         image = proxyImg(image);
-        return { title, excerpt, category, date, source: feedInfo.source, image, link };
+        return { title, excerpt, category, date, source: feedInfo.source, image, link, _hasRealImg };
       }).filter(Boolean);
+      // OG image enrichment for sources whose RSS feeds don't include article images
+      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope']);
+      if (NO_IMG_SRCS.has(feedInfo.source)) {
+        await Promise.allSettled(
+          articlesList.filter(a => !a._hasRealImg).map(async a => {
+            try {
+              const r = await fetch(`/api/og?url=${encodeURIComponent(a.link)}`, { signal: AbortSignal.timeout(5000) });
+              if (r.ok) { const d = await r.json(); if (d.image) a.image = proxyImg(d.image); }
+            } catch(e) {}
+          })
+        );
+      }
+      articlesList.forEach(a => delete a._hasRealImg);
+      return articlesList;
     }
   } catch(e) { /* fall through */ }
 
