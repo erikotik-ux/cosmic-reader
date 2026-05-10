@@ -1944,6 +1944,15 @@ function pickFallback(category, title) {
   if (!pool || !pool.length) return '';
   return pool[_hashTitle(title) % pool.length];
 }
+// Route publisher CDN images through /api/img so they're fetched server-side
+// with whitelisted UAs, bypassing Cloudflare hotlink/WAF blocks (kinsta.cloud etc.)
+// Wikimedia and data: URLs are served directly — they don't need proxying.
+function proxyImg(url) {
+  if (!url) return '';
+  if (url.startsWith('data:')) return url;
+  if (url.includes('wikimedia.org') || url.includes('wikipedia.org')) return url;
+  return '/api/img?url=' + encodeURIComponent(url);
+}
 // Called via onerror on article img tags — swaps a broken src to a pool fallback.
 // Using data-cat / data-title avoids quote-escaping issues in inline onerror attributes.
 function imgFail(el) {
@@ -2059,6 +2068,8 @@ async function fetchFeed(feedInfo) {
         }
         // 3. Category-matched fallback so no article is ever imageless
         if (!image || !/^https?:/.test(image)) image = pickFallback(category, title);
+        // 4. Route publisher images through server-side proxy (bypasses kinsta.cloud/Cloudflare blocks)
+        image = proxyImg(image);
         const readTime = Math.max(1, Math.ceil((body || excerpt).split(' ').length / 200));
         return {
           id: idx, title, excerpt, body: body || excerpt,
@@ -2164,6 +2175,8 @@ async function fetchFeed(feedInfo) {
     // If the feed didn't include an image, assign a category-matched fallback
     // so we don't silently drop good articles just because their RSS is image-free
     if (!image) image = pickFallback(category, title);
+    // Route publisher images through server-side proxy (bypasses kinsta.cloud/Cloudflare blocks)
+    image = proxyImg(image);
     const readTime = Math.max(1, Math.ceil(body.split(' ').length / 200));
     return {
       id: idx, title, excerpt, body,
@@ -2381,6 +2394,7 @@ async function scrapeRundownFeed() {
       }
     }
     if (!image) image = pickFallback('AI & Tech', title);
+    image = proxyImg(image);
 
     // Extract excerpt from sibling/child <p> elements
     const descEl = link.querySelector('p') || (link.parentElement && link.parentElement.querySelector('p'));
@@ -2433,9 +2447,9 @@ async function fetchSpaceNewsFeed() {
         ? new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : '';
       const category  = guessCategory(title, '') || 'Missions';
-      const image     = (post.image && post.image.startsWith('http'))
+      const image     = proxyImg((post.image && post.image.startsWith('http'))
         ? post.image
-        : pickFallback(category, title);
+        : pickFallback(category, title));
 
       if (!image || !image.startsWith('http')) return null;
 

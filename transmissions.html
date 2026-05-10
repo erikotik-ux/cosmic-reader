@@ -250,6 +250,7 @@ const FALLBACK_POOL = {
 function _hashTitle(s){let h=0;for(let i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0;}return Math.abs(h);}
 function pickFallback(cat,title){const p=FALLBACK_POOL[cat];if(!p||!p.length)return '';return p[_hashTitle(title)%p.length];}
 function guessCategory(title,tags){const txt=(title+' '+tags).toLowerCase();for(const[kws,cat]of KEYWORD_CATS){for(const kw of kws){if(txt.includes(kw))return cat;}}return null;}
+function proxyImg(url){if(!url)return '';if(url.startsWith('data:'))return url;if(url.includes('wikimedia.org')||url.includes('wikipedia.org'))return url;return '/api/img?url='+encodeURIComponent(url);}
 const BLOCKED_HOSTS=['kinsta.cloud','kinsta.app','b-cdn.net'];
 function normaliseImg(u){
   if(!u)return '';
@@ -280,6 +281,7 @@ async function fetchFeed(feedInfo) {
         let image = normaliseImg(item.thumbnail||item.enclosure?.link||'');
         if (!image){const html=item.content||item.description||'';const m=html.match(/\bsrc="((?:https?:|\/\/)[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);if(m)image=normaliseImg(m[1].split('?')[0]);}
         if (!image) image=pickFallback(category,title);
+        image=proxyImg(image);
         return {title,excerpt,category,date,source:feedInfo.source,image,link};
       }).filter(Boolean);
     }
@@ -307,6 +309,7 @@ async function fetchFeed(feedInfo) {
     for(const el of allEls){const u=el.getAttribute('url')||el.getAttribute('href')||'';if(/^https?:.*\.(?:jpg|jpeg|png|webp|gif)/i.test(u)){image=normaliseImg(u.split('?')[0]);break;}}
     if(!image){const m=descRaw.match(/\bsrc="((?:https?:|\/\/)[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);if(m)image=normaliseImg(m[1].split('?')[0]);}
     if(!image)image=pickFallback(category,title);
+    image=proxyImg(image);
     return {title,excerpt,category,date,source:feedInfo.source,image,link};
   }).filter(a=>a.category&&a.title.length>10&&/^https?:/.test(a.link));
 }
