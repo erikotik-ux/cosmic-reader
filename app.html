@@ -1956,25 +1956,29 @@ function imgFail(el) {
 //   Step 2 — pool URL also fails  → use an SVG data-URI (guaranteed, no network needed)
 // This ensures something always displays even if external CDNs are unreachable.
 const _SVG_COLORS = {
-  Physics:'210,55%,7%', Planets:'140,50%,6%', Moon:'230,45%,7%',
-  Missions:'265,50%,6%', 'AI & Tech':'200,60%,6%'
+  Physics:'210,55%,16%', Planets:'140,50%,14%', Moon:'230,45%,15%',
+  Missions:'265,50%,14%', 'AI & Tech':'200,60%,15%'
 };
 function _svgPlaceholder(cat) {
-  const c = _SVG_COLORS[cat] || '220,40%,6%';
+  const c = _SVG_COLORS[cat] || '220,40%,14%';
   return 'data:image/svg+xml,' + encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720"><defs>` +
     `<radialGradient id="g"><stop offset="0%" stop-color="hsl(${c})"/>` +
-    `<stop offset="100%" stop-color="hsl(220,30%,3%)"/></radialGradient></defs>` +
+    `<stop offset="100%" stop-color="hsl(220,30%,6%)"/></radialGradient></defs>` +
     `<rect width="1280" height="720" fill="url(#g)"/></svg>`
   );
 }
 function imgChain(el, fb, cat) {
-  if (el.src !== fb && fb) {
-    // First failure: try the pool fallback URL
-    el.onerror = () => imgChain(el, '', cat);
+  // Use a data attribute to track whether the fallback URL has already been tried.
+  // Without this, when a.image is empty the initial src IS already fb, so
+  // el.src !== fb would be false on the very first onerror — skipping straight to the
+  // SVG placeholder and producing a black image.
+  if (!el.dataset.fbTried && fb) {
+    el.dataset.fbTried = '1';
+    el.onerror = () => imgChain(el, fb, cat);
     el.src = fb;
   } else {
-    // Second failure: guaranteed SVG placeholder (no network needed)
+    // Fallback already attempted (or no fb URL) → use guaranteed SVG placeholder
     el.onerror = null;
     el.src = _svgPlaceholder(cat);
   }
