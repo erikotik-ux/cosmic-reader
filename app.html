@@ -16,7 +16,8 @@
     var _isOAuthCallback = new URLSearchParams(_search).has('code')
       || _hash.indexOf('access_token') !== -1;
 
-    console.log('[AUTH] page load | hash:', _hash, '| search:', _search, '| isOAuthCallback:', _isOAuthCallback);
+    function _dbg(msg) { console.log(msg); try { localStorage.setItem('cr_auth_log', (localStorage.getItem('cr_auth_log') || '') + '\n' + msg); } catch(e){} }
+    _dbg('[AUTH] page load | hash: ' + _hash + ' | search: ' + _search + ' | isOAuthCallback: ' + _isOAuthCallback);
 
     const _sb = supabase.createClient(
       'https://hckgxwcppqrtanjdmrhi.supabase.co',
@@ -24,15 +25,15 @@
     );
     window._supabase = _sb;
     _sb.auth.onAuthStateChange((event, session) => {
-      console.log('[AUTH] event:', event, '| session:', session ? session.user.email : null, '| isOAuthCallback:', _isOAuthCallback);
+      _dbg('[AUTH] event: ' + event + ' | session: ' + (session ? session.user.email : null) + ' | isOAuthCallback: ' + _isOAuthCallback);
       if (event === 'INITIAL_SESSION') {
         if (session) {
           window._crUser = session.user;
         } else if (!_isOAuthCallback) {
-          console.log('[AUTH] no session + no callback → redirecting to home');
+          _dbg('[AUTH] no session + no callback → redirecting to home');
           window.location.replace('home.html');
         } else {
-          console.log('[AUTH] no session but isOAuthCallback=true → waiting for SIGNED_IN');
+          _dbg('[AUTH] no session but isOAuthCallback=true → waiting for SIGNED_IN');
         }
       } else if (event === 'SIGNED_IN' && session) {
         window._crUser = session.user;
