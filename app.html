@@ -3253,9 +3253,9 @@ function drawConstellationLines() {
     };
   }).filter(Boolean);
 
-  // Planet DOM order: 0=Planets(teal), 1=SpaceFrontier(orange), 2=Physics(purple), 3=Moon, 4=AI&Tech(blue)
-  // Removed: Planets↔Physics [0,2], Moon↔SpaceFrontier [3,1], SpaceFrontier↔AI&Tech [1,4]
-  const pairs = [[0,1],[1,2],[0,3],[2,4]];
+  // Planet DOM order: 0=Planets(teal), 1=SpaceFrontier(orange), 2=Physics(purple/bottom-right), 3=Moon, 4=AI&Tech(blue/top-right)
+  // [1,4] keeps the SpaceFrontier→top-right diagonal after Physics↔AI&Tech position swap
+  const pairs = [[0,1],[1,4],[0,3],[2,4]];
   const ORBIT_GAP = 16; // px beyond sphere edge
 
   pairs.forEach(([a, b], i) => {
