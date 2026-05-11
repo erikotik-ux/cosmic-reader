@@ -9,8 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { overflow-x: hidden; overscroll-behavior: none; }
-    html, body { overscroll-behavior: none; }
+    html { overflow-x: hidden; overscroll-behavior-x: none; }
+    html, body { overscroll-behavior-x: none; }
 
     :root {
       --surface:           #0d1515;
@@ -1241,11 +1241,7 @@
     if (error) setAuthMsg(error.message, 'error');
   }
   async function signInWithTwitter() {
-    const { error } = await _supabase.auth.signInWithOAuth({
-      provider: 'twitter',
-      options: { redirectTo: window.location.origin + '/app.html' }
-    });
-    if (error) setAuthMsg(error.message, 'error');
+    setAuthMsg('X sign-in is not yet available. Please use GitHub or email.', 'error');
   }
 
   // ── Email Sign In ──────────────────────────────────────────
