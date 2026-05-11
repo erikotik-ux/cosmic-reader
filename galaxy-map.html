@@ -454,8 +454,8 @@
       </div>
     </div>
 
-    <!-- PLANET: Physics & Cosmos (Top Right) -->
-    <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openCategoryArticle('Physics')">
+    <!-- PLANET: Physics & Cosmos (Bottom Right) -->
+    <div class="planet-node absolute pointer-events-auto" style="top:calc(68% - 105px); left:calc(73% + 55px);" onclick="openCategoryArticle('Physics')">
       <div class="relative" style="transform-style: preserve-3d;">
         <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
         <div class="planet-sphere relative w-52 h-52 planet-glow-primary" style="border-radius:50%;">
@@ -628,8 +628,8 @@
       </div>
     </div>
 
-    <!-- PLANET: AI & Tech (Right) -->
-    <div class="planet-node absolute pointer-events-auto" style="top:calc(68% - 105px); left:calc(73% + 55px);" onclick="openCategoryArticle('AI & Tech')">
+    <!-- PLANET: AI & Tech (Top Right) -->
+    <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openCategoryArticle('AI & Tech')">
       <div class="relative" style="transform-style: preserve-3d;">
         <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%;background:#02050f;">
           <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
@@ -1386,7 +1386,8 @@ function drawConstellationLines() {
     };
   }).filter(Boolean);
 
-  const pairs = [[0,1],[1,2],[0,3],[2,4]];
+  // [1,4] keeps the diagonal line pointing to top-right after Physics↔AI&Tech position swap
+  const pairs = [[0,1],[1,4],[0,3],[2,4]];
   const ORBIT_GAP = 16;
 
   pairs.forEach(([a, b], i) => {
