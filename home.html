@@ -637,20 +637,129 @@
       letter-spacing: 0.05em;
     }
 
+    /* ── Hamburger button ── */
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: 1px solid rgba(0,240,255,0.2);
+      cursor: pointer;
+      padding: 0.5rem 0.6rem;
+      z-index: 60;
+      border-radius: 4px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .hamburger-btn:hover {
+      border-color: rgba(0,240,255,0.45);
+      background: rgba(0,240,255,0.05);
+    }
+    .ham-line {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: rgba(219,252,255,0.75);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+    .hamburger-btn.open .ham-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger-btn.open .ham-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger-btn.open .ham-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Mobile nav drawer ── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0; right: 0;
+      z-index: 48;
+      background: rgba(8,15,16,0.97);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(0,240,255,0.1);
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .mobile-nav.open { max-height: 420px; }
+    .mobile-nav-inner {
+      padding: 1.25rem 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .mobile-nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .mobile-nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: rgba(219,252,255,0.55);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.9rem 0.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: color 0.2s;
+    }
+    .mobile-nav-links a:hover { color: #00f0ff; }
+    .mobile-nav-links .material-symbols-outlined { font-size: 18px; color: rgba(0,240,255,0.6); }
+    .mobile-nav-cta {
+      margin-top: 1.25rem;
+      width: 100%;
+      text-align: center;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+    }
+    .mobile-nav-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 47;
+      background: transparent;
+    }
+    .mobile-nav-backdrop.open { display: block; }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
-      nav.top-bar { padding: 1rem 1.5rem; }
+      nav.top-bar {
+        padding: 0.875rem 1.25rem;
+        grid-template-columns: 1fr auto;
+      }
+      nav.top-bar .btn-primary { display: none; }
       .nav-links { display: none; }
-      .hero { padding: 5rem 1.5rem 3rem; }
-      .hero-logo-wrap { width: 324px; height: 324px; }
-      .hero-title { letter-spacing: 0.15em; }
+      .hamburger-btn { display: flex; }
+      .mobile-nav { display: block; }
+
+      .hero { padding: 5rem 1.25rem 3rem; }
+      .hero-logo-wrap { width: clamp(220px, 72vw, 320px); height: clamp(220px, 72vw, 320px); }
+      .hero-title { letter-spacing: 0.12em; font-size: clamp(2.2rem, 9vw, 3.2rem); }
+      .hero-subtitle { font-size: 0.8rem; letter-spacing: 0.12em; }
+      .hero-cta-row { flex-direction: column; gap: 0.875rem; }
+      .hero-cta-row .btn-primary { width: 100%; max-width: 280px; text-align: center; }
       .hero-hud { display: none; }
-      .category-strip { padding: 3.5rem 1.5rem; }
+
+      .category-strip { padding: 3.5rem 1.25rem; }
       .category-grid { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
-      .teaser-section { padding: 4rem 1.5rem; }
-      .teaser-inner { flex-direction: column; gap: 2.5rem; }
-      footer { padding: 2.5rem 1.5rem; }
-      .footer-links { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+
+      .teaser-section { padding: 3.5rem 1.25rem; }
+      .teaser-inner { flex-direction: column; gap: 2rem; }
+      .teaser-headline { font-size: 1.5rem; }
+
+      footer { padding: 2.5rem 1.25rem; }
+      .footer-links { flex-wrap: wrap; justify-content: center; gap: 1.25rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-logo-wrap { width: clamp(180px, 65vw, 240px); height: clamp(180px, 65vw, 240px); }
+      .hero-title { font-size: clamp(1.9rem, 10vw, 2.5rem); letter-spacing: 0.08em; }
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* ── Auth Modal ── */
@@ -833,7 +942,27 @@
     <li><a href="trending.html"><span class="material-symbols-outlined">local_fire_department</span>Trending</a></li>
   </ul>
   <button onclick="openAuthModal()" class="btn-primary">Enter Terminal</button>
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Open navigation" onclick="toggleMobileNav()">
+    <span class="ham-line"></span>
+    <span class="ham-line"></span>
+    <span class="ham-line"></span>
+  </button>
 </nav>
+
+<!-- Mobile nav backdrop -->
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
+
+<!-- Mobile nav drawer -->
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <div class="mobile-nav-inner">
+    <ul class="mobile-nav-links">
+      <li><a href="galaxy-map.html" onclick="closeMobileNav()"><span class="material-symbols-outlined">radar</span>Galaxy Map</a></li>
+      <li><a href="transmissions.html" onclick="closeMobileNav()"><span class="material-symbols-outlined">satellite_alt</span>Transmissions</a></li>
+      <li><a href="trending.html" onclick="closeMobileNav()"><span class="material-symbols-outlined">local_fire_department</span>Trending</a></li>
+    </ul>
+    <button onclick="openAuthModal(); closeMobileNav();" class="btn-primary mobile-nav-cta">Enter Terminal</button>
+  </div>
+</div>
 
 <!-- ── Hero ── -->
 <section class="hero">
@@ -993,6 +1122,30 @@
 </div>
 
 <script>
+  // ── Mobile nav ───────────────────────────────────────────
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobile-nav');
+    const btn = document.getElementById('hamburger-btn');
+    const backdrop = document.getElementById('mobile-nav-backdrop');
+    const isOpen = nav.classList.contains('open');
+    if (isOpen) {
+      closeMobileNav();
+    } else {
+      nav.classList.add('open');
+      nav.setAttribute('aria-hidden', 'false');
+      btn.classList.add('open');
+      backdrop.classList.add('open');
+    }
+  }
+  function closeMobileNav() {
+    document.getElementById('mobile-nav').classList.remove('open');
+    document.getElementById('mobile-nav').setAttribute('aria-hidden', 'true');
+    document.getElementById('hamburger-btn').classList.remove('open');
+    document.getElementById('mobile-nav-backdrop').classList.remove('open');
+  }
+  // Close on Escape
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobileNav(); });
+
   // ── Starfield ────────────────────────────────────────────
   (function initStarfield() {
     const canvas = document.getElementById('home-stars');
