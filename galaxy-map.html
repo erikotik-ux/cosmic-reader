@@ -846,7 +846,26 @@
       <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
     </svg>
 
-    <!-- Mobile Planet 1: Planets — left -->
+    <!-- Mobile Planet 1: Moon — right -->
+    <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openCategoryArticle('Moon')">
+      <div class="relative" style="transform-style:preserve-3d;">
+        <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #1e1e1e 0%, #111111 55%, #060606 100%);">
+          <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 80% 22%,rgba(0,200,225,0.10) 0%,transparent 42%);pointer-events:none;"></div>
+          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 62% 65%, rgba(0,0,0,0.40) 0%, transparent 58%);pointer-events:none;"></div>
+        </div>
+        <div class="orbit-3d" style="animation:orb-0f 5s linear infinite;">
+          <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_6px_rgba(160,215,225,0.45)]" style="top:-3px;left:62px;animation:unorb-0f 5s linear infinite;"></div>
+        </div>
+        <canvas class="pw-canvas" data-color="219,252,255"></canvas>
+      </div>
+      <div class="mt-3 text-center">
+        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Moon</span>
+        <span class="block text-xs text-on-surface-variant font-label">Lunar Dispatch</span>
+      </div>
+    </div>
+
+    <!-- Mobile Planet 2: Planets — left -->
     <div class="planet-node self-start ml-6 pointer-events-auto" onclick="openCategoryArticle('Planets')">
       <div class="relative" style="transform-style:preserve-3d;">
         <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 38% 33%, #002030 0%, #000e18 60%, #00060c 100%);">
@@ -868,8 +887,8 @@
       </div>
     </div>
 
-    <!-- Mobile Planet 2: Missions — right -->
-    <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openCategoryArticle('Missions')">
+    <!-- Mobile Planet 3: Space Frontier — right -->
+    <div class="planet-node self-end mr-4 pointer-events-auto" onclick="openCategoryArticle('Missions')">
       <div class="relative" style="transform-style:preserve-3d;">
         <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #261000 0%, #130500 55%, #050100 100%);">
           <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Missions"/>
@@ -895,8 +914,215 @@
       </div>
     </div>
 
-    <!-- Mobile Planet 3: Physics — center-left -->
-    <div class="planet-node self-start ml-10 pointer-events-auto" onclick="openCategoryArticle('Physics')">
+    <!-- Mobile Planet 4: AI & Tech — left (full-fidelity canvas matching desktop) -->
+    <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openCategoryArticle('AI & Tech')">
+      <div class="relative" style="transform-style:preserve-3d;">
+        <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%;background:#02050f;">
+          <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+          <div class="absolute inset-0 pointer-events-none" style="border-radius:50%;background:radial-gradient(circle at 30% 26%,rgba(125,211,252,0.06) 0%,transparent 50%);"></div>
+          <script>(function(){
+  var wrap=document.currentScript&&document.currentScript.parentElement;
+  if(!wrap)return;
+  var canvas=wrap.querySelector('.ds-c');
+  if(!canvas)return;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  function resize(){
+    var sz=wrap.offsetWidth||(wrap.classList.contains('w-32')?128:160);
+    canvas.width=sz*dpr;canvas.height=sz*dpr;
+    canvas.style.width=sz+'px';canvas.style.height=sz+'px';
+    return sz;
+  }
+  var sz=resize();
+  if(!sz){requestAnimationFrame(function(){sz=resize();if(sz)go(sz);});return;}
+  go(sz);
+  function go(sz){
+    var ctx=canvas.getContext('2d');
+    var cx=sz/2,cy=sz/2,R=sz*.484;
+    var NL=9,NM=16,TILT=0.40;
+    var seed=54321;
+    function rand(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
+    var open=[];
+    for(var l=1;l<NL-1;l++)
+      for(var m=0;m<NM;m++)
+        if(rand()<0.48*Math.sin(((l+0.5)/NL)*Math.PI))
+          open.push([l,m]);
+    function pt(phi,th,rot){
+      var x=Math.sin(phi)*Math.cos(th),y=Math.cos(phi),z=Math.sin(phi)*Math.sin(th);
+      var ct=Math.cos(TILT),st=Math.sin(TILT);
+      var y2=y*ct-z*st,z2=y*st+z*ct;
+      var cr=Math.cos(rot),sr=Math.sin(rot);
+      return{sx:cx+R*(x*cr+z2*sr),sy:cy-R*y2,z:-x*sr+z2*cr};
+    }
+    function fillQuad(l,m,rot){
+      var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
+      var th1=(m/NM)*Math.PI*2,th2=((m+1)/NM)*Math.PI*2;
+      var S=3,poly=[];
+      for(var k=0;k<=S;k++)poly.push(pt(phi1,th1+(th2-th1)*k/S,rot));
+      for(var k=1;k<=S;k++)poly.push(pt(phi1+(phi2-phi1)*k/S,th2,rot));
+      for(var k=S-1;k>=0;k--)poly.push(pt(phi2,th1+(th2-th1)*k/S,rot));
+      for(var k=S-1;k>=1;k--)poly.push(pt(phi1+(phi2-phi1)*k/S,th1,rot));
+      ctx.beginPath();ctx.moveTo(poly[0].sx,poly[0].sy);
+      for(var i=1;i<poly.length;i++)ctx.lineTo(poly[i].sx,poly[i].sy);
+      ctx.closePath();
+      return poly;
+    }
+    var rot=0,pulse=0;
+    function draw(){
+      ctx.clearRect(0,0,sz*dpr,sz*dpr);
+      ctx.save();ctx.scale(dpr,dpr);
+      pulse+=0.018;
+      var p=0.5+0.5*Math.sin(pulse);
+      var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.70);
+      cg.addColorStop(0,'rgba(210,235,248,'+(0.68+p*0.04)+')');
+      cg.addColorStop(0.10,'rgba(160,210,235,'+(0.50+p*0.07)+')');
+      cg.addColorStop(0.25,'rgba(95,175,220,'+(0.30+p*0.07)+')');
+      cg.addColorStop(0.50,'rgba(55,130,190,'+(0.13+p*0.04)+')');
+      cg.addColorStop(0.80,'rgba(22,75,140,0.04)');
+      cg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=cg;
+      ctx.beginPath();ctx.arc(cx,cy,R*0.70,0,Math.PI*2);ctx.fill();
+      var hg=ctx.createRadialGradient(cx,cy,R*0.40,cx,cy,R*0.92);
+      hg.addColorStop(0,'rgba(80,170,220,'+(0.09+p*0.04)+')');
+      hg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=hg;
+      ctx.beginPath();ctx.arc(cx,cy,R*0.92,0,Math.PI*2);ctx.fill();
+      for(var i=0;i<open.length;i++){
+        var l=open[i][0],m=open[i][1];
+        var mid=pt(((l+0.5)/NL)*Math.PI,((m+0.5)/NM)*Math.PI*2,rot);
+        if(mid.z>0)continue;
+        var br=Math.abs(mid.z)*Math.sin(((l+0.5)/NL)*Math.PI)*0.30;
+        fillQuad(l,m,rot);
+        ctx.fillStyle='rgba(50,140,200,'+br+')';ctx.fill();
+      }
+      ctx.lineWidth=0.35;
+      for(var m=0;m<NM;m++){
+        var th=(m/NM)*Math.PI*2;
+        ctx.beginPath();var f=true;
+        for(var k=0;k<=40;k++){
+          var pp=pt((k/40)*Math.PI,th,rot);
+          if(pp.z>0){f=true;continue;}
+          if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
+        }
+        ctx.strokeStyle='rgba(50,140,200,0.15)';ctx.stroke();
+      }
+      ctx.lineWidth=0.30;
+      for(var l=1;l<NL;l++){
+        var phi=(l/NL)*Math.PI;
+        ctx.beginPath();var f=true;
+        for(var k=0;k<=60;k++){
+          var pp=pt(phi,(k/60)*Math.PI*2,rot);
+          if(pp.z>0){f=true;continue;}
+          if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
+        }
+        ctx.strokeStyle='rgba(40,120,180,'+(0.11*Math.sin((l/NL)*Math.PI))+')';ctx.stroke();
+      }
+      ctx.lineWidth=0.20;
+      for(var l=1;l<NL-1;l++){
+        for(var m=0;m<NM;m++){
+          var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
+          var th1=(m/NM)*Math.PI*2,th2=((m+1)/NM)*Math.PI*2;
+          var pA=pt(phi1,th2,rot),pB=pt(phi2,th1,rot);
+          if(pA.z>0||pB.z>0)continue;
+          ctx.beginPath();ctx.moveTo(pA.sx,pA.sy);ctx.lineTo(pB.sx,pB.sy);
+          ctx.strokeStyle='rgba(35,105,160,0.09)';ctx.stroke();
+        }
+      }
+      for(var i=0;i<open.length;i++){
+        var l=open[i][0],m=open[i][1];
+        var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
+        var th1=(m/NM)*Math.PI*2,th2=((m+1)/NM)*Math.PI*2;
+        var mid=pt((phi1+phi2)/2,(th1+th2)/2,rot);
+        if(mid.z<0.04)continue;
+        var br=mid.z*Math.sin((phi1+phi2)/2);
+        fillQuad(l,m,rot);
+        ctx.fillStyle='rgba(100,195,245,'+(br*(0.18+p*0.08))+')';ctx.fill();
+      }
+      ctx.lineWidth=1.05;
+      for(var m=0;m<NM;m++){
+        var th=(m/NM)*Math.PI*2;
+        ctx.beginPath();var f=true;
+        for(var k=0;k<=80;k++){
+          var pp=pt((k/80)*Math.PI,th,rot);
+          if(pp.z<0){f=true;continue;}
+          if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
+        }
+        var brt=Math.max(0,Math.cos(th+rot))*0.28+0.24;
+        ctx.strokeStyle='rgba(125,211,252,'+brt+')';ctx.stroke();
+      }
+      ctx.lineWidth=0.88;
+      for(var l=1;l<NL;l++){
+        var phi=(l/NL)*Math.PI;
+        ctx.beginPath();var f=true;
+        for(var k=0;k<=80;k++){
+          var pp=pt(phi,(k/80)*Math.PI*2,rot);
+          if(pp.z<0){f=true;continue;}
+          if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
+        }
+        ctx.strokeStyle='rgba(125,211,252,'+(Math.sin((l/NL)*Math.PI)*0.35)+')';ctx.stroke();
+      }
+      ctx.lineWidth=0.48;
+      for(var l=1;l<NL-1;l++){
+        for(var m=0;m<NM;m++){
+          var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
+          var th1=(m/NM)*Math.PI*2,th2=((m+1)/NM)*Math.PI*2;
+          var pA=pt(phi1,th2,rot),pB=pt(phi2,th1,rot);
+          if(pA.z<0.03||pB.z<0.03)continue;
+          var br=(pA.z+pB.z)*0.5*Math.sin((phi1+phi2)/2);
+          ctx.beginPath();ctx.moveTo(pA.sx,pA.sy);ctx.lineTo(pB.sx,pB.sy);
+          ctx.strokeStyle='rgba(100,185,235,'+(br*0.28)+')';ctx.stroke();
+        }
+      }
+      ctx.shadowColor='rgba(125,211,252,0.70)';
+      ctx.shadowBlur=5;
+      for(var l=1;l<NL;l++){
+        var phi=(l/NL)*Math.PI;
+        for(var m=0;m<NM;m++){
+          var pp=pt(phi,(m/NM)*Math.PI*2,rot);
+          if(pp.z<0.08)continue;
+          var br=pp.z*Math.sin(phi);
+          ctx.beginPath();
+          ctx.arc(pp.sx,pp.sy,1.5+br*0.9,0,Math.PI*2);
+          ctx.fillStyle='rgba(125,211,252,'+(br*0.88)+')';
+          ctx.fill();
+        }
+      }
+      ctx.shadowBlur=0;
+      var rim=ctx.createRadialGradient(cx,cy,R*0.68,cx,cy,R*1.03);
+      rim.addColorStop(0,'rgba(0,0,0,0)');
+      rim.addColorStop(1,'rgba(0,3,14,0.90)');
+      ctx.fillStyle=rim;
+      ctx.beginPath();ctx.arc(cx,cy,R*1.04,0,Math.PI*2);ctx.fill();
+      var edge=ctx.createRadialGradient(cx,cy,R*0.86,cx,cy,R*1.0);
+      edge.addColorStop(0,'rgba(0,0,0,0)');
+      edge.addColorStop(0.6,'rgba(50,145,210,0.10)');
+      edge.addColorStop(1,'rgba(125,211,252,0.22)');
+      ctx.fillStyle=edge;
+      ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+      rot+=0.0038;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+})();</script>
+        </div>
+        <div class="orbit-3d" style="animation:orb-0f 13s linear -5s infinite;">
+          <div style="position:absolute;top:-4px;left:83px;animation:unorb-0f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
+            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
+            <div style="width:6px;height:6px;background:#52b4d8;border-radius:1px;box-shadow:0 0 6px 2px rgba(95,175,220,0.55);"></div>
+            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
+          </div>
+        </div>
+        <canvas class="pw-canvas" data-color="125,211,252"></canvas>
+      </div>
+      <div class="mt-3 text-center">
+        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#7dd3fc]">AI &amp; Tech</span>
+        <span class="block text-xs text-on-surface-variant font-label">Models &amp; Intelligence</span>
+      </div>
+    </div>
+
+    <!-- Mobile Planet 5: Physics & Cosmos — right -->
+    <div class="planet-node self-end mr-6 pointer-events-auto" onclick="openCategoryArticle('Physics')">
       <div class="relative" style="transform-style:preserve-3d;">
         <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
         <div class="planet-sphere relative w-40 h-40 planet-glow-primary" style="border-radius:50%;">
@@ -1050,123 +1276,6 @@
       </div>
     </div>
 
-    <!-- Mobile Planet 4: Moon — right -->
-    <div class="planet-node self-end mr-10 pointer-events-auto" onclick="openCategoryArticle('Moon')">
-      <div class="relative" style="transform-style:preserve-3d;">
-        <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #1e1e1e 0%, #111111 55%, #060606 100%);">
-          <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
-          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(circle at 80% 22%,rgba(0,200,225,0.10) 0%,transparent 42%);pointer-events:none;"></div>
-          <div class="absolute inset-0" style="border-radius:50%;background:radial-gradient(ellipse at 62% 65%, rgba(0,0,0,0.40) 0%, transparent 58%);pointer-events:none;"></div>
-        </div>
-        <div class="orbit-3d" style="animation:orb-0f 5s linear infinite;">
-          <div class="absolute w-1.5 h-1.5 bg-[#dbfcff] rounded-full shadow-[0_0_6px_rgba(160,215,225,0.45)]" style="top:-3px;left:75px;animation:unorb-0f 5s linear infinite;"></div>
-        </div>
-        <canvas class="pw-canvas" data-color="219,252,255"></canvas>
-      </div>
-      <div class="mt-3 text-center">
-        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#dbfcff]">Moon</span>
-        <span class="block text-xs text-on-surface-variant font-label">Lunar Dispatch</span>
-      </div>
-    </div>
-
-    <!-- Mobile Planet 5: AI & Tech — left -->
-    <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openCategoryArticle('AI & Tech')">
-      <div class="relative" style="transform-style:preserve-3d;">
-        <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%;background:#02050f;">
-          <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
-          <div class="absolute inset-0 pointer-events-none" style="border-radius:50%;background:radial-gradient(circle at 30% 26%,rgba(125,211,252,0.06) 0%,transparent 50%);"></div>
-          <script>(function(){
-  var wrap=document.currentScript&&document.currentScript.parentElement;
-  if(!wrap)return;
-  var canvas=wrap.querySelector('.ds-c');
-  if(!canvas)return;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
-  function resize(){
-    var sz=wrap.offsetWidth||(wrap.classList.contains('w-32')?128:160);
-    canvas.width=sz*dpr;canvas.height=sz*dpr;
-    canvas.style.width=sz+'px';canvas.style.height=sz+'px';
-    return sz;
-  }
-  var sz=resize();
-  if(!sz){requestAnimationFrame(function(){sz=resize();if(sz)go(sz);});return;}
-  go(sz);
-  function go(sz){
-    var ctx=canvas.getContext('2d');
-    var cx=sz/2,cy=sz/2,R=sz*.484;
-    var NL=9,NM=16,TILT=0.40;
-    var seed=54321;
-    function rand(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
-    var open=[];
-    for(var l=1;l<NL-1;l++)
-      for(var m=0;m<NM;m++)
-        if(rand()<0.48*Math.sin(((l+0.5)/NL)*Math.PI))
-          open.push([l,m]);
-    function pt(phi,th,rot){
-      var x=Math.sin(phi)*Math.cos(th),y=Math.cos(phi),z=Math.sin(phi)*Math.sin(th);
-      var ct=Math.cos(TILT),st=Math.sin(TILT);
-      var y2=y*ct-z*st,z2=y*st+z*ct;
-      var cr=Math.cos(rot),sr=Math.sin(rot);
-      return{sx:cx+R*(x*cr+z2*sr),sy:cy-R*y2,z:-x*sr+z2*cr};
-    }
-    function fillQuad(l,m,rot){
-      var phi1=(l/NL)*Math.PI,phi2=((l+1)/NL)*Math.PI;
-      var th1=(m/NM)*Math.PI*2,th2=((m+1)/NM)*Math.PI*2;
-      var S=3,poly=[];
-      for(var k=0;k<=S;k++)poly.push(pt(phi1,th1+(th2-th1)*k/S,rot));
-      for(var k=1;k<=S;k++)poly.push(pt(phi1+(phi2-phi1)*k/S,th2,rot));
-      for(var k=S-1;k>=0;k--)poly.push(pt(phi2,th1+(th2-th1)*k/S,rot));
-      for(var k=S-1;k>=1;k--)poly.push(pt(phi1+(phi2-phi1)*k/S,th1,rot));
-      ctx.beginPath();ctx.moveTo(poly[0].sx,poly[0].sy);
-      for(var i=1;i<poly.length;i++)ctx.lineTo(poly[i].sx,poly[i].sy);
-      ctx.closePath();
-      return poly;
-    }
-    var rot=0,pulse=0;
-    function draw(){
-      ctx.clearRect(0,0,sz*dpr,sz*dpr);
-      ctx.save();ctx.scale(dpr,dpr);
-      pulse+=0.018;var p=0.5+0.5*Math.sin(pulse);
-      var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.70);
-      cg.addColorStop(0,'rgba(210,235,248,'+(0.68+p*0.04)+')');
-      cg.addColorStop(0.10,'rgba(160,210,235,'+(0.50+p*0.07)+')');
-      cg.addColorStop(0.25,'rgba(95,175,220,'+(0.30+p*0.07)+')');
-      cg.addColorStop(0.50,'rgba(55,130,190,'+(0.13+p*0.04)+')');
-      cg.addColorStop(0.80,'rgba(22,75,140,0.04)');cg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx,cy,R*0.70,0,Math.PI*2);ctx.fill();
-      ctx.lineWidth=1.05;
-      for(var m=0;m<NM;m++){
-        var th=(m/NM)*Math.PI*2;ctx.beginPath();var f=true;
-        for(var k=0;k<=80;k++){
-          var pp=pt((k/80)*Math.PI,th,rot);
-          if(pp.z<0){f=true;continue;}
-          if(f)ctx.moveTo(pp.sx,pp.sy);else ctx.lineTo(pp.sx,pp.sy);f=false;
-        }
-        var brt=Math.max(0,Math.cos(th+rot))*0.28+0.24;
-        ctx.strokeStyle='rgba(125,211,252,'+brt+')';ctx.stroke();
-      }
-      var rim=ctx.createRadialGradient(cx,cy,R*0.68,cx,cy,R*1.03);
-      rim.addColorStop(0,'rgba(0,0,0,0)');rim.addColorStop(1,'rgba(0,3,14,0.90)');
-      ctx.fillStyle=rim;ctx.beginPath();ctx.arc(cx,cy,R*1.04,0,Math.PI*2);ctx.fill();
-      ctx.restore();rot+=0.0038;requestAnimationFrame(draw);
-    }
-    draw();
-  }
-})();</script>
-        </div>
-        <div class="orbit-3d" style="animation:orb-0f 13s linear -5s infinite;">
-          <div style="position:absolute;top:-4px;left:83px;animation:unorb-0f 13s linear -5s infinite;display:flex;align-items:center;gap:1px;">
-            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
-            <div style="width:6px;height:6px;background:#52b4d8;border-radius:1px;box-shadow:0 0 6px 2px rgba(95,175,220,0.55);"></div>
-            <div style="width:8px;height:2px;background:rgba(95,175,220,0.45);border-radius:1px;"></div>
-          </div>
-        </div>
-        <canvas class="pw-canvas" data-color="125,211,252"></canvas>
-      </div>
-      <div class="mt-3 text-center">
-        <span class="block font-headline text-[10px] tracking-[0.2em] uppercase text-[#7dd3fc]">AI &amp; Tech</span>
-        <span class="block text-xs text-on-surface-variant font-label">Models &amp; Intelligence</span>
-      </div>
-    </div>
 
   </div><!-- /mobile-galaxy -->
 

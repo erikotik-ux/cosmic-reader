@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overscroll-behavior-x: none; }
 
     :root {
       --surface:           #0d1515;
@@ -737,7 +738,8 @@
       .hamburger-btn { display: flex; }
       .mobile-nav { display: block; }
 
-      .hero { padding: 5rem 1.25rem 3rem; }
+      .hero { padding: 3rem 1.25rem 3rem; }
+      .why-cta-row { flex-direction: column; align-items: center; gap: 0.75rem; }
       .hero-logo-wrap { width: clamp(220px, 72vw, 320px); height: clamp(220px, 72vw, 320px); }
       .hero-title { letter-spacing: 0.12em; font-size: clamp(2.2rem, 9vw, 3.2rem); }
       .hero-subtitle { font-size: 0.8rem; letter-spacing: 0.12em; }
