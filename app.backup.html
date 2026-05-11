@@ -387,17 +387,17 @@
       <!-- SVG FIRST so it renders behind all planet nodes -->
       <svg id="constellation-svg" class="absolute inset-0 w-full h-full pointer-events-none" style="left:0;top:0;">
         <!-- Clean hair-thin lines, no glow -->
-        <line id="cl0" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl1" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl2" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl3" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl4" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl5" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
-        <line id="cl6" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl0" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl1" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl4" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl5" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
+        <line id="cl6" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.22" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
 
-      <!-- PLANET: Planets & Exoplanets (Upper Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(28% - 88px); left:calc(27% - 88px);" onclick="openCategoryArticle('Planets')">
+      <!-- PLANET: Planets & Exoplanets (Top Left) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(22% - 45px); left:calc(18% + 45px);" onclick="openCategoryArticle('Planets')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 38% 33%, #002030 0%, #000e18 60%, #00060c 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -420,8 +420,8 @@
         </div>
       </div>
 
-      <!-- PLANET: Space Missions (Lower Center) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(64% - 120px); left:calc(44% - 120px);" onclick="openCategoryArticle('Missions')">
+      <!-- PLANET: Space Missions (Center-Bottom) -->
+      <div class="planet-node absolute pointer-events-auto" style="bottom:10%; left:37%;" onclick="openCategoryArticle('Missions')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-60 h-60 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #261000 0%, #130500 55%, #050100 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship artist rendering"/>
@@ -448,8 +448,8 @@
         </div>
       </div>
 
-      <!-- PLANET: Physics & Cosmos (Lower Right) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(64% - 104px); left:calc(79% - 104px);" onclick="openCategoryArticle('Physics')">
+      <!-- PLANET: Physics & Cosmos (Top Right) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(20% - 30px); left:calc(62% - 50px);" onclick="openCategoryArticle('Physics')">
         <div class="relative" style="transform-style: preserve-3d;">
           <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
           <div class="planet-sphere relative w-52 h-52 planet-glow-primary" style="border-radius:50%;">
@@ -472,11 +472,11 @@
     var rxO=R*1.88,ryO=R*0.35,rxI=R*1.27,ryI=R*0.235;
     var rxM=rxO*0.90,ryM=ryO*0.90;
     var blobs=[
-      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.50,r:0,g:195,b:215},
-      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.42,r:0,g:135,b:158},
-      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.48,r:0,g:225,b:245},
-      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.38,r:0,g:105,b:125},
-      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.45,r:10,g:215,b:232}
+      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.25,r:0,g:168,b:178},
+      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.22,r:0,g:100,b:110},
+      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.20,r:20,g:195,b:205},
+      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.24,r:0,g:75,b:85},
+      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.18,r:30,g:175,b:182}
     ];
     var stars=[],seed=13579;
     function rng(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
@@ -535,7 +535,7 @@
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
       var p=0.5+0.5*Math.sin(t*0.5);
       var bg=ctx.createRadialGradient(cx-R*0.15,cy-R*0.15,0,cx,cy,R);
-      bg.addColorStop(0,'#0c2830');bg.addColorStop(0.35,'#071a22');bg.addColorStop(1,'#040e14');
+      bg.addColorStop(0,'#041214');bg.addColorStop(0.35,'#020b0c');bg.addColorStop(1,'#010506');
       ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
       blobs.forEach(function(bl){
         var bx=cx+bl.ox*R*2,by=cy+bl.oy*R*2;
@@ -550,24 +550,21 @@
       });
       stars.forEach(function(s){
         var tw=0.6+0.4*Math.sin(t*1.5+s.ph);
-        ctx.fillStyle='rgba(220,255,255,'+((0.42+s.b*0.58)*tw)+')';
+        ctx.fillStyle='rgba(190,245,250,'+((0.25+s.b*0.55)*tw)+')';
         ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();
       });
       var hl=ctx.createRadialGradient(cx-R*0.28,cy-R*0.22,0,cx,cy,R*0.78);
-      hl.addColorStop(0,'rgba(0,210,235,0.22)');hl.addColorStop(0.55,'rgba(0,140,158,0.08)');hl.addColorStop(1,'rgba(0,0,0,0)');
+      hl.addColorStop(0,'rgba(0,170,185,0.10)');hl.addColorStop(0.55,'rgba(0,100,112,0.04)');hl.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=hl;ctx.fillRect(0,0,W,H);
       var sp1=ctx.createRadialGradient(cx-R*0.32,cy-R*0.30,0,cx-R*0.28,cy-R*0.26,R*0.22);
-      sp1.addColorStop(0,'rgba(160,252,255,0.55)');sp1.addColorStop(0.5,'rgba(60,205,225,0.20)');sp1.addColorStop(1,'rgba(0,0,0,0)');
+      sp1.addColorStop(0,'rgba(100,240,250,0.28)');sp1.addColorStop(0.5,'rgba(40,180,195,0.09)');sp1.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp1;ctx.fillRect(0,0,W,H);
       var sp2=ctx.createRadialGradient(cx+R*0.24,cy+R*0.20,0,cx+R*0.20,cy+R*0.17,R*0.16);
-      sp2.addColorStop(0,'rgba(0,195,215,0.24)');sp2.addColorStop(1,'rgba(0,0,0,0)');
+      sp2.addColorStop(0,'rgba(0,155,165,0.12)');sp2.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp2;ctx.fillRect(0,0,W,H);
       var ld=ctx.createRadialGradient(cx,cy,R*0.52,cx,cy,R);
-      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.65,'rgba(0,3,4,0.05)');ld.addColorStop(1,'rgba(0,3,4,0.58)');
+      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.60,'rgba(0,3,4,0.08)');ld.addColorStop(1,'rgba(0,3,4,0.82)');
       ctx.fillStyle=ld;ctx.fillRect(0,0,W,H);
-      var rim=ctx.createRadialGradient(cx,cy,R*0.84,cx,cy,R*1.0);
-      rim.addColorStop(0,'rgba(0,0,0,0)');rim.addColorStop(1,'rgba(0,210,240,0.20)');
-      ctx.fillStyle=rim;ctx.fillRect(0,0,W,H);
       ctx.restore();
     }
     function drawMoon(){
@@ -603,8 +600,8 @@
         </div>
       </div>
 
-      <!-- PLANET: Moon (Lower Left) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(64% - 72px); left:calc(12% - 72px);" onclick="openCategoryArticle('Moon')">
+      <!-- PLANET: Moon (Left-Center) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(54% - 15px); left:calc(8% - 10px);" onclick="openCategoryArticle('Moon')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #1e1e1e 0%, #111111 55%, #060606 100%);">
             <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
@@ -623,8 +620,8 @@
         </div>
       </div>
 
-      <!-- PLANET: AI & Tech (Upper Right) -->
-      <div class="planet-node absolute pointer-events-auto" style="top:calc(28% - 80px); left:calc(61% - 80px);" onclick="openCategoryArticle('AI & Tech')">
+      <!-- PLANET: AI & Tech (Bottom) -->
+      <div class="planet-node absolute pointer-events-auto" style="top:calc(68% - 105px); left:calc(73% + 55px);" onclick="openCategoryArticle('AI & Tech')">
         <div class="relative" style="transform-style: preserve-3d;">
           <div class="planet-sphere relative w-40 h-40 overflow-hidden" style="border-radius:50%;background:#02050f;">
             <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
@@ -937,11 +934,11 @@
     var rxO=R*1.88,ryO=R*0.35,rxI=R*1.27,ryI=R*0.235;
     var rxM=rxO*0.90,ryM=ryO*0.90;
     var blobs=[
-      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.50,r:0,g:195,b:215},
-      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.42,r:0,g:135,b:158},
-      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.48,r:0,g:225,b:245},
-      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.38,r:0,g:105,b:125},
-      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.45,r:10,g:215,b:232}
+      {ox:-0.15,oy:-0.10,rx:R*0.92,ry:R*0.70,a:0.25,r:0,g:168,b:178},
+      {ox: 0.18,oy: 0.16,rx:R*0.82,ry:R*0.65,a:0.22,r:0,g:100,b:110},
+      {ox:-0.06,oy: 0.22,rx:R*0.70,ry:R*0.56,a:0.20,r:20,g:195,b:205},
+      {ox: 0.20,oy:-0.07,rx:R*0.76,ry:R*0.60,a:0.24,r:0,g:75,b:85},
+      {ox: 0.03,oy:-0.26,rx:R*0.56,ry:R*0.44,a:0.18,r:30,g:175,b:182}
     ];
     var stars=[],seed=13579;
     function rng(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;}
@@ -1000,7 +997,7 @@
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
       var p=0.5+0.5*Math.sin(t*0.5);
       var bg=ctx.createRadialGradient(cx-R*0.15,cy-R*0.15,0,cx,cy,R);
-      bg.addColorStop(0,'#0c2830');bg.addColorStop(0.35,'#071a22');bg.addColorStop(1,'#040e14');
+      bg.addColorStop(0,'#041214');bg.addColorStop(0.35,'#020b0c');bg.addColorStop(1,'#010506');
       ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
       blobs.forEach(function(bl){
         var bx=cx+bl.ox*R*2,by=cy+bl.oy*R*2;
@@ -1015,24 +1012,21 @@
       });
       stars.forEach(function(s){
         var tw=0.6+0.4*Math.sin(t*1.5+s.ph);
-        ctx.fillStyle='rgba(220,255,255,'+((0.42+s.b*0.58)*tw)+')';
+        ctx.fillStyle='rgba(190,245,250,'+((0.25+s.b*0.55)*tw)+')';
         ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();
       });
       var hl=ctx.createRadialGradient(cx-R*0.28,cy-R*0.22,0,cx,cy,R*0.78);
-      hl.addColorStop(0,'rgba(0,210,235,0.22)');hl.addColorStop(0.55,'rgba(0,140,158,0.08)');hl.addColorStop(1,'rgba(0,0,0,0)');
+      hl.addColorStop(0,'rgba(0,170,185,0.10)');hl.addColorStop(0.55,'rgba(0,100,112,0.04)');hl.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=hl;ctx.fillRect(0,0,W,H);
       var sp1=ctx.createRadialGradient(cx-R*0.32,cy-R*0.30,0,cx-R*0.28,cy-R*0.26,R*0.22);
-      sp1.addColorStop(0,'rgba(160,252,255,0.55)');sp1.addColorStop(0.5,'rgba(60,205,225,0.20)');sp1.addColorStop(1,'rgba(0,0,0,0)');
+      sp1.addColorStop(0,'rgba(100,240,250,0.28)');sp1.addColorStop(0.5,'rgba(40,180,195,0.09)');sp1.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp1;ctx.fillRect(0,0,W,H);
       var sp2=ctx.createRadialGradient(cx+R*0.24,cy+R*0.20,0,cx+R*0.20,cy+R*0.17,R*0.16);
-      sp2.addColorStop(0,'rgba(0,195,215,0.24)');sp2.addColorStop(1,'rgba(0,0,0,0)');
+      sp2.addColorStop(0,'rgba(0,155,165,0.12)');sp2.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=sp2;ctx.fillRect(0,0,W,H);
       var ld=ctx.createRadialGradient(cx,cy,R*0.52,cx,cy,R);
-      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.65,'rgba(0,3,4,0.05)');ld.addColorStop(1,'rgba(0,3,4,0.58)');
+      ld.addColorStop(0,'rgba(0,0,0,0)');ld.addColorStop(0.60,'rgba(0,3,4,0.08)');ld.addColorStop(1,'rgba(0,3,4,0.82)');
       ctx.fillStyle=ld;ctx.fillRect(0,0,W,H);
-      var rim=ctx.createRadialGradient(cx,cy,R*0.84,cx,cy,R*1.0);
-      rim.addColorStop(0,'rgba(0,0,0,0)');rim.addColorStop(1,'rgba(0,210,240,0.20)');
-      ctx.fillStyle=rim;ctx.fillRect(0,0,W,H);
       ctx.restore();
     }
     function drawMoon(){
@@ -1861,14 +1855,12 @@ const RSS_PROXIES = [
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 const FEEDS = [
-  { url: 'https://www.space.com/feeds/all',               source: 'Space.com' },
+  { url: 'https://www.nasaspaceflight.com/feed/',         source: 'NASASpaceFlight' },
   { url: 'https://www.universetoday.com/feed/',           source: 'Universe Today' },
   // SpaceNews intentionally omits images from RSS — handled via /api/spacenews (WP REST API)
   { url: 'https://www.nasa.gov/feed/',                    source: 'NASA' },
-  { url: 'https://phys.org/rss-feed/space-news/',         source: 'Phys.org' },
+  { url: 'https://spaceflightnow.com/feed/',              source: 'Spaceflight Now' },
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
-  { url: 'https://www.teslarati.com/feed/',               source: 'Teslarati' },
-  { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
 ];
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','hugging face','stability ai','midjourney','xai','grok','semiconductor','microchip','processor','gpu','cpu','nvidia','intel','amd','qualcomm','apple silicon','smartphone','software','hardware','github','open source','developer','cloud computing','data center','silicon','app store','operating system','programming','cybersecurity','hacker','hacking','cyber attack','malware','ransomware','data breach','vulnerability','exploit','zero-day','phishing','encryption','ars technica','tech industry','big tech','surveillance','privacy violation'],'AI & Tech'],
@@ -1878,11 +1870,11 @@ const KEYWORD_CATS = [
   [['black hole','gravitational wave','ligo','neutron star','dark matter','dark energy','quantum','galaxy','nebula','cosmos','big bang','telescope','hubble','spectrum','radiation','particle','physics'],'Physics'],
 ];
 const FALLBACK_IMAGES = {
-  Physics:    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
-  Planets:    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1024px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
-  Moon:       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg',
-  Missions:   'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg',
-  'AI & Tech': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg',
+  Physics:    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',  // Hubble: gravitational waves eject black hole
+  Planets:    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg',  // Hubble: Jupiter 2019 OPAL portrait
+  Moon:       'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',             // NASA Supermoon 2016 — Flickr
+  Missions:   'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg', // Hubble: DART impact ejecta at Dimorphos
+  'AI & Tech': 'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',           // AI/Tech visualization — Flickr
 };
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
 const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
@@ -1891,48 +1883,48 @@ const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Mission
 // pickFallback() hashes the article title so each article consistently gets a
 // different image, preventing the same placeholder from repeating across the feed.
 const FALLBACK_POOL = {
-  // All images: Wikimedia Commons — confirmed hotlink-friendly, stable CDN
+  // All images: ESA Hubble CDN + NASA Flickr — confirmed hotlink-friendly, no JPL Photojournal
   Physics: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/1024px-NGC_4414_%28NASA-med%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Blackhole.png/1024px-Blackhole.png',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Butterfly_Nebula_from_HST.jpg/1024px-Butterfly_Nebula_from_HST.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',   // Hubble: gravitational waves eject black hole (2017)
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy M51 — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A jet — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0712a.jpg',   // Butterfly Nebula — HST
   ],
   Planets: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1024px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1024px-Saturn_during_Equinox.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Neptune_Full.jpg/1024px-Neptune_Full.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Whole_Earth%2C_as_seen_from_Apollo_17.jpg/1024px-Whole_Earth%2C_as_seen_from_Apollo_17.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Mariner_10_first_image_of_Mercury.jpg/1024px-Mariner_10_first_image_of_Mercury.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg',   // Jupiter 2019 — Hubble OPAL portrait
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1917a.jpg',   // Saturn 2019 — Hubble OPAL portrait
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9516g.jpg',    // Venus cloud tops — Hubble UV (1995)
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST 1995
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
   ],
   Moon: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Full_Moon_Luc_Viatour.jpg/1024px-Full_Moon_Luc_Viatour.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Aldrin_Apollo_11.jpg/1024px-Aldrin_Apollo_11.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Apollo15LunarModule.jpg/1024px-Apollo15LunarModule.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
+    'https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg',              // NASA Supermoon 2016 — Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field (dark/stellar)
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A — HST
   ],
   Missions: [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Aldrin_Apollo_11.jpg/1024px-Aldrin_Apollo_11.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1024px-The_Earth_seen_from_Apollo_17.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg',   // Hubble images DART ejecta at Dimorphos (2022)
+    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',              // SpaceX Starship — Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg',   // Hubble: gravitational waves/black hole
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9821a.jpg',    // Pillars of Creation — HST
   ],
   'AI & Tech': [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/1024px-NGC_4414_%28NASA-med%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
+    'https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg',              // AI/Tech visualization — Flickr
+    'https://live.staticflickr.com/65535/48954138962_ee541e6755_b.jpg',              // SpaceX Starship — Flickr
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1007a.jpg',   // Centaurus A jet — HST (data-flow feel)
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0601a.jpg',   // Hubble Ultra Deep Field
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0709a.jpg',   // Carina Nebula — HST
+    'https://cdn.spacetelescope.org/archives/images/publicationjpg/heic0407a.jpg',   // Whirlpool Galaxy — HST
   ],
 };
 // Hash article title to a stable integer — used to pick a unique pool image per article
@@ -1946,25 +1938,11 @@ function pickFallback(category, title) {
   if (!pool || !pool.length) return '';
   return pool[_hashTitle(title) % pool.length];
 }
-// Route publisher CDN images through wsrv.nl — a dedicated image-proxy CDN
-// that fetches images server-side and re-serves them. Its IPs are not in AWS
-// data-center ranges, so Cloudflare WAF rules that block hosting providers
-// (which break /api/img for kinsta.cloud) don't apply.
-// Wikimedia and data: URLs load directly — no proxy needed.
-function proxyImg(url) {
-  if (!url) return '';
-  if (url.startsWith('data:')) return url;
-  if (url.includes('wsrv.nl')) return url; // already proxied
-  // Route everything (including Wikimedia) through wsrv.nl — direct Wikimedia
-  // requests from browsers get rate-limited (503); wsrv.nl caches and relays them
-  return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
-}
 // Called via onerror on article img tags — swaps a broken src to a pool fallback.
 // Using data-cat / data-title avoids quote-escaping issues in inline onerror attributes.
 function imgFail(el) {
   el.onerror = null; // prevent infinite loop if fallback also fails
-  const raw = pickFallback(el.dataset.cat || '', el.dataset.title || '');
-  el.src = proxyImg(raw);
+  el.src = pickFallback(el.dataset.cat || '', el.dataset.title || '');
 }
 
 // 2-step fallback chain:
@@ -1972,33 +1950,25 @@ function imgFail(el) {
 //   Step 2 — pool URL also fails  → use an SVG data-URI (guaranteed, no network needed)
 // This ensures something always displays even if external CDNs are unreachable.
 const _SVG_COLORS = {
-  Physics:'210,55%,16%', Planets:'140,50%,14%', Moon:'230,45%,15%',
-  Missions:'265,50%,14%', 'AI & Tech':'200,60%,15%'
+  Physics:'210,55%,7%', Planets:'140,50%,6%', Moon:'230,45%,7%',
+  Missions:'265,50%,6%', 'AI & Tech':'200,60%,6%'
 };
 function _svgPlaceholder(cat) {
-  const c = _SVG_COLORS[cat] || '220,40%,14%';
+  const c = _SVG_COLORS[cat] || '220,40%,6%';
   return 'data:image/svg+xml,' + encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720"><defs>` +
     `<radialGradient id="g"><stop offset="0%" stop-color="hsl(${c})"/>` +
-    `<stop offset="100%" stop-color="hsl(220,30%,6%)"/></radialGradient></defs>` +
+    `<stop offset="100%" stop-color="hsl(220,30%,3%)"/></radialGradient></defs>` +
     `<rect width="1280" height="720" fill="url(#g)"/></svg>`
   );
 }
 function imgChain(el, fb, cat) {
-  // Use a data attribute to track whether the fallback URL has already been tried.
-  // Without this, when a.image is empty the initial src IS already fb, so
-  // el.src !== fb would be false on the very first onerror — skipping straight to the
-  // SVG placeholder and producing a black image.
-  if (!el.dataset.fbTried && fb) {
-    el.dataset.fbTried = '1';
-    el.onerror = () => imgChain(el, fb, cat);
-    // Always route fallback through wsrv.nl — direct Wikimedia/CDN requests 503
-    const proxiedFb = (fb.startsWith('data:') || fb.includes('wsrv.nl'))
-      ? fb
-      : 'https://wsrv.nl/?url=' + encodeURIComponent(fb) + '&maxage=7d&output=jpg&q=85';
-    el.src = proxiedFb;
+  if (el.src !== fb && fb) {
+    // First failure: try the pool fallback URL
+    el.onerror = () => imgChain(el, '', cat);
+    el.src = fb;
   } else {
-    // Fallback already attempted (or no fb URL) → use guaranteed SVG placeholder
+    // Second failure: guaranteed SVG placeholder (no network needed)
     el.onerror = null;
     el.src = _svgPlaceholder(cat);
   }
@@ -2022,7 +1992,7 @@ function stripHtml(s) {
 }
 
 async function fetchFeed(feedInfo) {
-  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
+  const SPACE_SRCS = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
 
   // ── Primary: rss2json.com — purpose-built RSS service, returns clean JSON ──
   try {
@@ -2032,7 +2002,7 @@ async function fetchFeed(feedInfo) {
     );
     const json = await res.json();
     if (json.status === 'ok' && json.items?.length > 0) {
-      const articlesList = json.items.slice(0, 15).map((item, idx) => {
+      return json.items.slice(0, 15).map((item, idx) => {
         const title = stripHtml(item.title || '');
         if (!title || title.length < 10 || /^(subscribe|sign in|log in|archive|home|read more)$/i.test(title)) return null;
         const read_more = item.link || item.guid || '#';
@@ -2048,26 +2018,14 @@ async function fetchFeed(feedInfo) {
           if (!u) return '';
           u = u.trim();
           if (u.startsWith('//')) u = 'https:' + u;
-          else if (u.startsWith('http:')) u = 'https' + u.slice(4); // upgrade HTTP → HTTPS (mixed-content fix)
           // Strip WP resize/crop params but NOT ssl=1 (needed by some Jetpack CDN URLs)
-          try {
-            const p = new URL(u);
-            p.searchParams.delete('resize'); p.searchParams.delete('fit'); p.searchParams.delete('w'); p.searchParams.delete('h');
-            // Reject Cloudflare WAF-protected / hotlink-blocked hosting — these return HTML not images
-            const BLOCKED = ['kinsta.cloud','kinsta.app'];
-            if (BLOCKED.some(d => p.hostname === d || p.hostname.endsWith('.' + d))) return '';
-            return p.href;
-          } catch(e) { return u; }
+          try { const p = new URL(u); p.searchParams.delete('resize'); p.searchParams.delete('fit'); p.searchParams.delete('w'); p.searchParams.delete('h'); return p.href; } catch(e) { return u; }
         }
-        // 1. rss2json thumbnail / enclosure — skip audio/video enclosures (e.g. Planetary Society podcasts)
-        const _encLink = item.enclosure?.link || '';
-        const _encType = item.enclosure?.type || '';
-        const _encIsImg = /^image/i.test(_encType) || (!_encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(_encLink));
-        let image = normaliseImg(item.thumbnail || (_encIsImg ? _encLink : '') || '');
-        let _hasRealImg = !!(image && /^https?:/.test(image));
+        // 1. rss2json thumbnail / enclosure
+        let image = normaliseImg(item.thumbnail || item.enclosure?.link || '');
         // 2. Scan the content HTML — rss2json strips <img> from item.content but WordPress
         //    featured images often survive in item.description. Also check srcset (WP generates these).
-        if (!_hasRealImg) {
+        if (!image || !/^https?:/.test(image)) {
           const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/i;
           const SRCSET_RE = /srcset=["']([^"']+)["']/i;
           for (const html of [item.description || '', item.content || '']) {
@@ -2080,17 +2038,14 @@ async function fetchFeed(feedInfo) {
               if (parts.length) { image = normaliseImg(parts[parts.length - 1]); break; }
             }
           }
-          if (image && /^https?:/.test(image)) _hasRealImg = true;
         }
         // 3. Category-matched fallback so no article is ever imageless
         if (!image || !/^https?:/.test(image)) image = pickFallback(category, title);
-        // 4. Route publisher images through server-side proxy (bypasses kinsta.cloud/Cloudflare blocks)
-        image = proxyImg(image);
         const readTime = Math.max(1, Math.ceil((body || excerpt).split(' ').length / 200));
         return {
           id: idx, title, excerpt, body: body || excerpt,
           category, date, source: feedInfo.source,
-          image, _hasRealImg, read_more,
+          image, read_more,
           coord: 'Live — ' + feedInfo.source,
           readTime: readTime + 'm',
           stats: [
@@ -2101,21 +2056,6 @@ async function fetchFeed(feedInfo) {
           ]
         };
       }).filter(Boolean);
-      // OG image enrichment — Planetary Society & Sky & Telescope don't include images in their RSS.
-      // Fetch the article's og:image server-side for any article that has no real feed image.
-      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope']);
-      if (NO_IMG_SRCS.has(feedInfo.source)) {
-        await Promise.allSettled(
-          articlesList.filter(a => !a._hasRealImg).map(async a => {
-            try {
-              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(3000) });
-              if (r.ok) { const d = await r.json(); if (d.image) a.image = proxyImg(d.image); }
-            } catch(e) {}
-          })
-        );
-      }
-      articlesList.forEach(a => delete a._hasRealImg);
-      return articlesList;
     }
   } catch(e) { /* fall through to XML proxies */ }
 
@@ -2156,7 +2096,7 @@ async function fetchFeed(feedInfo) {
     const date    = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
-    const PURE_SPACE_SOURCES = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
+    const PURE_SPACE_SOURCES = ['NASASpaceFlight','Universe Today','SpaceNews','NASA','Spaceflight Now'];
     const PURE_AI_SOURCES    = [];
     const category = guessCategory(title, tags)
       || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
@@ -2206,8 +2146,6 @@ async function fetchFeed(feedInfo) {
     // If the feed didn't include an image, assign a category-matched fallback
     // so we don't silently drop good articles just because their RSS is image-free
     if (!image) image = pickFallback(category, title);
-    // Route publisher images through server-side proxy (bypasses kinsta.cloud/Cloudflare blocks)
-    image = proxyImg(image);
     const readTime = Math.max(1, Math.ceil(body.split(' ').length / 200));
     return {
       id: idx, title, excerpt, body,
@@ -2249,7 +2187,7 @@ function renderFeed(list) {
     if (style === 'hero') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
         <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
-        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
           <h2 class="text-3xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight max-w-2xl">${escHtml(a.title)}</h2>
@@ -2279,7 +2217,7 @@ function renderFeed(list) {
     if (style === 'medium') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
         <div class="relative h-52 md:h-auto overflow-hidden">
-          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
         </div>
         <div class="p-7 flex flex-col justify-center">
@@ -2294,7 +2232,7 @@ function renderFeed(list) {
     return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
         <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
-          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
         <div class="flex-grow min-w-0">
           <div class="flex items-center gap-2 mb-1">
@@ -2425,7 +2363,6 @@ async function scrapeRundownFeed() {
       }
     }
     if (!image) image = pickFallback('AI & Tech', title);
-    image = proxyImg(image);
 
     // Extract excerpt from sibling/child <p> elements
     const descEl = link.querySelector('p') || (link.parentElement && link.parentElement.querySelector('p'));
@@ -2478,9 +2415,9 @@ async function fetchSpaceNewsFeed() {
         ? new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : '';
       const category  = guessCategory(title, '') || 'Missions';
-      const image     = proxyImg((post.image && post.image.startsWith('http'))
+      const image     = (post.image && post.image.startsWith('http'))
         ? post.image
-        : pickFallback(category, title));
+        : pickFallback(category, title);
 
       if (!image || !image.startsWith('http')) return null;
 
@@ -2506,32 +2443,10 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v1';
-const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
-
 async function loadLiveFeeds() {
   const statusEl  = document.getElementById('feed-status');
   const statusTxt = document.getElementById('feed-status-text');
   if (statusEl) statusEl.classList.remove('hidden');
-
-  // ── Fast path: serve from sessionStorage cache ──
-  try {
-    const c = JSON.parse(sessionStorage.getItem(_CR_CACHE_KEY) || '{}');
-    if (c.ts && Date.now() - c.ts < _CR_CACHE_TTL && c.articles?.length) {
-      articles.length = 0;
-      c.articles.forEach(a => articles.push(a));
-      currentPage = 1; currentFilter = 'All';
-      renderCurrentPage();
-      updatePrioritySignal(articles[0]);
-      updateTicker(articles.slice(0, 6));
-      if (currentView === 'trending') renderTrending();
-      if (statusEl) {
-        statusTxt.textContent = '⚡ ' + articles.length + ' signals loaded instantly from cache';
-        setTimeout(() => statusEl.classList.add('hidden'), 2000);
-      }
-      return;
-    }
-  } catch(e) {}
 
   try {
     // Fetch all RSS feeds, SpaceNews (WP API), and The Rundown AI in parallel
@@ -2591,14 +2506,11 @@ async function loadLiveFeeds() {
     if (merged.length > 0) {
       articles.length = 0;
       merged.forEach(a => articles.push(a));
-      // Persist to sessionStorage so trending/transmissions pages load instantly
-      try { sessionStorage.setItem(_CR_CACHE_KEY, JSON.stringify({ ts: Date.now(), articles: merged })); } catch(e) {}
       currentPage = 1;
       currentFilter = 'All';
       renderCurrentPage();
       updatePrioritySignal(articles[0]);
       updateTicker(articles.slice(0, 6));
-      if (currentView === 'trending') renderTrending();
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
@@ -2786,7 +2698,172 @@ function updateTicker(arts) {
 }
 
 // ── Fallback Article Data (used until RSS loads) ───────────
-const articles = []; // Populated by loadLiveFeeds()
+const articles = [
+  {
+    id: 0,
+    title: "A Signal From Before the Stars: LIGO's Primordial Black Hole Detection",
+    excerpt: "LIGO picked up a gravitational wave signal from a primordial black hole — smaller than our Sun and potentially older than all stars in the universe. The detection challenges existing models of black hole formation and opens a new window into the pre-stellar epoch.",
+    category: "Physics",
+    date: "March 27, 2026",
+    source: "Universe Today",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg",
+    read_more: "https://www.universetoday.com/articles/a-signal-from-before-the-stars",
+    coord: "Coordinate: 04.28.99",
+    readTime: "5m",
+    body: `The silence of deep space is a fabrication of the uninitiated. To those with the right instrumentation, the vacuum is a cacophony of rhythmic disturbances. LIGO's latest observation run — designated O4b — has returned something extraordinary.
+
+The gravitational wave signal, catalogued as GW-2026-03B, exhibits a chirp mass of approximately 0.4 solar masses. This is strikingly smaller than any stellar black hole produced by core collapse, suggesting the object formed in the radiation-dominated era of the early universe — before a single star had ignited.
+
+We used to believe these signals were the byproduct of collapsing massive stars. But the GW-2026-03B event contains anomalies that do not align with standard stellar evolution. The mass gap is too significant. The waveform too clean.
+
+If confirmed, this would be the first direct detection of a primordial black hole — a relic of quantum fluctuations in the early universe's density field. These objects have been theorized for decades as a candidate component of dark matter.
+
+The next observation window opens in June. Further detections would allow us to constrain the primordial black hole mass spectrum with unprecedented precision.`,
+    stats: [
+      { label: "Chirp Mass", val: "0.4 M☉", color: "text-primary" },
+      { label: "Confidence Level", val: "98.7%", color: "text-secondary" },
+      { label: "Distance", val: "1.2 Gpc", color: "text-tertiary" },
+      { label: "Observation Run", val: "O4b", color: "text-primary" }
+    ]
+  },
+  {
+    id: 1,
+    title: "Hunting Moon Water With Neutrons",
+    excerpt: "NASA sends a clever instrument that hunts for water without digging, using subatomic particles to sniff out hidden ice deposits at the lunar south pole. The LEND instrument aboard LRO has detected elevated hydrogen signatures consistent with water-ice concentrations near permanently shadowed craters.",
+    category: "Moon",
+    date: "March 27, 2026",
+    source: "Universe Today",
+    image: "https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg",
+    read_more: "https://www.universetoday.com/articles/hunting-moon-water-with-neutrons",
+    coord: "Coordinate: LUNA-S.01",
+    readTime: "4m",
+    body: `The Lunar South Pole holds secrets that could define the future of human spaceflight. Permanently shadowed craters, never touched by sunlight since the Moon formed, may harbor billions of tonnes of water ice — a resource for drinking, fuel, and breathable oxygen.
+
+NASA's Lunar Reconnaissance Orbiter has been quietly scanning the lunar surface with its Lunar Exploration Neutron Detector (LEND) for over a decade. But recent reanalysis of the data has revealed something striking: anomalously high hydrogen concentrations in regions correlating exactly with crater floor shadows.
+
+The technique is elegant. Cosmic rays striking the lunar surface liberate fast neutrons. When those neutrons encounter hydrogen atoms — the key ingredient in water — they slow down dramatically. The LEND instrument detects this slowing as a deficiency in the fast-neutron count, effectively mapping hydrogen density from orbit without ever touching the surface.
+
+The latest data shows pockets of concentration near the crater Haworth and de Gerlache that are orders of magnitude higher than the surrounding terrain. These pockets align with ground-truth measurements from the LCROSS impact mission in 2009, which directly detected water vapor and ice particles.
+
+Artemis basecamp planners are watching closely.`,
+    stats: [
+      { label: "H₂O Concentration", val: "High", color: "text-primary" },
+      { label: "Depth Estimate", val: "~1m", color: "text-secondary" },
+      { label: "Target Crater", val: "Haworth", color: "text-tertiary" },
+      { label: "Instrument", val: "LEND/LRO", color: "text-primary" }
+    ]
+  },
+  {
+    id: 2,
+    title: "Hera Aces Massive Engine Burn to Didymos",
+    excerpt: "ESA's Hera spacecraft successfully completed its most dramatic deep-space orbital maneuver toward the asteroid deflection target. The precision burn adjusted the trajectory by 400 m/s — ensuring Hera arrives at the Didymos binary system on schedule in early 2027.",
+    category: "Missions",
+    date: "March 27, 2026",
+    source: "Universe Today",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg",
+    read_more: "https://www.universetoday.com/articles/hera-aces-a-massive-engine-burn-on-its-way-to-didymos",
+    coord: "Coordinate: AST-65803",
+    readTime: "4m",
+    body: `Deep space navigation is an exercise in patience and precision. ESA's Hera mission, launched in October 2024, just completed the largest and most consequential engine burn of its voyage — a 400 m/s deep-space manoeuvre that will determine whether it makes its 2027 rendezvous with the Didymos asteroid system.
+
+The burn, lasting over 8 hours, used Hera's 400-Newton main thruster running on hydrazine. The entire sequence had to be executed autonomously: at a distance of over 200 million kilometres, the round-trip communication lag to Earth was nearly 22 minutes, making real-time commanding impossible.
+
+Hera's destination is historic. NASA's DART spacecraft impacted Dimorphos — the moon of asteroid Didymos — in September 2022, successfully altering its orbit. It was humanity's first planetary defence test. But DART couldn't study the aftermath in detail. Hera will.
+
+When Hera arrives, it will orbit Didymos and Dimorphos, deploy two CubeSats called Juventas and Milani into low orbit around Dimorphos, and carry out the first-ever radar imaging of an asteroid's interior structure. The data will tell us whether asteroid deflection is a reliable tool in our planetary defence toolkit.
+
+Mission controllers at ESOC in Darmstadt confirmed nominal spacecraft health after the burn.`,
+    stats: [
+      { label: "Delta-V", val: "400 m/s", color: "text-primary" },
+      { label: "Burn Duration", val: "8.2 hours", color: "text-secondary" },
+      { label: "Target Arrival", val: "Early 2027", color: "text-tertiary" },
+      { label: "Mission Agency", val: "ESA", color: "text-primary" }
+    ]
+  },
+  {
+    id: 3,
+    title: "Jupiter's Lightning Is Up To 1 Million Times More Powerful",
+    excerpt: "Juno observations show Jupiter's lightning triggered by a stealth superstorm could be up to one million times more powerful than Earth's. The storm, located in Jupiter's northern mid-latitudes, shows discharge signatures unlike anything observed in the solar system.",
+    category: "Planets",
+    date: "March 26, 2026",
+    source: "Universe Today",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1914a.jpg",
+    read_more: "https://www.universetoday.com/articles/jupiters-lightning-could-be-almost-unbelievably-powerful",
+    coord: "Coordinate: JUP-45.12N",
+    readTime: "5m",
+    body: `Lightning on Earth is terrifying by any measure — a bolt discharging up to a billion joules in a fraction of a second. But new data from NASA's Juno spacecraft suggests Jupiter plays in an entirely different league.
+
+Analysis of Juno's microwave radiometer readings from Perijove 44 has revealed a persistent, large-scale storm system hiding beneath Jupiter's cloud canopy. Unlike the visible Great Red Spot, this "stealth superstorm" operates at deeper atmospheric levels, invisible to conventional optical imaging.
+
+What makes it alarming is the electromagnetic discharge signature. The signal from this storm, captured in the 600 MHz band, is approximately one million times stronger than typical Jovian lightning signatures — which are themselves already far more powerful than anything on Earth.
+
+The mechanism differs from terrestrial lightning. On Earth, water ice and liquid water droplets generate charge separation in thunderclouds. On Jupiter, the process involves ammonia acting as a catalyst, interacting with water deep in the troposphere. The result is lightning that can last seconds rather than milliseconds, releasing enormous energy over sustained periods.
+
+No spacecraft has ever flown deep enough into Jupiter's atmosphere to measure a discharge directly. Juno's orbit takes it to approximately 3,500 km above the cloud tops — close enough to detect the electromagnetic fingerprint but not to see the bolt itself.`,
+    stats: [
+      { label: "Power vs Earth", val: "×1,000,000", color: "text-primary" },
+      { label: "Depth", val: "~50 km", color: "text-secondary" },
+      { label: "Storm Type", val: "Superstorm", color: "text-tertiary" },
+      { label: "Instrument", val: "Juno/MWR", color: "text-primary" }
+    ]
+  },
+  {
+    id: 4,
+    title: "How Did Venus Become a Hellscape? 234,000 Simulations Reveal Four Paths",
+    excerpt: "234,000 climate simulations reveal four possible paths to explain why Venus became a scorching inferno while Earth remained habitable. The models suggest the divergence may have occurred as recently as 700 million years ago, triggered by a runaway volcanic resurfacing event.",
+    category: "Planets",
+    date: "March 26, 2026",
+    source: "Universe Today",
+    image: "https://cdn.spacetelescope.org/archives/images/publicationjpg/opo9516g.jpg",
+    read_more: "https://www.universetoday.com/articles/venus-hellscape-climate-simulations",
+    coord: "Coordinate: VEN-SOL.02",
+    readTime: "6m",
+    body: `Venus and Earth are twins in almost every physical respect — near-identical mass, size, composition, and distance from the Sun. Yet Venus today is a sulfurous hell where the surface temperature exceeds 465°C and the atmospheric pressure would crush a submarine.
+
+A new modelling study published in Nature Geoscience has run 234,000 climate simulations to understand how this divergence occurred. Four distinct scenarios emerge, all consistent with the available data.
+
+In the first and most likely scenario, a prolonged period of volcanic resurfacing approximately 700 million years ago released enough CO₂ to tip Venus into a runaway greenhouse effect. Unlike Earth, where plate tectonics continuously cycle carbon between the atmosphere and crust, Venus has no active plate tectonics — once carbon was released, it had nowhere to go.
+
+The second scenario involves an early Venus ocean. If Venus once had liquid water on its surface — a possibility the team assigns a 30% likelihood — its proximity to the Sun would have gradually evaporated it. As water vapour rose into the stratosphere, ultraviolet radiation broke it apart into hydrogen (which escaped to space) and oxygen (which oxidized surface rocks).
+
+The third scenario is a tidal locking near-miss: Venus rotates backwards and extremely slowly. Early close encounters with Earth may have stripped angular momentum, slowing its rotation to the point where atmospheric dynamics no longer distributed heat efficiently.
+
+The fourth involves a catastrophic impactor in the inner solar system disrupting the early Venus magnetosphere, exposing it to solar wind stripping.`,
+    stats: [
+      { label: "Simulations Run", val: "234,000", color: "text-primary" },
+      { label: "Surface Temp", val: "465°C", color: "text-secondary" },
+      { label: "Divergence Age", val: "~700 Myr", color: "text-tertiary" },
+      { label: "Journal", val: "Nature Geo.", color: "text-primary" }
+    ]
+  },
+  {
+    id: 5,
+    title: "AI Models Reach New Frontier: Reasoning at Human Expert Level",
+    excerpt: "Foundation models from leading AI labs demonstrate breakthrough performance on scientific and professional benchmarks, signalling a new era of machine intelligence that may fundamentally reshape knowledge work.",
+    category: "AI & Tech",
+    date: "April 10, 2026",
+    source: "Ben's Bites",
+    image: "https://live.staticflickr.com/65535/50703878421_40f681155b_b.jpg",
+    read_more: "https://www.bensbites.com",
+    coord: "Signal: AI-FRONTIER-01",
+    readTime: "4m",
+    body: `A new generation of large language models has crossed a threshold that researchers once considered decades away. Multiple frontier labs — including Anthropic, OpenAI, and Google DeepMind — have independently reported benchmark scores that match or exceed human expert performance across medicine, law, mathematics, and scientific reasoning.
+
+The results represent more than incremental progress. Unlike earlier improvements that relied purely on scale, the latest generation employs novel training paradigms including extended chain-of-thought reasoning, reinforcement learning from verifiable outcomes, and synthetic data generation that allows models to effectively teach themselves.
+
+What makes the current moment significant is the breadth of capability. Previous milestones were narrow — a model defeating a chess grandmaster, or passing a bar exam in isolation. Today's systems demonstrate transfer across domains that previously required years of specialised human training.
+
+The practical implications are already being felt across industries. AI-assisted drug discovery pipelines are compressing timelines from years to months. Legal research tools are surfacing precedents that junior associates would have missed. Materials science labs are using AI to propose novel compounds for synthesis.
+
+Critics note that benchmark performance does not always translate cleanly to real-world deployment. Issues of reliability, hallucination, and safety alignment remain active research problems. But the momentum is unmistakable — and the labs show no signs of slowing.`,
+    stats: [
+      { label: "Benchmark", val: "Expert+", color: "text-[#7dd3fc]" },
+      { label: "Labs Active", val: "12+", color: "text-secondary" },
+      { label: "Domains", val: "Cross-domain", color: "text-tertiary" },
+      { label: "Source", val: "Ben's Bites", color: "text-[#7dd3fc]" }
+    ]
+  }
+];
 
 // ── Saved Stories ─────────────────────────────────────────
 const savedStories = [];
@@ -2840,7 +2917,7 @@ function renderSavedStories() {
       return `
       <article onclick="openArticle(${artIdx >= 0 ? artIdx : 0})" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
         <div class="w-32 self-stretch shrink-0 overflow-hidden relative">
-          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
         <div class="flex-1 p-5 flex flex-col justify-between min-w-0">
           <div>
@@ -2933,7 +3010,7 @@ function renderTrending() {
       </div>
       <!-- Thumbnail -->
       <div class="w-16 h-12 shrink-0 rounded-lg overflow-hidden hidden sm:block">
-        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
       </div>
       <!-- Content -->
       <div class="flex-1 min-w-0">
@@ -3039,8 +3116,8 @@ function openArticle(idx) {
   const _dImg2 = document.getElementById('detail-img');
   _dImg.onerror = () => imgChain(_dImg, _dfb, a.category);
   _dImg2.onerror = () => imgChain(_dImg2, _dfb, a.category);
-  _dImg.src = a.image || _dfb;
-  _dImg2.src = a.image || _dfb;
+  _dImg.src = a.image;
+  _dImg2.src = a.image;
   document.getElementById('detail-title').textContent = a.title;
   document.getElementById('detail-excerpt').textContent = a.excerpt;
   document.getElementById('detail-source').textContent = 'Source: ' + a.source;
@@ -3070,7 +3147,7 @@ function openReading(idx) {
   const _rfb = pickFallback(a.category, a.title);
   const _rImg = document.getElementById('read-img');
   _rImg.onerror = () => imgChain(_rImg, _rfb, a.category);
-  _rImg.src = a.image || _rfb;
+  _rImg.src = a.image;
   document.getElementById('read-caption').textContent = 'Visual reference — ' + a.category + ' Sector';
   document.getElementById('read-link').href = a.read_more;
 
@@ -3253,9 +3330,9 @@ function drawConstellationLines() {
     };
   }).filter(Boolean);
 
-  // Planet DOM order: 0=Planets(teal), 1=SpaceFrontier(orange), 2=Physics(purple/bottom-right), 3=Moon, 4=AI&Tech(blue/top-right)
-  // [1,4] keeps the SpaceFrontier→top-right diagonal after Physics↔AI&Tech position swap
-  const pairs = [[0,1],[1,4],[0,3],[2,4]];
+  // Planet DOM order: 0=Planets(teal), 1=SpaceFrontier(orange), 2=Physics(purple), 3=Moon, 4=AI&Tech(blue)
+  // Removed: Planets↔Physics [0,2], Moon↔SpaceFrontier [3,1], SpaceFrontier↔AI&Tech [1,4]
+  const pairs = [[0,1],[1,2],[0,3],[2,4]];
   const ORBIT_GAP = 16; // px beyond sphere edge
 
   pairs.forEach(([a, b], i) => {
