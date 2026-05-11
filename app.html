@@ -11,9 +11,12 @@
 <script>
   // ── Auth guard — redirect to home.html if not signed in ──
   (function() {
-    // Capture OAuth signals BEFORE createClient() strips them from the URL
-    var _isOAuthCallback = new URLSearchParams(window.location.search).has('code')
-      || window.location.hash.indexOf('access_token') !== -1;
+    var _hash = window.location.hash;
+    var _search = window.location.search;
+    var _isOAuthCallback = new URLSearchParams(_search).has('code')
+      || _hash.indexOf('access_token') !== -1;
+
+    console.log('[AUTH] page load | hash:', _hash, '| search:', _search, '| isOAuthCallback:', _isOAuthCallback);
 
     const _sb = supabase.createClient(
       'https://hckgxwcppqrtanjdmrhi.supabase.co',
@@ -21,14 +24,16 @@
     );
     window._supabase = _sb;
     _sb.auth.onAuthStateChange((event, session) => {
+      console.log('[AUTH] event:', event, '| session:', session ? session.user.email : null, '| isOAuthCallback:', _isOAuthCallback);
       if (event === 'INITIAL_SESSION') {
         if (session) {
           window._crUser = session.user;
         } else if (!_isOAuthCallback) {
-          // No session and no OAuth callback in progress — send to home
+          console.log('[AUTH] no session + no callback → redirecting to home');
           window.location.replace('home.html');
+        } else {
+          console.log('[AUTH] no session but isOAuthCallback=true → waiting for SIGNED_IN');
         }
-        // If _isOAuthCallback is true, wait for SIGNED_IN to fire
       } else if (event === 'SIGNED_IN' && session) {
         window._crUser = session.user;
         _isOAuthCallback = false;
