@@ -10,7 +10,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { overflow-x: hidden; overscroll-behavior: none; }
-    html, body { overscroll-behavior-x: none; }
+    html, body { overscroll-behavior: none; }
 
     :root {
       --surface:           #0d1515;
@@ -149,6 +149,7 @@
     .hero {
       position: relative;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
