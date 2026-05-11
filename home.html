@@ -1297,6 +1297,16 @@
     history.replaceState(null, '', window.location.pathname);
   }
 
+  // ── Show OAuth error if bounced back from app.html ──
+  (function() {
+    var _p = new URLSearchParams(window.location.search);
+    if (_p.has('auth_error')) {
+      openAuthModal('signin');
+      setAuthMsg(_p.get('auth_error'), 'error');
+      history.replaceState(null, '', window.location.pathname);
+    }
+  })();
+
   // ── Live breaking-news teaser ──────────────────────────────────────────────
   // Picks the freshest article with a real image from our active sources.
   // Fast path: reads the sessionStorage cache written by app.html (instant).

@@ -11,13 +11,16 @@
 <script>
   // ── Auth guard — redirect to home.html if not signed in ──
   (function() {
-    var _hash = window.location.hash;
-    var _search = window.location.search;
-    var _isOAuthCallback = new URLSearchParams(_search).has('code')
-      || _hash.indexOf('access_token') !== -1;
+    var _params = new URLSearchParams(window.location.search);
+    var _isOAuthCallback = _params.has('code')
+      || window.location.hash.indexOf('access_token') !== -1;
 
-    function _dbg(msg) { console.log(msg); try { localStorage.setItem('cr_auth_log', (localStorage.getItem('cr_auth_log') || '') + '\n' + msg); } catch(e){} }
-    _dbg('[AUTH] page load | hash: ' + _hash + ' | search: ' + _search + ' | isOAuthCallback: ' + _isOAuthCallback);
+    // If Supabase returned an OAuth error, bounce to home with the message
+    if (_params.has('error')) {
+      var _desc = _params.get('error_description') || 'Sign-in failed';
+      window.location.replace('home.html?auth_error=' + encodeURIComponent(_desc));
+      return;
+    }
 
     const _sb = supabase.createClient(
       'https://hckgxwcppqrtanjdmrhi.supabase.co',
@@ -25,15 +28,11 @@
     );
     window._supabase = _sb;
     _sb.auth.onAuthStateChange((event, session) => {
-      _dbg('[AUTH] event: ' + event + ' | session: ' + (session ? session.user.email : null) + ' | isOAuthCallback: ' + _isOAuthCallback);
       if (event === 'INITIAL_SESSION') {
         if (session) {
           window._crUser = session.user;
         } else if (!_isOAuthCallback) {
-          _dbg('[AUTH] no session + no callback → redirecting to home');
           window.location.replace('home.html');
-        } else {
-          _dbg('[AUTH] no session but isOAuthCallback=true → waiting for SIGNED_IN');
         }
       } else if (event === 'SIGNED_IN' && session) {
         window._crUser = session.user;
