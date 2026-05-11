@@ -10,9 +10,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ── Auth guard — redirect to home.html if not signed in ──
-  // Uses onAuthStateChange + INITIAL_SESSION so OAuth/PKCE callbacks
-  // (GitHub, Google) complete their code exchange before we decide.
   (function() {
+    // Capture OAuth signals BEFORE createClient() strips them from the URL
+    var _isOAuthCallback = new URLSearchParams(window.location.search).has('code')
+      || window.location.hash.indexOf('access_token') !== -1;
+
     const _sb = supabase.createClient(
       'https://hckgxwcppqrtanjdmrhi.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA'
@@ -22,20 +24,14 @@
       if (event === 'INITIAL_SESSION') {
         if (session) {
           window._crUser = session.user;
-        } else {
-          // Don't redirect if an OAuth callback is landing here:
-          // PKCE sends ?code=... in query string
-          // Implicit flow sends #access_token=... in hash
-          var hasCode = new URLSearchParams(window.location.search).has('code');
-          var hasHash = window.location.hash.includes('access_token');
-          if (!hasCode && !hasHash) window.location.replace('home.html');
+        } else if (!_isOAuthCallback) {
+          // No session and no OAuth callback in progress — send to home
+          window.location.replace('home.html');
         }
+        // If _isOAuthCallback is true, wait for SIGNED_IN to fire
       } else if (event === 'SIGNED_IN' && session) {
         window._crUser = session.user;
-        // Clean up any OAuth params from the URL
-        if (window.location.search.includes('code=') || window.location.hash.includes('access_token')) {
-          history.replaceState(null, '', window.location.pathname);
-        }
+        _isOAuthCallback = false;
       }
     });
   })();
