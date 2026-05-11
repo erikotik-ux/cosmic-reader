@@ -1241,7 +1241,11 @@
     if (error) setAuthMsg(error.message, 'error');
   }
   async function signInWithTwitter() {
-    setAuthMsg('X sign-in is not yet available. Please use GitHub or email.', 'error');
+    const { error } = await _supabase.auth.signInWithOAuth({
+      provider: 'twitter',
+      options: { redirectTo: window.location.origin + '/app.html' }
+    });
+    if (error) setAuthMsg(error.message, 'error');
   }
 
   // ── Email Sign In ──────────────────────────────────────────

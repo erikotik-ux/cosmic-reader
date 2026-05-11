@@ -23,10 +23,16 @@
         if (session) {
           window._crUser = session.user;
         } else {
-          window.location.replace('home.html');
+          // Don't redirect if OAuth code exchange is still in progress
+          var hasCode = new URLSearchParams(window.location.search).has('code');
+          if (!hasCode) window.location.replace('home.html');
         }
       } else if (event === 'SIGNED_IN' && session) {
         window._crUser = session.user;
+        // Clean up OAuth code from URL after successful sign-in
+        if (window.location.search.includes('code=')) {
+          history.replaceState(null, '', window.location.pathname);
+        }
       }
     });
   })();
