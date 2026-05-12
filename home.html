@@ -1242,7 +1242,7 @@
   }
   async function signInWithTwitter() {
     const { error } = await _supabase.auth.signInWithOAuth({
-      provider: 'twitter',
+      provider: 'x',
       options: { redirectTo: window.location.origin + '/app.html' }
     });
     if (error) setAuthMsg(error.message, 'error');
