@@ -299,7 +299,7 @@ async function fetchFeed(feedInfo) {
         return {title,excerpt,category,date,source:feedInfo.source,image,link,_hasRealImg};
       }).filter(Boolean);
       // OG image enrichment for sources whose RSS feeds don't include article images
-      const NO_IMG_SRCS=new Set(['Planetary Society','Sky & Telescope']);
+      const NO_IMG_SRCS=new Set(['Planetary Society','Sky & Telescope','SpaceNews']);
       if(NO_IMG_SRCS.has(feedInfo.source)){
         await Promise.allSettled(
           articlesList.filter(a=>!a._hasRealImg).map(async a=>{
