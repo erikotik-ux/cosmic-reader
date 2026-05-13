@@ -7,6 +7,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Pre-paint: tag <html> so body stays hidden until intro completes (no FOUC) -->
+  <script>
+    (function() {
+      try {
+        var played = sessionStorage.getItem('cr_intro_played_v1') === '1';
+        var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!played && !reduced) {
+          document.documentElement.classList.add('cr-intro-pending');
+        }
+      } catch(e) {}
+    })();
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { overflow-x: hidden; overscroll-behavior-x: none; }
@@ -32,6 +44,45 @@
       color: var(--on-surface);
       font-family: 'Space Grotesk', sans-serif;
       overflow-x: hidden;
+    }
+
+    /* ── Intro video overlay (plays once on first load) ── */
+    .cr-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #0d1515;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+      will-change: opacity;
+    }
+    .cr-intro.is-fading { opacity: 0; }
+    .cr-intro.is-hidden { display: none !important; }
+    .cr-intro video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      background: #0d1515;
+    }
+    /* Hide page until intro completes — prevents flash of unstyled content */
+    html.cr-intro-pending body { opacity: 0; pointer-events: none; }
+    html.cr-intro-pending body.cr-intro-done {
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.65s ease;
+    }
+    /* Prevent scroll while intro plays */
+    html.cr-intro-pending,
+    html.cr-intro-pending body { overflow: hidden !important; height: 100%; }
+    /* Reduced-motion: skip intro entirely */
+    @media (prefers-reduced-motion: reduce) {
+      .cr-intro { display: none !important; }
+      html.cr-intro-pending body { opacity: 1 !important; }
     }
 
     /* ── Starfield canvas ── */
@@ -925,6 +976,13 @@
 </head>
 <body>
 
+<!-- ── Intro animation overlay (plays once per tab session) ── -->
+<div class="cr-intro" id="cr-intro" aria-hidden="true">
+  <video id="cr-intro-video" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true">
+    <source src="assets/cosmic-reader-intro.mp4" type="video/mp4">
+  </video>
+</div>
+
 <!-- Star canvas -->
 <canvas id="home-stars" aria-hidden="true"></canvas>
 
@@ -1398,6 +1456,105 @@
       } catch(e) { /* try next feed */ }
     }
   })();
+</script>
+
+<!-- ── Intro animation controller ── -->
+<script>
+(function() {
+  var INTRO_KEY = 'cr_intro_played_v1';
+  var FADE_LEAD_MS = 450; // start crossfade this long before video ends
+  var FADE_DUR_MS  = 700; // matches CSS transitions
+  var SAFETY_MS    = 6000; // hard cutoff if video never plays
+
+  var html  = document.documentElement;
+  var intro = document.getElementById('cr-intro');
+  var video = document.getElementById('cr-intro-video');
+  var body  = document.body;
+  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ended = false;
+
+  function markDone() {
+    try { sessionStorage.setItem(INTRO_KEY, '1'); } catch(e) {}
+  }
+
+  function revealBody() {
+    body.classList.add('cr-intro-done');
+  }
+
+  function hideIntro() {
+    if (!intro) return;
+    intro.classList.add('is-fading');
+    setTimeout(function() {
+      intro.classList.add('is-hidden');
+      html.classList.remove('cr-intro-pending');
+    }, FADE_DUR_MS);
+  }
+
+  function endIntro() {
+    if (ended) return;
+    ended = true;
+    revealBody();
+    hideIntro();
+    markDone();
+  }
+
+  function skipIntro() {
+    if (ended) return;
+    ended = true;
+    revealBody();
+    if (intro) {
+      intro.classList.add('is-hidden');
+    }
+    html.classList.remove('cr-intro-pending');
+    markDone();
+  }
+
+  // Already played this tab session, or reduced-motion preference → skip
+  var played = false;
+  try { played = sessionStorage.getItem(INTRO_KEY) === '1'; } catch(e) {}
+  if (played || prefersReduced || !video || !intro) {
+    skipIntro();
+    return;
+  }
+
+  // Crossfade slightly before video ends so the live logo appears behind seamlessly
+  video.addEventListener('timeupdate', function() {
+    if (!ended && video.duration && isFinite(video.duration)) {
+      if (video.currentTime >= video.duration - (FADE_LEAD_MS / 1000)) {
+        endIntro();
+      }
+    }
+  });
+  video.addEventListener('ended',  endIntro);
+  video.addEventListener('error',  skipIntro);
+  video.addEventListener('stalled', function() {
+    if (video.readyState < 2) skipIntro();
+  });
+
+  // Safety timeout in case video stalls
+  setTimeout(function() {
+    if (!ended && (video.readyState < 2 || video.paused)) {
+      skipIntro();
+    }
+  }, SAFETY_MS);
+
+  // Kick off playback (some browsers need an explicit call after metadata loads)
+  function startPlayback() {
+    var p = video.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(function() {
+        // Autoplay blocked — skip rather than freeze on a black screen
+        skipIntro();
+      });
+    }
+  }
+  if (video.readyState >= 2) {
+    startPlayback();
+  } else {
+    video.addEventListener('loadeddata', startPlayback, { once: true });
+    video.addEventListener('canplay',    startPlayback, { once: true });
+  }
+})();
 </script>
 </body>
 </html>
