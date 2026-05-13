@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Privacy Protocol — Cosmic Reader</title>
+<meta name="description" content="How Cosmic Reader handles your data, cookies, and account information." />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="icon" href="assets/cr-logo-new.svg" type="image/svg+xml"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { overscroll-behavior-x: none; }
+  body {
+    background: #0d1515; color: #dce4e5;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    min-height: 100vh; min-height: 100dvh;
+    overflow-x: hidden; overscroll-behavior-x: none;
+    line-height: 1.6;
+  }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+  #star-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; animation: star-breathe 10s ease-in-out infinite; }
+  @keyframes star-breathe { 0%,100%{opacity:0.55}50%{opacity:0.9} }
+
+  /* Top bar */
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem; gap: 1rem;
+    background: rgba(8,15,16,0.7); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,240,255,0.08);
+  }
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+  .back-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: rgba(219,252,255,0.5); text-decoration: none;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    border: 1px solid rgba(219,252,255,0.1); padding: 0.4rem 0.9rem; border-radius: 2rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .back-btn:hover { color: #00f0ff; border-color: rgba(0,240,255,0.3); }
+  .nav-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+  .nav-brand img { width: 28px; height: 28px; filter: drop-shadow(0 0 5px rgba(0,240,255,0.4)); }
+  .nav-brand-text { line-height: 1; font-family: 'Exo 2', 'Space Grotesk', sans-serif; }
+  .nav-brand-text span { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; }
+  .nav-brand-text span:first-child { color: #00f0ff; }
+  .nav-brand-text span:last-child { color: rgba(219,252,255,0.5); }
+  .btn-enter {
+    background: transparent; border: 1px solid #00f0ff; color: #00f0ff;
+    padding: 0.45rem 1.2rem; font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; display: inline-block; border-radius: 2px;
+    transition: background 0.2s, box-shadow 0.2s; white-space: nowrap;
+  }
+  .btn-enter:hover { background: rgba(0,240,255,0.08); box-shadow: 0 0 18px rgba(0,240,255,0.2); }
+  @media (max-width: 600px) {
+    .top-bar { padding: 0.75rem 1rem; }
+    .nav-left { gap: 0; }
+    .back-btn { padding: 0.35rem 0.6rem; font-size: 0.6rem; }
+    .nav-brand { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .btn-enter { display: none; }
+  }
+
+  /* Layout */
+  main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
+
+  .page-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,240,255,0.08); }
+  .page-header .eyebrow {
+    display: inline-block;
+    font-size: 0.7rem; letter-spacing: 0.32em; text-transform: uppercase;
+    color: #00f0ff; opacity: 0.85;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid rgba(0,240,255,0.25);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 700; letter-spacing: 0.04em;
+    color: #dbfcff;
+    text-shadow: 0 0 22px rgba(0,240,255,0.25);
+    margin-bottom: 0.85rem;
+    line-height: 1.05;
+  }
+  .page-header .lede {
+    font-size: 1rem; color: rgba(219,252,255,0.55); letter-spacing: 0.02em;
+    max-width: 560px;
+  }
+  .page-meta { font-size: 0.7rem; color: rgba(219,252,255,0.35); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 1.25rem; }
+
+  section.chapter { margin-bottom: 2.75rem; }
+  section.chapter h2 {
+    font-size: 0.75rem; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #00f0ff; opacity: 0.75;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  section.chapter h2::before { content: ''; display: inline-block; width: 14px; height: 1px; background: #00f0ff; opacity: 0.6; }
+  section.chapter h3 {
+    font-size: 1.1rem; font-weight: 600; color: #dbfcff;
+    letter-spacing: 0.02em; margin-bottom: 0.75rem;
+  }
+  section.chapter p { color: rgba(219,252,255,0.7); margin-bottom: 0.9rem; font-size: 0.95rem; }
+  section.chapter ul { margin: 0.5rem 0 1rem 1.25rem; }
+  section.chapter li { color: rgba(219,252,255,0.7); margin-bottom: 0.45rem; font-size: 0.95rem; }
+  section.chapter a { color: #00f0ff; text-decoration: none; border-bottom: 1px solid rgba(0,240,255,0.3); transition: border-color 0.15s; }
+  section.chapter a:hover { border-bottom-color: #00f0ff; }
+
+  /* Footer */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid rgba(0,240,255,0.08);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .footer-brand { font-size: 0.7rem; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(0,240,255,0.6); margin-bottom: 1rem; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; list-style: none; margin-bottom: 1rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(219,252,255,0.4); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: #00f0ff; }
+  .footer-copy { font-size: 0.7rem; color: rgba(219,252,255,0.25); letter-spacing: 0.12em; }
+</style>
+</head>
+<body>
+
+<canvas id="star-canvas" aria-hidden="true"></canvas>
+
+<header class="top-bar">
+  <div class="nav-left">
+    <a href="home.html" class="back-btn">
+      <span class="material-symbols-outlined" style="font-size:14px">arrow_back</span>
+      Home
+    </a>
+    <a href="home.html" class="nav-brand">
+      <img src="assets/cr-logo-new.svg" alt="Cosmic Reader"/>
+      <div class="nav-brand-text"><span>Cosmic</span><span>Reader</span></div>
+    </a>
+  </div>
+  <a href="app.html" class="btn-enter">Enter Terminal</a>
+</header>
+
+<main>
+  <div class="page-header">
+    <span class="eyebrow">Policy Channel</span>
+    <h1>Privacy Protocol</h1>
+    <p class="lede">A plain-English summary of what data Cosmic Reader collects, why it exists, and how to remove it.</p>
+    <p class="page-meta">Last calibrated · May 2026</p>
+  </div>
+
+  <section class="chapter">
+    <h2>01 — What we keep</h2>
+    <h3>Account credentials</h3>
+    <p>If you sign up with email, GitHub, or X, we store the email address and provider ID returned by Supabase (our auth backend). No passwords ever touch our servers — third-party providers handle that.</p>
+    <h3>Saved articles &amp; preferences</h3>
+    <p>When you save an article, follow a category, or change a setting, we persist those choices against your account so the app behaves consistently across devices.</p>
+    <h3>Anonymous analytics</h3>
+    <p>We log aggregate page views and feature interactions so we know which sections of the cosmos people actually visit. No personal data is attached to these events.</p>
+  </section>
+
+  <section class="chapter">
+    <h2>02 — What we don't keep</h2>
+    <ul>
+      <li>We do not sell or rent your data to advertisers, brokers, or third parties.</li>
+      <li>We do not build cross-site behavioral profiles.</li>
+      <li>We do not run third-party ad networks or tracking pixels.</li>
+      <li>We do not store the content of articles you read — only that you read them, if you saved them.</li>
+    </ul>
+  </section>
+
+  <section class="chapter">
+    <h2>03 — Cookies</h2>
+    <p>Cosmic Reader sets one essential cookie used by Supabase to keep you signed in. We may set a short-lived session cookie to remember your read state across page reloads. We do not set advertising cookies.</p>
+  </section>
+
+  <section class="chapter">
+    <h2>04 — Third parties we rely on</h2>
+    <ul>
+      <li><strong>Supabase</strong> — authentication and database hosting.</li>
+      <li><strong>Vercel</strong> — site hosting and serverless functions.</li>
+      <li><strong>Google Fonts</strong> — typography. Hits Google directly when you load a page.</li>
+      <li><strong>wsrv.nl</strong> — an image proxy that caches article thumbnails so they load consistently.</li>
+      <li><strong>RSS publishers</strong> — when you click an article you leave this site and land on the publisher's domain, subject to their privacy policy.</li>
+    </ul>
+  </section>
+
+  <section class="chapter">
+    <h2>05 — Removing your data</h2>
+    <p>To delete your account and everything we have on it, sign in and use the "Delete Account" option in your settings — or email <a href="mailto:hello@cosmicreader.app">hello@cosmicreader.app</a>. We'll confirm and wipe the record within seven days.</p>
+  </section>
+
+  <section class="chapter">
+    <h2>06 — Contact</h2>
+    <p>Questions, concerns, or vulnerability disclosures: <a href="mailto:hello@cosmicreader.app">hello@cosmicreader.app</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-brand">Cosmic Reader Terminal</div>
+  <ul class="footer-links">
+    <li><a href="privacy.html">Privacy Protocol</a></li>
+    <li><a href="about.html">Signal Frequency</a></li>
+    <li><a href="terms.html">Terminal Terms</a></li>
+  </ul>
+  <p class="footer-copy">© 2126 Cosmic Reader Terminal. All rights reserved.</p>
+</footer>
+
+<script>
+  // Star canvas
+  (function(){
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    function draw(){
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      const total = Math.floor((canvas.width*canvas.height)/2800);
+      for(let i=0;i<total;i++){
+        const x=Math.random()*canvas.width, y=Math.random()*canvas.height;
+        const r=Math.random()*1.1, opacity=Math.random()*0.55+0.1;
+        const isCyan=Math.random()<0.12;
+        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.fillStyle=isCyan?`rgba(180,240,255,${opacity})`:`rgba(255,255,255,${opacity})`;
+        ctx.fill();
+      }
+    }
+    draw(); window.addEventListener('resize',draw);
+  })();
+</script>
+</body>
+</html>

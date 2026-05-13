@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Signal Frequency — Cosmic Reader</title>
+<meta name="description" content="About Cosmic Reader — the feeds we pull, the categories we route into, and how the terminal works." />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="icon" href="assets/cr-logo-new.svg" type="image/svg+xml"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { overscroll-behavior-x: none; }
+  body {
+    background: #0d1515; color: #dce4e5;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    min-height: 100vh; min-height: 100dvh;
+    overflow-x: hidden; overscroll-behavior-x: none;
+    line-height: 1.6;
+  }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+  #star-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; animation: star-breathe 10s ease-in-out infinite; }
+  @keyframes star-breathe { 0%,100%{opacity:0.55}50%{opacity:0.9} }
+
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem; gap: 1rem;
+    background: rgba(8,15,16,0.7); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,240,255,0.08);
+  }
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+  .back-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: rgba(219,252,255,0.5); text-decoration: none;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    border: 1px solid rgba(219,252,255,0.1); padding: 0.4rem 0.9rem; border-radius: 2rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .back-btn:hover { color: #00f0ff; border-color: rgba(0,240,255,0.3); }
+  .nav-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+  .nav-brand img { width: 28px; height: 28px; filter: drop-shadow(0 0 5px rgba(0,240,255,0.4)); }
+  .nav-brand-text { line-height: 1; font-family: 'Exo 2', 'Space Grotesk', sans-serif; }
+  .nav-brand-text span { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; }
+  .nav-brand-text span:first-child { color: #00f0ff; }
+  .nav-brand-text span:last-child { color: rgba(219,252,255,0.5); }
+  .btn-enter {
+    background: transparent; border: 1px solid #00f0ff; color: #00f0ff;
+    padding: 0.45rem 1.2rem; font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; display: inline-block; border-radius: 2px;
+    transition: background 0.2s, box-shadow 0.2s; white-space: nowrap;
+  }
+  .btn-enter:hover { background: rgba(0,240,255,0.08); box-shadow: 0 0 18px rgba(0,240,255,0.2); }
+  @media (max-width: 600px) {
+    .top-bar { padding: 0.75rem 1rem; }
+    .nav-left { gap: 0; }
+    .back-btn { padding: 0.35rem 0.6rem; font-size: 0.6rem; }
+    .nav-brand { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .btn-enter { display: none; }
+  }
+
+  main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
+
+  .page-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,240,255,0.08); }
+  .page-header .eyebrow {
+    display: inline-block;
+    font-size: 0.7rem; letter-spacing: 0.32em; text-transform: uppercase;
+    color: #00f0ff; opacity: 0.85;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid rgba(0,240,255,0.25);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 700; letter-spacing: 0.04em;
+    color: #dbfcff;
+    text-shadow: 0 0 22px rgba(0,240,255,0.25);
+    margin-bottom: 0.85rem;
+    line-height: 1.05;
+  }
+  .page-header .lede {
+    font-size: 1.05rem; color: rgba(219,252,255,0.6); letter-spacing: 0.02em;
+    max-width: 640px;
+  }
+
+  /* Stats strip */
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem; margin-bottom: 3.5rem;
+  }
+  .stat {
+    border: 1px solid rgba(0,240,255,0.12);
+    background: rgba(0,240,255,0.025);
+    padding: 1.25rem 1.4rem;
+    border-radius: 0.5rem;
+  }
+  .stat .num { font-size: 2rem; font-weight: 700; color: #00f0ff; letter-spacing: 0.02em; line-height: 1; margin-bottom: 0.5rem; }
+  .stat .lbl { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(219,252,255,0.55); }
+
+  section.chapter { margin-bottom: 3rem; }
+  section.chapter h2 {
+    font-size: 0.75rem; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #00f0ff; opacity: 0.75;
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  section.chapter h2::before { content: ''; display: inline-block; width: 14px; height: 1px; background: #00f0ff; opacity: 0.6; }
+  section.chapter h3 {
+    font-size: 1.5rem; font-weight: 600; color: #dbfcff;
+    letter-spacing: 0.02em; margin-bottom: 0.75rem;
+  }
+  section.chapter p { color: rgba(219,252,255,0.7); margin-bottom: 0.9rem; font-size: 0.98rem; max-width: 680px; }
+  section.chapter a { color: #00f0ff; text-decoration: none; border-bottom: 1px solid rgba(0,240,255,0.3); transition: border-color 0.15s; }
+  section.chapter a:hover { border-bottom-color: #00f0ff; }
+
+  /* Feed sources grid */
+  .feed-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.85rem;
+  }
+  .feed-card {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    padding: 1.15rem 1.25rem;
+    border: 1px solid rgba(0,240,255,0.12);
+    background: rgba(26,30,30,0.5);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .feed-card:hover {
+    background: rgba(26,30,30,0.85);
+    border-color: rgba(0,240,255,0.35);
+    transform: translateY(-1px);
+  }
+  .feed-card .feed-name {
+    color: #dbfcff;
+    font-weight: 600; font-size: 1rem; letter-spacing: 0.01em;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .feed-card .feed-host {
+    color: rgba(219,252,255,0.4);
+    font-size: 0.72rem; letter-spacing: 0.08em;
+  }
+  .feed-card .feed-icon { color: #00f0ff; opacity: 0.7; font-size: 14px; }
+
+  /* Category routing list */
+  .cat-routing { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; }
+  .cat-item {
+    padding: 0.95rem 1.1rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.025);
+    border-radius: 0.5rem;
+  }
+  .cat-item .cat-name {
+    font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .cat-item .cat-blurb { color: rgba(219,252,255,0.55); font-size: 0.82rem; }
+
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid rgba(0,240,255,0.08);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .footer-brand { font-size: 0.7rem; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(0,240,255,0.6); margin-bottom: 1rem; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; list-style: none; margin-bottom: 1rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(219,252,255,0.4); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: #00f0ff; }
+  .footer-copy { font-size: 0.7rem; color: rgba(219,252,255,0.25); letter-spacing: 0.12em; }
+</style>
+</head>
+<body>
+
+<canvas id="star-canvas" aria-hidden="true"></canvas>
+
+<header class="top-bar">
+  <div class="nav-left">
+    <a href="home.html" class="back-btn">
+      <span class="material-symbols-outlined" style="font-size:14px">arrow_back</span>
+      Home
+    </a>
+    <a href="home.html" class="nav-brand">
+      <img src="assets/cr-logo-new.svg" alt="Cosmic Reader"/>
+      <div class="nav-brand-text"><span>Cosmic</span><span>Reader</span></div>
+    </a>
+  </div>
+  <a href="app.html" class="btn-enter">Enter Terminal</a>
+</header>
+
+<main>
+  <div class="page-header">
+    <span class="eyebrow">Mission Briefing</span>
+    <h1>Signal Frequency</h1>
+    <p class="lede">Cosmic Reader is a unified terminal for deep-space news — pulling live signals from the best independent space publishers and routing them into five intuitive categories. No ads, no clutter, no algorithm.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="num">8</div><div class="lbl">Active Sources</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">Signal Categories</div></div>
+    <div class="stat"><div class="num">8m</div><div class="lbl">Refresh Cache</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">Trackers / Ads</div></div>
+  </div>
+
+  <section class="chapter">
+    <h2>01 — How the terminal works</h2>
+    <p>Every time you open the app, Cosmic Reader pulls fresh RSS feeds from a curated list of space-news publishers, normalizes the article metadata, classifies each headline into one of five categories using a keyword router, and presents the merged result in the galaxy map and transmissions feed.</p>
+    <p>Articles open at their original source — Cosmic Reader is a reading layer, not a mirror. Publishers keep their traffic, you get a unified inbox.</p>
+  </section>
+
+  <section class="chapter">
+    <h2>02 — Active source feeds</h2>
+    <p>The terminal is currently tracking these publishers in real time. Click any card to open the publisher's site.</p>
+    <div class="feed-grid" id="feed-grid"></div>
+  </section>
+
+  <section class="chapter">
+    <h2>03 — Signal categories</h2>
+    <p>Every article is auto-routed to one of five categories based on title and tags. Categories drive the galaxy map planets and the filter chips in the transmissions view.</p>
+    <div class="cat-routing">
+      <div class="cat-item">
+        <div class="cat-name" style="color:#00f0ff">Planets &amp; Exoplanets</div>
+        <div class="cat-blurb">Mars, Jupiter, Saturn, asteroids, solar-system science.</div>
+      </div>
+      <div class="cat-item">
+        <div class="cat-name" style="color:#e8e3f5">Physics &amp; Cosmos</div>
+        <div class="cat-blurb">Black holes, dark matter, gravitational waves, telescopes.</div>
+      </div>
+      <div class="cat-item">
+        <div class="cat-name" style="color:#dbfcff">Moon</div>
+        <div class="cat-blurb">Artemis, lunar geology, south-pole missions, craters.</div>
+      </div>
+      <div class="cat-item">
+        <div class="cat-name" style="color:#ffb98a">Missions</div>
+        <div class="cat-blurb">Rocket launches, crewed flight, probes, SLS, Starship.</div>
+      </div>
+      <div class="cat-item">
+        <div class="cat-name" style="color:#7dd3fc">AI &amp; Tech</div>
+        <div class="cat-blurb">Computing, AI in research, spacecraft autonomy, cybersec.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter">
+    <h2>04 — Editorial stance</h2>
+    <p>We don't pick winners. The feed shows what publishers publish, in publication order, with one click-through to the source. We don't insert sponsored content, don't shadow-rank stories, and don't run a "trending" algorithm beyond a chronological cut.</p>
+    <p>If we ever change that, we'll say so on this page first.</p>
+  </section>
+
+  <section class="chapter">
+    <h2>05 — Suggest a feed</h2>
+    <p>Know a space publisher we should be tracking? Send us the RSS URL: <a href="mailto:feeds@cosmicreader.app">feeds@cosmicreader.app</a>. We review every suggestion and add high-quality outlets within a week.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-brand">Cosmic Reader Terminal</div>
+  <ul class="footer-links">
+    <li><a href="privacy.html">Privacy Protocol</a></li>
+    <li><a href="about.html">Signal Frequency</a></li>
+    <li><a href="terms.html">Terminal Terms</a></li>
+  </ul>
+  <p class="footer-copy">© 2126 Cosmic Reader Terminal. All rights reserved.</p>
+</footer>
+
+<script>
+  // Active feed sources — kept in sync with transmissions.html / app.html
+  var FEEDS = [
+    { name: 'Space.com',         feed: 'https://www.space.com/feeds/all',                site: 'https://www.space.com' },
+    { name: 'Universe Today',    feed: 'https://www.universetoday.com/feed/',            site: 'https://www.universetoday.com' },
+    { name: 'SpaceNews',         feed: 'https://spacenews.com/feed/',                    site: 'https://spacenews.com' },
+    { name: 'NASA',              feed: 'https://www.nasa.gov/feed/',                     site: 'https://www.nasa.gov' },
+    { name: 'Phys.org',          feed: 'https://phys.org/rss-feed/space-news/',          site: 'https://phys.org/space-news/' },
+    { name: 'Ars Technica',      feed: 'https://feeds.arstechnica.com/arstechnica/index', site: 'https://arstechnica.com' },
+    { name: 'Teslarati',         feed: 'https://www.teslarati.com/feed/',                site: 'https://www.teslarati.com' },
+    { name: 'Planetary Society', feed: 'https://www.planetary.org/rss/articles',         site: 'https://www.planetary.org' }
+  ];
+
+  (function() {
+    var grid = document.getElementById('feed-grid');
+    if (!grid) return;
+    grid.innerHTML = FEEDS.map(function(f) {
+      var host = (function(){ try { return new URL(f.site).hostname.replace(/^www\./, ''); } catch(e) { return ''; }})();
+      return '<a class="feed-card" href="' + f.site + '" target="_blank" rel="noopener noreferrer">' +
+        '<div class="feed-name"><span class="material-symbols-outlined feed-icon">satellite_alt</span>' + f.name + '</div>' +
+        '<div class="feed-host">' + host + '</div>' +
+      '</a>';
+    }).join('');
+  })();
+
+  // Star canvas
+  (function(){
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    function draw(){
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      const total = Math.floor((canvas.width*canvas.height)/2800);
+      for(let i=0;i<total;i++){
+        const x=Math.random()*canvas.width, y=Math.random()*canvas.height;
+        const r=Math.random()*1.1, opacity=Math.random()*0.55+0.1;
+        const isCyan=Math.random()<0.12;
+        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.fillStyle=isCyan?`rgba(180,240,255,${opacity})`:`rgba(255,255,255,${opacity})`;
+        ctx.fill();
+      }
+    }
+    draw(); window.addEventListener('resize',draw);
+  })();
+</script>
+</body>
+</html>
