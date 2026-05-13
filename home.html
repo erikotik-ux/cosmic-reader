@@ -11,9 +11,8 @@
   <script>
     (function() {
       try {
-        var played = sessionStorage.getItem('cr_intro_played_v1') === '1';
         var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (!played && !reduced) {
+        if (!reduced) {
           document.documentElement.classList.add('cr-intro-pending');
         }
       } catch(e) {}
@@ -1463,7 +1462,6 @@
 <!-- ── Intro animation controller ── -->
 <script>
 (function() {
-  var INTRO_KEY = 'cr_intro_played_v1';
   var FADE_LEAD_MS = 450; // start crossfade this long before video ends
   var FADE_DUR_MS  = 700; // matches CSS transitions
   var SAFETY_MS    = 6000; // hard cutoff if video never plays
@@ -1474,10 +1472,6 @@
   var body  = document.body;
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ended = false;
-
-  function markDone() {
-    try { sessionStorage.setItem(INTRO_KEY, '1'); } catch(e) {}
-  }
 
   function revealBody() {
     body.classList.add('cr-intro-done');
@@ -1497,7 +1491,6 @@
     ended = true;
     revealBody();
     hideIntro();
-    markDone();
   }
 
   function skipIntro() {
@@ -1508,13 +1501,10 @@
       intro.classList.add('is-hidden');
     }
     html.classList.remove('cr-intro-pending');
-    markDone();
   }
 
-  // Already played this tab session, or reduced-motion preference → skip
-  var played = false;
-  try { played = sessionStorage.getItem(INTRO_KEY) === '1'; } catch(e) {}
-  if (played || prefersReduced || !video || !intro) {
+  // Reduced-motion preference or missing assets → skip
+  if (prefersReduced || !video || !intro) {
     skipIntro();
     return;
   }
