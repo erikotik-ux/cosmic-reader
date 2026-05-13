@@ -55,10 +55,10 @@
     html.cr-intro-pending,
     html.cr-intro-pending body { overflow: hidden !important; }
 
-    /* Hide all page chrome while the intro plays */
+    /* Hide all page chrome while the intro plays — but KEEP the starfield
+       and the hero bloom visible so the animation plays over the cosmic
+       backdrop instead of a flat dark rectangle. */
     html.cr-intro-pending .top-bar,
-    html.cr-intro-pending #home-stars,
-    html.cr-intro-pending .hero-bloom,
     html.cr-intro-pending .hero-eyebrow,
     html.cr-intro-pending .hero-title,
     html.cr-intro-pending .hero-subtitle,
@@ -106,8 +106,6 @@
 
     /* After the intro completes the body gets cr-intro-done. Chrome fades back in. */
     html.cr-intro-pending body.cr-intro-done .top-bar,
-    html.cr-intro-pending body.cr-intro-done #home-stars,
-    html.cr-intro-pending body.cr-intro-done .hero-bloom,
     html.cr-intro-pending body.cr-intro-done .hero-eyebrow,
     html.cr-intro-pending body.cr-intro-done .hero-title,
     html.cr-intro-pending body.cr-intro-done .hero-subtitle,
@@ -151,8 +149,6 @@
       html.cr-intro-pending .cr-arc-r,
       html.cr-intro-pending .cr-letterform { animation: none !important; opacity: 1 !important; transform: none !important; }
       html.cr-intro-pending .top-bar,
-      html.cr-intro-pending #home-stars,
-      html.cr-intro-pending .hero-bloom,
       html.cr-intro-pending .hero-eyebrow,
       html.cr-intro-pending .hero-title,
       html.cr-intro-pending .hero-subtitle,
