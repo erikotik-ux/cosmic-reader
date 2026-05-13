@@ -68,7 +68,30 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      background: #0d1515;
+      background: transparent;
+      position: relative;
+      z-index: 2;
+    }
+    /* Logo placeholder behind the video — visible only while the video buffers */
+    .cr-intro-placeholder {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(180px, 32vmin, 320px);
+      height: auto;
+      opacity: 0.95;
+      filter: drop-shadow(0 0 18px rgba(0,240,255,0.35));
+      animation: cr-intro-placeholder-pulse 1.6s ease-in-out infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .cr-intro.is-video-ready .cr-intro-placeholder {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    @keyframes cr-intro-placeholder-pulse {
+      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 14px rgba(0,240,255,0.30)); }
+      50%       { opacity: 1.00; filter: drop-shadow(0 0 22px rgba(0,240,255,0.55)); }
     }
     /* Hide page until intro completes — prevents flash of unstyled content */
     html.cr-intro-pending body { opacity: 0; pointer-events: none; }
@@ -979,11 +1002,20 @@
 
 <!-- ── Intro animation overlay (plays once on every page load) ── -->
 <div class="cr-intro" id="cr-intro" aria-hidden="true">
+  <!-- Static logo placeholder shown while video buffers — keeps screen from being pure black -->
+  <img class="cr-intro-placeholder" src="assets/cr-logo-new.svg" alt="" aria-hidden="true" />
   <video id="cr-intro-video"
          muted
          playsinline
+         autoplay
+         preload="auto"
          disablepictureinpicture
-         aria-hidden="true"></video>
+         aria-hidden="true">
+    <!-- WebM/VP9 first (smaller, opens streaming sooner on supported browsers),
+         then MP4/H.264 fallback for Safari/iOS. -->
+    <source src="assets/cosmic-reader-intro.webm" type="video/webm">
+    <source src="assets/cosmic-reader-intro.mp4"  type="video/mp4">
+  </video>
 </div>
 
 <!-- Star canvas -->
@@ -1464,11 +1496,9 @@
 <!-- ── Intro animation controller ── -->
 <script>
 (function() {
-  var INTRO_SRC    = 'assets/cosmic-reader-intro.mp4';
-  var FADE_LEAD_MS = 450;   // start crossfade this long before video ends
-  var FADE_DUR_MS  = 700;   // matches CSS transitions
-  var FETCH_TIMEOUT_MS = 12000; // hard cap on video download
-  var NEVER_STARTED_MS = 8000;  // after blob is set, if 'playing' never fires
+  var FADE_LEAD_MS = 450;       // start crossfade this long before video ends
+  var FADE_DUR_MS  = 700;       // matches CSS transitions
+  var NEVER_STARTED_MS = 20000; // fail-open after 20s if video literally never plays
 
   var html  = document.documentElement;
   var intro = document.getElementById('cr-intro');
@@ -1477,7 +1507,6 @@
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ended = false;
   var hasStartedPlaying = false;
-  var blobUrl = null;
 
   function revealBody() { body.classList.add('cr-intro-done'); }
 
@@ -1487,8 +1516,6 @@
     setTimeout(function() {
       intro.classList.add('is-hidden');
       html.classList.remove('cr-intro-pending');
-      // Free blob memory once the overlay is gone for good
-      if (blobUrl) { try { URL.revokeObjectURL(blobUrl); } catch(e) {} }
     }, FADE_DUR_MS);
   }
 
@@ -1505,7 +1532,6 @@
     revealBody();
     if (intro) intro.classList.add('is-hidden');
     html.classList.remove('cr-intro-pending');
-    if (blobUrl) { try { URL.revokeObjectURL(blobUrl); } catch(e) {} }
   }
 
   if (prefersReduced || !video || !intro) {
@@ -1513,52 +1539,51 @@
     return;
   }
 
-  // Wire video events
-  video.addEventListener('playing', function() { hasStartedPlaying = true; });
+  // Hide the placeholder as soon as the video has data to show — first frame is ready
+  video.addEventListener('loadeddata', function() {
+    intro.classList.add('is-video-ready');
+  });
+
+  // The authoritative "video is actually rendering frames" signal
+  video.addEventListener('playing', function() {
+    hasStartedPlaying = true;
+    intro.classList.add('is-video-ready');
+  });
+
+  // Crossfade just before the end so the live logo emerges seamlessly
   video.addEventListener('timeupdate', function() {
     if (ended || !hasStartedPlaying) return;
     var dur = video.duration;
     if (!dur || !isFinite(dur) || dur <= 0) return;
     if (video.currentTime >= dur - (FADE_LEAD_MS / 1000)) endIntro();
   });
+
+  // Backup end trigger
   video.addEventListener('ended', endIntro);
-  video.addEventListener('error', skipIntro);
 
-  // Fetch the video as a blob so playback bypasses any HTTP-streaming
-  // quirks on the video element side. This is reliable because:
-  // 1. fetch is a known-working code path on this origin.
-  // 2. createObjectURL produces a local blob: URL the video element
-  //    can play instantly with no further network involvement.
-  var controller = (window.AbortController) ? new AbortController() : null;
-  var fetchOpts  = controller ? { signal: controller.signal } : {};
-  var fetchTimer = setTimeout(function() {
-    if (controller) { try { controller.abort(); } catch(e) {} }
-    if (!ended) skipIntro();
-  }, FETCH_TIMEOUT_MS);
+  // Hard codec/decoding error → skip (rare; happens if every source fails)
+  video.addEventListener('error', function() {
+    // Only fail if every source has been exhausted
+    if (video.networkState === 3 /* NO_SOURCE */) skipIntro();
+  });
 
-  fetch(INTRO_SRC, fetchOpts)
-    .then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.blob();
-    })
-    .then(function(blob) {
-      clearTimeout(fetchTimer);
-      if (ended) return;
-      blobUrl = URL.createObjectURL(blob);
-      video.src = blobUrl;
-      // Failsafe: if 'playing' never fires after src is set, reveal the page
-      setTimeout(function() {
-        if (!ended && !hasStartedPlaying) skipIntro();
-      }, NEVER_STARTED_MS);
+  // Belt-and-suspenders: also call play() since some browsers want it explicit
+  function tryPlay() {
+    try {
       var p = video.play();
-      if (p && typeof p.catch === 'function') {
-        p.catch(function() { /* the NEVER_STARTED_MS guard will fire */ });
-      }
-    })
-    .catch(function() {
-      clearTimeout(fetchTimer);
-      if (!ended) skipIntro();
-    });
+      if (p && typeof p.catch === 'function') { p.catch(function() {}); }
+    } catch(e) {}
+  }
+  if (video.readyState >= 2) tryPlay();
+  else {
+    video.addEventListener('loadeddata', tryPlay, { once: true });
+    video.addEventListener('canplay',    tryPlay, { once: true });
+  }
+
+  // Fail-open: if video never starts within 20s, reveal page anyway
+  setTimeout(function() {
+    if (!ended && !hasStartedPlaying) skipIntro();
+  }, NEVER_STARTED_MS);
 })();
 </script>
 </body>
