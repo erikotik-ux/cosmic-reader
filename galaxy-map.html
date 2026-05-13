@@ -91,6 +91,9 @@ if (window.innerWidth <= 768) {
   .planet-node { cursor: pointer; transition: transform 0.4s ease; }
   .planet-node:hover .planet-sphere { transform: scale(1.08); }
   .planet-sphere { transition: transform 0.4s ease; isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black); }
+  .phys-wrap { transition: transform 0.4s ease; }
+  .planet-node:hover .phys-wrap { transform: scale(1.08); }
+  .planet-node:hover .phys-wrap .planet-sphere { transform: none; }
   /* ── Top bar ── */
   .top-bar {
     position: fixed;
@@ -475,7 +478,7 @@ if (window.innerWidth <= 768) {
 
     <!-- PLANET: Physics & Cosmos (Lower Right) -->
     <div class="planet-node absolute pointer-events-auto" style="top:calc(64% - 104px); left:calc(79% - 104px);" onclick="openCategoryArticle('Physics')">
-      <div class="relative" style="transform-style: preserve-3d;">
+      <div class="relative phys-wrap" style="transform-style: preserve-3d;">
         <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
         <div class="planet-sphere relative w-52 h-52 planet-glow-phys" style="border-radius:50%;">
           <script>(function(){
@@ -1144,7 +1147,7 @@ if (window.innerWidth <= 768) {
 
     <!-- Mobile Planet 5: Physics & Cosmos — right -->
     <div class="planet-node self-end mr-6 pointer-events-auto" onclick="openCategoryArticle('Physics')">
-      <div class="relative" style="transform-style:preserve-3d;">
+      <div class="relative phys-wrap" style="transform-style:preserve-3d;">
         <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
         <div class="planet-sphere relative w-40 h-40 planet-glow-phys" style="border-radius:50%;">
           <script>(function(){
