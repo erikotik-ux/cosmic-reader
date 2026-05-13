@@ -979,7 +979,13 @@
 
 <!-- ── Intro animation overlay (plays once per tab session) ── -->
 <div class="cr-intro" id="cr-intro" aria-hidden="true">
-  <video id="cr-intro-video" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true">
+  <video id="cr-intro-video"
+         muted
+         playsinline
+         autoplay
+         preload="auto"
+         disablepictureinpicture
+         aria-hidden="true">
     <source src="assets/cosmic-reader-intro.mp4" type="video/mp4">
   </video>
 </div>
@@ -1462,9 +1468,12 @@
 <!-- ── Intro animation controller ── -->
 <script>
 (function() {
-  var FADE_LEAD_MS = 450; // start crossfade this long before video ends
-  var FADE_DUR_MS  = 700; // matches CSS transitions
-  var SAFETY_MS    = 6000; // hard cutoff if video never plays
+  var FADE_LEAD_MS = 450;  // start crossfade this long before video ends
+  var FADE_DUR_MS  = 700;  // matches CSS transitions
+  // Only kicks in if the video LITERALLY never starts playing.
+  // We track real playback via the 'playing' event, so this isn't a "video too slow" timer —
+  // it's a "video totally failed to play" timer.
+  var NEVER_STARTED_MS = 15000;
 
   var html  = document.documentElement;
   var intro = document.getElementById('cr-intro');
@@ -1472,6 +1481,7 @@
   var body  = document.body;
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ended = false;
+  var hasStartedPlaying = false;
 
   function revealBody() {
     body.classList.add('cr-intro-done');
@@ -1497,9 +1507,7 @@
     if (ended) return;
     ended = true;
     revealBody();
-    if (intro) {
-      intro.classList.add('is-hidden');
-    }
+    if (intro) intro.classList.add('is-hidden');
     html.classList.remove('cr-intro-pending');
   }
 
@@ -1509,43 +1517,50 @@
     return;
   }
 
-  // Crossfade slightly before video ends so the live logo appears behind seamlessly
+  // Real-playback detection — only this means video is actually rendering frames
+  video.addEventListener('playing', function() {
+    hasStartedPlaying = true;
+  });
+
+  // Crossfade slightly before the video ends (only after it has actually started)
   video.addEventListener('timeupdate', function() {
-    if (!ended && video.duration && isFinite(video.duration)) {
-      if (video.currentTime >= video.duration - (FADE_LEAD_MS / 1000)) {
-        endIntro();
+    if (ended || !hasStartedPlaying) return;
+    var dur = video.duration;
+    if (!dur || !isFinite(dur) || dur <= 0) return;
+    if (video.currentTime >= dur - (FADE_LEAD_MS / 1000)) {
+      endIntro();
+    }
+  });
+
+  // Natural ending as a backup
+  video.addEventListener('ended', endIntro);
+
+  // Hard errors → skip
+  video.addEventListener('error', skipIntro);
+
+  // Best-effort play. Browsers may also autoplay from the attribute,
+  // so this is belt-and-suspenders; we don't skip if it rejects unless
+  // playback never actually starts (handled by the NEVER_STARTED_MS guard).
+  function tryPlay() {
+    try {
+      var p = video.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(function() { /* see NEVER_STARTED_MS fallback */ });
       }
-    }
-  });
-  video.addEventListener('ended',  endIntro);
-  video.addEventListener('error',  skipIntro);
-  video.addEventListener('stalled', function() {
-    if (video.readyState < 2) skipIntro();
-  });
-
-  // Safety timeout in case video stalls
-  setTimeout(function() {
-    if (!ended && (video.readyState < 2 || video.paused)) {
-      skipIntro();
-    }
-  }, SAFETY_MS);
-
-  // Kick off playback (some browsers need an explicit call after metadata loads)
-  function startPlayback() {
-    var p = video.play();
-    if (p && typeof p.catch === 'function') {
-      p.catch(function() {
-        // Autoplay blocked — skip rather than freeze on a black screen
-        skipIntro();
-      });
-    }
+    } catch(e) { /* see NEVER_STARTED_MS fallback */ }
   }
   if (video.readyState >= 2) {
-    startPlayback();
+    tryPlay();
   } else {
-    video.addEventListener('loadeddata', startPlayback, { once: true });
-    video.addEventListener('canplay',    startPlayback, { once: true });
+    video.addEventListener('loadeddata', tryPlay, { once: true });
+    video.addEventListener('canplay',    tryPlay, { once: true });
   }
+
+  // Failsafe: if the 'playing' event has not fired by NEVER_STARTED_MS,
+  // assume video is broken/blocked and reveal the page.
+  setTimeout(function() {
+    if (!ended && !hasStartedPlaying) skipIntro();
+  }, NEVER_STARTED_MS);
 })();
 </script>
 </body>
