@@ -45,68 +45,123 @@
       overflow-x: hidden;
     }
 
-    /* ── Intro video overlay (plays once on first load) ── */
-    /* Hidden by default — only shown when html.cr-intro-pending is set on first visit */
-    .cr-intro { display: none; }
-    html.cr-intro-pending .cr-intro {
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      background: #0d1515;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 1;
-      transition: opacity 0.6s ease;
-      pointer-events: none;
-      will-change: opacity;
-    }
-    .cr-intro.is-fading { opacity: 0; }
-    .cr-intro.is-hidden { display: none !important; }
-    .cr-intro video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      background: transparent;
-      position: relative;
-      z-index: 2;
-    }
-    /* Logo placeholder behind the video — visible only while the video buffers */
-    .cr-intro-placeholder {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: clamp(180px, 32vmin, 320px);
-      height: auto;
-      opacity: 0.95;
-      filter: drop-shadow(0 0 18px rgba(0,240,255,0.35));
-      animation: cr-intro-placeholder-pulse 1.6s ease-in-out infinite;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .cr-intro.is-video-ready .cr-intro-placeholder {
-      opacity: 0;
-      transition: opacity 0.35s ease;
-    }
-    @keyframes cr-intro-placeholder-pulse {
-      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 14px rgba(0,240,255,0.30)); }
-      50%       { opacity: 1.00; filter: drop-shadow(0 0 22px rgba(0,240,255,0.55)); }
-    }
-    /* Hide page until intro completes — prevents flash of unstyled content */
-    html.cr-intro-pending body { opacity: 0; pointer-events: none; }
-    html.cr-intro-pending body.cr-intro-done {
-      opacity: 1;
-      pointer-events: auto;
-      transition: opacity 0.65s ease;
-    }
-    /* Prevent scroll while intro plays */
+    /* ── Pure-CSS cinematic intro: plays on every page load ──
+       The intro re-uses the existing hero-logo-wrap as the stage. During the
+       intro we hide all other page chrome and run staged keyframes on the
+       planet image and the C / R paths of the inline SVG. When done, the
+       chrome fades back in and the existing cr-float / cr-glow / cr-planet-pulse
+       animations seamlessly take over. */
+
     html.cr-intro-pending,
-    html.cr-intro-pending body { overflow: hidden !important; height: 100%; }
-    /* Reduced-motion: skip intro entirely */
+    html.cr-intro-pending body { overflow: hidden !important; }
+
+    /* Hide all page chrome while the intro plays */
+    html.cr-intro-pending .top-bar,
+    html.cr-intro-pending #home-stars,
+    html.cr-intro-pending .hero-bloom,
+    html.cr-intro-pending .hero-eyebrow,
+    html.cr-intro-pending .hero-title,
+    html.cr-intro-pending .hero-subtitle,
+    html.cr-intro-pending .hero-cta-row,
+    html.cr-intro-pending .scroll-hint,
+    html.cr-intro-pending .hero-hud,
+    html.cr-intro-pending .hero-logo-wrap::before,
+    html.cr-intro-pending main,
+    html.cr-intro-pending footer,
+    html.cr-intro-pending section:not(.hero),
+    html.cr-intro-pending #mobile-nav-overlay {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* The hero-logo-wrap is the stage — no float during intro */
+    html.cr-intro-pending .hero-logo-wrap { animation: none !important; }
+
+    /* Planet: dark sphere fades in with a cyan rim glow */
+    html.cr-intro-pending .cr-planet {
+      opacity: 0;
+      animation: cr-intro-planet-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+    }
+
+    /* "C" arc: appears first, slides/scales in subtly */
+    html.cr-intro-pending .cr-arc-c {
+      opacity: 0;
+      transform-origin: 50% 50%;
+      transform: scale(0.94) translateX(-6px);
+      animation: cr-intro-arc-c-in 1.3s cubic-bezier(0.22, 1, 0.36, 1) 1.35s forwards;
+    }
+
+    /* "R" letterform: appears after the C, scales/fades in */
+    html.cr-intro-pending .cr-arc-r {
+      opacity: 0;
+      transform-origin: 50% 50%;
+      transform: scale(0.94) translateX(6px);
+      animation: cr-intro-arc-r-in 1.3s cubic-bezier(0.22, 1, 0.36, 1) 2.25s forwards;
+    }
+
+    /* Whole letterform: a bright cyan glow pulse on completion */
+    html.cr-intro-pending .cr-letterform {
+      animation: cr-intro-glow-pulse 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3.55s forwards;
+    }
+
+    /* After the intro completes the body gets cr-intro-done. Chrome fades back in. */
+    html.cr-intro-pending body.cr-intro-done .top-bar,
+    html.cr-intro-pending body.cr-intro-done #home-stars,
+    html.cr-intro-pending body.cr-intro-done .hero-bloom,
+    html.cr-intro-pending body.cr-intro-done .hero-eyebrow,
+    html.cr-intro-pending body.cr-intro-done .hero-title,
+    html.cr-intro-pending body.cr-intro-done .hero-subtitle,
+    html.cr-intro-pending body.cr-intro-done .hero-cta-row,
+    html.cr-intro-pending body.cr-intro-done .scroll-hint,
+    html.cr-intro-pending body.cr-intro-done .hero-hud,
+    html.cr-intro-pending body.cr-intro-done .hero-logo-wrap::before,
+    html.cr-intro-pending body.cr-intro-done main,
+    html.cr-intro-pending body.cr-intro-done footer,
+    html.cr-intro-pending body.cr-intro-done section:not(.hero) {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transition: opacity 0.7s ease;
+    }
+
+    @keyframes cr-intro-planet-in {
+      0%   { opacity: 0;    transform: scale(0.82); filter: brightness(0.35) blur(5px); }
+      55%  { opacity: 1;    transform: scale(1.03); filter: brightness(1.18) blur(0); }
+      100% { opacity: 0.92; transform: scale(1);    filter: brightness(1) blur(0); }
+    }
+    @keyframes cr-intro-arc-c-in {
+      0%   { opacity: 0;    transform: scale(0.94) translateX(-6px); }
+      60%  { opacity: 1;    transform: scale(1.02) translateX(0); }
+      100% { opacity: 1;    transform: scale(1)    translateX(0); }
+    }
+    @keyframes cr-intro-arc-r-in {
+      0%   { opacity: 0;    transform: scale(0.94) translateX(6px); }
+      60%  { opacity: 1;    transform: scale(1.02) translateX(0); }
+      100% { opacity: 1;    transform: scale(1)    translateX(0); }
+    }
+    @keyframes cr-intro-glow-pulse {
+      0%   { filter: drop-shadow(0 0 0  rgba(0,240,255,0))   drop-shadow(0 0 0  rgba(255,255,255,0)); }
+      45%  { filter: drop-shadow(0 0 28px rgba(0,240,255,0.75)) drop-shadow(0 0 12px rgba(255,255,255,0.55)); }
+      100% { filter: drop-shadow(0 0 6px  rgba(255,255,255,0.25)); }
+    }
+
+    /* Reduced motion: skip the intro entirely */
     @media (prefers-reduced-motion: reduce) {
-      .cr-intro { display: none !important; }
-      html.cr-intro-pending body { opacity: 1 !important; }
+      html.cr-intro-pending .cr-planet,
+      html.cr-intro-pending .cr-arc-c,
+      html.cr-intro-pending .cr-arc-r,
+      html.cr-intro-pending .cr-letterform { animation: none !important; opacity: 1 !important; transform: none !important; }
+      html.cr-intro-pending .top-bar,
+      html.cr-intro-pending #home-stars,
+      html.cr-intro-pending .hero-bloom,
+      html.cr-intro-pending .hero-eyebrow,
+      html.cr-intro-pending .hero-title,
+      html.cr-intro-pending .hero-subtitle,
+      html.cr-intro-pending .hero-cta-row,
+      html.cr-intro-pending .scroll-hint,
+      html.cr-intro-pending .hero-hud,
+      html.cr-intro-pending main,
+      html.cr-intro-pending footer,
+      html.cr-intro-pending section:not(.hero) { opacity: 1 !important; pointer-events: auto !important; }
     }
 
     /* ── Starfield canvas ── */
@@ -298,11 +353,13 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain;
       z-index: 2;
       filter: drop-shadow(0 0 6px rgba(255,255,255,0.25));
       animation: cr-glow 5s ease-in-out infinite;
+      display: block;
     }
+    /* When rendered as <img> the contain fit handled aspect; for inline SVG
+       we use the viewBox + preserveAspectRatio (default xMidYMid meet). */
     .cr-logo-mini {
       position: relative;
       width: 36px;
@@ -1000,24 +1057,6 @@
 </head>
 <body>
 
-<!-- ── Intro animation overlay (plays once on every page load) ── -->
-<div class="cr-intro" id="cr-intro" aria-hidden="true">
-  <!-- Static logo placeholder shown while video buffers — keeps screen from being pure black -->
-  <img class="cr-intro-placeholder" src="assets/cr-logo-new.svg" alt="" aria-hidden="true" />
-  <video id="cr-intro-video"
-         muted
-         playsinline
-         autoplay
-         preload="auto"
-         disablepictureinpicture
-         aria-hidden="true">
-    <!-- WebM/VP9 first (smaller, opens streaming sooner on supported browsers),
-         then MP4/H.264 fallback for Safari/iOS. -->
-    <source src="assets/cosmic-reader-intro.webm" type="video/webm">
-    <source src="assets/cosmic-reader-intro.mp4"  type="video/mp4">
-  </video>
-</div>
-
 <!-- Star canvas -->
 <canvas id="home-stars" aria-hidden="true"></canvas>
 
@@ -1068,7 +1107,11 @@
   <!-- Center Logo — CR letterform floating above glowing planet -->
   <div class="hero-logo-wrap">
     <img src="assets/planet.png" alt="" class="cr-planet" />
-    <img src="assets/cr-logo-new.svg" alt="Cosmic Reader" class="cr-letterform" />
+    <!-- Inline SVG so the intro animation can target the C and R independently -->
+    <svg class="cr-letterform" viewBox="0 0 540.3 551.5" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cosmic Reader">
+      <path class="cr-arc-c" fill="#FFFFFF" d="M382,448.1c-30.3,19.5-67.7,35-103.6,36.9c-55.3,3.1-109.6-15.8-151-52.7c-44.2-39.8-67.9-90-71-149.3c-2.9-56.4,16.6-111.6,54.3-153.6c38.1-42,89.6-68.4,146.7-71c42.1-2.1,83.8,8.2,120.1,29.7c2.8,1.7,5.4,3.3,8,4.9c2.5,1.6,0.6,5.3-2.2,4.3C337.5,80.1,284,80.7,239,100.1c-45.6,19.8-81.5,57-99.7,103.3c-17.6,46-16.4,97,3.5,142.1c19.8,45.2,56.8,80.7,102.7,98.7c58.7,19.1,91.3,11.1,135.6-2c2.3-0.7,4.4-1.4,6.3-2.1s3.3,1.9,1.6,3.1C386.6,445,384.2,446.7,382,448.1z"/>
+      <path class="cr-arc-r" fill="#FFFFFF" d="M282.4,147.2c35.9-0.5,72,0.6,107.9,0c15.3-0.2,28.7,0,43.1,6.3c74.5,32.8,70.8,136.6-5.7,165.3c4.8,7.2,12.6,16.8,18,23.8c9.8,12.9,19.5,26,29.1,39.1c3.4,4.6,9.9,11.7,12.1,16.4c-0.2,2.1,0.1,1.1-1.4,3c-4.2,1.4-47.7,0.6-55.7,0.5c-4.4,0-8.7,0-13.1-0.2c-4.1-3.4-11.7-13.7-15.3-18.3L381,356.9l-41.3-53c-7.6-9.7-27.2-32.1-32-42.4c3.3-2.9,21.1-1.9,26.1-1.9h47.3c6,0,12.1,0.1,18.1-0.3c12-0.8,21.8-12,23-23.6c0.8-6.9-1.3-13.9-5.8-19.2c-11.7-13.9-31.6-8.9-47.7-9.6c-14.5-0.6-29.6,0.8-44.1-0.3c-8.5-8-33.8-43.4-43.2-54.9C280.7,150.8,281.7,148.5,282.4,147.2z"/>
+    </svg>
   </div>
 
   <p class="label-caps hero-eyebrow">Signal incoming — deep space intelligence</p>
@@ -1493,97 +1536,34 @@
   })();
 </script>
 
-<!-- ── Intro animation controller ── -->
+<!-- ── Intro animation controller (CSS-only intro: just a timed reveal) ── -->
 <script>
 (function() {
-  var FADE_LEAD_MS = 450;       // start crossfade this long before video ends
-  var FADE_DUR_MS  = 700;       // matches CSS transitions
-  var NEVER_STARTED_MS = 20000; // fail-open after 20s if video literally never plays
+  // Must match the longest CSS animation/delay sum in the .cr-intro-pending block.
+  // Planet starts at 0.15s + 1.6s = 1.75s
+  // C arc   starts at 1.35s + 1.3s = 2.65s
+  // R arc   starts at 2.25s + 1.3s = 3.55s
+  // Glow    starts at 3.55s + 1.1s = 4.65s
+  // Add a small breath after the glow before revealing the chrome.
+  var INTRO_DURATION_MS    = 4700;
+  var CHROME_REVEAL_MS     = 750;   // matches the 0.7s transition on chrome elements
+  var html = document.documentElement;
+  var body = document.body;
 
-  var html  = document.documentElement;
-  var intro = document.getElementById('cr-intro');
-  var video = document.getElementById('cr-intro-video');
-  var body  = document.body;
-  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var ended = false;
-  var hasStartedPlaying = false;
+  // Pre-paint script only adds cr-intro-pending when reduced-motion is OFF.
+  // If the class isn't there we have nothing to do.
+  if (!html.classList.contains('cr-intro-pending')) return;
 
-  function revealBody() { body.classList.add('cr-intro-done'); }
-
-  function hideIntro() {
-    if (!intro) return;
-    intro.classList.add('is-fading');
-    setTimeout(function() {
-      intro.classList.add('is-hidden');
-      html.classList.remove('cr-intro-pending');
-    }, FADE_DUR_MS);
-  }
-
-  function endIntro() {
-    if (ended) return;
-    ended = true;
-    revealBody();
-    hideIntro();
-  }
-
-  function skipIntro() {
-    if (ended) return;
-    ended = true;
-    revealBody();
-    if (intro) intro.classList.add('is-hidden');
-    html.classList.remove('cr-intro-pending');
-  }
-
-  if (prefersReduced || !video || !intro) {
-    skipIntro();
-    return;
-  }
-
-  // Hide the placeholder as soon as the video has data to show — first frame is ready
-  video.addEventListener('loadeddata', function() {
-    intro.classList.add('is-video-ready');
-  });
-
-  // The authoritative "video is actually rendering frames" signal
-  video.addEventListener('playing', function() {
-    hasStartedPlaying = true;
-    intro.classList.add('is-video-ready');
-  });
-
-  // Crossfade just before the end so the live logo emerges seamlessly
-  video.addEventListener('timeupdate', function() {
-    if (ended || !hasStartedPlaying) return;
-    var dur = video.duration;
-    if (!dur || !isFinite(dur) || dur <= 0) return;
-    if (video.currentTime >= dur - (FADE_LEAD_MS / 1000)) endIntro();
-  });
-
-  // Backup end trigger
-  video.addEventListener('ended', endIntro);
-
-  // Hard codec/decoding error → skip (rare; happens if every source fails)
-  video.addEventListener('error', function() {
-    // Only fail if every source has been exhausted
-    if (video.networkState === 3 /* NO_SOURCE */) skipIntro();
-  });
-
-  // Belt-and-suspenders: also call play() since some browsers want it explicit
-  function tryPlay() {
-    try {
-      var p = video.play();
-      if (p && typeof p.catch === 'function') { p.catch(function() {}); }
-    } catch(e) {}
-  }
-  if (video.readyState >= 2) tryPlay();
-  else {
-    video.addEventListener('loadeddata', tryPlay, { once: true });
-    video.addEventListener('canplay',    tryPlay, { once: true });
-  }
-
-  // Fail-open: if video never starts within 20s, reveal page anyway
+  // After the logo finishes animating, mark the body so chrome fades in.
   setTimeout(function() {
-    if (!ended && !hasStartedPlaying) skipIntro();
-  }, NEVER_STARTED_MS);
+    body.classList.add('cr-intro-done');
+    // Once chrome has finished fading in, drop cr-intro-pending so the
+    // live cr-float / cr-glow / cr-planet-pulse animations resume from
+    // their normal cycles.
+    setTimeout(function() {
+      html.classList.remove('cr-intro-pending');
+    }, CHROME_REVEAL_MS);
+  }, INTRO_DURATION_MS);
 })();
 </script>
 </body>
