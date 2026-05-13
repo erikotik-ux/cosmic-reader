@@ -57,8 +57,12 @@
 
     /* Hide all page chrome while the intro plays — but KEEP the starfield
        and the hero bloom visible so the animation plays over the cosmic
-       backdrop instead of a flat dark rectangle. */
+       backdrop instead of a flat dark rectangle. Mobile elements are
+       explicitly listed too so the intro works the same on phones. */
     html.cr-intro-pending .top-bar,
+    html.cr-intro-pending .hamburger-btn,
+    html.cr-intro-pending .mobile-nav,
+    html.cr-intro-pending .mobile-nav-backdrop,
     html.cr-intro-pending .hero-eyebrow,
     html.cr-intro-pending .hero-title,
     html.cr-intro-pending .hero-subtitle,
@@ -68,8 +72,7 @@
     html.cr-intro-pending .hero-logo-wrap::before,
     html.cr-intro-pending main,
     html.cr-intro-pending footer,
-    html.cr-intro-pending section:not(.hero),
-    html.cr-intro-pending #mobile-nav-overlay {
+    html.cr-intro-pending section:not(.hero) {
       opacity: 0 !important;
       pointer-events: none !important;
     }
@@ -106,6 +109,9 @@
 
     /* After the intro completes the body gets cr-intro-done. Chrome fades back in. */
     html.cr-intro-pending body.cr-intro-done .top-bar,
+    html.cr-intro-pending body.cr-intro-done .hamburger-btn,
+    html.cr-intro-pending body.cr-intro-done .mobile-nav,
+    html.cr-intro-pending body.cr-intro-done .mobile-nav-backdrop,
     html.cr-intro-pending body.cr-intro-done .hero-eyebrow,
     html.cr-intro-pending body.cr-intro-done .hero-title,
     html.cr-intro-pending body.cr-intro-done .hero-subtitle,
@@ -149,6 +155,9 @@
       html.cr-intro-pending .cr-arc-r,
       html.cr-intro-pending .cr-letterform { animation: none !important; opacity: 1 !important; transform: none !important; }
       html.cr-intro-pending .top-bar,
+      html.cr-intro-pending .hamburger-btn,
+      html.cr-intro-pending .mobile-nav,
+      html.cr-intro-pending .mobile-nav-backdrop,
       html.cr-intro-pending .hero-eyebrow,
       html.cr-intro-pending .hero-title,
       html.cr-intro-pending .hero-subtitle,
