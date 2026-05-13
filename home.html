@@ -977,17 +977,13 @@
 </head>
 <body>
 
-<!-- ── Intro animation overlay (plays once per tab session) ── -->
+<!-- ── Intro animation overlay (plays once on every page load) ── -->
 <div class="cr-intro" id="cr-intro" aria-hidden="true">
   <video id="cr-intro-video"
          muted
          playsinline
-         autoplay
-         preload="auto"
          disablepictureinpicture
-         aria-hidden="true">
-    <source src="assets/cosmic-reader-intro.mp4" type="video/mp4">
-  </video>
+         aria-hidden="true"></video>
 </div>
 
 <!-- Star canvas -->
@@ -1468,12 +1464,11 @@
 <!-- ── Intro animation controller ── -->
 <script>
 (function() {
-  var FADE_LEAD_MS = 450;  // start crossfade this long before video ends
-  var FADE_DUR_MS  = 700;  // matches CSS transitions
-  // Only kicks in if the video LITERALLY never starts playing.
-  // We track real playback via the 'playing' event, so this isn't a "video too slow" timer —
-  // it's a "video totally failed to play" timer.
-  var NEVER_STARTED_MS = 15000;
+  var INTRO_SRC    = 'assets/cosmic-reader-intro.mp4';
+  var FADE_LEAD_MS = 450;   // start crossfade this long before video ends
+  var FADE_DUR_MS  = 700;   // matches CSS transitions
+  var FETCH_TIMEOUT_MS = 12000; // hard cap on video download
+  var NEVER_STARTED_MS = 8000;  // after blob is set, if 'playing' never fires
 
   var html  = document.documentElement;
   var intro = document.getElementById('cr-intro');
@@ -1482,10 +1477,9 @@
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ended = false;
   var hasStartedPlaying = false;
+  var blobUrl = null;
 
-  function revealBody() {
-    body.classList.add('cr-intro-done');
-  }
+  function revealBody() { body.classList.add('cr-intro-done'); }
 
   function hideIntro() {
     if (!intro) return;
@@ -1493,6 +1487,8 @@
     setTimeout(function() {
       intro.classList.add('is-hidden');
       html.classList.remove('cr-intro-pending');
+      // Free blob memory once the overlay is gone for good
+      if (blobUrl) { try { URL.revokeObjectURL(blobUrl); } catch(e) {} }
     }, FADE_DUR_MS);
   }
 
@@ -1509,58 +1505,60 @@
     revealBody();
     if (intro) intro.classList.add('is-hidden');
     html.classList.remove('cr-intro-pending');
+    if (blobUrl) { try { URL.revokeObjectURL(blobUrl); } catch(e) {} }
   }
 
-  // Reduced-motion preference or missing assets → skip
   if (prefersReduced || !video || !intro) {
     skipIntro();
     return;
   }
 
-  // Real-playback detection — only this means video is actually rendering frames
-  video.addEventListener('playing', function() {
-    hasStartedPlaying = true;
-  });
-
-  // Crossfade slightly before the video ends (only after it has actually started)
+  // Wire video events
+  video.addEventListener('playing', function() { hasStartedPlaying = true; });
   video.addEventListener('timeupdate', function() {
     if (ended || !hasStartedPlaying) return;
     var dur = video.duration;
     if (!dur || !isFinite(dur) || dur <= 0) return;
-    if (video.currentTime >= dur - (FADE_LEAD_MS / 1000)) {
-      endIntro();
-    }
+    if (video.currentTime >= dur - (FADE_LEAD_MS / 1000)) endIntro();
   });
-
-  // Natural ending as a backup
   video.addEventListener('ended', endIntro);
-
-  // Hard errors → skip
   video.addEventListener('error', skipIntro);
 
-  // Best-effort play. Browsers may also autoplay from the attribute,
-  // so this is belt-and-suspenders; we don't skip if it rejects unless
-  // playback never actually starts (handled by the NEVER_STARTED_MS guard).
-  function tryPlay() {
-    try {
+  // Fetch the video as a blob so playback bypasses any HTTP-streaming
+  // quirks on the video element side. This is reliable because:
+  // 1. fetch is a known-working code path on this origin.
+  // 2. createObjectURL produces a local blob: URL the video element
+  //    can play instantly with no further network involvement.
+  var controller = (window.AbortController) ? new AbortController() : null;
+  var fetchOpts  = controller ? { signal: controller.signal } : {};
+  var fetchTimer = setTimeout(function() {
+    if (controller) { try { controller.abort(); } catch(e) {} }
+    if (!ended) skipIntro();
+  }, FETCH_TIMEOUT_MS);
+
+  fetch(INTRO_SRC, fetchOpts)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.blob();
+    })
+    .then(function(blob) {
+      clearTimeout(fetchTimer);
+      if (ended) return;
+      blobUrl = URL.createObjectURL(blob);
+      video.src = blobUrl;
+      // Failsafe: if 'playing' never fires after src is set, reveal the page
+      setTimeout(function() {
+        if (!ended && !hasStartedPlaying) skipIntro();
+      }, NEVER_STARTED_MS);
       var p = video.play();
       if (p && typeof p.catch === 'function') {
-        p.catch(function() { /* see NEVER_STARTED_MS fallback */ });
+        p.catch(function() { /* the NEVER_STARTED_MS guard will fire */ });
       }
-    } catch(e) { /* see NEVER_STARTED_MS fallback */ }
-  }
-  if (video.readyState >= 2) {
-    tryPlay();
-  } else {
-    video.addEventListener('loadeddata', tryPlay, { once: true });
-    video.addEventListener('canplay',    tryPlay, { once: true });
-  }
-
-  // Failsafe: if the 'playing' event has not fired by NEVER_STARTED_MS,
-  // assume video is broken/blocked and reveal the page.
-  setTimeout(function() {
-    if (!ended && !hasStartedPlaying) skipIntro();
-  }, NEVER_STARTED_MS);
+    })
+    .catch(function() {
+      clearTimeout(fetchTimer);
+      if (!ended) skipIntro();
+    });
 })();
 </script>
 </body>
