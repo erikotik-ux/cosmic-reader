@@ -47,7 +47,9 @@
     }
 
     /* ── Intro video overlay (plays once on first load) ── */
-    .cr-intro {
+    /* Hidden by default — only shown when html.cr-intro-pending is set on first visit */
+    .cr-intro { display: none; }
+    html.cr-intro-pending .cr-intro {
       position: fixed;
       inset: 0;
       z-index: 99999;
