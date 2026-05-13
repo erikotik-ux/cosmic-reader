@@ -60,9 +60,9 @@ module.exports = {
         "full": "0.75rem",
       },
       fontFamily: {
-        "headline": ["Space Grotesk", "sans-serif"],
+        "headline": ["Exo 2", "Space Grotesk", "sans-serif"],
         "body": ["Inter", "sans-serif"],
-        "label": ["Space Grotesk", "sans-serif"],
+        "label": ["Exo 2", "Space Grotesk", "sans-serif"],
       },
     },
   },
