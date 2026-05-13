@@ -880,6 +880,19 @@
       .hero { padding: 1.5rem 1.25rem 3rem; }
       .why-cta-row { flex-direction: column; align-items: center; gap: 0.75rem; }
       .hero-logo-wrap { width: clamp(220px, 72vw, 320px); height: clamp(220px, 72vw, 320px); }
+      /* Tone down the floating-state glow on mobile (desktop unchanged) */
+      .hero-logo-wrap::before {
+        width: 460px; height: 460px;
+        background: radial-gradient(circle, rgba(0,219,233,0.045) 0%, transparent 68%);
+      }
+      .hero-logo-wrap .cr-letterform {
+        filter: drop-shadow(0 0 3px rgba(255,255,255,0.15));
+        animation: cr-glow-mobile 5s ease-in-out infinite;
+      }
+      @keyframes cr-glow-mobile {
+        0%, 100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.12)); }
+        50%      { filter: drop-shadow(0 0 5px rgba(255,255,255,0.24)); }
+      }
       .hero-title { letter-spacing: 0.12em; font-size: clamp(2.2rem, 9vw, 3.2rem); }
       .hero-subtitle { font-size: 0.8rem; letter-spacing: 0.12em; }
       .hero-cta-row { flex-direction: column; gap: 0.875rem; }
