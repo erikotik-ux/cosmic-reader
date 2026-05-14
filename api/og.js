@@ -43,6 +43,19 @@ export default async function handler(req, res) {
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    // ?debug=1 returns diagnostic info so we can see why an extraction failed
+    if (req.query.debug) {
+      return res.status(200).json({
+        image,
+        status: response.status,
+        ok: response.ok,
+        bytesRead: bytes,
+        hasOgImageStr: html.includes('og:image'),
+        hasTwitterImageStr: html.includes('twitter:image'),
+        contentType: response.headers.get('content-type'),
+        firstChars: html.slice(0, 400),
+      });
+    }
     return res.status(200).json({ image });
   } catch (error) {
     res.setHeader('Cache-Control', 'no-store');

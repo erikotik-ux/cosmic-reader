@@ -2131,7 +2131,7 @@ async function fetchFeed(feedInfo) {
       }).filter(Boolean);
       // OG image enrichment — Planetary Society & Sky & Telescope don't include images in their RSS.
       // Fetch the article's og:image server-side for any article that has no real feed image.
-      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews']);
+      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews', 'Teslarati']);
       if (NO_IMG_SRCS.has(feedInfo.source)) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {
