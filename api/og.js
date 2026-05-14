@@ -45,6 +45,12 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
     // ?debug=1 returns diagnostic info so we can see why an extraction failed
     if (req.query.debug) {
+      // Return the slice of HTML around the first og:image occurrence so we
+      // can see the exact tag format and tune the regex.
+      const ogIdx = html.indexOf('og:image');
+      const ogSlice = ogIdx >= 0
+        ? html.substring(Math.max(0, ogIdx - 120), ogIdx + 300)
+        : null;
       return res.status(200).json({
         image,
         status: response.status,
@@ -53,7 +59,7 @@ export default async function handler(req, res) {
         hasOgImageStr: html.includes('og:image'),
         hasTwitterImageStr: html.includes('twitter:image'),
         contentType: response.headers.get('content-type'),
-        firstChars: html.slice(0, 400),
+        ogSlice,
       });
     }
     return res.status(200).json({ image });
