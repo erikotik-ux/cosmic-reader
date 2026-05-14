@@ -1072,6 +1072,98 @@
     }
     .auth-msg.error { color: #ff6b6b; }
     .auth-msg.success { color: #00f0ff; }
+
+    /* ── Signup email-sent confirmation state ── */
+    .auth-sent {
+      text-align: center;
+      padding: 0.5rem 0 0.25rem;
+    }
+    .auth-sent-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(0,240,255,0.22), rgba(0,240,255,0.04) 70%);
+      border: 1px solid rgba(0,240,255,0.35);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 32px rgba(0,240,255,0.18);
+      animation: auth-sent-pulse 2.4s ease-in-out infinite;
+    }
+    .auth-sent-icon .material-symbols-outlined {
+      font-size: 30px; color: #00f0ff;
+      filter: drop-shadow(0 0 6px rgba(0,240,255,0.55));
+    }
+    @keyframes auth-sent-pulse {
+      0%, 100% { box-shadow: 0 0 28px rgba(0,240,255,0.16); }
+      50%       { box-shadow: 0 0 40px rgba(0,240,255,0.34); }
+    }
+    .auth-sent h3 {
+      font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--on-surface);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+    .auth-sent .sent-email {
+      font-size: 0.78rem;
+      color: #00f0ff;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.5rem;
+      word-break: break-all;
+    }
+    .auth-sent-warn {
+      display: flex; align-items: flex-start; gap: 0.65rem;
+      text-align: left;
+      background: rgba(255,193,7,0.06);
+      border: 1px solid rgba(255,193,7,0.22);
+      border-radius: 8px;
+      padding: 0.75rem 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .auth-sent-warn .material-symbols-outlined {
+      color: #ffb84d; font-size: 18px; flex-shrink: 0; margin-top: 1px;
+    }
+    .auth-sent-warn p {
+      font-size: 0.74rem;
+      line-height: 1.5;
+      color: rgba(255,224,150,0.85);
+      letter-spacing: 0.02em;
+    }
+    .auth-sent-warn p strong { color: #ffd47a; font-weight: 600; }
+    .auth-sent-actions {
+      display: flex; flex-direction: column; gap: 0.55rem;
+      margin-top: 0.25rem;
+    }
+    .auth-resend {
+      width: 100%;
+      background: rgba(0,240,255,0.06);
+      border: 1px solid rgba(0,240,255,0.28);
+      border-radius: 8px;
+      color: #00f0ff;
+      font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0.75rem;
+      transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+    }
+    .auth-resend:hover { background: rgba(0,240,255,0.14); border-color: rgba(0,240,255,0.5); }
+    .auth-resend:disabled { opacity: 0.5; cursor: not-allowed; }
+    .auth-change-email {
+      background: none;
+      border: none;
+      color: rgba(219,252,255,0.45);
+      font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: color 0.2s;
+    }
+    .auth-change-email:hover { color: #00f0ff; }
   </style>
 </head>
 <body>
@@ -1276,6 +1368,25 @@
       </form>
     </div>
 
+    <!-- Sign Up email-sent confirmation state — shown after a successful signUp() -->
+    <div id="auth-signup-sent" class="auth-sent" style="display:none">
+      <div class="auth-sent-icon" aria-hidden="true">
+        <span class="material-symbols-outlined">mark_email_read</span>
+      </div>
+      <h3>Transmission sent</h3>
+      <p class="sent-email">Confirmation link delivered to <strong id="auth-sent-address"></strong></p>
+
+      <div class="auth-sent-warn">
+        <span class="material-symbols-outlined">warning</span>
+        <p><strong>Check your spam / junk folder.</strong> Our first email sometimes lands there until your provider trusts us. Open it, hit "Not spam," then click the confirm link.</p>
+      </div>
+
+      <div class="auth-sent-actions">
+        <button id="auth-resend-btn" class="auth-resend" onclick="resendConfirmation()">Resend confirmation email</button>
+        <button class="auth-change-email" onclick="resetAuthToSignup()">← Use a different email</button>
+      </div>
+    </div>
+
     <p id="auth-msg" class="auth-msg"></p>
   </div>
 </div>
@@ -1367,6 +1478,16 @@
     document.getElementById('auth-overlay').classList.remove('open');
   }
   function setAuthTab(tab) {
+    // Always exit the post-signup "sent" state when switching tabs or
+    // (re)opening the modal — restore the default OAuth + form layout.
+    const sentBlock = document.getElementById('auth-signup-sent');
+    if (sentBlock) sentBlock.style.display = 'none';
+    document.querySelectorAll('.auth-google').forEach(b => b.style.display = '');
+    const divider = document.querySelector('#auth-overlay .auth-divider');
+    if (divider) divider.style.display = '';
+    const tabsEl = document.querySelector('#auth-overlay .auth-tabs');
+    if (tabsEl) tabsEl.style.display = '';
+
     document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
     document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
     document.getElementById('auth-signin-form').style.display = tab === 'signin' ? 'block' : 'none';
@@ -1420,6 +1541,9 @@
   }
 
   // ── Email Sign Up ──────────────────────────────────────────
+  // Remembered so the "Resend" button can re-trigger the confirmation email.
+  let _lastSignupEmail = null;
+
   async function handleSignUp(e) {
     e.preventDefault();
     const btn = document.getElementById('signup-btn');
@@ -1434,10 +1558,70 @@
     if (error) {
       setAuthMsg(error.message, 'error');
       btn.disabled = false; btn.textContent = 'Create Account';
-    } else {
-      setAuthMsg('Check your email to confirm your account.', 'success');
-      btn.disabled = false; btn.textContent = 'Create Account';
+      return;
     }
+
+    // Success — swap the form for the "check your email + warning + resend" state.
+    _lastSignupEmail = email;
+    showSignupSentState(email);
+    btn.disabled = false; btn.textContent = 'Create Account';
+    setAuthMsg('', '');
+  }
+
+  // Swap the auth modal into its "email sent" success state.
+  function showSignupSentState(email) {
+    document.getElementById('auth-signup-form').style.display = 'none';
+    document.getElementById('auth-signin-form').style.display = 'none';
+    document.querySelectorAll('.auth-google').forEach(b => b.style.display = 'none');
+    const divider = document.querySelector('#auth-overlay .auth-divider');
+    if (divider) divider.style.display = 'none';
+    const tabs = document.querySelector('#auth-overlay .auth-tabs');
+    if (tabs) tabs.style.display = 'none';
+
+    document.getElementById('auth-sent-address').textContent = email;
+    document.getElementById('auth-signup-sent').style.display = 'block';
+    // Start fresh: resend button enabled, no cooldown.
+    const rb = document.getElementById('auth-resend-btn');
+    rb.disabled = false; rb.textContent = 'Resend confirmation email';
+  }
+
+  // Restore the modal to its initial "Create Account" state.
+  // (setAuthTab already restores the OAuth buttons / divider / tabs / form visibility.)
+  function resetAuthToSignup() {
+    setAuthTab('signup');
+    _lastSignupEmail = null;
+  }
+
+  // Re-send the signup confirmation via Supabase, with a 30s button cooldown.
+  async function resendConfirmation() {
+    if (!_lastSignupEmail) return;
+    const btn = document.getElementById('auth-resend-btn');
+    btn.disabled = true; btn.textContent = 'Resending...';
+    const { error } = await _supabase.auth.resend({
+      type: 'signup',
+      email: _lastSignupEmail,
+      options: { emailRedirectTo: window.location.origin + '/app.html' }
+    });
+    if (error) {
+      setAuthMsg(error.message, 'error');
+      btn.disabled = false; btn.textContent = 'Resend confirmation email';
+      return;
+    }
+    setAuthMsg('Confirmation email resent — check inbox and spam folder.', 'success');
+    // 30-second cooldown so users don't hammer the button (and Supabase rate-limits).
+    let remaining = 30;
+    btn.textContent = 'Sent. Try again in ' + remaining + 's';
+    const tick = setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        clearInterval(tick);
+        btn.disabled = false;
+        btn.textContent = 'Resend confirmation email';
+        setAuthMsg('', '');
+      } else {
+        btn.textContent = 'Sent. Try again in ' + remaining + 's';
+      }
+    }, 1000);
   }
 
   // ── Legacy newsletter signup handler (keep for the signup section) ──
