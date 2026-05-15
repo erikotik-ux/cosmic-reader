@@ -2066,7 +2066,7 @@ async function fetchFeed(feedInfo) {
   try {
     const res = await fetch(
       `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedInfo.url)}`,
-      { signal: AbortSignal.timeout(8000) }
+      { signal: AbortSignal.timeout(5000) }
     );
     const json = await res.json();
     if (json.status === 'ok' && json.items?.length > 0) {
@@ -2146,7 +2146,7 @@ async function fetchFeed(feedInfo) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {
             try {
-              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(3000) });
+              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(2000) });
               if (r.ok) { const d = await r.json(); if (d.image) a.image = proxyImg(d.image); }
             } catch(e) {}
           })
@@ -2552,105 +2552,116 @@ async function loadLiveFeeds() {
   const statusTxt = document.getElementById('feed-status-text');
   if (statusEl) statusEl.classList.remove('hidden');
 
-  // ── Fast path: serve from sessionStorage cache ──
+  // ── Read cache (used for stale-while-revalidate) ──
+  let cachedArticles = null;
+  let cacheAge = Infinity;
   try {
     const c = JSON.parse(sessionStorage.getItem(_CR_CACHE_KEY) || '{}');
-    if (c.ts && Date.now() - c.ts < _CR_CACHE_TTL && c.articles?.length) {
-      articles.length = 0;
-      c.articles.forEach(a => articles.push(a));
-      currentPage = 1; currentFilter = 'All';
-      renderCurrentPage();
-      updatePrioritySignal(articles[0]);
-      updateTicker(articles.slice(0, 6));
-      if (currentView === 'trending') renderTrending();
-      if (statusEl) {
-        statusTxt.textContent = '⚡ ' + articles.length + ' signals loaded instantly from cache';
-        setTimeout(() => statusEl.classList.add('hidden'), 2000);
-      }
-      return;
+    if (c.articles?.length) {
+      cachedArticles = c.articles;
+      cacheAge = Date.now() - (c.ts || 0);
     }
   } catch(e) {}
 
-  try {
-    // Fetch all RSS feeds, SpaceNews (WP API), and The Rundown AI in parallel
-    const [results, spaceNewsArticles, rundownArticles] = await Promise.all([
-      Promise.allSettled(FEEDS.map(f => fetchFeed(f))),
-      fetchSpaceNewsFeed().catch(() => []),
-      scrapeRundownFeed().catch(() => [])
-    ]);
-
-    // Collect per-source buckets (only fulfilled RSS results)
-    const buckets = results
-      .map((r, i) => r.status === 'fulfilled' ? r.value : [])
-      .filter(b => b.length > 0);
-
-    // Add SpaceNews (WP API) bucket if we got articles
-    if (spaceNewsArticles.length > 0) {
-      buckets.push(spaceNewsArticles);
-    }
-
-    // Add The Rundown AI scraped articles as an extra bucket if we got any
-    if (rundownArticles.length > 0) {
-      buckets.push(rundownArticles);
-    }
-
-    // Round-robin interleave all sources up to 40 articles
-    const merged = [];
-    const maxLen  = Math.max(...buckets.map(b => b.length), 0);
-    for (let i = 0; i < maxLen && merged.length < 40; i++) {
-      for (const bucket of buckets) {
-        if (i < bucket.length && merged.length < 40) {
-          merged.push({ ...bucket[i], id: merged.length });
-        }
+  // ── Always paint the cache instantly (fresh OR stale) so first paint is fast ──
+  // Fresh cache → return early (no network needed). Stale cache → keep showing
+  // it while we refresh in the background so the user sees content immediately
+  // instead of staring at a loading state.
+  if (cachedArticles) {
+    articles.length = 0;
+    cachedArticles.forEach(a => articles.push(a));
+    currentPage = 1; currentFilter = 'All';
+    renderCurrentPage();
+    updatePrioritySignal(articles[0]);
+    updateTicker(articles.slice(0, 6));
+    if (currentView === 'trending') renderTrending();
+    if (statusEl) {
+      if (cacheAge < _CR_CACHE_TTL) {
+        statusTxt.textContent = '⚡ ' + articles.length + ' signals loaded instantly from cache';
+        setTimeout(() => statusEl.classList.add('hidden'), 2000);
+      } else {
+        statusTxt.textContent = 'Showing cached signals — refreshing in background…';
       }
     }
+    if (cacheAge < _CR_CACHE_TTL) return; // fresh — done, no refetch
+  }
 
-    // Deduplicate images — if two articles share the same image URL, give the duplicate
-    // a different category-matched fallback (avoids repeating the same photo in the feed)
+  // ── Fetch fresh — render INCREMENTALLY as each feed bucket arrives ──
+  // Old behaviour: await Promise.all(...) before any render, so the user waited
+  // for the slowest feed (up to 5-8s). New behaviour: re-merge + re-render every
+  // time a bucket comes back, so the first article appears in 1-2s.
+  const collectedBuckets = [];
+  let firstFreshRender = true; // priority-signal swap only on the first fresh render
+
+  function ingestBucket(bucket) {
+    if (!bucket || !bucket.length) return;
+    collectedBuckets.push(bucket);
+    // Round-robin interleave everything collected so far, capped at 40 articles
+    const merged = [];
+    const maxLen = Math.max(...collectedBuckets.map(b => b.length), 0);
+    for (let i = 0; i < maxLen && merged.length < 40; i++) {
+      for (const b of collectedBuckets) {
+        if (i < b.length && merged.length < 40) merged.push({ ...b[i], id: merged.length });
+      }
+    }
+    // Dedupe duplicate images
     const seenImages = new Set();
     merged.forEach(a => {
-      if (a.image && seenImages.has(a.image)) {
-        a.image = pickFallback(a.category, a.title + '_dup');
-      } else if (a.image) {
-        seenImages.add(a.image);
-      }
+      if (a.image && seenImages.has(a.image)) a.image = pickFallback(a.category, a.title + '_dup');
+      else if (a.image) seenImages.add(a.image);
     });
-
-    // Count live feeds — FEEDS (RSS) + SpaceNews WP API + Rundown
-    const rssLive = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
-    const liveCount = rssLive + (spaceNewsArticles.length > 0 ? 1 : 0) + (rundownArticles.length > 0 ? 1 : 0);
-    console.log('[CosmicReader] feed results:', results.map((r,i) => FEEDS[i]?.source + ':' + (r.status==='fulfilled' ? r.value.length + ' articles' : 'FAILED')));
-    console.log('[CosmicReader] SpaceNews (WP API):', spaceNewsArticles.length + ' articles');
-    console.log('[CosmicReader] liveCount:', liveCount);
-    const feedCountEl = document.getElementById('hud-feed-count');
-    if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
-    updateIntegrity(liveCount);
-
-    if (merged.length > 0) {
-      articles.length = 0;
-      merged.forEach(a => articles.push(a));
-      // Persist to sessionStorage so trending/transmissions pages load instantly
-      try { sessionStorage.setItem(_CR_CACHE_KEY, JSON.stringify({ ts: Date.now(), articles: merged })); } catch(e) {}
-      currentPage = 1;
-      currentFilter = 'All';
-      renderCurrentPage();
+    if (!merged.length) return;
+    articles.length = 0;
+    merged.forEach(a => articles.push(a));
+    renderCurrentPage();
+    if (firstFreshRender) {
+      firstFreshRender = false;
       updatePrioritySignal(articles[0]);
-      updateTicker(articles.slice(0, 6));
-      if (currentView === 'trending') renderTrending();
+    }
+    updateTicker(articles.slice(0, 6));
+    if (currentView === 'trending') renderTrending();
+  }
+
+  try {
+    const rssTracker = FEEDS.map(() => false); // track which RSS sources succeeded
+    const allPromises = [
+      ...FEEDS.map((f, i) =>
+        fetchFeed(f)
+          .then(bucket => { if (bucket && bucket.length) { rssTracker[i] = true; ingestBucket(bucket); } })
+          .catch(() => {})
+      ),
+      fetchSpaceNewsFeed().then(ingestBucket).catch(() => {}),
+      scrapeRundownFeed().then(ingestBucket).catch(() => {})
+    ];
+
+    await Promise.allSettled(allPromises);
+
+    if (articles.length > 0) {
+      // Persist final cache (snapshot of articles array)
+      try { sessionStorage.setItem(_CR_CACHE_KEY, JSON.stringify({ ts: Date.now(), articles: [...articles] })); } catch(e) {}
+      const liveCount = collectedBuckets.length;
+      console.log('[CosmicReader] feed results:', FEEDS.map((f,i) => f.source + ':' + (rssTracker[i] ? 'OK' : 'FAILED')).join(' | '));
+      console.log('[CosmicReader] liveCount:', liveCount);
+      const feedCountEl = document.getElementById('hud-feed-count');
+      if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
+      updateIntegrity(liveCount);
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
       }
 
-      // ── Deep-link: honour ?cat=Physics etc. from homepage sector cards ──
+      // Deep-link: honour ?cat=Physics etc. from homepage sector cards
       const deepCat = new URLSearchParams(location.search).get('cat');
       if (deepCat) {
         navigate('feed');
         setTimeout(() => filterFeed(deepCat), 150);
       }
-    } else {
+    } else if (!cachedArticles) {
       if (statusTxt) statusTxt.textContent = 'Using cached signals (network unavailable)';
       setTimeout(() => statusEl && statusEl.classList.add('hidden'), 3000);
+    } else if (statusEl) {
+      // Stale cache rendered + fresh fetch returned nothing — hide status
+      statusEl.classList.add('hidden');
     }
   } catch (e) {
     console.warn('RSS fetch failed:', e);
