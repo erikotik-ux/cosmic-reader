@@ -1656,6 +1656,15 @@
       setAuthMsg(_p.get('auth_error'), 'error');
       history.replaceState(null, '', window.location.pathname);
     }
+    // ── Auto-open auth modal when app.html bounces an unauthenticated
+    //     visitor back here (e.g. clicked "Enter Terminal" from a sub-page
+    //     without being signed in). Skips a confusing silent redirect. ──
+    var openauth = _p.get('openauth');
+    if (openauth === 'signin' || openauth === 'signup') {
+      openAuthModal(openauth);
+      setAuthMsg('Sign in to enter the terminal.', 'success');
+      history.replaceState(null, '', window.location.pathname);
+    }
   })();
 
   // ── Live breaking-news teaser ──────────────────────────────────────────────

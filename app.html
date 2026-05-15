@@ -33,7 +33,11 @@
         if (session) {
           window._crUser = session.user;
         } else if (!_isOAuthCallback) {
-          window.location.replace('home.html');
+          // Visitor isn't signed in. Bounce them to home.html with a signal
+          // to open the auth modal so the redirect is visible, not confusing.
+          // Also skip the homepage intro animation during this bounce.
+          try { sessionStorage.setItem('cr_skip_intro_next', '1'); } catch(e) {}
+          window.location.replace('home.html?openauth=signin');
         }
       } else if (event === 'SIGNED_IN' && session) {
         window._crUser = session.user;
