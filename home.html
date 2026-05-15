@@ -1702,7 +1702,10 @@
       }
     } catch(e) {}
 
-    // ── Slow path: fetch live from our active feed list ──
+    // ── Slow path: race all feeds in parallel — first usable one wins ──
+    // Old behaviour: sequential await loop, worst case 6 × 6s = 36s. New
+    // behaviour: Promise.any() resolves as soon as the FIRST feed returns
+    // an article we can use, so the teaser populates in 1-2s instead.
     const FEEDS_TO_TRY = [
       'https://www.space.com/feeds/all',
       'https://www.universetoday.com/feed/',
@@ -1712,36 +1715,34 @@
       'https://www.teslarati.com/feed/',
     ];
 
-    for (const feedUrl of FEEDS_TO_TRY) {
-      try {
-        const res = await fetch(
-          `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`,
-          { signal: AbortSignal.timeout(6000) }
-        );
-        const data = await res.json();
-        if (data.status !== 'ok' || !data.items?.length) continue;
-
-        // Find the first item in this feed that has a real image
-        let chosen = null;
-        for (const item of data.items.slice(0, 6)) {
-          // Skip audio/video enclosures
-          const encType = item.enclosure?.type || '';
-          const encLink = item.enclosure?.link || '';
-          const encIsImg = /^image/i.test(encType) || (!encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(encLink));
-          let img = item.thumbnail || (encIsImg ? encLink : '');
-          if (!img || !/^https?:/.test(img)) {
-            const html = item.content || item.description || '';
-            const m = html.match(/src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
-            if (m) img = m[1];
-          }
-          if (img && /^https?:/.test(img)) { chosen = { ...item, _img: img }; break; }
+    async function tryFeed(feedUrl) {
+      const res = await fetch(
+        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      const data = await res.json();
+      if (data.status !== 'ok' || !data.items?.length) throw new Error('no items');
+      // Find first item that has a real image
+      for (const item of data.items.slice(0, 6)) {
+        const encType = item.enclosure?.type || '';
+        const encLink = item.enclosure?.link || '';
+        const encIsImg = /^image/i.test(encType) || (!encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(encLink));
+        let img = item.thumbnail || (encIsImg ? encLink : '');
+        if (!img || !/^https?:/.test(img)) {
+          const html = item.content || item.description || '';
+          const m = html.match(/src="(https?:[^"]+\.(?:jpg|jpeg|png|webp|gif)[^"]*?)"/i);
+          if (m) img = m[1];
         }
-        if (!chosen) chosen = { ...data.items[0] }; // fallback: best article even without image
-
-        populate(chosen);
-        break; // success — stop trying feeds
-      } catch(e) { /* try next feed */ }
+        if (img && /^https?:/.test(img)) return { ...item, _img: img };
+      }
+      // Fallback within this feed: first article even without image
+      return { ...data.items[0] };
     }
+
+    try {
+      const chosen = await Promise.any(FEEDS_TO_TRY.map(tryFeed));
+      populate(chosen);
+    } catch (e) { /* all feeds failed — teaser stays blank */ }
   })();
 </script>
 

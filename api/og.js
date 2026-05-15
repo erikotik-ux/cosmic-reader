@@ -1,8 +1,48 @@
+// Hostnames we're willing to fetch og:image from. Restricting the allowlist
+// prevents the endpoint from being abused as a generic web fetcher / SSRF
+// vector (anyone could otherwise call /api/og?url=http://internal-ip/...).
+// Add a publisher here when adding a new feed to NO_IMG_SRCS in app.html.
+const OG_ALLOWED_HOSTS = new Set([
+  // Active RSS feeds
+  'spacenews.com', 'www.spacenews.com',
+  'www.teslarati.com', 'teslarati.com',
+  'www.planetary.org', 'planetary.org',
+  'www.space.com', 'space.com',
+  'www.universetoday.com', 'universetoday.com',
+  'www.nasa.gov', 'nasa.gov', 'science.nasa.gov',
+  'phys.org', 'www.phys.org',
+  'arstechnica.com', 'www.arstechnica.com',
+  // Rundown AI (scraped, not RSS)
+  'www.therundown.ai', 'therundown.ai',
+  // Currently blocked but historically supported (keep here in case re-enabled)
+  'skyandtelescope.org', 'www.skyandtelescope.org',
+]);
+
+function isHostAllowed(hostname) {
+  if (!hostname) return false;
+  const h = hostname.toLowerCase();
+  if (OG_ALLOWED_HOSTS.has(h)) return true;
+  // Allow any subdomain of an allowed host (e.g. cdn.spacenews.com)
+  for (const allowed of OG_ALLOWED_HOSTS) {
+    if (h.endsWith('.' + allowed)) return true;
+  }
+  return false;
+}
+
 export default async function handler(req, res) {
   const { url } = req.query;
 
   if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) {
     return res.status(400).json({ error: 'Invalid URL', image: null });
+  }
+
+  // Reject URLs outside the allowlist — prevents the endpoint from being
+  // used to fetch arbitrary internal or third-party hosts.
+  let parsedUrl;
+  try { parsedUrl = new URL(url); }
+  catch(e) { return res.status(400).json({ error: 'Malformed URL', image: null }); }
+  if (!isHostAllowed(parsedUrl.hostname)) {
+    return res.status(403).json({ error: 'Host not in allowlist', image: null });
   }
 
   try {
