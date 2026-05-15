@@ -4,7 +4,6 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Cosmic Reader | Space Exploration News</title>
-<meta name="description" content="The Cosmic Reader terminal — your live feed of deep-space transmissions, mission updates, and astronomy headlines from across the cosmos." />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="cosmic-reader.css"/>
@@ -339,7 +338,7 @@
       <div class="bg-[#131313]/60 border border-[#00f0ff]/20 rounded-full px-4 py-1.5 flex items-center gap-2 focus-within:border-[#00f0ff] transition-all">
         <span class="material-symbols-outlined text-[#00f0ff] text-lg">search</span>
         <input id="search-input" class="bg-transparent border-none focus:ring-0 text-xs font-headline text-[#dbfcff] placeholder-[#dbfcff]/40 w-48 outline-none" placeholder="Search articles..." type="text" autocomplete="off" oninput="handleSearch(this.value)" onkeydown="searchKeyNav(event)"/>
-        <button id="search-clear" onclick="clearSearch()" aria-label="Clear search" class="material-symbols-outlined text-[#dbfcff]/30 hover:text-[#dbfcff] text-base transition-all" style="display:none">close</button>
+        <button id="search-clear" onclick="clearSearch()" class="material-symbols-outlined text-[#dbfcff]/30 hover:text-[#dbfcff] text-base transition-all" style="display:none">close</button>
       </div>
       <!-- Search results dropdown -->
       <div id="search-results" style="display:none" class="absolute top-full left-0 mt-2 w-96 bg-[#0d1515] border border-[#00f0ff]/20 rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.6)] overflow-hidden z-50 max-h-[480px] overflow-y-auto">
@@ -347,33 +346,12 @@
       </div>
     </div>
     <div class="relative" id="user-menu-wrap">
-      <button onclick="toggleUserMenu()" aria-label="Account menu" class="material-symbols-outlined text-[#dbfcff] p-2 hover:bg-[#dbfcff]/5 rounded-full transition-all scale-95 active:scale-90">account_circle</button>
-      <div id="user-menu" style="display:none; border:1px solid rgba(0,240,255,0.18);" class="absolute right-0 top-full mt-2 w-52 bg-[#0d1515] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden z-50">
-        <div class="px-4 py-3" style="border-bottom:1px solid rgba(0,240,255,0.18);">
-          <p id="user-name-display" class="text-[11px] font-headline tracking-widest text-[#dbfcff]/85 truncate uppercase" style="display:none"></p>
+      <button onclick="toggleUserMenu()" class="material-symbols-outlined text-[#dbfcff] p-2 hover:bg-[#dbfcff]/5 rounded-full transition-all scale-95 active:scale-90">account_circle</button>
+      <div id="user-menu" style="display:none" class="absolute right-0 top-full mt-2 w-52 bg-[#0d1515] border border-[#00f0ff]/18 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden z-50">
+        <div class="px-4 py-3 border-b border-white/6">
           <p id="user-email-display" class="text-[11px] font-headline tracking-widest text-[#dbfcff]/50 truncate uppercase"></p>
         </div>
-        <button onclick="openSettingsModal()" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#dbfcff]/85 hover:bg-white/5 transition-colors flex items-center gap-3">
-          <span class="material-symbols-outlined text-base text-[#00f0ff]/80">tune</span>
-          Settings
-        </button>
-        <a href="about.html" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#dbfcff]/65 hover:bg-white/5 transition-colors flex items-center gap-3 no-underline">
-          <span class="material-symbols-outlined text-base text-[#00f0ff]/70">info</span>
-          About
-        </a>
-        <a href="privacy.html" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#dbfcff]/65 hover:bg-white/5 transition-colors flex items-center gap-3 no-underline">
-          <span class="material-symbols-outlined text-base text-[#00f0ff]/70">shield</span>
-          Privacy
-        </a>
-        <a href="terms.html" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#dbfcff]/65 hover:bg-white/5 transition-colors flex items-center gap-3 no-underline">
-          <span class="material-symbols-outlined text-base text-[#00f0ff]/70">gavel</span>
-          Terms
-        </a>
-        <div class="h-px mx-3" style="background:rgba(0,240,255,0.18);"></div>
-        <button onclick="signOut()" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#ff6b6b]/80 hover:bg-white/5 transition-colors flex items-center gap-3">
-          <span class="material-symbols-outlined text-base text-[#ff6b6b]/80">logout</span>
-          Sign Out
-        </button>
+        <button onclick="signOut()" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#ff6b6b]/80 hover:bg-white/5 transition-colors">Sign Out</button>
       </div>
     </div>
   </div>
@@ -408,8 +386,7 @@
       <span id="deploy-probe-icon" class="material-symbols-outlined text-sm">rocket_launch</span>
       <span id="deploy-probe-label">Deploy Probe</span>
     </button>
-    <p id="deploy-probe-help" class="text-[10px] font-body leading-snug text-center text-[#dbfcff]/45 mt-2">Refresh every active feed.<br/>Pulls the newest signals in.</p>
-    <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
+    <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-2 h-3"></p>
   </div>
   <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent w-[1px] h-3/4"></div>
 </aside>
@@ -1678,7 +1655,7 @@
   <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <!-- Discovery HUD -->
-      <div class="glass-panel relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(0,240,255,0.18); box-shadow:0 0 30px rgba(0,240,255,0.1);">
+      <div class="glass-panel relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-outline-variant/15 rounded-lg" style="box-shadow:0 0 30px rgba(0,240,255,0.12);">
         <!-- Left accent line -->
         <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-transparent opacity-60"></div>
         <!-- Hero Image -->
@@ -1723,19 +1700,19 @@
 
       <!-- Stat Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div id="stat1" class="bg-surface-container-high/40 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.18);">
+        <div id="stat1" class="bg-surface-container-high/40 backdrop-blur-lg p-5 border border-outline-variant/10 rounded-lg">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Category</p>
           <div class="flex items-end gap-2">
             <span id="stat1-val" class="text-2xl font-headline font-bold text-primary">—</span>
           </div>
         </div>
-        <div class="bg-surface-container-high/40 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.18);">
+        <div class="bg-surface-container-high/40 backdrop-blur-lg p-5 border border-outline-variant/10 rounded-lg">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Source</p>
           <div class="flex items-end gap-2">
             <span id="stat2-val" class="text-xl font-headline font-bold text-secondary">—</span>
           </div>
         </div>
-        <div class="bg-surface-container-high/40 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.18);">
+        <div class="bg-surface-container-high/40 backdrop-blur-lg p-5 border border-outline-variant/10 rounded-lg">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Date Received</p>
           <div class="flex items-end gap-2">
             <span id="stat3-val" class="text-xl font-headline font-bold text-on-surface">—</span>
@@ -2010,6 +1987,14 @@ function proxyImg(url) {
   // requests from browsers get rate-limited (503); wsrv.nl caches and relays them
   return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
 }
+// Called via onerror on article img tags — swaps a broken src to a pool fallback.
+// Using data-cat / data-title avoids quote-escaping issues in inline onerror attributes.
+function imgFail(el) {
+  el.onerror = null; // prevent infinite loop if fallback also fails
+  const raw = pickFallback(el.dataset.cat || '', el.dataset.title || '');
+  el.src = proxyImg(raw);
+}
+
 // 2-step fallback chain:
 //   Step 1 — image from RSS fails → try NASA/ESA pool URL (fb)
 //   Step 2 — pool URL also fails  → use an SVG data-URI (guaranteed, no network needed)
@@ -2071,7 +2056,7 @@ async function fetchFeed(feedInfo) {
   try {
     const res = await fetch(
       `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedInfo.url)}`,
-      { signal: AbortSignal.timeout(5000) }
+      { signal: AbortSignal.timeout(8000) }
     );
     const json = await res.json();
     if (json.status === 'ok' && json.items?.length > 0) {
@@ -2146,12 +2131,12 @@ async function fetchFeed(feedInfo) {
       }).filter(Boolean);
       // OG image enrichment — Planetary Society & Sky & Telescope don't include images in their RSS.
       // Fetch the article's og:image server-side for any article that has no real feed image.
-      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews', 'Teslarati']);
+      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews']);
       if (NO_IMG_SRCS.has(feedInfo.source)) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {
             try {
-              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(2000) });
+              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(3000) });
               if (r.ok) { const d = await r.json(); if (d.image) a.image = proxyImg(d.image); }
             } catch(e) {}
           })
@@ -2292,7 +2277,7 @@ function renderFeed(list) {
     if (style === 'hero') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
         <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
-        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
           <h2 class="text-3xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight max-w-2xl">${escHtml(a.title)}</h2>
@@ -2322,7 +2307,7 @@ function renderFeed(list) {
     if (style === 'medium') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
         <div class="relative h-52 md:h-auto overflow-hidden">
-          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
         </div>
         <div class="p-7 flex flex-col justify-center">
@@ -2337,7 +2322,7 @@ function renderFeed(list) {
     return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
         <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
-          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
         <div class="flex-grow min-w-0">
           <div class="flex items-center gap-2 mb-1">
@@ -2557,116 +2542,105 @@ async function loadLiveFeeds() {
   const statusTxt = document.getElementById('feed-status-text');
   if (statusEl) statusEl.classList.remove('hidden');
 
-  // ── Read cache (used for stale-while-revalidate) ──
-  let cachedArticles = null;
-  let cacheAge = Infinity;
+  // ── Fast path: serve from sessionStorage cache ──
   try {
     const c = JSON.parse(sessionStorage.getItem(_CR_CACHE_KEY) || '{}');
-    if (c.articles?.length) {
-      cachedArticles = c.articles;
-      cacheAge = Date.now() - (c.ts || 0);
+    if (c.ts && Date.now() - c.ts < _CR_CACHE_TTL && c.articles?.length) {
+      articles.length = 0;
+      c.articles.forEach(a => articles.push(a));
+      currentPage = 1; currentFilter = 'All';
+      renderCurrentPage();
+      updatePrioritySignal(articles[0]);
+      updateTicker(articles.slice(0, 6));
+      if (currentView === 'trending') renderTrending();
+      if (statusEl) {
+        statusTxt.textContent = '⚡ ' + articles.length + ' signals loaded instantly from cache';
+        setTimeout(() => statusEl.classList.add('hidden'), 2000);
+      }
+      return;
     }
   } catch(e) {}
 
-  // ── Always paint the cache instantly (fresh OR stale) so first paint is fast ──
-  // Fresh cache → return early (no network needed). Stale cache → keep showing
-  // it while we refresh in the background so the user sees content immediately
-  // instead of staring at a loading state.
-  if (cachedArticles) {
-    articles.length = 0;
-    cachedArticles.forEach(a => articles.push(a));
-    currentPage = 1; currentFilter = 'All';
-    renderCurrentPage();
-    updatePrioritySignal(articles[0]);
-    updateTicker(articles.slice(0, 6));
-    if (currentView === 'trending') renderTrending();
-    if (statusEl) {
-      if (cacheAge < _CR_CACHE_TTL) {
-        statusTxt.textContent = '⚡ ' + articles.length + ' signals loaded instantly from cache';
-        setTimeout(() => statusEl.classList.add('hidden'), 2000);
-      } else {
-        statusTxt.textContent = 'Showing cached signals — refreshing in background…';
-      }
+  try {
+    // Fetch all RSS feeds, SpaceNews (WP API), and The Rundown AI in parallel
+    const [results, spaceNewsArticles, rundownArticles] = await Promise.all([
+      Promise.allSettled(FEEDS.map(f => fetchFeed(f))),
+      fetchSpaceNewsFeed().catch(() => []),
+      scrapeRundownFeed().catch(() => [])
+    ]);
+
+    // Collect per-source buckets (only fulfilled RSS results)
+    const buckets = results
+      .map((r, i) => r.status === 'fulfilled' ? r.value : [])
+      .filter(b => b.length > 0);
+
+    // Add SpaceNews (WP API) bucket if we got articles
+    if (spaceNewsArticles.length > 0) {
+      buckets.push(spaceNewsArticles);
     }
-    if (cacheAge < _CR_CACHE_TTL) return; // fresh — done, no refetch
-  }
 
-  // ── Fetch fresh — render INCREMENTALLY as each feed bucket arrives ──
-  // Old behaviour: await Promise.all(...) before any render, so the user waited
-  // for the slowest feed (up to 5-8s). New behaviour: re-merge + re-render every
-  // time a bucket comes back, so the first article appears in 1-2s.
-  const collectedBuckets = [];
-  let firstFreshRender = true; // priority-signal swap only on the first fresh render
+    // Add The Rundown AI scraped articles as an extra bucket if we got any
+    if (rundownArticles.length > 0) {
+      buckets.push(rundownArticles);
+    }
 
-  function ingestBucket(bucket) {
-    if (!bucket || !bucket.length) return;
-    collectedBuckets.push(bucket);
-    // Round-robin interleave everything collected so far, capped at 40 articles
+    // Round-robin interleave all sources up to 40 articles
     const merged = [];
-    const maxLen = Math.max(...collectedBuckets.map(b => b.length), 0);
+    const maxLen  = Math.max(...buckets.map(b => b.length), 0);
     for (let i = 0; i < maxLen && merged.length < 40; i++) {
-      for (const b of collectedBuckets) {
-        if (i < b.length && merged.length < 40) merged.push({ ...b[i], id: merged.length });
+      for (const bucket of buckets) {
+        if (i < bucket.length && merged.length < 40) {
+          merged.push({ ...bucket[i], id: merged.length });
+        }
       }
     }
-    // Dedupe duplicate images
+
+    // Deduplicate images — if two articles share the same image URL, give the duplicate
+    // a different category-matched fallback (avoids repeating the same photo in the feed)
     const seenImages = new Set();
     merged.forEach(a => {
-      if (a.image && seenImages.has(a.image)) a.image = pickFallback(a.category, a.title + '_dup');
-      else if (a.image) seenImages.add(a.image);
+      if (a.image && seenImages.has(a.image)) {
+        a.image = pickFallback(a.category, a.title + '_dup');
+      } else if (a.image) {
+        seenImages.add(a.image);
+      }
     });
-    if (!merged.length) return;
-    articles.length = 0;
-    merged.forEach(a => articles.push(a));
-    renderCurrentPage();
-    if (firstFreshRender) {
-      firstFreshRender = false;
+
+    // Count live feeds — FEEDS (RSS) + SpaceNews WP API + Rundown
+    const rssLive = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
+    const liveCount = rssLive + (spaceNewsArticles.length > 0 ? 1 : 0) + (rundownArticles.length > 0 ? 1 : 0);
+    console.log('[CosmicReader] feed results:', results.map((r,i) => FEEDS[i]?.source + ':' + (r.status==='fulfilled' ? r.value.length + ' articles' : 'FAILED')));
+    console.log('[CosmicReader] SpaceNews (WP API):', spaceNewsArticles.length + ' articles');
+    console.log('[CosmicReader] liveCount:', liveCount);
+    const feedCountEl = document.getElementById('hud-feed-count');
+    if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
+    updateIntegrity(liveCount);
+
+    if (merged.length > 0) {
+      articles.length = 0;
+      merged.forEach(a => articles.push(a));
+      // Persist to sessionStorage so trending/transmissions pages load instantly
+      try { sessionStorage.setItem(_CR_CACHE_KEY, JSON.stringify({ ts: Date.now(), articles: merged })); } catch(e) {}
+      currentPage = 1;
+      currentFilter = 'All';
+      renderCurrentPage();
       updatePrioritySignal(articles[0]);
-    }
-    updateTicker(articles.slice(0, 6));
-    if (currentView === 'trending') renderTrending();
-  }
-
-  try {
-    const rssTracker = FEEDS.map(() => false); // track which RSS sources succeeded
-    const allPromises = [
-      ...FEEDS.map((f, i) =>
-        fetchFeed(f)
-          .then(bucket => { if (bucket && bucket.length) { rssTracker[i] = true; ingestBucket(bucket); } })
-          .catch(() => {})
-      ),
-      fetchSpaceNewsFeed().then(ingestBucket).catch(() => {}),
-      scrapeRundownFeed().then(ingestBucket).catch(() => {})
-    ];
-
-    await Promise.allSettled(allPromises);
-
-    if (articles.length > 0) {
-      // Persist final cache (snapshot of articles array)
-      try { sessionStorage.setItem(_CR_CACHE_KEY, JSON.stringify({ ts: Date.now(), articles: [...articles] })); } catch(e) {}
-      const liveCount = collectedBuckets.length;
-      console.log('[CosmicReader] feed results:', FEEDS.map((f,i) => f.source + ':' + (rssTracker[i] ? 'OK' : 'FAILED')).join(' | '));
-      console.log('[CosmicReader] liveCount:', liveCount);
-      const feedCountEl = document.getElementById('hud-feed-count');
-      if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
-      updateIntegrity(liveCount);
+      updateTicker(articles.slice(0, 6));
+      if (currentView === 'trending') renderTrending();
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
       }
 
-      // Deep-link: honour ?cat=Physics etc. from homepage sector cards
+      // ── Deep-link: honour ?cat=Physics etc. from homepage sector cards ──
       const deepCat = new URLSearchParams(location.search).get('cat');
       if (deepCat) {
         navigate('feed');
         setTimeout(() => filterFeed(deepCat), 150);
       }
-    } else if (!cachedArticles) {
+    } else {
       if (statusTxt) statusTxt.textContent = 'Using cached signals (network unavailable)';
       setTimeout(() => statusEl && statusEl.classList.add('hidden'), 3000);
-    } else if (statusEl) {
-      // Stale cache rendered + fresh fetch returned nothing — hide status
-      statusEl.classList.add('hidden');
     }
   } catch (e) {
     console.warn('RSS fetch failed:', e);
@@ -2843,47 +2817,29 @@ function updateTicker(arts) {
 const articles = []; // Populated by loadLiveFeeds()
 
 // ── Saved Stories ─────────────────────────────────────────
-// Hydrate from localStorage on boot so saves survive refreshes.
-// Keyed by article URL (read_more) rather than title — titles can collide
-// across feeds and change if a publisher edits a headline.
-const _CR_SAVED_KEY = 'cr_saved_v1';
-const savedStories = (function() {
-  try { return JSON.parse(localStorage.getItem(_CR_SAVED_KEY) || '[]'); }
-  catch(e) { return []; }
-})();
-
-function _persistSaved() {
-  try { localStorage.setItem(_CR_SAVED_KEY, JSON.stringify(savedStories)); }
-  catch(e) {}
-}
-
-function _savedKey(a) { return a && (a.read_more || a.link || a.title) || ''; }
+const savedStories = [];
 
 function saveStory(idx) {
   const a = articles[idx];
   if (!a) return;
   const icon = document.getElementById('save-story-icon');
-  const key = _savedKey(a);
-  const savedIdx = savedStories.findIndex(s => _savedKey(s) === key);
+  const savedIdx = savedStories.findIndex(s => s.title === a.title);
   if (savedIdx !== -1) {
     // Already saved — toggle off (unsave)
     savedStories.splice(savedIdx, 1);
-    _persistSaved();
     renderSavedStories();
     if (icon) { icon.textContent = 'bookmark_add'; icon.style.color = ''; }
   } else {
     // Not saved — save it
     savedStories.push(a);
-    _persistSaved();
     renderSavedStories();
     if (icon) { icon.textContent = 'bookmark'; icon.style.color = '#00f0ff'; }
   }
 }
 
-function removeSaved(key) {
-  const i = savedStories.findIndex(s => _savedKey(s) === key);
+function removeSaved(title) {
+  const i = savedStories.findIndex(s => s.title === title);
   if (i !== -1) savedStories.splice(i, 1);
-  _persistSaved();
   renderSavedStories();
 }
 
@@ -2912,7 +2868,7 @@ function renderSavedStories() {
       return `
       <article onclick="openArticle(${artIdx >= 0 ? artIdx : 0})" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
         <div class="w-32 self-stretch shrink-0 overflow-hidden relative">
-          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
         <div class="flex-1 p-5 flex flex-col justify-between min-w-0">
           <div>
@@ -2922,7 +2878,7 @@ function renderSavedStories() {
           </div>
           <div class="flex items-center justify-between mt-2">
             <span class="text-[10px] text-[#dbfcff]/30 font-headline">${a.date}</span>
-            <button onclick="event.stopPropagation(); removeSaved(this.dataset.key);" data-key="${escHtml(_savedKey(a))}" class="text-[10px] font-headline uppercase tracking-widest text-[#dbfcff]/20 hover:text-[#ffb5a0] transition-colors px-2 py-1">Remove</button>
+            <button onclick="event.stopPropagation(); removeSaved('${escHtml(a.title).replace(/'/g,"\\'")}');" class="text-[10px] font-headline uppercase tracking-widest text-[#dbfcff]/20 hover:text-[#ffb5a0] transition-colors px-2 py-1">Remove</button>
           </div>
         </div>
       </article>`;
@@ -3005,7 +2961,7 @@ function renderTrending() {
       </div>
       <!-- Thumbnail -->
       <div class="w-16 h-12 shrink-0 rounded-lg overflow-hidden hidden sm:block">
-        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${escHtml(a.image||fb)}" alt="" onerror="imgChain(this,'${fb}','${a.category}')"/>
       </div>
       <!-- Content -->
       <div class="flex-1 min-w-0">
@@ -3101,7 +3057,7 @@ function openArticle(idx) {
   // Reset save button state
   const saveIcon = document.getElementById('save-story-icon');
   if (saveIcon) {
-    const isSaved = savedStories.some(s => _savedKey(s) === _savedKey(a));
+    const isSaved = savedStories.some(s => s.title === a.title);
     saveIcon.textContent = isSaved ? 'bookmark' : 'bookmark_add';
     saveIcon.style.color = '';
   }
@@ -3484,9 +3440,6 @@ function drawMobileConstellationLines() {
 // ── Boot ──────────────────────────────────────────────────
 // Render fallback articles with pagination right away, then load live
 renderCurrentPage();
-// Paint the Saved view from localStorage on boot so anything the user saved
-// in a previous session is visible without needing to interact first.
-if (savedStories.length > 0) renderSavedStories();
 loadLiveFeeds();
 
 // Draw constellation lines after layout settles, and on resize
@@ -3661,367 +3614,6 @@ document.addEventListener('DOMContentLoaded', () => {
     await window._supabase.auth.signOut();
     window.location.replace('home.html');
   }
-
-  // ─────────────────────────────────────────────────────────────
-  // ── SETTINGS PANEL ──────────────────────────────────────────
-  // ─────────────────────────────────────────────────────────────
-  // User preferences (avatar emoji, display name, topic interests)
-  // are stored in Supabase auth user_metadata — no DB schema needed.
-  // On load we hydrate the top-right avatar + dropdown from this data.
-
-  const AVATAR_CHOICES = ['🚀','🛰️','🪐','🌌','🌠','👨‍🚀','👩‍🚀','🛸','🌍','🌙','☀️','⭐','🪨','🔭','📡','🧑‍🔬'];
-  const TOPIC_CHOICES  = [
-    { id: 'Planets',   label: 'Planets & Exoplanets', icon: 'public'            },
-    { id: 'Missions',  label: 'Space Missions',        icon: 'rocket_launch'     },
-    { id: 'Physics',   label: 'Physics & Cosmos',      icon: 'flare'             },
-    { id: 'Moon',      label: 'Moon & Lunar',          icon: 'bedtime'           },
-    { id: 'AI & Tech', label: 'AI & Tech',             icon: 'smart_toy'         },
-  ];
-
-  let _cachedSettings = null; // populated on first menu open
-
-  function openSettingsModal() {
-    document.getElementById('user-menu').style.display = 'none';
-    const overlay = document.getElementById('settings-overlay');
-    if (!overlay) return;
-    // Pre-fill from cached metadata if we have it
-    hydrateSettingsForm();
-    overlay.classList.add('open');
-    overlay.style.display = 'flex';
-  }
-  function closeSettingsModal() {
-    const overlay = document.getElementById('settings-overlay');
-    if (overlay) { overlay.classList.remove('open'); overlay.style.display = 'none'; }
-    const msg = document.getElementById('settings-msg');
-    if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
-  }
-
-  function renderAvatarPicker(selected) {
-    const wrap = document.getElementById('settings-avatar-grid');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    AVATAR_CHOICES.forEach(emoji => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = emoji;
-      b.className = 'settings-avatar-btn' + (emoji === selected ? ' is-selected' : '');
-      b.onclick = function() {
-        wrap.querySelectorAll('.settings-avatar-btn').forEach(x => x.classList.remove('is-selected'));
-        b.classList.add('is-selected');
-      };
-      wrap.appendChild(b);
-    });
-  }
-
-  function renderTopicPicker(selectedSet) {
-    const wrap = document.getElementById('settings-topic-grid');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    TOPIC_CHOICES.forEach(t => {
-      const isOn = selectedSet.has(t.id);
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.dataset.topic = t.id;
-      b.className = 'settings-topic-btn' + (isOn ? ' is-selected' : '');
-      b.innerHTML = '<span class="material-symbols-outlined">' + t.icon + '</span>' +
-                    '<span class="settings-topic-label">' + t.label + '</span>' +
-                    '<span class="material-symbols-outlined settings-topic-check">check_circle</span>';
-      b.onclick = function() { b.classList.toggle('is-selected'); };
-      wrap.appendChild(b);
-    });
-  }
-
-  function hydrateSettingsForm() {
-    const meta = _cachedSettings || {};
-    const avatar   = meta.avatar   || '🚀';
-    const username = meta.username || '';
-    const topics   = Array.isArray(meta.topics) ? meta.topics : [];
-    const usernameInput = document.getElementById('settings-username');
-    if (usernameInput) usernameInput.value = username;
-    renderAvatarPicker(avatar);
-    renderTopicPicker(new Set(topics));
-  }
-
-  async function saveSettings(e) {
-    if (e && e.preventDefault) e.preventDefault();
-    const btn = document.getElementById('settings-save-btn');
-    const msg = document.getElementById('settings-msg');
-    if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
-
-    const picked = document.querySelector('.settings-avatar-btn.is-selected');
-    const avatar = picked ? picked.textContent : '🚀';
-    const username = (document.getElementById('settings-username').value || '').trim().slice(0, 40);
-    const topics = Array.from(document.querySelectorAll('.settings-topic-btn.is-selected'))
-      .map(b => b.dataset.topic);
-
-    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
-    try {
-      const { data, error } = await window._supabase.auth.updateUser({
-        data: { avatar, username, topics }
-      });
-      if (error) throw error;
-      _cachedSettings = (data && data.user && data.user.user_metadata) || { avatar, username, topics };
-      applySettingsToUI(_cachedSettings);
-      if (msg) { msg.textContent = 'Preferences saved.'; msg.className = 'settings-msg success'; }
-      setTimeout(closeSettingsModal, 900);
-    } catch (err) {
-      if (msg) { msg.textContent = err.message || 'Could not save preferences.'; msg.className = 'settings-msg error'; }
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = 'Save Preferences'; }
-    }
-  }
-
-  function applySettingsToUI(meta) {
-    if (!meta) return;
-    // Swap the top-right avatar icon for the chosen emoji
-    const btn = document.querySelector('#user-menu-wrap > button');
-    if (btn && meta.avatar) {
-      btn.classList.remove('material-symbols-outlined');
-      btn.textContent = meta.avatar;
-      btn.style.fontSize = '1.4rem';
-      btn.style.lineHeight = '1';
-    }
-    // Show username in the dropdown if present
-    const nameEl = document.getElementById('user-name-display');
-    if (nameEl) {
-      if (meta.username) { nameEl.textContent = meta.username; nameEl.style.display = ''; }
-      else { nameEl.style.display = 'none'; }
-    }
-  }
-
-  // Pull metadata once at boot so the avatar+name show up immediately.
-  (async function loadInitialSettings() {
-    // Wait until supabase client + session are ready
-    let tries = 0;
-    while (!window._supabase && tries < 50) { await new Promise(r => setTimeout(r, 100)); tries++; }
-    if (!window._supabase) return;
-    try {
-      const { data } = await window._supabase.auth.getUser();
-      const meta = (data && data.user && data.user.user_metadata) || {};
-      _cachedSettings = meta;
-      applySettingsToUI(meta);
-    } catch(e) { /* not signed in yet — skip */ }
-  })();
 </script>
-
-<!-- ═══ SETTINGS MODAL ═══ -->
-<style>
-  .settings-overlay {
-    position: fixed; inset: 0; z-index: 1000;
-    background: rgba(8,15,16,0.78);
-    backdrop-filter: blur(8px);
-    display: none;
-    align-items: center; justify-content: center;
-    padding: 1.25rem;
-    opacity: 0; transition: opacity 0.2s ease;
-  }
-  .settings-overlay.open { opacity: 1; }
-  .settings-panel {
-    width: 100%; max-width: 560px;
-    max-height: 92vh;
-    overflow-y: auto;
-    background: linear-gradient(180deg, #0d1515 0%, #0a1212 100%);
-    border: 1px solid rgba(0,240,255,0.22);
-    border-radius: 14px;
-    padding: 1.75rem 1.75rem 1.5rem;
-    box-shadow: 0 0 60px rgba(0,240,255,0.08), 0 20px 60px rgba(0,0,0,0.5);
-    position: relative;
-    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
-  }
-  .settings-close {
-    position: absolute; top: 0.85rem; right: 0.85rem;
-    background: none; border: none;
-    color: rgba(219,252,255,0.5);
-    cursor: pointer;
-    padding: 0.25rem;
-    transition: color 0.2s;
-  }
-  .settings-close:hover { color: #00f0ff; }
-  .settings-eyebrow {
-    font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase;
-    color: rgba(0,240,255,0.7);
-    margin-bottom: 0.5rem;
-  }
-  .settings-title {
-    font-size: 1.35rem; font-weight: 700;
-    color: #dbfcff;
-    letter-spacing: 0.02em;
-    margin-bottom: 0.4rem;
-  }
-  .settings-lede {
-    font-size: 0.8rem; color: rgba(219,252,255,0.55);
-    letter-spacing: 0.02em;
-    margin-bottom: 1.75rem;
-  }
-  .settings-section { margin-bottom: 1.5rem; }
-  .settings-section h3 {
-    font-size: 0.7rem; letter-spacing: 0.24em; text-transform: uppercase;
-    color: rgba(0,240,255,0.6);
-    margin-bottom: 0.6rem;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .settings-section h3::before { content: ''; width: 12px; height: 1px; background: rgba(0,240,255,0.45); }
-  .settings-hint {
-    font-size: 0.7rem; color: rgba(219,252,255,0.4);
-    letter-spacing: 0.02em;
-    margin-bottom: 0.65rem;
-  }
-  .settings-avatar-grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 0.4rem;
-  }
-  @media (max-width: 480px) { .settings-avatar-grid { grid-template-columns: repeat(6, 1fr); } }
-  .settings-avatar-btn {
-    aspect-ratio: 1;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(0,240,255,0.12);
-    border-radius: 10px;
-    font-size: 1.25rem;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, transform 0.1s;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-  }
-  .settings-avatar-btn:hover { background: rgba(0,240,255,0.08); border-color: rgba(0,240,255,0.35); }
-  .settings-avatar-btn.is-selected {
-    background: rgba(0,240,255,0.15);
-    border-color: #00f0ff;
-    box-shadow: 0 0 14px rgba(0,240,255,0.35);
-    transform: scale(1.05);
-  }
-  .settings-input {
-    width: 100%;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(0,240,255,0.18);
-    border-radius: 8px;
-    color: #dbfcff;
-    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
-    font-size: 0.85rem;
-    padding: 0.7rem 0.85rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .settings-input:focus { border-color: rgba(0,240,255,0.5); }
-  .settings-input::placeholder { color: rgba(219,252,255,0.3); }
-  .settings-topic-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.55rem;
-  }
-  @media (max-width: 480px) { .settings-topic-grid { grid-template-columns: 1fr; } }
-  .settings-topic-btn {
-    text-align: left;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(0,240,255,0.12);
-    border-radius: 10px;
-    color: rgba(219,252,255,0.85);
-    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 0.7rem 0.85rem;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    display: flex; align-items: center; gap: 0.65rem;
-    position: relative;
-  }
-  .settings-topic-btn > .material-symbols-outlined:first-child {
-    font-size: 18px; color: rgba(0,240,255,0.7); flex-shrink: 0;
-  }
-  .settings-topic-label { flex: 1; }
-  .settings-topic-check { font-size: 18px; color: #00f0ff; opacity: 0; transition: opacity 0.15s; }
-  .settings-topic-btn.is-selected {
-    background: rgba(0,240,255,0.1);
-    border-color: rgba(0,240,255,0.55);
-    color: #dbfcff;
-  }
-  .settings-topic-btn.is-selected .settings-topic-check { opacity: 1; }
-  .settings-topic-btn:hover { background: rgba(0,240,255,0.06); border-color: rgba(0,240,255,0.35); }
-  .settings-actions {
-    display: flex; gap: 0.65rem; align-items: center;
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba(0,240,255,0.1);
-  }
-  .settings-save {
-    flex: 1;
-    background: linear-gradient(135deg, rgba(0,240,255,0.18), rgba(0,240,255,0.08));
-    border: 1px solid rgba(0,240,255,0.42);
-    border-radius: 8px;
-    color: #00f0ff;
-    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    cursor: pointer;
-    padding: 0.85rem;
-    transition: background 0.15s, border-color 0.15s;
-  }
-  .settings-save:hover { background: rgba(0,240,255,0.25); border-color: #00f0ff; }
-  .settings-save:disabled { opacity: 0.5; cursor: not-allowed; }
-  .settings-cancel {
-    background: none;
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-    color: rgba(219,252,255,0.55);
-    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    cursor: pointer;
-    padding: 0.85rem 1.1rem;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .settings-cancel:hover { color: #dbfcff; border-color: rgba(255,255,255,0.25); }
-  .settings-msg {
-    margin-top: 0.85rem;
-    font-size: 0.72rem;
-    text-align: center;
-    letter-spacing: 0.04em;
-    min-height: 1.1em;
-  }
-  .settings-msg.error   { color: #ff6b6b; }
-  .settings-msg.success { color: #00f0ff; }
-</style>
-
-<div id="settings-overlay" class="settings-overlay" onclick="if(event.target===this)closeSettingsModal()">
-  <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-    <button class="settings-close" onclick="closeSettingsModal()" aria-label="Close">
-      <span class="material-symbols-outlined">close</span>
-    </button>
-    <p class="settings-eyebrow">Crew Profile</p>
-    <h2 id="settings-title" class="settings-title">Settings</h2>
-    <p class="settings-lede">Personalize your terminal. Topic preferences feed our build roadmap — what you pick shapes what we add next.</p>
-
-    <form onsubmit="saveSettings(event)">
-      <div class="settings-section">
-        <h3>Avatar</h3>
-        <p class="settings-hint">Pick the emoji that will represent you in the top-right corner.</p>
-        <div id="settings-avatar-grid" class="settings-avatar-grid"></div>
-      </div>
-
-      <div class="settings-section">
-        <h3>Display Name</h3>
-        <p class="settings-hint">Shown in your dropdown menu. Leave blank to keep using your email.</p>
-        <input id="settings-username" class="settings-input" type="text" maxlength="40" placeholder="e.g. Commander Eriko" autocomplete="off" />
-      </div>
-
-      <div class="settings-section">
-        <h3>Topics of Interest</h3>
-        <p class="settings-hint">Tap every category you want more of. This signals what to prioritize in the next build.</p>
-        <div id="settings-topic-grid" class="settings-topic-grid"></div>
-      </div>
-
-      <div class="settings-actions">
-        <button type="button" class="settings-cancel" onclick="closeSettingsModal()">Cancel</button>
-        <button id="settings-save-btn" class="settings-save" type="submit">Save Preferences</button>
-      </div>
-      <p id="settings-msg" class="settings-msg"></p>
-    </form>
-  </div>
-</div>
 </body>
 </html>

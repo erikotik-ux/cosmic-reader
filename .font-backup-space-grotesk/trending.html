@@ -4,7 +4,6 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Trending Signals — Cosmic Reader</title>
-<meta name="description" content="The space stories getting traction right now — ranked transmissions across all Cosmic Reader sectors." />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="icon" href="assets/cr-logo-new.svg" type="image/svg+xml"/>
@@ -12,7 +11,7 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { overscroll-behavior-x: none; }
-  body { background: #0d1515; color: #dce4e5; font-family: 'Exo 2', 'Space Grotesk', sans-serif; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; overscroll-behavior-x: none; }
+  body { background: #0d1515; color: #dce4e5; font-family: 'Space Grotesk', sans-serif; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; overscroll-behavior-x: none; }
   .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 
   /* Star canvas */
@@ -44,7 +43,7 @@
   .nav-brand-text span:last-child { color: rgba(219,252,255,0.5); }
   .btn-enter {
     background: transparent; border: 1px solid #00f0ff; color: #00f0ff;
-    padding: 0.45rem 1.2rem; font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    padding: 0.45rem 1.2rem; font-family: 'Space Grotesk', sans-serif;
     font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
     cursor: pointer; text-decoration: none; display: inline-block; border-radius: 2px;
     transition: background 0.2s, box-shadow 0.2s;
@@ -99,7 +98,7 @@
     border-radius: 0.5rem; border: 1px solid;
     background: rgba(26,30,30,0.8);
   }
-  .rank-badge span { font-family: 'Exo 2', 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.875rem; }
+  .rank-badge span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.875rem; }
   .rank-1 { border-color: rgba(255,181,160,0.3); }
   .rank-1 span { color: #ffb5a0; }
   .rank-2 { border-color: rgba(0,240,255,0.3); }
@@ -269,7 +268,7 @@ async function fetchFeed(feedInfo) {
         return { title, excerpt, category, date, source: feedInfo.source, image, link, _hasRealImg };
       }).filter(Boolean);
       // OG image enrichment for sources whose RSS feeds don't include article images
-      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews', 'Teslarati']);
+      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews']);
       if (NO_IMG_SRCS.has(feedInfo.source)) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {
