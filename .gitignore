@@ -17,3 +17,16 @@ Thumbs.db
 # cosmic-reader.css is intentionally committed so the site works without a build step
 
 .vercel
+
+# Local-only project notes / dev artifacts (don't ship to Vercel)
+.claude/
+CLAUDE.md
+NOTEBOOKLM_SUMMARY.md
+COSMIC_READER_PROJECT_NOTES.md
+pinecone-pending-upserts.md
+pinecone-setup.py
+
+# Font / page backups — kept locally for rollback, not deployed
+.font-backup-space-grotesk/
+app.backup.html
+galaxy-map.backup.html
