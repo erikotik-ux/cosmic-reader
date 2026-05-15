@@ -8,6 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="cosmic-reader.css"/>
+<!-- Signal to home.html that we're navigating WITHIN the site —
+     skip the intro animation on the next visit to home. Refresh
+     of home.html itself still replays it (flag is consumed there). -->
+<script>try{sessionStorage.setItem('cr_skip_intro_next','1');}catch(e){}</script>
 <script>
 // Throttle canvas animations to ~30fps on mobile to reduce GPU load
 if (window.innerWidth <= 768) {

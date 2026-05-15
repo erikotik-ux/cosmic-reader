@@ -13,12 +13,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Pre-paint: tag <html> so body stays hidden until intro completes (no FOUC) -->
+  <!-- Pre-paint: tag <html> so body stays hidden until intro completes (no FOUC).
+       Also: skip the intro if the user is returning from an internal sub-page
+       (galaxy-map / transmissions / trending). Those pages set a sessionStorage
+       flag on load; we consume + clear it here so a FRESH refresh of the
+       homepage still replays the animation. -->
   <script>
     (function() {
       try {
+        var skipFromInternalNav = sessionStorage.getItem('cr_skip_intro_next') === '1';
+        if (skipFromInternalNav) sessionStorage.removeItem('cr_skip_intro_next');
         var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (!reduced) {
+        if (!reduced && !skipFromInternalNav) {
           document.documentElement.classList.add('cr-intro-pending');
         }
       } catch(e) {}
