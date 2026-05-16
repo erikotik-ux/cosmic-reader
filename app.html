@@ -2922,6 +2922,22 @@ const savedStories = (function() {
 function _persistSaved() {
   try { localStorage.setItem(_CR_SAVED_KEY, JSON.stringify(savedStories)); }
   catch(e) {}
+  _queueSavedRemoteSync(); // debounced upload to Supabase for cross-device sync
+}
+
+// Debounced background sync of savedStories to Supabase user_metadata.
+// Cross-device: saving on desktop ⟶ visible on mobile after reload.
+let _savedSyncTimer = null;
+function _queueSavedRemoteSync() {
+  if (_savedSyncTimer) clearTimeout(_savedSyncTimer);
+  _savedSyncTimer = setTimeout(async () => {
+    if (!window._supabase || !window._crUser) return;
+    try {
+      // Use a shallow snapshot — fast, captures current state of the array
+      const snapshot = savedStories.slice();
+      await window._supabase.auth.updateUser({ data: { saved: snapshot } });
+    } catch(e) { /* offline / not signed in — localStorage still has the data */ }
+  }, 800);
 }
 
 function _savedKey(a) { return a && (a.read_more || a.link || a.title) || ''; }
@@ -3897,6 +3913,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const meta = (data && data.user && data.user.user_metadata) || {};
       _cachedSettings = meta;
       applySettingsToUI(meta);
+
+      // ── Saved Stories cross-device sync ─────────────────────────
+      // Merge any saves stored in this user's Supabase user_metadata
+      // with whatever is already in localStorage. Union by URL key so
+      // we never duplicate or clobber. Result becomes the new source
+      // of truth and is written back to both stores.
+      const remote = Array.isArray(meta.saved) ? meta.saved : [];
+      if (remote.length > 0 || savedStories.length > 0) {
+        const seen = new Set(savedStories.map(_savedKey));
+        let changed = false;
+        remote.forEach(a => {
+          const k = _savedKey(a);
+          if (k && !seen.has(k)) { savedStories.push(a); seen.add(k); changed = true; }
+        });
+        // If local had items the remote didn't, or vice versa, persist the merged result.
+        // (If everything was already in sync, this is a no-op.)
+        if (changed || remote.length !== savedStories.length) {
+          _persistSaved();         // localStorage + queued upload
+          renderSavedStories();    // re-render the Saved view
+        }
+      }
     } catch(e) { /* not signed in yet — skip */ }
   })();
 </script>

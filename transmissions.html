@@ -77,10 +77,13 @@
   /* Filter chips */
   .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
   .filter-chip {
-    padding: 0.4rem 1rem; border-radius: 2rem; font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.55rem 1rem 0.35rem; border-radius: 2rem;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
     font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
     cursor: pointer; transition: all 0.2s; border: 1px solid rgba(0,240,255,0.2);
     background: rgba(26,30,30,0.6); color: #dbfcff;
+    white-space: nowrap;
   }
   .filter-chip:hover { border-color: #00f0ff; }
   .filter-chip.active { background: #00f0ff; color: #00363a; border-color: #00f0ff; }
