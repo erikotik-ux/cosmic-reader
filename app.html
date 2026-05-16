@@ -1789,12 +1789,12 @@
         <h1 id="read-title" class="text-4xl md:text-5xl font-headline font-bold text-on-surface tracking-tight leading-[1.1] max-w-4xl"></h1>
         <div class="flex items-center gap-5 pt-3">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full border border-primary-container/30 p-0.5 bg-surface-container-high overflow-hidden">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCb7uCoaoHdPcM92w9ZOGbhoHSUiFIj1a6KgfgOP8NTP7t8jutiw3OwKe_ZiNdLLctaSG3KKqOkbJKX0N5jMJBDAvxlEZANT5guTHD_n27aYI-FgUOzejSzVnhaFPQb6QKJoAiEpuRj6bWMfE0zCbBhTHz16aUXn3-C-S-LnMMbNtoRf6lCc9zNeCCJ45g559YFc_xY6GMMLh5A6LiA1ic4CNCxW_h33piccb-6ZH3lLXv8GxQzIYx9KDcydbaRDSOp3Xcfwf6N5c" alt="author" class="w-full h-full rounded-full object-cover"/>
+            <div class="w-10 h-10 rounded-full border border-primary-container/30 p-1 bg-surface-container-high overflow-hidden flex items-center justify-center">
+              <img id="read-author-logo" src="" alt="" loading="lazy" class="w-full h-full rounded-full object-contain" onerror="this.onerror=null;this.style.display='none';this.parentElement.innerHTML='<span class=\&quot;material-symbols-outlined text-primary text-base\&quot;>satellite_alt</span>';"/>
             </div>
             <div>
-              <p id="read-author" class="font-label text-sm text-on-surface">Commander Elara Vance</p>
-              <p class="font-label text-[10px] text-on-surface-variant uppercase tracking-tighter">Chief Correspondent</p>
+              <p id="read-author" class="font-label text-sm text-on-surface"></p>
+              <p id="read-author-role" class="font-label text-[10px] text-on-surface-variant uppercase tracking-tighter">Original Reporting</p>
             </div>
           </div>
           <div class="h-6 w-px bg-outline-variant/30"></div>
@@ -3146,6 +3146,24 @@ function openArticle(idx) {
   navigate('detail');
 }
 
+// ── Publisher byline data ─────────────────────────────────
+// Maps the article source string (from FEEDS / fetchSpaceNewsFeed /
+// scrapeRundownFeed) to a real publisher logo + display name. Used
+// in the reading view byline instead of a fake "Cosmic Reader AI"
+// persona. Logos come from Google's S2 favicon CDN (free, global
+// edge-cached, ~1-3 KB each).
+const PUBLISHER_BYLINE = {
+  'NASA':              { logo: 'https://www.google.com/s2/favicons?domain=nasa.gov&sz=128',           label: 'NASA' },
+  'Space.com':         { logo: 'https://www.google.com/s2/favicons?domain=space.com&sz=128',          label: 'Space.com' },
+  'Universe Today':    { logo: 'https://www.google.com/s2/favicons?domain=universetoday.com&sz=128',  label: 'Universe Today' },
+  'SpaceNews':         { logo: 'https://www.google.com/s2/favicons?domain=spacenews.com&sz=128',      label: 'SpaceNews' },
+  'Phys.org':          { logo: 'https://www.google.com/s2/favicons?domain=phys.org&sz=128',           label: 'Phys.org' },
+  'Ars Technica':      { logo: 'https://www.google.com/s2/favicons?domain=arstechnica.com&sz=128',    label: 'Ars Technica' },
+  'Teslarati':         { logo: 'https://www.google.com/s2/favicons?domain=teslarati.com&sz=128',      label: 'Teslarati' },
+  'Planetary Society': { logo: 'https://www.google.com/s2/favicons?domain=planetary.org&sz=128',      label: 'Planetary Society' },
+  'The Rundown AI':    { logo: 'https://www.google.com/s2/favicons?domain=therundown.ai&sz=128',      label: 'The Rundown AI' },
+};
+
 // ── Open Full Reading ─────────────────────────────────────
 function openReading(idx) {
   const a = articles[idx];
@@ -3155,7 +3173,21 @@ function openReading(idx) {
   document.getElementById('read-tag').textContent = a.category + ' // ID:' + String(a.id).padStart(4,'0');
   document.getElementById('read-sector').textContent = a.category;
   document.getElementById('read-date').textContent = a.date;
-  document.getElementById('read-author').textContent = 'Cosmic Reader AI';
+  // Byline: real publisher logo + name (replaces the old "Cosmic Reader AI"
+  // placeholder which falsely implied the article was AI-authored).
+  const byline = PUBLISHER_BYLINE[a.source] || { logo: '', label: a.source || 'External Source' };
+  const logoEl = document.getElementById('read-author-logo');
+  if (logoEl) {
+    // Restore the <img> in case a previous article triggered the onerror swap
+    if (logoEl.tagName !== 'IMG') {
+      const wrap = logoEl.parentElement;
+      wrap.innerHTML = '<img id="read-author-logo" src="" alt="" loading="lazy" class="w-full h-full rounded-full object-contain" onerror="this.onerror=null;this.style.display=\'none\';this.parentElement.innerHTML=\'<span class=&quot;material-symbols-outlined text-primary text-base&quot;>satellite_alt</span>\';"/>';
+    }
+    const freshLogo = document.getElementById('read-author-logo');
+    freshLogo.style.display = '';
+    freshLogo.src = byline.logo || '';
+  }
+  document.getElementById('read-author').textContent = byline.label;
   document.getElementById('read-time').textContent = Math.ceil(a.body.split(' ').length / 200) + ' min read';
   document.getElementById('read-source-label').textContent = a.source;
   const _rfb = pickFallback(a.category, a.title);
