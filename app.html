@@ -313,14 +313,16 @@
     50%       { filter: drop-shadow(0 0 10px rgba(255,255,255,0.40)); }
   }
 
-  /* My Feed category filter chips — force vertical centering of the
-     uppercase text inside the pill. Without this, Exo 2's tall
-     cap-height made the labels sit slightly above center. */
+  /* My Feed category filter chips — optical centering of the
+     uppercase text. Exo 2 has a tall cap-height relative to its
+     baseline so symmetric padding makes glyphs look top-heavy.
+     Slightly heavier top padding pushes them to the visual center. */
   .feed-filter {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1;
+    padding-top: 0.625rem !important;    /* 10px (was 8px) */
+    padding-bottom: 0.375rem !important; /* 6px  (was 8px) */
   }
 
   /* Keep subheads (e.g. the Trending Signals byline) on a single line
@@ -1513,7 +1515,7 @@
       <section class="mb-12 flex flex-col md:flex-row justify-between items-end gap-8">
         <div class="space-y-3">
           <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#00f0ff]/60 block">Live Transmission</span>
-          <h1 class="text-5xl font-headline font-bold text-[#dbfcff]" style="letter-spacing:0.06em;">My Feed</h1>
+          <h1 class="text-5xl font-headline font-bold text-[#dbfcff]" style="letter-spacing:0.02em;">My Feed</h1>
           <p class="text-[#dbfcff]/60 max-w-xl font-body leading-relaxed">The latest signals decoded from Universe Today, NASA JPL, and observatories across the known sectors.</p>
         </div>
         <div class="bg-surface-container-low p-5 rounded-xl glow-border flex gap-6 items-center glass-panel shrink-0">
