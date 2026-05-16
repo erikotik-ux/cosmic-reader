@@ -313,6 +313,13 @@
     50%       { filter: drop-shadow(0 0 10px rgba(255,255,255,0.40)); }
   }
 
+  /* Keep subheads (e.g. the Trending Signals byline) on a single line
+     once the viewport is wide enough to fit. Below 480px we let them
+     wrap naturally so they never overflow off a phone screen. */
+  @media (min-width: 480px) {
+    .cr-subhead-nowrap { white-space: nowrap !important; }
+  }
+
   /* ── Article-title typography ───────────────────────────────────
      text-wrap: balance evenly distributes words across all lines so we
      never get an ugly "widow" — a single dangling word stranded on
@@ -1911,7 +1918,7 @@
         <div>
           <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#ffb5a0]/60 block mb-2">Last 48 Hours</span>
           <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff]">Trending Signals</h1>
-          <p class="text-[#dbfcff]/40 font-body text-sm mt-2 max-w-md">The freshest transmissions ranked by recency across all active feeds.</p>
+          <p class="text-[#dbfcff]/40 font-body text-sm mt-2 cr-subhead-nowrap">The freshest transmissions ranked by recency across all active feeds.</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <div class="w-2 h-2 rounded-full bg-[#ffb5a0] animate-pulse shadow-[0_0_8px_#ffb5a0]"></div>
