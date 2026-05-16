@@ -1802,11 +1802,6 @@
             <p id="read-time" class="font-label text-sm text-on-surface">8 min read</p>
             <p class="font-label text-[10px] text-on-surface-variant uppercase tracking-tighter">Encryption: Level 4</p>
           </div>
-          <div class="h-6 w-px bg-outline-variant/30"></div>
-          <div>
-            <p id="read-source-label" class="font-label text-sm text-on-surface">Universe Today</p>
-            <p class="font-label text-[10px] text-on-surface-variant uppercase tracking-tighter">Source Feed</p>
-          </div>
         </div>
       </header>
 
@@ -3189,7 +3184,6 @@ function openReading(idx) {
   }
   document.getElementById('read-author').textContent = byline.label;
   document.getElementById('read-time').textContent = Math.ceil(a.body.split(' ').length / 200) + ' min read';
-  document.getElementById('read-source-label').textContent = a.source;
   const _rfb = pickFallback(a.category, a.title);
   const _rImg = document.getElementById('read-img');
   _rImg.onerror = () => imgChain(_rImg, _rfb, a.category);
