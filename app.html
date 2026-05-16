@@ -313,6 +313,21 @@
     50%       { filter: drop-shadow(0 0 10px rgba(255,255,255,0.40)); }
   }
 
+  /* ── Article-title typography ───────────────────────────────────
+     text-wrap: balance evenly distributes words across all lines so we
+     never get an ugly "widow" — a single dangling word stranded on
+     its own bottom line. Supported in Chrome 114+, Safari 17.5+,
+     Firefox 121+. Older browsers fall back to default wrapping. */
+  #read-title, #detail-title {
+    text-wrap: balance;
+  }
+  /* Apply the same to the dynamically-rendered card titles (article-img is
+     the image inside each card; its sibling h3 is the title). */
+  .article-img ~ * h3,
+  .article-img ~ h3 {
+    text-wrap: balance;
+  }
+
   /* ── Reduced-motion accessibility ───────────────────────────────────
      Respects the OS-level "Reduce Motion" setting (Windows / macOS /
      iOS). When enabled, suppresses ALL CSS animations + transitions
