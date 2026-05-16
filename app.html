@@ -323,6 +323,30 @@
     justify-content: center;
     padding-top: 0.625rem !important;    /* 10px (was 8px) */
     padding-bottom: 0.375rem !important; /* 6px  (was 8px) */
+    white-space: nowrap;                  /* keep "AI & Tech" on one line */
+  }
+
+  /* Hero card with a long article title — the default gradient (which
+     fades to transparent halfway up) isn't dark enough to keep the
+     text legible when the headline runs 4-6+ lines. Apply a darker,
+     taller gradient ONLY when JS detects the title length is over
+     60 chars; short headlines keep the lighter look. */
+  .cr-hero-grad-long {
+    background-image: linear-gradient(
+      to top,
+      #131313 0%,
+      rgba(19,19,19,0.92) 30%,
+      rgba(19,19,19,0.65) 60%,
+      rgba(19,19,19,0.25) 85%,
+      transparent 100%
+    ) !important;
+  }
+
+  /* End-of-Excerpt footer: keep the two sentences on separate lines on
+     desktop (visual hierarchy), but join them inline on mobile where
+     the column is narrow and the break creates an awkward dangle. */
+  @media (max-width: 768px) {
+    .cr-eoe-break { display: none; }
   }
 
   /* Keep subheads (e.g. the Trending Signals byline) on a single line
@@ -1536,8 +1560,9 @@
         </div>
       </section>
 
-      <!-- Category Filters -->
-      <div class="flex items-center gap-3 mb-10 overflow-x-auto pb-2">
+      <!-- Category Filters — wrap to multiple rows on narrow viewports
+           instead of scrolling horizontally. Fits in one row on desktop. -->
+      <div class="flex flex-wrap items-center gap-3 mb-10 pb-2">
         <button onclick="filterFeed('All')" class="feed-filter px-5 py-2 rounded-full bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest transition-all active-filter">All</button>
         <button onclick="filterFeed('Planets')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Planets</button>
         <button onclick="filterFeed('Physics')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Physics</button>
@@ -1859,11 +1884,8 @@
       <footer class="mt-16 border-t border-outline-variant/20 pt-10 flex flex-col md:flex-row justify-between items-start gap-6">
         <div class="max-w-md">
           <h4 class="font-headline font-bold text-primary mb-3">End of Excerpt</h4>
-          <p class="text-sm text-on-surface-variant leading-relaxed font-body" style="margin-bottom:0;">
-            Cosmic Reader shows curated previews from each source.
-          </p>
           <p class="text-sm text-on-surface-variant leading-relaxed font-body">
-            Hit View Original for the full article on the publisher's site.
+            Cosmic Reader shows curated previews from each source.<br class="cr-eoe-break"/> Hit View Original for the full article on the publisher's site.
           </p>
         </div>
         <div class="flex gap-3">
@@ -2336,7 +2358,7 @@ function renderFeed(list) {
     const fb = pickFallback(a.category, a.title);
     if (style === 'hero') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10${a.title.length > 60 ? ' cr-hero-grad-long' : ''}"></div>
         <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
