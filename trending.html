@@ -80,9 +80,13 @@
   .trending-header .eyebrow { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,181,160,0.6); display: block; margin-bottom: 0.5rem; }
   .trending-header h1 { font-size: clamp(2rem,4vw,3rem); font-weight: 700; letter-spacing: -0.02em; color: #dbfcff; }
   .trending-header p { color: rgba(219,252,255,0.4); font-size: 0.875rem; margin-top: 0.5rem; }
-  /* Keep the subhead on a single line on desktop. On mobile we let it
-     wrap naturally so it never overflows the viewport horizontally. */
-  @media (min-width: 720px) { .trending-header p { white-space: nowrap; } }
+  /* Keep the subhead on a single line. On very narrow phones (<480px)
+     we let it wrap to avoid horizontal overflow; everywhere else it
+     stays as one line. !important guards against any cached or
+     conflicting rule fighting the nowrap. */
+  @media (min-width: 480px) {
+    .trending-header p { white-space: nowrap !important; }
+  }
   .live-badge { display: flex; align-items: center; gap: 0.5rem; }
   .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #ffb5a0; animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
