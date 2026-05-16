@@ -312,6 +312,21 @@
     0%, 100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.20)); }
     50%       { filter: drop-shadow(0 0 10px rgba(255,255,255,0.40)); }
   }
+
+  /* ── Reduced-motion accessibility ───────────────────────────────────
+     Respects the OS-level "Reduce Motion" setting (Windows / macOS /
+     iOS). When enabled, suppresses ALL CSS animations + transitions
+     site-wide on this page — planet pulses, orbital dots, the
+     marquee ticker, skeleton loaders, intro fades, etc. Default
+     behaviour is unchanged for users who haven't opted in. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 </style>
 </head>
 <body class="bg-background text-on-surface font-body overflow-hidden">
