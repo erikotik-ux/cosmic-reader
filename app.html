@@ -326,6 +326,17 @@
     white-space: nowrap;                  /* keep "AI & Tech" on one line */
   }
 
+  /* Saved Stories header: keep title + Explore Feed button on a single
+     row at every viewport. Mobile uses a smaller heading and tighter
+     button padding so both fit comfortably; desktop matches the look
+     of the other dashboard h1s (text-4xl). */
+  .cr-saved-h1 { font-size: 1.875rem; line-height: 1.1; }   /* text-3xl, mobile */
+  .cr-saved-cta { padding: 0.5rem 0.75rem; }                 /* tighter on mobile */
+  @media (min-width: 768px) {
+    .cr-saved-h1 { font-size: 2.25rem; line-height: 1.1; }   /* text-4xl, desktop */
+    .cr-saved-cta { padding: 0.5rem 1.25rem; }               /* px-5 py-2 on desktop */
+  }
+
   /* Hero card with a long article title — the default gradient (which
      fades to transparent halfway up) isn't dark enough to keep the
      text legible when the headline runs 4-6+ lines. Apply a darker,
@@ -1924,12 +1935,12 @@
 <main id="view-saved" class="view h-screen w-full overflow-hidden">
   <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
-      <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
+      <div class="mb-8 flex items-end justify-between gap-3">
+        <div class="min-w-0">
           <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#00f0ff]/60 block mb-2">Your Collection</span>
-          <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff]">Saved Stories</h1>
+          <h1 class="cr-saved-h1 font-headline font-bold tracking-tighter text-[#dbfcff]">Saved Stories</h1>
         </div>
-        <button onclick="navigate('feed')" class="px-5 py-2 border border-[#00f0ff]/20 text-[#dbfcff]/60 font-headline uppercase tracking-widest text-[10px] rounded-lg hover:border-[#00f0ff] hover:text-[#dbfcff] transition-all shrink-0 self-start md:self-auto">← Explore Feed</button>
+        <button onclick="navigate('feed')" class="cr-saved-cta border border-[#00f0ff]/20 text-[#dbfcff]/60 font-headline uppercase tracking-widest text-[10px] rounded-lg hover:border-[#00f0ff] hover:text-[#dbfcff] transition-all shrink-0">← Explore Feed</button>
       </div>
       <div id="saved-articles-container">
         <div class="text-center py-16">
