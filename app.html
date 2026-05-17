@@ -1998,6 +1998,8 @@ const FEEDS = [
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
   { url: 'https://www.teslarati.com/feed/',               source: 'Teslarati' },
   { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
+  // The Rundown AI — beehiiv newsletter RSS (replaces the old archive-page scraper)
+  { url: 'https://www.therundown.ai/feed',                source: 'The Rundown AI' },
 ];
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','hugging face','stability ai','midjourney','xai','grok','semiconductor','microchip','processor','gpu','cpu','nvidia','intel','amd','qualcomm','apple silicon','smartphone','software','hardware','github','open source','developer','cloud computing','data center','silicon','app store','operating system','programming','cybersecurity','hacker','hacking','cyber attack','malware','ransomware','data breach','vulnerability','exploit','zero-day','phishing','encryption','ars technica','tech industry','big tech','surveillance','privacy violation'],'AI & Tech'],
@@ -2278,7 +2280,7 @@ async function fetchFeed(feedInfo) {
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
     const PURE_SPACE_SOURCES = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
-    const PURE_AI_SOURCES    = [];
+    const PURE_AI_SOURCES    = ['The Rundown AI'];
     const category = guessCategory(title, tags)
       || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
       || (PURE_AI_SOURCES.includes(feedInfo.source)    ? 'AI & Tech'  : null);
@@ -3125,8 +3127,8 @@ function openArticle(idx) {
 }
 
 // ── Publisher byline data ─────────────────────────────────
-// Maps the article source string (from FEEDS / fetchSpaceNewsFeed)
-// to a real publisher logo + display name. Used
+// Maps the article source string (from FEEDS / fetchSpaceNewsFeed) to
+// a real publisher logo + display name. Used
 // in the reading view byline instead of a fake "Cosmic Reader AI"
 // persona. Logos come from Google's S2 favicon CDN (free, global
 // edge-cached, ~1-3 KB each).
@@ -3139,6 +3141,7 @@ const PUBLISHER_BYLINE = {
   'Ars Technica':      { logo: 'https://www.google.com/s2/favicons?domain=arstechnica.com&sz=128',    label: 'Ars Technica' },
   'Teslarati':         { logo: 'https://www.google.com/s2/favicons?domain=teslarati.com&sz=128',      label: 'Teslarati' },
   'Planetary Society': { logo: 'https://www.google.com/s2/favicons?domain=planetary.org&sz=128',      label: 'Planetary Society' },
+  'The Rundown AI':    { logo: 'https://www.google.com/s2/favicons?domain=therundown.ai&sz=128',      label: 'The Rundown AI' },
 };
 
 // ── Open Full Reading ─────────────────────────────────────
