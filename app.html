@@ -4505,8 +4505,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // can reference. Capped at 20 articles + 120-char excerpts.
   function _buildArticleContext() {
     try {
-      if (!Array.isArray(window.articles) || window.articles.length === 0) return '';
-      return window.articles.slice(0, 20).map((a, i) =>
+      // `articles` is a top-level const in the main page script — visible via
+      // lexical scope from inside this IIFE. (window.articles is undefined
+      // because top-level `const` doesn't attach to window.)
+      const list = (typeof articles !== 'undefined' && Array.isArray(articles)) ? articles
+                  : (Array.isArray(window.articles) ? window.articles : []);
+      if (list.length === 0) return '';
+      // Sort by recency so "top trending" lines up with the Trending Signals view.
+      const sorted = list.slice().sort((a, b) => {
+        const ta = new Date(a.pub_date || a.pubDate || a.date || 0).getTime() || 0;
+        const tb = new Date(b.pub_date || b.pubDate || b.date || 0).getTime() || 0;
+        return tb - ta;
+      });
+      return sorted.slice(0, 20).map((a, i) =>
         '[' + (i + 1) + '] "' + (a.title || '').slice(0, 120) +
         '" — ' + (a.source || 'Unknown') +
         ' (' + (a.category || 'Other') + '): ' +
