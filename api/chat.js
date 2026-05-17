@@ -119,13 +119,16 @@ export default async function handler(req, res) {
 
     if (!llmRes.ok) {
       const errText = await llmRes.text().catch(() => '');
-      console.error('[/api/chat] Upstream error:', llmRes.status, errText.slice(0, 300));
-      // Surface a friendlier status to the user but log details server-side
-      const status = llmRes.status === 429 ? 429 : 502;
-      return res.status(status).json({
-        error: status === 429
-          ? 'Hitting rate limits — try again in a moment.'
-          : 'Upstream AI service unavailable. Try again shortly.'
+      let errDetail = errText.slice(0, 400);
+      // Pull a human-readable message out of common JSON error shapes
+      try {
+        const errJson = JSON.parse(errText);
+        if (errJson.error && errJson.error.message) errDetail = errJson.error.message;
+        else if (errJson.message) errDetail = errJson.message;
+      } catch(e) {}
+      console.error('[/api/chat] Upstream error:', llmRes.status, errDetail);
+      return res.status(502).json({
+        error: 'AI service returned ' + llmRes.status + ': ' + errDetail
       });
     }
 
