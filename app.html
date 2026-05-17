@@ -3945,6 +3945,13 @@ document.addEventListener('DOMContentLoaded', () => {
           renderSavedStories();    // re-render the Saved view
         }
       }
+
+      // ── Chat history cross-device sync ──────────────────────────
+      // Pull any chat history stored in user_metadata. Empty tabs hydrate
+      // from remote; active conversations stay put (see _crHydrateChat).
+      if (typeof window._crHydrateChat === 'function') {
+        window._crHydrateChat(Array.isArray(meta.chat) ? meta.chat : []);
+      }
     } catch(e) { /* not signed in yet — skip */ }
   })();
 </script>
@@ -4458,7 +4465,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function _persist() {
     try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)); } catch(e) {}
+    _queueChatRemoteSync(); // debounced upload to Supabase for cross-device sync
   }
+
+  // Debounced background sync of chat history to Supabase user_metadata.
+  // Survives tab close + appears on other devices after reload.
+  let _chatSyncTimer = null;
+  function _queueChatRemoteSync() {
+    if (_chatSyncTimer) clearTimeout(_chatSyncTimer);
+    _chatSyncTimer = setTimeout(async () => {
+      if (!window._supabase || !window._crUser) return;
+      try {
+        // Strip 'error' bubbles — those are transient, no point persisting
+        const snapshot = chatHistory
+          .filter(m => m.role === 'user' || m.role === 'assistant')
+          .slice(-MAX_HISTORY);
+        await window._supabase.auth.updateUser({ data: { chat: snapshot } });
+      } catch(e) { /* offline / not signed in — sessionStorage still has the data */ }
+    }, 1000);
+  }
+
+  // Hydrator called from loadInitialSettings once Supabase user_metadata is fetched.
+  // Remote replaces local if remote is non-empty and local is empty (fresh tab on
+  // a signed-in user). Otherwise keep local — user is mid-conversation.
+  window._crHydrateChat = function(remote) {
+    if (!Array.isArray(remote) || remote.length === 0) return;
+    if (chatHistory.length > 0) return; // don't clobber an active conversation
+    chatHistory = remote.slice(-MAX_HISTORY);
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)); } catch(e) {}
+    _renderMessages();
+  };
   function _escapeHtml(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -4610,14 +4646,81 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(payload)
       });
 
-      const data = await res.json().catch(() => ({}));
+      // Error path: backend returns JSON on non-2xx
       if (!res.ok) {
-        const errMsg = (data && data.error) || ('Chat error (' + res.status + ')');
+        let errMsg = 'Chat error (' + res.status + ')';
+        try {
+          const errData = await res.json();
+          if (errData && errData.error) errMsg = errData.error;
+        } catch(e) {}
         chatHistory.push({ role: 'error', content: errMsg });
-      } else if (data && data.message) {
-        chatHistory.push({ role: 'assistant', content: data.message });
-      } else {
+        return;
+      }
+
+      // Success path: SSE stream of OpenAI-style chunks
+      const ctype = res.headers.get('content-type') || '';
+      if (!res.body || !ctype.includes('text/event-stream')) {
+        // Fallback for non-streaming responses (shouldn't happen w/ Edge runtime)
+        const data = await res.json().catch(() => ({}));
+        if (data && data.message) {
+          chatHistory.push({ role: 'assistant', content: data.message });
+        } else {
+          chatHistory.push({ role: 'error', content: 'Empty response from AI. Try again.' });
+        }
+        return;
+      }
+
+      // Push a placeholder assistant message we'll grow as chunks arrive
+      const asstMsg = { role: 'assistant', content: '' };
+      chatHistory.push(asstMsg);
+      isSending = false; // typing dots off — actual text now streaming in
+      _renderMessages();
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+      let receivedAny = false;
+      let lastRender = 0;
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+
+        // SSE frames are separated by blank lines; each frame has `data: ...` lines
+        let nlIdx;
+        while ((nlIdx = buf.indexOf('\n')) !== -1) {
+          const line = buf.slice(0, nlIdx).replace(/\r$/, '');
+          buf = buf.slice(nlIdx + 1);
+          if (!line.startsWith('data:')) continue;
+          const payload = line.slice(5).trim();
+          if (!payload || payload === '[DONE]') continue;
+          try {
+            const json = JSON.parse(payload);
+            const delta = json.choices && json.choices[0] && json.choices[0].delta;
+            const piece = delta && delta.content;
+            if (piece) {
+              asstMsg.content += piece;
+              receivedAny = true;
+            }
+          } catch(e) { /* malformed chunk — skip */ }
+        }
+
+        // Throttle re-renders to ~30fps to avoid layout thrash
+        const now = Date.now();
+        if (now - lastRender > 33) {
+          _renderMessages();
+          lastRender = now;
+        }
+      }
+
+      if (!receivedAny) {
+        // Replace empty placeholder with an error bubble
+        chatHistory.pop();
         chatHistory.push({ role: 'error', content: 'Empty response from AI. Try again.' });
+      } else {
+        // Trim trailing whitespace from the streamed reply
+        asstMsg.content = asstMsg.content.trim();
       }
     } catch(err) {
       chatHistory.push({ role: 'error', content: 'Network error. Check connection and try again.' });

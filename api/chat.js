@@ -1,13 +1,15 @@
-// /api/chat.js — Cosmic Reader AI Operator
+// /api/chat.js — Cosmic Reader AI Operator (Edge runtime, streaming SSE)
 //
 // Receives a chat conversation from the client and proxies it to whichever
 // LLM provider's OpenAI-compatible endpoint is configured via env vars.
-// Default target: Google Gemini Flash 2.0 (free tier friendly).
+// Streams tokens back to the client as Server-Sent Events for a low-latency,
+// ChatGPT-like typing effect.
+// Default target: Google Gemini Flash (free tier friendly).
 //
 // Env vars required:
 //   LLM_API_KEY    — provider API key
 //   LLM_BASE_URL   — e.g. https://generativelanguage.googleapis.com/v1beta/openai/
-//   LLM_MODEL      — e.g. gemini-2.0-flash
+//   LLM_MODEL      — e.g. gemini-2.5-flash-lite
 //
 // Request body (JSON):
 //   {
@@ -15,9 +17,9 @@
 //     articleContext?: '...'   // optional: compact summary of today's feed
 //   }
 //
-// Response (JSON):
-//   { message: '...response text...', usage?: { ... } }
-//   { error: '...' }   on failure
+// Response: text/event-stream with OpenAI-style `data: {...}` chunks.
+
+export const config = { runtime: 'edge' };
 
 const SYSTEM_PROMPT = `You are the Cosmic Reader AI Operator, an assistant embedded in a space-news aggregator dashboard.
 
@@ -37,70 +39,72 @@ Guidelines:
 
 Today's feed is provided to you below (if available). Reference it when relevant.`;
 
-export default async function handler(req, res) {
-  // CORS / method gating
+function jsonError(status, message) {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+export default async function handler(req) {
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method not allowed' });
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json', 'Allow': 'POST' }
+    });
   }
 
-  // Verify configuration
   const apiKey  = process.env.LLM_API_KEY;
   const baseUrl = process.env.LLM_BASE_URL;
   const model   = process.env.LLM_MODEL;
   if (!apiKey || !baseUrl || !model) {
-    return res.status(500).json({
-      error: 'Chat backend not configured. Missing LLM_API_KEY / LLM_BASE_URL / LLM_MODEL env vars.'
-    });
+    return jsonError(500, 'Chat backend not configured. Missing LLM_API_KEY / LLM_BASE_URL / LLM_MODEL env vars.');
   }
 
-  // Parse body (Vercel auto-parses JSON but defensively re-parse if string)
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); }
-    catch (e) { return res.status(400).json({ error: 'Invalid JSON body' }); }
+  let body;
+  try {
+    body = await req.json();
+  } catch (e) {
+    return jsonError(400, 'Invalid JSON body');
   }
   body = body || {};
 
-  // Validate messages
   const messages = body.messages;
   if (!Array.isArray(messages) || messages.length === 0) {
-    return res.status(400).json({ error: 'Missing or empty `messages` array' });
+    return jsonError(400, 'Missing or empty `messages` array');
   }
   if (messages.length > 30) {
-    return res.status(400).json({ error: 'Conversation too long. Clear it and start over.' });
+    return jsonError(400, 'Conversation too long. Clear it and start over.');
   }
   for (const m of messages) {
     if (!m || typeof m !== 'object' || !m.role || typeof m.content !== 'string') {
-      return res.status(400).json({ error: 'Invalid message format' });
+      return jsonError(400, 'Invalid message format');
     }
     if (m.content.length > 2000) {
-      return res.status(400).json({ error: 'A message is too long. Keep each turn under 2000 characters.' });
+      return jsonError(400, 'A message is too long. Keep each turn under 2000 characters.');
     }
     if (!['user', 'assistant', 'system'].includes(m.role)) {
-      return res.status(400).json({ error: 'Invalid message role' });
+      return jsonError(400, 'Invalid message role');
     }
   }
 
-  // Build the final system prompt: base prompt + optional today's-articles context.
+  // Build system prompt + optional article context
   let systemPrompt = SYSTEM_PROMPT;
   if (typeof body.articleContext === 'string' && body.articleContext.length > 0) {
-    // Cap context size to avoid blowing past free-tier token limits
     const ctx = body.articleContext.slice(0, 8000);
     systemPrompt += '\n\n--- Today\'s feed (article index) ---\n' + ctx;
   }
 
   const chatMessages = [
     { role: 'system', content: systemPrompt },
-    // Drop any 'system' roles the client tried to send — only ours counts
     ...messages.filter(m => m.role !== 'system')
   ];
 
-  // Compose endpoint URL safely (handle trailing slash)
   const endpoint = baseUrl.replace(/\/+$/, '') + '/chat/completions';
 
+  let upstream;
   try {
-    const llmRes = await fetch(endpoint, {
+    upstream = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -110,45 +114,37 @@ export default async function handler(req, res) {
         model,
         messages: chatMessages,
         max_tokens: 600,
-        temperature: 0.7
+        temperature: 0.7,
+        stream: true
       }),
-      // Vercel Hobby tier serverless functions cap at 10s by default, 30s on
-      // the Edge runtime / higher tiers. Stay safely under 10s.
-      signal: AbortSignal.timeout(9000)
-    });
-
-    if (!llmRes.ok) {
-      const errText = await llmRes.text().catch(() => '');
-      let errDetail = errText.slice(0, 400);
-      // Pull a human-readable message out of common JSON error shapes
-      try {
-        const errJson = JSON.parse(errText);
-        if (errJson.error && errJson.error.message) errDetail = errJson.error.message;
-        else if (errJson.message) errDetail = errJson.message;
-      } catch(e) {}
-      console.error('[/api/chat] Upstream error:', llmRes.status, errDetail);
-      return res.status(502).json({
-        error: 'AI service returned ' + llmRes.status + ': ' + errDetail
-      });
-    }
-
-    const data = await llmRes.json();
-    const text = (data && data.choices && data.choices[0] && data.choices[0].message
-      && data.choices[0].message.content) || '';
-    if (!text) {
-      console.warn('[/api/chat] Empty completion', JSON.stringify(data).slice(0, 300));
-      return res.status(502).json({ error: 'No response from AI. Try again.' });
-    }
-
-    return res.status(200).json({
-      message: text.trim(),
-      usage: data.usage || null
+      signal: AbortSignal.timeout(25000)
     });
   } catch (err) {
-    console.error('[/api/chat] Fetch error:', err && err.message);
     if (err && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
-      return res.status(504).json({ error: 'AI took too long to respond. Try a shorter question.' });
+      return jsonError(504, 'AI took too long to respond. Try a shorter question.');
     }
-    return res.status(500).json({ error: 'Chat error. Try again.' });
+    return jsonError(500, 'Chat error. Try again.');
   }
+
+  if (!upstream.ok || !upstream.body) {
+    const errText = await upstream.text().catch(() => '');
+    let errDetail = errText.slice(0, 400);
+    try {
+      const errJson = JSON.parse(errText);
+      if (errJson.error && errJson.error.message) errDetail = errJson.error.message;
+      else if (errJson.message) errDetail = errJson.message;
+    } catch (e) {}
+    return jsonError(502, 'AI service returned ' + upstream.status + ': ' + errDetail);
+  }
+
+  // Pass the SSE stream straight through to the client.
+  return new Response(upstream.body, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no'
+    }
+  });
 }
