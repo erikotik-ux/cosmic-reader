@@ -12,8 +12,8 @@ const OG_ALLOWED_HOSTS = new Set([
   'www.nasa.gov', 'nasa.gov', 'science.nasa.gov',
   'phys.org', 'www.phys.org',
   'arstechnica.com', 'www.arstechnica.com',
-  // The Rundown AI (beehiiv-hosted newsletter)
-  'www.therundown.ai', 'therundown.ai',
+  // Ben's Bites (Substack-hosted AI newsletter)
+  'www.bensbites.com', 'bensbites.com',
   // Currently blocked but historically supported (keep here in case re-enabled)
   'skyandtelescope.org', 'www.skyandtelescope.org',
 ]);
