@@ -4168,5 +4168,478 @@ document.addEventListener('DOMContentLoaded', () => {
     </form>
   </div>
 </div>
+
+<!-- ═══ COSMIC AI CHAT ═══════════════════════════════════════ -->
+<style>
+  /* Floating chat button — fixed bottom-right, above mobile bottom nav */
+  .cr-chat-fab {
+    position: fixed;
+    bottom: 6rem;             /* clear of mobile bottom nav */
+    right: 1.25rem;
+    z-index: 900;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #dbfcff 0%, #00f0ff 100%);
+    color: #00363a;
+    border: none;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(0,240,255,0.25), 0 0 0 1px rgba(0,240,255,0.4);
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .cr-chat-fab:hover { transform: scale(1.05); box-shadow: 0 10px 28px rgba(0,240,255,0.4), 0 0 0 1px #00f0ff; }
+  .cr-chat-fab:active { transform: scale(0.96); }
+  .cr-chat-fab .material-symbols-outlined { font-size: 26px; }
+  @media (min-width: 768px) {
+    .cr-chat-fab { bottom: 1.5rem; right: 1.5rem; width: 60px; height: 60px; }
+  }
+  /* Hide FAB when the panel is open */
+  body.cr-chat-open .cr-chat-fab { display: none; }
+
+  /* Slide-in chat panel — full-screen on mobile, side panel on desktop */
+  .cr-chat-panel {
+    position: fixed;
+    z-index: 1010;
+    background: linear-gradient(180deg, #0d1515 0%, #0a1212 100%);
+    border: 1px solid rgba(0,240,255,0.22);
+    box-shadow: -10px 0 60px rgba(0,0,0,0.6);
+    display: none;
+    flex-direction: column;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+  }
+  /* Mobile: full screen */
+  .cr-chat-panel { inset: 0; }
+  /* Desktop: right side panel, 380px wide, full height */
+  @media (min-width: 768px) {
+    .cr-chat-panel {
+      top: 0; right: 0; bottom: 0; left: auto;
+      width: 380px;
+      border-left: 1px solid rgba(0,240,255,0.22);
+      border-radius: 0;
+    }
+  }
+  body.cr-chat-open .cr-chat-panel { display: flex; }
+
+  /* Header */
+  .cr-chat-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(0,240,255,0.18);
+    background: rgba(0,240,255,0.04);
+  }
+  .cr-chat-title {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    color: #00f0ff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .cr-chat-title .material-symbols-outlined { font-size: 18px; }
+  .cr-chat-actions { display: inline-flex; gap: 0.25rem; }
+  .cr-chat-actions button {
+    background: none; border: none;
+    color: rgba(219,252,255,0.55);
+    padding: 0.4rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .cr-chat-actions button:hover { color: #00f0ff; background: rgba(0,240,255,0.06); }
+  .cr-chat-actions button .material-symbols-outlined { font-size: 18px; }
+
+  /* Messages scroll area */
+  .cr-chat-messages {
+    flex: 1; min-height: 0;
+    overflow-y: auto;
+    padding: 1rem 0.95rem;
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+  .cr-chat-messages::-webkit-scrollbar { width: 6px; }
+  .cr-chat-messages::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.2); border-radius: 3px; }
+
+  /* Empty state */
+  .cr-chat-empty {
+    text-align: center;
+    padding: 1.5rem 0.5rem 0.5rem;
+    color: rgba(219,252,255,0.6);
+  }
+  .cr-chat-empty-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(0,240,255,0.22), rgba(0,240,255,0.04) 70%);
+    border: 1px solid rgba(0,240,255,0.32);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 24px rgba(0,240,255,0.15);
+  }
+  .cr-chat-empty-icon .material-symbols-outlined { font-size: 28px; color: #00f0ff; filter: drop-shadow(0 0 5px rgba(0,240,255,0.5)); }
+  .cr-chat-empty h4 { color: #dbfcff; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; letter-spacing: 0.02em; }
+  .cr-chat-empty p { font-size: 0.78rem; color: rgba(219,252,255,0.5); line-height: 1.5; max-width: 280px; margin: 0 auto 1rem; }
+  .cr-chat-suggestions {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    margin: 0.5rem 0 0;
+  }
+  .cr-chat-suggest-btn {
+    text-align: left;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,240,255,0.18);
+    border-radius: 10px;
+    padding: 0.6rem 0.75rem;
+    color: rgba(219,252,255,0.85);
+    font-family: inherit;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .cr-chat-suggest-btn:hover { background: rgba(0,240,255,0.08); border-color: rgba(0,240,255,0.45); }
+  .cr-chat-suggest-btn .material-symbols-outlined { font-size: 16px; color: rgba(0,240,255,0.7); flex-shrink: 0; }
+
+  /* Message bubbles */
+  .cr-chat-msg {
+    max-width: 85%;
+    padding: 0.6rem 0.85rem;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .cr-chat-msg.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, rgba(0,240,255,0.22), rgba(0,240,255,0.12));
+    border: 1px solid rgba(0,240,255,0.35);
+    color: #dbfcff;
+    border-bottom-right-radius: 4px;
+  }
+  .cr-chat-msg.assistant {
+    align-self: flex-start;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(219,252,255,0.92);
+    border-bottom-left-radius: 4px;
+  }
+  .cr-chat-msg.error {
+    align-self: flex-start;
+    background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.3);
+    color: #ffb5a0;
+    font-size: 0.78rem;
+  }
+
+  /* Typing indicator */
+  .cr-chat-typing {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.7rem 0.9rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    border-bottom-left-radius: 4px;
+  }
+  .cr-chat-typing span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(0,240,255,0.6);
+    animation: cr-chat-bounce 1.2s infinite ease-in-out;
+  }
+  .cr-chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .cr-chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes cr-chat-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-3px); opacity: 1; }
+  }
+
+  /* Composer */
+  .cr-chat-form {
+    border-top: 1px solid rgba(0,240,255,0.15);
+    background: rgba(8,15,16,0.6);
+    padding: 0.7rem 0.85rem;
+    display: flex; align-items: flex-end; gap: 0.55rem;
+  }
+  .cr-chat-form textarea {
+    flex: 1;
+    resize: none;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,240,255,0.2);
+    border-radius: 10px;
+    color: #dbfcff;
+    font-family: inherit;
+    font-size: 0.85rem;
+    padding: 0.55rem 0.7rem;
+    line-height: 1.4;
+    outline: none;
+    max-height: 120px;
+    min-height: 38px;
+    transition: border-color 0.15s;
+  }
+  .cr-chat-form textarea:focus { border-color: rgba(0,240,255,0.55); }
+  .cr-chat-form textarea::placeholder { color: rgba(219,252,255,0.3); }
+  .cr-chat-form button {
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(0,240,255,0.25), rgba(0,240,255,0.12));
+    border: 1px solid rgba(0,240,255,0.45);
+    color: #00f0ff;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .cr-chat-form button:hover { background: rgba(0,240,255,0.3); border-color: #00f0ff; }
+  .cr-chat-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .cr-chat-form button .material-symbols-outlined { font-size: 18px; }
+
+  /* Footer note */
+  .cr-chat-footnote {
+    font-size: 0.62rem;
+    color: rgba(219,252,255,0.3);
+    text-align: center;
+    padding: 0 0.85rem 0.6rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* Lock background scroll when chat is open on mobile */
+  @media (max-width: 767px) {
+    body.cr-chat-open { overflow: hidden; }
+  }
+</style>
+
+<button class="cr-chat-fab" onclick="crChatOpen()" aria-label="Open Cosmic AI chat" title="Cosmic AI">
+  <span class="material-symbols-outlined">auto_awesome</span>
+</button>
+
+<aside class="cr-chat-panel" id="cr-chat-panel" role="dialog" aria-label="Cosmic AI chat">
+  <header class="cr-chat-header">
+    <div class="cr-chat-title">
+      <span class="material-symbols-outlined">auto_awesome</span>
+      Cosmic AI
+    </div>
+    <div class="cr-chat-actions">
+      <button onclick="crChatClear()" aria-label="Clear conversation" title="Clear conversation">
+        <span class="material-symbols-outlined">delete_sweep</span>
+      </button>
+      <button onclick="crChatClose()" aria-label="Close chat" title="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="cr-chat-messages" id="cr-chat-messages"></div>
+
+  <form class="cr-chat-form" onsubmit="crChatSend(event)">
+    <textarea id="cr-chat-input"
+              placeholder="Ask about today's space news…"
+              rows="1"
+              maxlength="1800"
+              onkeydown="crChatKey(event)"
+              oninput="crChatAutosize(this)"></textarea>
+    <button type="submit" id="cr-chat-send-btn" aria-label="Send">
+      <span class="material-symbols-outlined">send</span>
+    </button>
+  </form>
+  <div class="cr-chat-footnote">Powered by Gemini — replies may be inaccurate. Verify at the source.</div>
+</aside>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'cr_chat_history_v1';
+  const MAX_HISTORY = 24; // hard cap kept client-side
+
+  // ── State ───────────────────────────────────────────────────
+  let chatHistory = [];
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (raw) chatHistory = JSON.parse(raw) || [];
+  } catch(e) { chatHistory = []; }
+  let isSending = false;
+
+  function _persist() {
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)); } catch(e) {}
+  }
+  function _escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // ── Article context for the AI ──────────────────────────────
+  // Builds a compact summary of today's feed (article index) the model
+  // can reference. Capped at 20 articles + 120-char excerpts.
+  function _buildArticleContext() {
+    try {
+      if (!Array.isArray(window.articles) || window.articles.length === 0) return '';
+      return window.articles.slice(0, 20).map((a, i) =>
+        '[' + (i + 1) + '] "' + (a.title || '').slice(0, 120) +
+        '" — ' + (a.source || 'Unknown') +
+        ' (' + (a.category || 'Other') + '): ' +
+        (a.excerpt || '').slice(0, 120).replace(/\s+/g, ' ').trim()
+      ).join('\n');
+    } catch(e) { return ''; }
+  }
+
+  // ── Render ─────────────────────────────────────────────────
+  function _renderEmpty() {
+    return '' +
+      '<div class="cr-chat-empty">' +
+      '  <div class="cr-chat-empty-icon"><span class="material-symbols-outlined">auto_awesome</span></div>' +
+      '  <h4>Cosmic AI Operator</h4>' +
+      '  <p>Ask about today\'s headlines, get a summary, or explore a space topic.</p>' +
+      '  <div class="cr-chat-suggestions">' +
+      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="Summarize today\'s top headlines in 3 bullet points.">' +
+      '      <span class="material-symbols-outlined">summarize</span>' +
+      '      Summarize today\'s top headlines' +
+      '    </button>' +
+      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="Pick one article from today\'s feed that I should read first, and tell me why.">' +
+      '      <span class="material-symbols-outlined">recommend</span>' +
+      '      Recommend one to read first' +
+      '    </button>' +
+      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="What\'s the latest on Artemis 3?">' +
+      '      <span class="material-symbols-outlined">rocket_launch</span>' +
+      '      What\'s new with Artemis 3?' +
+      '    </button>' +
+      '  </div>' +
+      '</div>';
+  }
+
+  function _renderMessages() {
+    const root = document.getElementById('cr-chat-messages');
+    if (!root) return;
+    if (chatHistory.length === 0 && !isSending) {
+      root.innerHTML = _renderEmpty();
+      return;
+    }
+    let html = '';
+    chatHistory.forEach(m => {
+      const cls = m.role === 'user' ? 'user'
+                : m.role === 'error' ? 'assistant error'
+                : 'assistant';
+      html += '<div class="cr-chat-msg ' + cls + '">' + _escapeHtml(m.content) + '</div>';
+    });
+    if (isSending) {
+      html += '<div class="cr-chat-typing" aria-label="Cosmic AI is typing">' +
+              '<span></span><span></span><span></span></div>';
+    }
+    root.innerHTML = html;
+    // Scroll to bottom
+    root.scrollTop = root.scrollHeight;
+  }
+
+  // ── Open / close ───────────────────────────────────────────
+  window.crChatOpen = function() {
+    document.body.classList.add('cr-chat-open');
+    _renderMessages();
+    // Focus the input on open (small delay to let panel animate)
+    setTimeout(() => {
+      const i = document.getElementById('cr-chat-input');
+      if (i) i.focus();
+    }, 50);
+  };
+  window.crChatClose = function() {
+    document.body.classList.remove('cr-chat-open');
+  };
+  window.crChatClear = function() {
+    if (chatHistory.length === 0) return;
+    if (!confirm('Clear this conversation?')) return;
+    chatHistory = [];
+    _persist();
+    _renderMessages();
+  };
+
+  // ── Suggestion click ───────────────────────────────────────
+  window.crChatSuggest = function(text) {
+    const input = document.getElementById('cr-chat-input');
+    if (input) {
+      input.value = text;
+      crChatAutosize(input);
+      input.focus();
+    }
+  };
+
+  // ── Composer behaviour ─────────────────────────────────────
+  window.crChatKey = function(e) {
+    // Enter to send, Shift+Enter for newline
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      crChatSend(e);
+    }
+  };
+  window.crChatAutosize = function(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  };
+
+  // ── Send ───────────────────────────────────────────────────
+  window.crChatSend = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (isSending) return;
+    const input = document.getElementById('cr-chat-input');
+    const sendBtn = document.getElementById('cr-chat-send-btn');
+    if (!input) return;
+    const text = (input.value || '').trim();
+    if (!text) return;
+
+    // Push user message
+    chatHistory.push({ role: 'user', content: text });
+    // Cap history (drop oldest non-system messages if over limit)
+    while (chatHistory.length > MAX_HISTORY) chatHistory.shift();
+    _persist();
+
+    // Clear input
+    input.value = '';
+    crChatAutosize(input);
+
+    // Render + show typing
+    isSending = true;
+    if (sendBtn) sendBtn.disabled = true;
+    _renderMessages();
+
+    try {
+      // Build the messages payload (only role+content, no extras)
+      const payload = {
+        messages: chatHistory
+          .filter(m => m.role === 'user' || m.role === 'assistant')
+          .map(m => ({ role: m.role, content: m.content })),
+        articleContext: _buildArticleContext()
+      };
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errMsg = (data && data.error) || ('Chat error (' + res.status + ')');
+        chatHistory.push({ role: 'error', content: errMsg });
+      } else if (data && data.message) {
+        chatHistory.push({ role: 'assistant', content: data.message });
+      } else {
+        chatHistory.push({ role: 'error', content: 'Empty response from AI. Try again.' });
+      }
+    } catch(err) {
+      chatHistory.push({ role: 'error', content: 'Network error. Check connection and try again.' });
+    } finally {
+      isSending = false;
+      if (sendBtn) sendBtn.disabled = false;
+      _persist();
+      _renderMessages();
+    }
+  };
+
+  // ── ESC to close ───────────────────────────────────────────
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.body.classList.contains('cr-chat-open')) {
+      crChatClose();
+    }
+  });
+
+  // Render once on init so re-opens show the cached conversation
+  _renderMessages();
+})();
+</script>
+
 </body>
 </html>
