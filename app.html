@@ -2481,102 +2481,6 @@ function renderFeed(list) {
   enrichOgImages();
 }
 
-// ── Scrape The Rundown AI (no RSS — beehiiv archive page) ──
-async function scrapeRundownFeed() {
-  const targetUrl = 'https://www.therundown.ai/archive';
-  let html = '';
-  // Try each CORS proxy until we get back valid HTML containing article links
-  for (const proxyFn of RSS_PROXIES) {
-    try {
-      const res = await fetch(proxyFn(targetUrl), { signal: AbortSignal.timeout(15000) });
-      const t = await res.text();
-      // Accept if we get meaningful HTML back (either /p/ links or therundown mention)
-      if (t.length > 500 && (t.includes('/p/') || t.includes('therundown') || t.includes('rundown'))) {
-        html = t; break;
-      }
-    } catch(e) { /* try next proxy */ }
-  }
-  if (!html) return [];
-
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-
-  // Collect all <a> tags that link to individual posts (/p/ path pattern)
-  const allLinks = Array.from(doc.querySelectorAll('a[href]'));
-  const postLinks = allLinks.filter(a => {
-    const h = a.getAttribute('href') || '';
-    return h.includes('/p/') && !h.includes('#') && !h.includes('?ref=');
-  });
-
-  const seen = new Set();
-  const items = [];
-
-  for (const link of postLinks) {
-    const rawHref = link.getAttribute('href') || '';
-    const fullHref = rawHref.startsWith('http')
-      ? rawHref
-      : 'https://www.therundown.ai' + (rawHref.startsWith('/') ? rawHref : '/' + rawHref);
-
-    // Deduplicate by URL
-    const urlKey = fullHref.split('?')[0].replace(/\/$/, '');
-    if (seen.has(urlKey)) continue;
-    seen.add(urlKey);
-
-    // Extract title — check headings inside the link first, then the link text itself
-    const heading = link.querySelector('h1, h2, h3, h4, h5, h6');
-    let title = (heading ? heading.textContent : link.textContent).replace(/\s+/g, ' ').trim();
-    // Skip nav links, buttons, or very short stubs
-    if (!title || title.length < 12 || /^(subscribe|sign in|log in|archive|home|read more)$/i.test(title)) continue;
-
-    // Extract image — look inside the link for <img> tags
-    const imgEl = link.querySelector('img');
-    let image = '';
-    if (imgEl) {
-      image = imgEl.getAttribute('src') || imgEl.getAttribute('data-src') || imgEl.getAttribute('data-lazy-src') || '';
-      // Resolve relative image URLs
-      if (image && !image.startsWith('http')) image = 'https://www.therundown.ai' + image;
-      // Skip tiny icons/avatars (usually < 200 chars in URL or very small dimensions)
-      if (image && (image.includes('favicon') || image.includes('logo') || image.includes('avatar'))) image = '';
-    }
-    // Also search for beehiiv CDN images in the surrounding container
-    if (!image) {
-      const container = link.closest('article, li, div') || link.parentElement;
-      if (container) {
-        const containerImg = container.querySelector('img:not([src*="avatar"]):not([src*="favicon"])');
-        if (containerImg) image = containerImg.getAttribute('src') || containerImg.getAttribute('data-src') || '';
-      }
-    }
-    if (!image) image = pickFallback('AI & Tech', title);
-    image = proxyImg(image);
-
-    // Extract excerpt from sibling/child <p> elements
-    const descEl = link.querySelector('p') || (link.parentElement && link.parentElement.querySelector('p'));
-    const excerpt = descEl ? descEl.textContent.replace(/\s+/g, ' ').trim().slice(0, 280) : '';
-
-    items.push({
-      id: items.length,
-      title,
-      excerpt: excerpt || 'Latest AI news and analysis from The Rundown AI.',
-      body:    excerpt || 'Read the full article on The Rundown AI.',
-      category: 'AI & Tech',
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      source: 'The Rundown AI',
-      image,
-      read_more: fullHref,
-      coord: 'Live — The Rundown AI',
-      readTime: '3m',
-      stats: [
-        { label: 'Category',  val: 'AI & Tech',      color: 'text-primary'   },
-        { label: 'Source',    val: 'The Rundown AI', color: 'text-secondary' },
-        { label: 'Published', val: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), color: 'text-tertiary' },
-        { label: 'Read Time', val: '3 min',          color: 'text-primary'   },
-      ]
-    });
-    if (items.length >= 10) break;
-  }
-
-  return items;
-}
-
 // ── SpaceNews via WordPress REST API ──────────────────────
 // SpaceNews intentionally strips images from its RSS feed (only sponsored posts
 // include them). Their WP REST API exposes yoast_head_json.og_image[] which gives
@@ -2713,8 +2617,7 @@ async function loadLiveFeeds() {
           .then(bucket => { if (bucket && bucket.length) { rssTracker[i] = true; ingestBucket(bucket); } })
           .catch(() => {})
       ),
-      fetchSpaceNewsFeed().then(ingestBucket).catch(() => {}),
-      scrapeRundownFeed().then(ingestBucket).catch(() => {})
+      fetchSpaceNewsFeed().then(ingestBucket).catch(() => {})
     ];
 
     await Promise.allSettled(allPromises);
@@ -3222,8 +3125,8 @@ function openArticle(idx) {
 }
 
 // ── Publisher byline data ─────────────────────────────────
-// Maps the article source string (from FEEDS / fetchSpaceNewsFeed /
-// scrapeRundownFeed) to a real publisher logo + display name. Used
+// Maps the article source string (from FEEDS / fetchSpaceNewsFeed)
+// to a real publisher logo + display name. Used
 // in the reading view byline instead of a fake "Cosmic Reader AI"
 // persona. Logos come from Google's S2 favicon CDN (free, global
 // edge-cached, ~1-3 KB each).
@@ -3236,7 +3139,6 @@ const PUBLISHER_BYLINE = {
   'Ars Technica':      { logo: 'https://www.google.com/s2/favicons?domain=arstechnica.com&sz=128',    label: 'Ars Technica' },
   'Teslarati':         { logo: 'https://www.google.com/s2/favicons?domain=teslarati.com&sz=128',      label: 'Teslarati' },
   'Planetary Society': { logo: 'https://www.google.com/s2/favicons?domain=planetary.org&sz=128',      label: 'Planetary Society' },
-  'The Rundown AI':    { logo: 'https://www.google.com/s2/favicons?domain=therundown.ai&sz=128',      label: 'The Rundown AI' },
 };
 
 // ── Open Full Reading ─────────────────────────────────────
