@@ -173,9 +173,14 @@
          force-snap to the END of the container, which caused the last planet
          to float high with a huge empty gap below it. */
       scroll-snap-type: y proximity;
-      scroll-padding-top: 8rem;    /* 128px — matches padding-top so scroll=0 is valid */
-      scroll-padding-bottom: 4rem; /* 64px — clears 56px bottom nav */
-      padding-top: 8rem !important; /* 128px — first planet 60px below ~68px header */
+      /* Top clearance accounts for the HUD bar (SYS INTEGRITY / LOCAL TIME /
+         ACTIVE FEEDS) AND a comfortable visual buffer so the Moon (first
+         planet) never sits behind it when scrolled to the top. Was 8rem
+         but the HUD is taller than that on most phones; bumped to 11rem
+         (176px) which clears the bar fully on iPhone Pro Max sizes. */
+      scroll-padding-top: 11rem;    /* 176px — keeps snap target below HUD */
+      scroll-padding-bottom: 4rem;  /* 64px — clears 56px bottom nav */
+      padding-top: 11rem !important; /* 176px — first planet sits well below HUD */
     }
     /* Cross-browser bottom spacer — Chrome ignores padding-bottom in overflow
        flex containers, but DOES extend scroll height for ::after elements. */
