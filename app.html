@@ -325,6 +325,22 @@
     padding-top: 0.625rem !important;    /* 10px (was 8px) */
     padding-bottom: 0.375rem !important; /* 6px  (was 8px) */
     white-space: nowrap;                  /* keep "AI & Tech" on one line */
+    line-height: 1;                       /* keep optical centering predictable */
+  }
+  /* Mobile: shrink horizontal padding so all 6 chips fit in 2 rows
+     (3 per row instead of the current 3+2+1 wrap), and use symmetric
+     vertical padding since the smaller chip size makes the desktop
+     asymmetric trick look top-heavy on phones. */
+  @media (max-width: 640px) {
+    .feed-filter {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+      padding-left: 0.75rem !important;
+      padding-right: 0.75rem !important;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+    }
+    .feed-filter-row { gap: 0.5rem !important; }   /* tighter than desktop's gap-3 */
   }
 
   /* Saved Stories header: keep title + Explore Feed button on a single
@@ -995,8 +1011,8 @@
         <line id="mcl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
         <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
-      <!-- Planet 1: Planets & Exoplanets — left offset -->
-      <div class="planet-node self-start ml-6 pointer-events-auto" onclick="openCategoryArticle('Planets')">
+      <!-- Planet 1: Planets & Exoplanets — chain pos #2, top-left on desktop -->
+      <div class="planet-node self-start ml-10 pointer-events-auto" style="order:2" onclick="openCategoryArticle('Planets')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-36 h-36 overflow-hidden planet-glow-primary" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #002030 0%, #000e18 60%, #00060c 100%);">
             <img class="w-full h-full object-cover opacity-70 mix-blend-screen" style="border-radius:50%;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2bRs7KvJKTUCus4hWpUbLgNbCV6uoK-ubndSNO8u8FtyrysQ0wJ7OLG6JhpxS9dFf4ZqjzER1tTjKcSFOgVfz6zQjQkgxvJKUSB1p1o7c3m8SGoUXCbMWhV2yLsxnzflKoLBd0aj5ZTcww7NVvDVYoM_0kQNn5cPfYsM_NrIgv0o6D5h3EwYseHwjMKwB1-5hvpQkrTvChsRuAGHbWBxOuByO806cmtm4lceO1Kp9MAa2H3jvRZx8HwoYE4dVHhhALxnF0oe9So" alt="Physics planet"/>
@@ -1019,8 +1035,8 @@
         </div>
       </div>
 
-      <!-- Planet 2: Space Missions — right offset -->
-      <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openCategoryArticle('Missions')">
+      <!-- Planet 2: Space Missions — chain pos #3, bottom-center on desktop -->
+      <div class="planet-node self-center pointer-events-auto" style="order:3" onclick="openCategoryArticle('Missions')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-44 h-44 overflow-hidden planet-glow-secondary" style="border-radius:50%; background:radial-gradient(circle at 38% 32%, #261000 0%, #130500 55%, #050100 100%);">
             <img class="w-full h-full object-cover opacity-80 mix-blend-screen" style="border-radius:50%; object-position: calc(50% + 13px) calc(50% + 14px); transform: scale(1.3) translateZ(0);" src="https://live.staticflickr.com/65535/48954139137_94523700ec_b.jpg" alt="Starship artist rendering"/>
@@ -1047,8 +1063,8 @@
         </div>
       </div>
 
-      <!-- Planet 3: Physics & Cosmos — center-left -->
-      <div class="planet-node self-start ml-10 pointer-events-auto" onclick="openCategoryArticle('Physics')">
+      <!-- Planet 3: Physics & Cosmos — chain pos #5 (last), bottom-right on desktop -->
+      <div class="planet-node self-end mr-4 pointer-events-auto" style="order:5" onclick="openCategoryArticle('Physics')">
         <div class="relative phys-wrap" style="transform-style:preserve-3d;">
           <canvas class="phys-c" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;z-index:1;pointer-events:none;"></canvas>
           <div class="planet-sphere relative w-40 h-40 planet-glow-phys" style="border-radius:50%;">
@@ -1204,8 +1220,8 @@
         </div>
       </div>
 
-      <!-- Planet 4: Moon — right offset -->
-      <div class="planet-node self-end mr-10 pointer-events-auto" onclick="openCategoryArticle('Moon')">
+      <!-- Planet 4: Moon — chain pos #1 (first), bottom-left on desktop -->
+      <div class="planet-node self-start ml-4 pointer-events-auto" style="order:1" onclick="openCategoryArticle('Moon')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-28 h-28 overflow-hidden planet-glow-exo" style="border-radius:50%; background:radial-gradient(circle at 40% 35%, #1e1e1e 0%, #111111 55%, #060606 100%);">
             <img class="w-full h-full object-cover opacity-85 mix-blend-screen" style="border-radius:50%; transform: scale(1.6) translateZ(0);" src="https://live.staticflickr.com/5588/30866406122_4c0cdf45c2_b.jpg" alt="Moon"/>
@@ -1224,8 +1240,8 @@
         </div>
       </div>
 
-      <!-- Planet 5: AI & Tech — left offset -->
-      <div class="planet-node self-start ml-8 pointer-events-auto" onclick="openCategoryArticle('AI & Tech')">
+      <!-- Planet 5: AI & Tech — chain pos #4, top-right on desktop -->
+      <div class="planet-node self-end mr-10 pointer-events-auto" style="order:4" onclick="openCategoryArticle('AI & Tech')">
         <div class="relative" style="transform-style:preserve-3d;">
           <div class="planet-sphere relative w-32 h-32 overflow-hidden" style="border-radius:50%;background:#02050f;">
             <canvas class="ds-c" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
@@ -1573,8 +1589,9 @@
       </section>
 
       <!-- Category Filters — wrap to multiple rows on narrow viewports
-           instead of scrolling horizontally. Fits in one row on desktop. -->
-      <div class="flex flex-wrap items-center gap-3 mb-10 pb-2">
+           instead of scrolling horizontally. Fits in one row on desktop,
+           2 rows of 3 on mobile (mobile spacing is overridden in CSS). -->
+      <div class="feed-filter-row flex flex-wrap items-center gap-3 mb-10 pb-2">
         <button onclick="filterFeed('All')" class="feed-filter px-5 py-2 rounded-full bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest transition-all active-filter">All</button>
         <button onclick="filterFeed('Planets')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Planets</button>
         <button onclick="filterFeed('Physics')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Physics</button>
@@ -2830,32 +2847,49 @@ const articles = []; // Populated by loadLiveFeeds()
 // Hydrate from localStorage on boot so saves survive refreshes.
 // Keyed by article URL (read_more) rather than title — titles can collide
 // across feeds and change if a publisher edits a headline.
-const _CR_SAVED_KEY = 'cr_saved_v1';
+const _CR_SAVED_KEY     = 'cr_saved_v1';
+const _CR_REMOVED_KEY   = 'cr_saved_removed_v1';  // tombstones: removals win over stale remote
 const savedStories = (function() {
   try { return JSON.parse(localStorage.getItem(_CR_SAVED_KEY) || '[]'); }
   catch(e) { return []; }
 })();
+// Tombstone set — keys of saved stories the user has explicitly removed.
+// Survives reloads so a stale remote can't resurrect a removed story.
+const removedKeys = new Set(((function() {
+  try { return JSON.parse(localStorage.getItem(_CR_REMOVED_KEY) || '[]'); }
+  catch(e) { return []; }
+})()));
 
 function _persistSaved() {
-  try { localStorage.setItem(_CR_SAVED_KEY, JSON.stringify(savedStories)); }
-  catch(e) {}
+  try { localStorage.setItem(_CR_SAVED_KEY,   JSON.stringify(savedStories)); }       catch(e) {}
+  try { localStorage.setItem(_CR_REMOVED_KEY, JSON.stringify([...removedKeys])); }   catch(e) {}
   _queueSavedRemoteSync(); // debounced upload to Supabase for cross-device sync
 }
 
-// Debounced background sync of savedStories to Supabase user_metadata.
+// Background sync of savedStories + tombstones to Supabase user_metadata.
 // Cross-device: saving on desktop ⟶ visible on mobile after reload.
+// Short debounce (200ms) + visibilitychange flush so removals stick even
+// when the user immediately backgrounds the tab on mobile.
 let _savedSyncTimer = null;
 function _queueSavedRemoteSync() {
   if (_savedSyncTimer) clearTimeout(_savedSyncTimer);
-  _savedSyncTimer = setTimeout(async () => {
-    if (!window._supabase || !window._crUser) return;
-    try {
-      // Use a shallow snapshot — fast, captures current state of the array
-      const snapshot = savedStories.slice();
-      await window._supabase.auth.updateUser({ data: { saved: snapshot } });
-    } catch(e) { /* offline / not signed in — localStorage still has the data */ }
-  }, 800);
+  _savedSyncTimer = setTimeout(_flushSavedRemoteSync, 200);
 }
+async function _flushSavedRemoteSync() {
+  if (_savedSyncTimer) { clearTimeout(_savedSyncTimer); _savedSyncTimer = null; }
+  if (!window._supabase || !window._crUser) return;
+  try {
+    await window._supabase.auth.updateUser({
+      data: { saved: savedStories.slice(), removedKeys: [...removedKeys] }
+    });
+  } catch(e) { /* offline / not signed in — localStorage still has the data */ }
+}
+// Flush on tab hide — covers the "tap remove → swipe away tab" case on mobile
+// where the 200ms debounce wouldn't otherwise fire before the tab is killed.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && _savedSyncTimer) _flushSavedRemoteSync();
+});
+window.addEventListener('pagehide', () => { if (_savedSyncTimer) _flushSavedRemoteSync(); });
 
 function _savedKey(a) { return a && (a.read_more || a.link || a.title) || ''; }
 
@@ -2866,14 +2900,17 @@ function saveStory(idx) {
   const key = _savedKey(a);
   const savedIdx = savedStories.findIndex(s => _savedKey(s) === key);
   if (savedIdx !== -1) {
-    // Already saved — toggle off (unsave)
+    // Already saved — toggle off (unsave). Add to tombstone so a stale remote
+    // can't resurrect it after a refresh on this or another device.
     savedStories.splice(savedIdx, 1);
+    if (key) removedKeys.add(key);
     _persistSaved();
     renderSavedStories();
     if (icon) { icon.textContent = 'bookmark_add'; icon.style.color = ''; }
   } else {
-    // Not saved — save it
+    // Not saved — save it. Clear any tombstone so this re-save sticks across devices.
     savedStories.push(a);
+    if (key) removedKeys.delete(key);
     _persistSaved();
     renderSavedStories();
     if (icon) { icon.textContent = 'bookmark'; icon.style.color = '#00f0ff'; }
@@ -2883,6 +2920,7 @@ function saveStory(idx) {
 function removeSaved(key) {
   const i = savedStories.findIndex(s => _savedKey(s) === key);
   if (i !== -1) savedStories.splice(i, 1);
+  if (key) removedKeys.add(key); // tombstone — blocks resurrection from stale remote
   _persistSaved();
   renderSavedStories();
 }
@@ -3479,7 +3517,10 @@ function drawMobileConstellationLines() {
   const cRect = container.getBoundingClientRect();
   const scrollTop = container.scrollTop;
 
-  // Planet centers in SVG coordinate space (scroll-content relative)
+  // Planet centers in SVG coordinate space (scroll-content relative).
+  // Sort by Y so the chain follows VISUAL (CSS-order) order rather than
+  // DOM order — needed because we use `order: N` to reorder mobile
+  // planets to match the desktop W-grid chain.
   const centers = nodes.map(n => {
     const sphere = n.querySelector('.planet-sphere');
     if (!sphere) return null;
@@ -3490,7 +3531,7 @@ function drawMobileConstellationLines() {
       rx: r.width  / 2,
       ry: r.height / 2
     };
-  }).filter(Boolean);
+  }).filter(Boolean).sort((a, b) => a.y - b.y);
 
   // Zigzag chain: 0→1, 1→2, 2→3, 3→4
   const pairs = [[0,1],[1,2],[2,3],[3,4]];
@@ -3832,22 +3873,32 @@ document.addEventListener('DOMContentLoaded', () => {
       applySettingsToUI(meta);
 
       // ── Saved Stories cross-device sync ─────────────────────────
-      // Merge any saves stored in this user's Supabase user_metadata
-      // with whatever is already in localStorage. Union by URL key so
-      // we never duplicate or clobber. Result becomes the new source
-      // of truth and is written back to both stores.
-      const remote = Array.isArray(meta.saved) ? meta.saved : [];
-      if (remote.length > 0 || savedStories.length > 0) {
+      // Merge remote (Supabase user_metadata) into local (localStorage) by
+      // URL key. UNION so saves from any device show up everywhere — but
+      // any key in EITHER tombstone list (local or remote) is filtered out
+      // first, so a remove on one device removes everywhere.
+      const remote        = Array.isArray(meta.saved)        ? meta.saved        : [];
+      const remoteRemoved = Array.isArray(meta.removedKeys)  ? meta.removedKeys  : [];
+      // Merge tombstones first — both sides contribute
+      let tombsChanged = false;
+      remoteRemoved.forEach(k => { if (k && !removedKeys.has(k)) { removedKeys.add(k); tombsChanged = true; } });
+      // Drop any local saves that the remote has tombstoned (other-device removal)
+      let savesChanged = false;
+      for (let i = savedStories.length - 1; i >= 0; i--) {
+        const k = _savedKey(savedStories[i]);
+        if (k && removedKeys.has(k)) { savedStories.splice(i, 1); savesChanged = true; }
+      }
+      // Then union remote saves into local, skipping anything tombstoned
+      if (remote.length > 0 || savedStories.length > 0 || tombsChanged) {
         const seen = new Set(savedStories.map(_savedKey));
-        let changed = false;
         remote.forEach(a => {
           const k = _savedKey(a);
-          if (k && !seen.has(k)) { savedStories.push(a); seen.add(k); changed = true; }
+          if (k && !seen.has(k) && !removedKeys.has(k)) {
+            savedStories.push(a); seen.add(k); savesChanged = true;
+          }
         });
-        // If local had items the remote didn't, or vice versa, persist the merged result.
-        // (If everything was already in sync, this is a no-op.)
-        if (changed || remote.length !== savedStories.length) {
-          _persistSaved();         // localStorage + queued upload
+        if (savesChanged || tombsChanged || remote.length !== savedStories.length) {
+          _persistSaved();         // localStorage + queued upload (re-broadcasts merged truth)
           renderSavedStories();    // re-render the Saved view
         }
       }
