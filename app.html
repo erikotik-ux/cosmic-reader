@@ -1575,7 +1575,8 @@
           <h1 class="text-5xl font-headline font-bold tracking-tighter text-[#dbfcff]">My Feed</h1>
           <p class="text-[#dbfcff]/60 max-w-xl font-body leading-relaxed">The latest signals decoded from Universe Today, NASA JPL, and observatories across the known sectors.</p>
         </div>
-        <div class="bg-surface-container-low p-5 rounded-xl glow-border flex gap-6 items-center glass-panel shrink-0">
+        <!-- Desktop stats card — bordered glass panel beside the hero text -->
+        <div class="hidden md:flex bg-surface-container-low p-5 rounded-xl glow-border gap-6 items-center glass-panel shrink-0">
           <div class="text-center">
             <span class="block text-2xl font-bold font-headline text-[#00f0ff]">9</span>
             <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/40">Articles</span>
@@ -1593,16 +1594,55 @@
         </div>
       </section>
 
-      <!-- Category Filters — wrap to multiple rows on narrow viewports
-           instead of scrolling horizontally. Fits in one row on desktop,
-           2 rows of 3 on mobile (mobile spacing is overridden in CSS). -->
-      <div class="feed-filter-row flex flex-wrap items-center gap-3 mb-10 pb-2">
+      <!-- Mobile stats — full-width row with thin dividers, no card.
+           Bigger numbers, brand colors, optical breathing room. -->
+      <section class="md:hidden mb-8 -mx-2">
+        <div class="flex items-stretch justify-between rounded-2xl border border-[#00f0ff]/15 bg-gradient-to-b from-[#00f0ff]/[0.04] to-transparent py-4 px-2">
+          <div class="flex-1 text-center px-2">
+            <span class="block text-3xl font-bold font-headline text-[#00f0ff] leading-none">9</span>
+            <span class="block mt-1.5 text-[9px] uppercase tracking-[0.18em] text-[#dbfcff]/45">Articles</span>
+          </div>
+          <div class="w-px self-stretch bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent"></div>
+          <div class="flex-1 text-center px-2">
+            <span class="block text-3xl font-bold font-headline text-[#ffb5a0] leading-none">4</span>
+            <span class="block mt-1.5 text-[9px] uppercase tracking-[0.18em] text-[#dbfcff]/45">Categories</span>
+          </div>
+          <div class="w-px self-stretch bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent"></div>
+          <div class="flex-1 text-center px-2">
+            <span class="inline-flex items-center gap-1.5 text-2xl font-bold font-headline text-[#fcf2ff] leading-none">
+              <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-pulse"></span>Live
+            </span>
+            <span class="block mt-1.5 text-[9px] uppercase tracking-[0.18em] text-[#dbfcff]/45">Signal</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category Filters — desktop only.
+           Mobile uses a native <select> below for a thumb-friendly OS picker. -->
+      <div class="feed-filter-row hidden md:flex flex-wrap items-center gap-3 mb-10 pb-2">
         <button onclick="filterFeed('All')" class="feed-filter px-5 py-2 rounded-full bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest transition-all active-filter">All</button>
         <button onclick="filterFeed('Planets')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Planets</button>
         <button onclick="filterFeed('Physics')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Physics</button>
         <button onclick="filterFeed('Moon')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Moon</button>
         <button onclick="filterFeed('Missions')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Missions</button>
         <button onclick="filterFeed('AI & Tech')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">AI &amp; Tech</button>
+      </div>
+      <!-- Mobile filter dropdown — native <select> for OS-native picker UX.
+           Trigger is styled to match the chip aesthetic. -->
+      <div class="md:hidden mb-8">
+        <label class="block text-[10px] font-headline uppercase tracking-[0.24em] text-[#00f0ff]/60 mb-2 ml-1">Filter</label>
+        <div class="cr-mobile-filter relative">
+          <select id="feed-filter-mobile" onchange="filterFeed(this.value)"
+            class="w-full appearance-none bg-surface-container-high border border-[#00f0ff]/25 text-[#dbfcff] font-headline text-sm uppercase tracking-[0.18em] rounded-xl pl-4 pr-12 py-3.5 focus:outline-none focus:border-[#00f0ff] transition-colors">
+            <option value="All">All Categories</option>
+            <option value="Planets">Planets</option>
+            <option value="Physics">Physics</option>
+            <option value="Moon">Moon</option>
+            <option value="Missions">Missions</option>
+            <option value="AI & Tech">AI &amp; Tech</option>
+          </select>
+          <span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#00f0ff]/70 text-xl">expand_more</span>
+        </div>
       </div>
 
       <!-- Bento Grid -->
@@ -2499,8 +2539,11 @@ function renderFeed(list) {
   });
 
   // Update count display
-  const countEl = document.querySelector('#view-feed .text-2xl.text-\\[\\#00f0ff\\]');
-  if (countEl) countEl.textContent = String(total);
+  // Two count elements now: desktop card (.text-2xl) + mobile row (.text-3xl).
+  // querySelectorAll keeps both in sync.
+  document.querySelectorAll('#view-feed [data-stat="articles"], #view-feed .text-2xl.text-\\[\\#00f0ff\\], #view-feed .text-3xl.text-\\[\\#00f0ff\\]').forEach(el => {
+    el.textContent = String(total);
+  });
 
   // Enrich any fallback images by fetching og:image from article pages
   enrichOgImages();
@@ -3255,6 +3298,7 @@ function filterFeed(category) {
   currentFilter = category;
   currentPage   = 1;
 
+  // Desktop chip styling
   document.querySelectorAll('.feed-filter').forEach(btn => {
     const isActive = btn.textContent.trim() === category;
     btn.classList.toggle('bg-[#00f0ff]', isActive);
@@ -3266,6 +3310,11 @@ function filterFeed(category) {
     btn.classList.toggle('border', !isActive);
     btn.classList.toggle('border-[#00f0ff]/20', !isActive);
   });
+
+  // Mobile dropdown sync — keeps the <select> value in step when a filter
+  // is set programmatically (e.g. via a galaxy-map planet click).
+  const sel = document.getElementById('feed-filter-mobile');
+  if (sel && sel.value !== category) sel.value = category;
 
   renderCurrentPage();
 }
