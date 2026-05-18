@@ -2081,12 +2081,15 @@ const FEEDS = [
   // Ben's Bites — Substack AI newsletter (per-article RSS with image enclosures)
   { url: 'https://www.bensbites.com/feed',                source: "Ben's Bites" },
 ];
+// Order matters — first match wins. Most specific topics first.
+// Physics is checked BEFORE Missions so cosmology articles (which often
+// mention NASA/spacecraft in passing) don't get misrouted to Missions.
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','hugging face','stability ai','midjourney','xai','grok','semiconductor','microchip','processor','gpu','cpu','nvidia','intel','amd','qualcomm','apple silicon','smartphone','software','hardware','github','open source','developer','cloud computing','data center','silicon','app store','operating system','programming','cybersecurity','hacker','hacking','cyber attack','malware','ransomware','data breach','vulnerability','exploit','zero-day','phishing','encryption','ars technica','tech industry','big tech','surveillance','privacy violation'],'AI & Tech'],
   [['moon','lunar','artemis','south pole crater','lend ','lro ','lcross'],'Moon'],
-  [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid belt','solar system','planet','lightning storm'],'Planets'],
+  [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid belt','solar system','planet','exoplanet','lightning storm'],'Planets'],
+  [['black hole','gravitational wave','ligo','neutron star','dark matter','dark energy','quantum','galaxy','nebula','cosmos','cosmology','cosmological','universe','spacetime','space-time','singularity','singularities','wave function','no-boundary','no boundary','general relativity','special relativity','einstein','hawking','wheeler','dewitt','multiverse','inflation','primordial','wormhole','string theory','quark','higgs','boson','gluon','antimatter','redshift','pulsar','magnetar','quasar','supernova','supernovae','big bang','telescope','hubble','spectrum','radiation','particle','physics','astrophysics'],'Physics'],
   [['nasa','esa','spacex','rocket','starship','launch','mission','spacecraft','probe','sls','falcon','hera','dart','voyager','cassini','juno','new horizons'],'Missions'],
-  [['black hole','gravitational wave','ligo','neutron star','dark matter','dark energy','quantum','galaxy','nebula','cosmos','big bang','telescope','hubble','spectrum','radiation','particle','physics'],'Physics'],
 ];
 const FALLBACK_IMAGES = {
   Physics:    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
@@ -2208,8 +2211,11 @@ function imgChain(el, fb, cat) {
 }
 
 // Returns null if no space/science keyword matches — used to filter non-space articles
-function guessCategory(title, tags) {
-  const txt = (title + ' ' + tags).toLowerCase();
+function guessCategory(title, tags, excerpt) {
+  // Title and tags get full weight; the excerpt is also scanned so articles
+  // whose titles are obtuse (e.g. "What If the Universe Had No Beginning?")
+  // still get categorised by the cosmology language in their summary.
+  const txt = (title + ' ' + (tags || '') + ' ' + (excerpt || '')).toLowerCase();
   for (const [kws, cat] of KEYWORD_CATS) {
     for (const kw of kws) { if (txt.includes(kw)) return cat; }
   }
@@ -2245,7 +2251,7 @@ async function fetchFeed(feedInfo) {
         const body     = stripHtml(descRaw).slice(0, 2000);
         const date     = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
         const tags     = (item.categories || []).join(' ');
-        const category = guessCategory(title, tags) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
+        const category = guessCategory(title, tags, excerpt) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
         // Helper: normalise a raw URL — fix protocol-relative, strip WP resize params but keep CDN ssl param
         function normaliseImg(u) {
           if (!u) return '';
@@ -2361,7 +2367,7 @@ async function fetchFeed(feedInfo) {
     const tags    = catEls.map(c => c.textContent).join(' ');
     const PURE_SPACE_SOURCES = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
     const PURE_AI_SOURCES    = ["Ben's Bites"];
-    const category = guessCategory(title, tags)
+    const category = guessCategory(title, tags, excerpt)
       || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
       || (PURE_AI_SOURCES.includes(feedInfo.source)    ? 'AI & Tech'  : null);
     // Helper: normalise image URL — fix protocol-relative, strip known resize params
@@ -2588,7 +2594,7 @@ async function fetchSpaceNewsFeed() {
       const date      = post.date
         ? new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : '';
-      const category  = guessCategory(title, '') || 'Missions';
+      const category  = guessCategory(title, '', excerpt) || 'Missions';
       const image     = proxyImg((post.image && post.image.startsWith('http'))
         ? post.image
         : pickFallback(category, title));
