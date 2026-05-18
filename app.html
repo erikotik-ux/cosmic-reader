@@ -1628,20 +1628,21 @@
         <button onclick="filterFeed('AI & Tech')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">AI &amp; Tech</button>
       </div>
       <!-- Mobile filter dropdown — native <select> for OS-native picker UX.
-           Trigger is styled to match the chip aesthetic. -->
+           Trigger is styled like the active filter chip: cyan pill, dark
+           text, full-radius, bold uppercase. -->
       <div class="md:hidden mb-8">
         <label class="block text-[10px] font-headline uppercase tracking-[0.24em] text-[#00f0ff]/60 mb-2 ml-1">Filter</label>
-        <div class="cr-mobile-filter relative">
+        <div class="cr-mobile-filter relative inline-block w-auto">
           <select id="feed-filter-mobile" onchange="filterFeed(this.value)"
-            class="w-full appearance-none bg-surface-container-high border border-[#00f0ff]/25 text-[#dbfcff] font-headline text-sm uppercase tracking-[0.18em] rounded-xl pl-4 pr-12 py-3.5 focus:outline-none focus:border-[#00f0ff] transition-colors">
-            <option value="All">All Categories</option>
+            class="appearance-none bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest rounded-full pl-5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+            <option value="All">All</option>
             <option value="Planets">Planets</option>
             <option value="Physics">Physics</option>
             <option value="Moon">Moon</option>
             <option value="Missions">Missions</option>
             <option value="AI & Tech">AI &amp; Tech</option>
           </select>
-          <span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#00f0ff]/70 text-xl">expand_more</span>
+          <span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#00363a] text-lg">expand_more</span>
         </div>
       </div>
 
