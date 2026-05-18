@@ -2086,9 +2086,9 @@ const FEEDS = [
 // mention NASA/spacecraft in passing) don't get misrouted to Missions.
 const KEYWORD_CATS = [
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','hugging face','stability ai','midjourney','xai','grok','semiconductor','microchip','processor','gpu','cpu','nvidia','intel','amd','qualcomm','apple silicon','smartphone','software','hardware','github','open source','developer','cloud computing','data center','silicon','app store','operating system','programming','cybersecurity','hacker','hacking','cyber attack','malware','ransomware','data breach','vulnerability','exploit','zero-day','phishing','encryption','ars technica','tech industry','big tech','surveillance','privacy violation'],'AI & Tech'],
-  [['moon','lunar','artemis','south pole crater','lend ','lro ','lcross'],'Moon'],
-  [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid belt','solar system','planet','exoplanet','lightning storm'],'Planets'],
-  [['black hole','gravitational wave','ligo','neutron star','dark matter','dark energy','quantum','galaxy','nebula','cosmos','cosmology','cosmological','universe','spacetime','space-time','singularity','singularities','wave function','no-boundary','no boundary','general relativity','special relativity','einstein','hawking','wheeler','dewitt','multiverse','inflation','primordial','wormhole','string theory','quark','higgs','boson','gluon','antimatter','redshift','pulsar','magnetar','quasar','supernova','supernovae','big bang','telescope','hubble','spectrum','radiation','particle','physics','astrophysics'],'Physics'],
+  [['moon','lunar','artemis','south pole crater','lend','lro','lcross'],'Moon'],
+  [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid belt','solar system','planet','exoplanet','gas giant','ice giant','lightning storm'],'Planets'],
+  [['black hole','gravitational wave','ligo','neutron star','dark matter','dark energy','quantum','galaxy','nebula','cosmos','cosmology','cosmological','universe','spacetime','space-time','singularity','singularities','wave function','no-boundary','no boundary','general relativity','special relativity','einstein','hawking','wheeler','dewitt','multiverse','inflation','primordial','wormhole','string theory','quark','higgs','boson','gluon','antimatter','redshift','pulsar','magnetar','quasar','supernova','supernovae','stardust','stellar','interstellar','star formation','comet','meteor','big bang','telescope','hubble','spectrum','radiation','particle','physics','astrophysics','astronomer','astronomy'],'Physics'],
   [['nasa','esa','spacex','rocket','starship','launch','mission','spacecraft','probe','sls','falcon','hera','dart','voyager','cassini','juno','new horizons'],'Missions'],
 ];
 const FALLBACK_IMAGES = {
@@ -2215,9 +2215,20 @@ function guessCategory(title, tags, excerpt) {
   // Title and tags get full weight; the excerpt is also scanned so articles
   // whose titles are obtuse (e.g. "What If the Universe Had No Beginning?")
   // still get categorised by the cosmology language in their summary.
+  // Uses word-boundary matching so short keywords like 'intel' don't match
+  // inside 'Intelligence' (SETI articles), 'amd' doesn't match in random
+  // identifiers, etc. Multi-word keywords still work — \b matches at any
+  // non-word boundary including spaces between the words.
   const txt = (title + ' ' + (tags || '') + ' ' + (excerpt || '')).toLowerCase();
   for (const [kws, cat] of KEYWORD_CATS) {
-    for (const kw of kws) { if (txt.includes(kw)) return cat; }
+    for (const kw of kws) {
+      // Escape regex metacharacters, then wrap in \b boundaries with
+      // optional trailing 's' so 'astronomer' matches 'astronomers',
+      // 'telescope' matches 'telescopes', etc.
+      const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const re = new RegExp('\\b' + escaped + 's?\\b');
+      if (re.test(txt)) return cat;
+    }
   }
   return null;
 }
@@ -2623,7 +2634,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v1';
+const _CR_CACHE_KEY = 'cr_cache_v2';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 async function loadLiveFeeds() {
