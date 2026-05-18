@@ -350,6 +350,22 @@
     .feed-filter-row { gap: 0.5rem !important; }   /* tighter than desktop's gap-3 */
   }
 
+  /* Mobile filter dropdown — option list theming. The trigger keeps its
+     cyan pill look (set via Tailwind on the <select>), but the popup
+     menu should match the rest of the dark UI. Chrome/Edge/Firefox on
+     desktop and Android Chrome honor option bg+color; iOS Safari uses
+     a native wheel that ignores these (acceptable). */
+  #feed-filter-mobile option {
+    background-color: #0d1515;
+    color: #dbfcff;
+    font-weight: 400;
+  }
+  #feed-filter-mobile option:checked,
+  #feed-filter-mobile option:hover {
+    background-color: #0a1212;
+    color: #00f0ff;
+  }
+
   /* Saved Stories header: keep title + Explore Feed button on a single
      row at every viewport. Mobile uses a smaller heading and tighter
      button padding so both fit comfortably; desktop matches the look
