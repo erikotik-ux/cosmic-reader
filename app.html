@@ -178,9 +178,9 @@
          planet) never sits behind it when scrolled to the top. Was 8rem
          but the HUD is taller than that on most phones; bumped to 11rem
          (176px) which clears the bar fully on iPhone Pro Max sizes. */
-      scroll-padding-top: 11rem;    /* 176px — keeps snap target below HUD */
+      scroll-padding-top: 13rem;    /* 208px — keeps snap target below HUD with breathing room */
       scroll-padding-bottom: 4rem;  /* 64px — clears 56px bottom nav */
-      padding-top: 11rem !important; /* 176px — first planet sits well below HUD */
+      padding-top: 13rem !important; /* 208px — first planet (Moon) sits well below HUD */
     }
     /* Cross-browser bottom spacer — Chrome ignores padding-bottom in overflow
        flex containers, but DOES extend scroll height for ::after elements. */
@@ -197,15 +197,17 @@
     }
     /* Article/content scroll containers */
     .mobile-safe-scroll {
-      scroll-padding-top: 8rem;       /* 128px — clears fixed header */
+      scroll-padding-top: 10rem;      /* 160px — clears fixed top bar + breathing room */
       scroll-padding-bottom: 4rem;    /* 64px — clears bottom nav */
-      padding-top: 8rem !important;   /* 128px — clears ~68px fixed header with room */
+      padding-top: 10rem !important;  /* 160px — was 8rem; headlines were touching top bar */
     }
-    /* Same Chrome bottom-padding bug — use ::after spacer */
+    /* Same Chrome bottom-padding bug — use ::after spacer.
+       Tightened from 5rem → 3.5rem because pages were ending with a
+       large empty gap below the last article on mobile. */
     .mobile-safe-scroll::after {
       content: '';
       display: block;
-      height: 5rem; /* 80px — clears 56px bottom nav */
+      height: 3.5rem; /* 56px — exactly matches the bottom-nav height */
     }
   }
   .drop-cap-para::first-letter {
@@ -1594,28 +1596,8 @@
         </div>
       </section>
 
-      <!-- Mobile stats — full-width row with thin dividers, no card.
-           Bigger numbers, brand colors, optical breathing room. -->
-      <section class="md:hidden mb-8 -mx-2">
-        <div class="flex items-stretch justify-between rounded-2xl border border-[#00f0ff]/15 bg-gradient-to-b from-[#00f0ff]/[0.04] to-transparent py-4 px-2">
-          <div class="flex-1 text-center px-2">
-            <span class="block text-3xl font-bold font-headline text-[#00f0ff] leading-none">9</span>
-            <span class="block mt-1.5 text-[9px] uppercase tracking-[0.18em] text-[#dbfcff]/45">Articles</span>
-          </div>
-          <div class="w-px self-stretch bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent"></div>
-          <div class="flex-1 text-center px-2">
-            <span class="block text-3xl font-bold font-headline text-[#ffb5a0] leading-none">4</span>
-            <span class="block mt-1.5 text-[9px] uppercase tracking-[0.18em] text-[#dbfcff]/45">Categories</span>
-          </div>
-          <div class="w-px self-stretch bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent"></div>
-          <div class="flex-1 text-center px-2">
-            <span class="inline-flex items-center gap-1.5 text-2xl font-bold font-headline text-[#fcf2ff] leading-none">
-              <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-pulse"></span>Live
-            </span>
-            <span class="block mt-1.5 text-[9px] uppercase tracking-[0.18em] text-[#dbfcff]/45">Signal</span>
-          </div>
-        </div>
-      </section>
+      <!-- (Mobile stats merged with the filter dropdown below — see the
+           md:hidden flex row that follows the desktop chip row.) -->
 
       <!-- Category Filters — desktop only.
            Mobile uses a native <select> below for a thumb-friendly OS picker. -->
@@ -1627,14 +1609,14 @@
         <button onclick="filterFeed('Missions')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Missions</button>
         <button onclick="filterFeed('AI & Tech')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">AI &amp; Tech</button>
       </div>
-      <!-- Mobile filter dropdown — native <select> for OS-native picker UX.
-           Trigger is styled like the active filter chip: cyan pill, dark
-           text, full-radius, bold uppercase. -->
-      <div class="md:hidden mb-8">
-        <label class="block text-[10px] font-headline uppercase tracking-[0.24em] text-[#00f0ff]/60 mb-2 ml-1">Filter</label>
-        <div class="cr-mobile-filter relative inline-block w-auto">
+      <!-- Mobile filter + compact stats — single horizontal row.
+           Filter dropdown (cyan pill, OS-native picker) on the left,
+           compact 3-stat tile on the right. Heights are matched so the
+           two elements sit cleanly side-by-side. -->
+      <div class="md:hidden mb-8 flex items-center justify-between gap-3">
+        <div class="cr-mobile-filter relative shrink-0">
           <select id="feed-filter-mobile" onchange="filterFeed(this.value)"
-            class="appearance-none bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest rounded-full pl-5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+            class="appearance-none bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
             <option value="All">All</option>
             <option value="Planets">Planets</option>
             <option value="Physics">Physics</option>
@@ -1642,7 +1624,25 @@
             <option value="Missions">Missions</option>
             <option value="AI & Tech">AI &amp; Tech</option>
           </select>
-          <span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#00363a] text-lg">expand_more</span>
+          <span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#00363a] text-base">expand_more</span>
+        </div>
+        <div class="flex items-stretch gap-2 py-1.5 px-3 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/[0.04]">
+          <div class="text-center px-1.5">
+            <span class="block text-base font-bold font-headline text-[#00f0ff] leading-none">9</span>
+            <span class="block mt-0.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45">Articles</span>
+          </div>
+          <span class="w-px self-stretch bg-[#00f0ff]/20"></span>
+          <div class="text-center px-1.5">
+            <span class="block text-base font-bold font-headline text-[#ffb5a0] leading-none">4</span>
+            <span class="block mt-0.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45">Cats</span>
+          </div>
+          <span class="w-px self-stretch bg-[#00f0ff]/20"></span>
+          <div class="text-center px-1.5">
+            <span class="inline-flex items-center gap-1 text-sm font-bold font-headline text-[#fcf2ff] leading-none">
+              <span class="inline-block w-1 h-1 rounded-full bg-[#00f0ff] animate-pulse"></span>Live
+            </span>
+            <span class="block mt-0.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45">Signal</span>
+          </div>
         </div>
       </div>
 
@@ -2540,9 +2540,10 @@ function renderFeed(list) {
   });
 
   // Update count display
-  // Two count elements now: desktop card (.text-2xl) + mobile row (.text-3xl).
-  // querySelectorAll keeps both in sync.
-  document.querySelectorAll('#view-feed [data-stat="articles"], #view-feed .text-2xl.text-\\[\\#00f0ff\\], #view-feed .text-3xl.text-\\[\\#00f0ff\\]').forEach(el => {
+  // Two count elements: desktop card (.text-2xl) + mobile compact tile
+  // (.text-base, same .text-[#00f0ff] hex color). querySelectorAll keeps
+  // both in sync as feeds load.
+  document.querySelectorAll('#view-feed [data-stat="articles"], #view-feed .text-2xl.text-\\[\\#00f0ff\\], #view-feed .text-base.text-\\[\\#00f0ff\\]').forEach(el => {
     el.textContent = String(total);
   });
 
