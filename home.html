@@ -923,6 +923,39 @@
 
       footer { padding: 2.5rem 1.25rem; }
       .footer-links { flex-wrap: wrap; justify-content: center; gap: 1.25rem; }
+
+      /* ── Mobile scroll-smoothing ────────────────────────────────
+         Mobile GPUs choke on backdrop-filter blurs that repaint every
+         scroll frame. Drop the heavy cat-card blur and lighten the
+         top-bar blur on phones; desktop keeps the full glassy effect.
+         Also promote animated hero elements to their own compositor
+         layers so their idle keyframes don't dirty the whole document
+         while the user is scrolling. */
+      nav.top-bar {
+        backdrop-filter: blur(8px);      /* was 16px */
+        -webkit-backdrop-filter: blur(8px);
+      }
+      .cat-card {
+        backdrop-filter: none;            /* was blur(12px) */
+        -webkit-backdrop-filter: none;
+        background: rgba(13,21,21,0.85);  /* compensate for lost blur */
+      }
+      /* Promote animated hero elements to GPU layers so their idle
+         keyframes don't cause document-wide repaints during scroll. */
+      .hero-logo-wrap,
+      .hero-logo-wrap .cr-letterform,
+      .hero-logo-wrap::before {
+        transform: translateZ(0);
+        will-change: transform, opacity;
+      }
+      /* Pause the constant scroll-hint pulse while the user is actively
+         scrolling — the scroll listener toggles a class on <html>. */
+      html.cr-scrolling .scroll-hint,
+      html.cr-scrolling .hero-logo-wrap .cr-letterform {
+        animation-play-state: paused;
+      }
+      /* Older iOS momentum scrolling */
+      html, body { -webkit-overflow-scrolling: touch; }
     }
 
     @media (max-width: 480px) {
@@ -1471,6 +1504,22 @@
     draw();
     window.addEventListener('resize', draw);
   })();
+
+  // ── Mobile scroll smoothing ─────────────────────────────────
+  // Pause non-essential animations (scroll-hint pulse, hero letterform
+  // glow) while the user is actively scrolling so the compositor isn't
+  // doing animation work AND momentum-scroll repaints at the same
+  // time. Class toggles on <html>; CSS @media handles the rest.
+  // Only attached on mobile widths — desktop keeps full motion.
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    let scrollTimer = null;
+    const root = document.documentElement;
+    window.addEventListener('scroll', () => {
+      if (!root.classList.contains('cr-scrolling')) root.classList.add('cr-scrolling');
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => root.classList.remove('cr-scrolling'), 140);
+    }, { passive: true });
+  }
 
   // ── Supabase Auth ─────────────────────────────────────────
   const SUPA_URL = 'https://hckgxwcppqrtanjdmrhi.supabase.co';
