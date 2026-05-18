@@ -82,7 +82,15 @@ export default async function handler(req, res) {
     const image = m ? m[1].trim() : null;
 
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    // Only cache hits — caching a null result poisons the edge for an hour
+    // and a single transient failure means the article shows imageless for
+    // every subsequent visitor. Misses are no-store so the next request tries
+    // upstream again. This was the SpaceNews 'York Space' bug.
+    if (image) {
+      res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    } else {
+      res.setHeader('Cache-Control', 'no-store');
+    }
     // ?debug=1 returns diagnostic info so we can see why an extraction failed
     if (req.query.debug) {
       // Return the slice of HTML around the first og:image occurrence so we
