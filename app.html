@@ -630,7 +630,7 @@
   if(!wrap)return;
   var canvas=wrap.parentElement.querySelector('.phys-c');
   if(!canvas)return;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min(window.devicePixelRatio||1,(/firefox/i.test(navigator.userAgent||"")?1:2));
   function init(){
     var sp=wrap.offsetWidth||(wrap.classList.contains('w-52')?208:wrap.classList.contains('w-40')?160:208);
     if(!sp){requestAnimationFrame(init);return;}
@@ -808,7 +808,7 @@
   if(!wrap)return;
   var canvas=wrap.querySelector('.ds-c');
   if(!canvas)return;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min(window.devicePixelRatio||1,(/firefox/i.test(navigator.userAgent||"")?1:2));
   function resize(){
     var sz=wrap.offsetWidth||(wrap.classList.contains('w-32')?128:160);
     canvas.width=sz*dpr;canvas.height=sz*dpr;
@@ -1097,7 +1097,7 @@
   if(!wrap)return;
   var canvas=wrap.parentElement.querySelector('.phys-c');
   if(!canvas)return;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min(window.devicePixelRatio||1,(/firefox/i.test(navigator.userAgent||"")?1:2));
   function init(){
     var sp=wrap.offsetWidth||(wrap.classList.contains('w-52')?208:wrap.classList.contains('w-40')?160:208);
     if(!sp){requestAnimationFrame(init);return;}
@@ -1275,7 +1275,7 @@
   if(!wrap)return;
   var canvas=wrap.querySelector('.ds-c');
   if(!canvas)return;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min(window.devicePixelRatio||1,(/firefox/i.test(navigator.userAgent||"")?1:2));
   function resize(){
     var sz=wrap.offsetWidth||(wrap.classList.contains('w-32')?128:160);
     canvas.width=sz*dpr;canvas.height=sz*dpr;
@@ -3670,7 +3670,15 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 // ── Planet Dotted-Grid Gravitational Wave System ─────────────────────────────
 (function(){
-  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  // Firefox's 2D canvas is significantly slower per arc/fill than Chromium/
+  // Safari. With 5 planets each rendering ~2700 dots per frame at DPR 2,
+  // the wave animation drops to 10-15fps on Firefox. Capping DPR to 1 on
+  // Firefox cuts the canvas pixel count 4× (clearRect + every per-pixel op)
+  // and brings frame time back in line with other browsers. Visual softness
+  // is barely noticeable because the dot grid already uses sub-pixel alphas.
+  var IS_FF = /firefox/i.test(navigator.userAgent || '');
+  var DPR_MAX = IS_FF ? 1 : 2;
+  var DPR = Math.min(window.devicePixelRatio || 1, DPR_MAX);
 
   function initCanvas(canvas) {
     var node   = canvas.closest('.planet-node');
