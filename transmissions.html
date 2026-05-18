@@ -7,7 +7,7 @@
 <meta name="description" content="Live transmissions from across the universe — every space-news story Cosmic Reader is currently tracking, filtered by sector." />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link rel="icon" href="assets/cr-logo-new.svg" type="image/svg+xml"/>
+<link rel="icon" href="/assets/cr-logo-new.svg" type="image/svg+xml"/>
 <link rel="stylesheet" href="cosmic-reader.css"/>
 <!-- Tell home.html to skip the intro animation when the user navigates back. -->
 <script>try{sessionStorage.setItem('cr_skip_intro_next','1');}catch(e){}</script>
@@ -24,7 +24,7 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 50;
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem 2rem; gap: 1rem;
-    background: rgba(8,15,16,0.7); backdrop-filter: blur(20px);
+    background: rgba(8,15,16,0.7); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(0,240,255,0.08);
   }
   .nav-left { display: flex; align-items: center; gap: 1rem; }
@@ -154,7 +154,7 @@
 
   .signup-footer {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
-    background: rgba(10,14,14,0.95); backdrop-filter: blur(20px);
+    background: rgba(10,14,14,0.95); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
     border-top: 1px solid rgba(0,240,255,0.1);
     padding: 0.85rem 2rem;
     display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
@@ -437,10 +437,6 @@ async function loadFeeds() {
 
   try {
     const results = await Promise.allSettled(FEEDS.map(f => fetchFeed(f)));
-    // Debug: open DevTools > Console to see which feeds succeeded
-    console.log('[CosmicReader] feed results:', results.map((r,i) =>
-      FEEDS[i].source + ': ' + (r.status === 'fulfilled' ? (r.value?.length||0) + ' articles' : 'FAILED')
-    ).join(' | '));
     const buckets = results.map(r => r.status === 'fulfilled' ? r.value : []).filter(b => b.length > 0);
     const merged = [];
     const maxLen = Math.max(...buckets.map(b => b.length), 0);
