@@ -940,18 +940,44 @@
         -webkit-backdrop-filter: none;
         background: rgba(13,21,21,0.85);  /* compensate for lost blur */
       }
-      /* Promote animated hero elements to GPU layers so their idle
-         keyframes don't cause document-wide repaints during scroll. */
+      /* Promote animated hero elements to their own GPU layers so their
+         idle keyframes don't cause document-wide repaints during scroll. */
       .hero-logo-wrap,
       .hero-logo-wrap .cr-letterform,
       .hero-logo-wrap::before {
         transform: translateZ(0);
-        will-change: transform, opacity;
+        will-change: transform, filter, opacity;
       }
-      /* Pause the constant scroll-hint pulse while the user is actively
-         scrolling — the scroll listener toggles a class on <html>. */
+      .cr-planet { will-change: transform, filter, opacity; }
+      #home-stars { will-change: opacity; }
+
+      /* Off-screen rendering skip — these sections don't need to repaint
+         while they're outside the viewport, which is most of the time
+         on a phone. contain-intrinsic-size keeps scroll position stable. */
+      .category-strip,
+      .teaser-section,
+      footer {
+        content-visibility: auto;
+        contain-intrinsic-size: 600px;
+      }
+
+      /* Pause hero animations when the hero is out of view. JS toggles
+         .cr-hero-off on <html> via IntersectionObserver. Filter and
+         drop-shadow animations are the most expensive — pausing them
+         while they're invisible reclaims the entire frame budget for
+         the scroll compositor. */
+      html.cr-hero-off .hero-logo-wrap,
+      html.cr-hero-off .hero-logo-wrap .cr-letterform,
+      html.cr-hero-off .cr-planet,
+      html.cr-hero-off .scroll-hint,
+      html.cr-hero-off #home-stars {
+        animation-play-state: paused;
+      }
+
+      /* Also pause non-essential animations during active scroll. */
       html.cr-scrolling .scroll-hint,
-      html.cr-scrolling .hero-logo-wrap .cr-letterform {
+      html.cr-scrolling .hero-logo-wrap .cr-letterform,
+      html.cr-scrolling #home-stars {
         animation-play-state: paused;
       }
       /* Older iOS momentum scrolling */
@@ -1506,19 +1532,42 @@
   })();
 
   // ── Mobile scroll smoothing ─────────────────────────────────
-  // Pause non-essential animations (scroll-hint pulse, hero letterform
-  // glow) while the user is actively scrolling so the compositor isn't
-  // doing animation work AND momentum-scroll repaints at the same
-  // time. Class toggles on <html>; CSS @media handles the rest.
-  // Only attached on mobile widths — desktop keeps full motion.
+  // Two-pronged approach (only attached on mobile; desktop keeps full motion):
+  //
+  // 1. Active-scroll pause: scroll listener toggles .cr-scrolling on <html>
+  //    so non-essential animations freeze during momentum scroll.
+  //
+  // 2. Off-screen pause: IntersectionObserver watches the .hero section and
+  //    toggles .cr-hero-off when it leaves the viewport. While hero is out
+  //    of view the heavy filter:drop-shadow keyframes (cr-glow, cr-glow-mobile,
+  //    cr-planet-pulse) AND the full-viewport star-breathe canvas animation
+  //    all freeze — the GPU stops doing per-frame filter recomputation for
+  //    pixels nobody can see.
+  //
+  // Animations resume the instant the hero scrolls back into view (e.g.
+  // user scrolls to top), so the visible motion is identical.
   if (window.matchMedia('(max-width: 768px)').matches) {
-    let scrollTimer = null;
     const root = document.documentElement;
+
+    // Active-scroll class
+    let scrollTimer = null;
     window.addEventListener('scroll', () => {
       if (!root.classList.contains('cr-scrolling')) root.classList.add('cr-scrolling');
       if (scrollTimer) clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => root.classList.remove('cr-scrolling'), 140);
     }, { passive: true });
+
+    // Hero-out-of-view class
+    const hero = document.querySelector('.hero');
+    if (hero && 'IntersectionObserver' in window) {
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) root.classList.remove('cr-hero-off');
+          else                  root.classList.add('cr-hero-off');
+        }
+      }, { threshold: 0, rootMargin: '50px 0px' }); // small margin so we don't toggle right at the boundary
+      obs.observe(hero);
+    }
   }
 
   // ── Supabase Auth ─────────────────────────────────────────
