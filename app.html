@@ -2170,6 +2170,11 @@ function proxyImg(url) {
   if (!url) return '';
   if (url.startsWith('data:')) return url;
   if (url.includes('wsrv.nl')) return url; // already proxied
+  // Unwrap Jetpack Photon CDN URLs (i0.wp.com / i1.wp.com / i2.wp.com).
+  // wsrv.nl rejects these by domain policy ("Domain or TLD blocked"), but the
+  // original publisher host serves the same image fine. Strip photon query
+  // params too — fit/ssl/quality flags are photon-specific.
+  url = url.replace(/^https?:\/\/i[0-9]\.wp\.com\/([^?]+).*$/i, 'https://$1');
   // Route everything (including Wikimedia) through wsrv.nl — direct Wikimedia
   // requests from browsers get rate-limited (503); wsrv.nl caches and relays them
   return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
@@ -2329,7 +2334,7 @@ async function fetchFeed(feedInfo) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {
             try {
-              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(2000) });
+              const r = await fetch(`/api/og?url=${encodeURIComponent(a.read_more)}`, { signal: AbortSignal.timeout(6000) });
               if (r.ok) { const d = await r.json(); if (d.image) a.image = proxyImg(d.image); }
             } catch(e) {}
           })
@@ -2635,7 +2640,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v2';
+const _CR_CACHE_KEY = 'cr_cache_v3';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 async function loadLiveFeeds() {

@@ -1780,6 +1780,8 @@
 
     function proxyImg(url) {
       if (!url || url.startsWith('data:') || url.includes('wsrv.nl')) return url;
+      // Unwrap Jetpack Photon (i0/i1/i2.wp.com) — wsrv.nl blocks the domain.
+      url = url.replace(/^https?:\/\/i[0-9]\.wp\.com\/([^?]+).*$/i, 'https://$1');
       return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
     }
 
@@ -1814,7 +1816,7 @@
 
     // ── Fast path: sessionStorage cache written by app.html ──
     try {
-      const c = JSON.parse(sessionStorage.getItem('cr_cache_v2') || '{}');
+      const c = JSON.parse(sessionStorage.getItem('cr_cache_v3') || '{}');
       if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
         // Pick first article that has a real (non-Wikimedia) image
         const pick = c.articles.find(a => a.image && !/wikimedia\.org/.test(a.image)) || c.articles[0];
