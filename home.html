@@ -1619,27 +1619,33 @@
   function clearAuthMsg() { setAuthMsg('', ''); }
 
   // ── OAuth providers ────────────────────────────────────────
-  async function signInWithGoogle() {
-    const { error } = await _supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin + '/app.html' }
-    });
-    if (error) setAuthMsg(error.message, 'error');
+  // Shared helper. We use skipBrowserRedirect:true and navigate
+  // manually because the SDK's built-in auto-redirect can silently
+  // no-op after the await async gap in some browser/SDK combos —
+  // user clicks the button and nothing happens. Doing the navigation
+  // ourselves is bulletproof: we explicitly assign location.href to
+  // the OAuth URL Supabase returns.
+  async function _startOAuth(provider) {
+    try {
+      const { data, error } = await _supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.origin + '/app.html',
+          skipBrowserRedirect: true
+        }
+      });
+      if (error)       { setAuthMsg(error.message || 'Could not start sign-in.', 'error'); return; }
+      if (!data || !data.url) { setAuthMsg('Sign-in URL not returned. Try again.', 'error'); return; }
+      window.location.href = data.url;
+    } catch (e) {
+      setAuthMsg((e && e.message) || 'Sign-in failed. Try again.', 'error');
+    }
   }
-  async function signInWithGitHub() {
-    const { error } = await _supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: { redirectTo: window.location.origin + '/app.html' }
-    });
-    if (error) setAuthMsg(error.message, 'error');
-  }
-  async function signInWithTwitter() {
-    const { error } = await _supabase.auth.signInWithOAuth({
-      provider: 'x',
-      options: { redirectTo: window.location.origin + '/app.html' }
-    });
-    if (error) setAuthMsg(error.message, 'error');
-  }
+  async function signInWithGoogle()  { return _startOAuth('google'); }
+  async function signInWithGitHub()  { return _startOAuth('github'); }
+  // Provider id is 'x' (not 'twitter') — confirmed via /auth/v1/authorize
+  // probe: 'x' → 200 redirects to x.com/i/oauth2/authorize, 'twitter' → 400.
+  async function signInWithTwitter() { return _startOAuth('x'); }
 
   // ── Email Sign In ──────────────────────────────────────────
   async function handleSignIn(e) {
