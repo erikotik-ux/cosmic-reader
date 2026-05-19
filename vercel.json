@@ -2,5 +2,8 @@
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/", "destination": "/home.html" }
+  ],
+  "crons": [
+    { "path": "/api/healthcheck-watcher", "schedule": "0 12 * * 1" }
   ]
 }
