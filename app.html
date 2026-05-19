@@ -3887,18 +3887,87 @@ document.addEventListener('DOMContentLoaded', () => {
     if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
   }
 
-  function renderAvatarPicker(selected) {
+  // Resize a user-picked image to a square 128×128 JPEG data URI.
+  // 128px is plenty for the 32-40px round avatar (retina-quality at 4× DPR).
+  // Center-cropped so any aspect ratio fits cleanly. ~10-20KB output, well
+  // under Supabase user_metadata's ~1MB total cap.
+  function resizeImageToDataUri(file, size = 128, quality = 0.85) {
+    return new Promise(function(resolve, reject) {
+      if (!file || !file.type || !file.type.startsWith('image/')) {
+        reject(new Error('Please choose an image file (PNG, JPG, GIF, WebP).'));
+        return;
+      }
+      if (file.size > 8 * 1024 * 1024) {
+        reject(new Error('Image is too large (max 8MB before resizing).'));
+        return;
+      }
+      const img = new Image();
+      const objUrl = URL.createObjectURL(file);
+      img.onload = function() {
+        try {
+          const min = Math.min(img.naturalWidth, img.naturalHeight);
+          const sx  = (img.naturalWidth  - min) / 2;
+          const sy  = (img.naturalHeight - min) / 2;
+          const canvas = document.createElement('canvas');
+          canvas.width = size; canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
+          const dataUri = canvas.toDataURL('image/jpeg', quality);
+          URL.revokeObjectURL(objUrl);
+          resolve(dataUri);
+        } catch (e) {
+          URL.revokeObjectURL(objUrl);
+          reject(e);
+        }
+      };
+      img.onerror = function() {
+        URL.revokeObjectURL(objUrl);
+        reject(new Error('Could not load that image. Try a different file.'));
+      };
+      img.src = objUrl;
+    });
+  }
+
+  function renderAvatarPicker(selected, customImage) {
     const wrap = document.getElementById('settings-avatar-grid');
     if (!wrap) return;
     wrap.innerHTML = '';
+
+    // ── Upload tile (first position) ────────────────────────────
+    // Clicking it triggers the hidden file input. If the user has
+    // already uploaded a custom image, this tile shows the preview.
+    const up = document.createElement('button');
+    up.type = 'button';
+    up.className = 'settings-avatar-btn settings-avatar-upload' + (customImage ? ' is-selected has-image' : '');
+    up.title = 'Upload your own image';
+    up.dataset.customImage = customImage || '';
+    if (customImage) {
+      up.innerHTML = '<img src="' + customImage + '" alt=""/>';
+    } else {
+      up.innerHTML = '<span class="material-symbols-outlined">add_photo_alternate</span>';
+    }
+    up.onclick = function() {
+      const fileInput = document.getElementById('settings-avatar-file');
+      if (fileInput) fileInput.click();
+    };
+    wrap.appendChild(up);
+
+    // ── Emoji tiles ─────────────────────────────────────────────
     AVATAR_CHOICES.forEach(emoji => {
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = emoji;
-      b.className = 'settings-avatar-btn' + (emoji === selected ? ' is-selected' : '');
+      // Only mark emoji as selected if there's no custom image AND it matches
+      b.className = 'settings-avatar-btn' + (!customImage && emoji === selected ? ' is-selected' : '');
       b.onclick = function() {
         wrap.querySelectorAll('.settings-avatar-btn').forEach(x => x.classList.remove('is-selected'));
         b.classList.add('is-selected');
+        // Picking an emoji clears any pending custom image — they're mutually exclusive
+        up.dataset.customImage = '';
+        up.classList.remove('has-image');
+        up.innerHTML = '<span class="material-symbols-outlined">add_photo_alternate</span>';
       };
       wrap.appendChild(b);
     });
@@ -3924,13 +3993,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function hydrateSettingsForm() {
     const meta = _cachedSettings || {};
-    const avatar   = meta.avatar   || '🚀';
-    const username = meta.username || '';
-    const topics   = Array.isArray(meta.topics) ? meta.topics : [];
+    const avatar      = meta.avatar      || '🚀';
+    const avatarImage = meta.avatarImage || '';
+    const username    = meta.username    || '';
+    const topics      = Array.isArray(meta.topics) ? meta.topics : [];
     const usernameInput = document.getElementById('settings-username');
     if (usernameInput) usernameInput.value = username;
-    renderAvatarPicker(avatar);
+    renderAvatarPicker(avatar, avatarImage);
     renderTopicPicker(new Set(topics));
+    // Wire the file input each time (handler is idempotent because the
+    // input element is the same; we just rebind to capture the current
+    // upload tile).
+    wireAvatarFileInput();
+  }
+
+  let _avatarFileInputWired = false;
+  function wireAvatarFileInput() {
+    if (_avatarFileInputWired) return;
+    const fi = document.getElementById('settings-avatar-file');
+    if (!fi) return;
+    fi.addEventListener('change', async function(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const wrap = document.getElementById('settings-avatar-grid');
+      const up   = wrap && wrap.querySelector('.settings-avatar-upload');
+      const msg  = document.getElementById('settings-msg');
+      try {
+        const dataUri = await resizeImageToDataUri(file);
+        if (up) {
+          up.innerHTML = '<img src="' + dataUri + '" alt=""/>';
+          up.dataset.customImage = dataUri;
+          up.classList.add('has-image');
+          wrap.querySelectorAll('.settings-avatar-btn').forEach(x => x.classList.remove('is-selected'));
+          up.classList.add('is-selected');
+        }
+        if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
+      } catch (err) {
+        if (msg) {
+          msg.textContent = err.message || 'Could not load that image.';
+          msg.className = 'settings-msg error';
+        }
+      } finally {
+        // Reset the input so picking the same file again still fires change
+        e.target.value = '';
+      }
+    });
+    _avatarFileInputWired = true;
   }
 
   async function saveSettings(e) {
@@ -3940,7 +4048,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
 
     const picked = document.querySelector('.settings-avatar-btn.is-selected');
-    const avatar = picked ? picked.textContent : '🚀';
+    let avatar = '🚀';
+    let avatarImage = null;
+    if (picked) {
+      if (picked.classList.contains('settings-avatar-upload')) {
+        avatarImage = picked.dataset.customImage || null;
+      } else {
+        avatar = picked.textContent;
+      }
+    }
     const username = (document.getElementById('settings-username').value || '').trim().slice(0, 40);
     const topics = Array.from(document.querySelectorAll('.settings-topic-btn.is-selected'))
       .map(b => b.dataset.topic);
@@ -3948,7 +4064,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
     try {
       const { data, error } = await window._supabase.auth.updateUser({
-        data: { avatar, username, topics }
+        data: { avatar, avatarImage, username, topics }
       });
       if (error) throw error;
       _cachedSettings = (data && data.user && data.user.user_metadata) || { avatar, username, topics };
@@ -3964,13 +4080,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function applySettingsToUI(meta) {
     if (!meta) return;
-    // Swap the top-right avatar icon for the chosen emoji
+    // Swap the top-right avatar icon for the user's choice — either
+    // a custom uploaded image (meta.avatarImage takes priority) or an emoji.
     const btn = document.querySelector('#user-menu-wrap > button');
-    if (btn && meta.avatar) {
-      btn.classList.remove('material-symbols-outlined');
-      btn.textContent = meta.avatar;
-      btn.style.fontSize = '1.4rem';
-      btn.style.lineHeight = '1';
+    if (btn) {
+      if (meta.avatarImage) {
+        // Custom image — replace text content with an <img> child
+        btn.classList.remove('material-symbols-outlined');
+        btn.textContent = '';
+        let img = btn.querySelector('img.cr-user-avatar-img');
+        if (!img) {
+          img = document.createElement('img');
+          img.className = 'cr-user-avatar-img';
+          img.alt = '';
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+          btn.appendChild(img);
+        }
+        img.src = meta.avatarImage;
+        btn.style.padding = '0';
+        btn.style.overflow = 'hidden';
+        btn.style.width = '2.25rem';
+        btn.style.height = '2.25rem';
+      } else if (meta.avatar) {
+        // Emoji — strip any previous <img> and set text
+        const oldImg = btn.querySelector('img.cr-user-avatar-img');
+        if (oldImg) oldImg.remove();
+        btn.classList.remove('material-symbols-outlined');
+        btn.textContent = meta.avatar;
+        btn.style.fontSize = '1.4rem';
+        btn.style.lineHeight = '1';
+        btn.style.padding = '';
+        btn.style.overflow = '';
+        btn.style.width = '';
+        btn.style.height = '';
+      }
     }
     // Show username in the dropdown if present
     const nameEl = document.getElementById('user-name-display');
@@ -4120,6 +4263,26 @@ document.addEventListener('DOMContentLoaded', () => {
     box-shadow: 0 0 14px rgba(0,240,255,0.35);
     transform: scale(1.05);
   }
+  /* Upload tile — special first cell with a "+" icon. When the user has
+     picked an image, the tile shows a circular preview filling the cell. */
+  .settings-avatar-btn.settings-avatar-upload {
+    color: rgba(0,240,255,0.75);
+    overflow: hidden;
+  }
+  .settings-avatar-btn.settings-avatar-upload .material-symbols-outlined {
+    font-size: 1.25rem;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .settings-avatar-btn.settings-avatar-upload.has-image {
+    padding: 0;
+  }
+  .settings-avatar-btn.settings-avatar-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    display: block;
+  }
   .settings-input {
     width: 100%;
     background: rgba(255,255,255,0.03);
@@ -4229,8 +4392,10 @@ document.addEventListener('DOMContentLoaded', () => {
     <form onsubmit="saveSettings(event)">
       <div class="settings-section">
         <h3>Avatar</h3>
-        <p class="settings-hint">Pick the emoji that will represent you in the top-right corner.</p>
+        <p class="settings-hint">Pick an emoji or upload your own image. Uploads are auto-resized to fit the round profile button — anything photo-sized works.</p>
         <div id="settings-avatar-grid" class="settings-avatar-grid"></div>
+        <!-- Hidden file input — opened by the upload tile in the grid above. -->
+        <input id="settings-avatar-file" type="file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" style="display:none" aria-label="Upload profile image" />
       </div>
 
       <div class="settings-section">
