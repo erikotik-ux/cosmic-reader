@@ -10,7 +10,8 @@
 //
 // Read-only proxy. Cannot affect anything on the live site.
 
-const LL2_URL = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=8&hide_recent_previous=true&mode=list';
+// mode=normal (not 'list') so we get provider + pad details too.
+const LL2_URL = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=8&hide_recent_previous=true';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
