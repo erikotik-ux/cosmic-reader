@@ -1621,7 +1621,11 @@
           <div class="h-8 w-px bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent"></div>
           <div class="text-center">
             <span class="flex items-center justify-center h-7" aria-label="Live signal">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#00f0ff] animate-pulse" style="animation-duration:3.2s; box-shadow:0 0 8px rgba(0,240,255,0.5)"></span>
+              <!-- Mini ringed planet — on-brand cosmic icon, slow pulse -->
+              <svg viewBox="0 0 24 24" class="w-6 h-6 animate-pulse" style="animation-duration:3.2s; filter:drop-shadow(0 0 6px rgba(0,240,255,0.5));" aria-hidden="true">
+                <ellipse cx="12" cy="12" rx="10.5" ry="3" fill="none" stroke="#00f0ff" stroke-width="1.4" transform="rotate(-22 12 12)"/>
+                <circle cx="12" cy="12" r="4.5" fill="#00f0ff"/>
+              </svg>
             </span>
             <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/40">Signal</span>
           </div>
