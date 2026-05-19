@@ -71,6 +71,109 @@
     background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent);
   }
   .reading-glow { box-shadow: 0 0 100px 20px rgba(0, 240, 255, 0.03); }
+  /* ── Live Launch Tracker ───────────────────────────────────
+     Slim mission-control ticker above the My Feed hero. Pulls
+     from Launch Library 2 via /api/launches. Live countdown
+     ticks every second client-side. */
+  .cr-launch-tracker {
+    border: 1px solid rgba(0,240,255,0.18);
+    border-radius: 0.75rem;
+    background:
+      linear-gradient(90deg, rgba(0,240,255,0.04) 0%, transparent 30%, transparent 70%, rgba(0,240,255,0.04) 100%),
+      #0a1212;
+    overflow: hidden;
+  }
+  .cr-launch-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.85rem 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s;
+  }
+  .cr-launch-row:hover { background: rgba(0,240,255,0.04); }
+  .cr-launch-eyebrow {
+    display: flex; align-items: center; gap: 0.4rem;
+    color: rgba(0,240,255,0.85);
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .cr-launch-eyebrow .material-symbols-outlined { font-size: 1rem; }
+  .cr-launch-name {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .cr-launch-name-text {
+    color: #dbfcff;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cr-launch-provider {
+    color: rgba(219,252,255,0.4);
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cr-launch-countdown {
+    display: flex; flex-direction: column; align-items: flex-end;
+    flex-shrink: 0;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+  }
+  .cr-launch-cd-value {
+    color: #00f0ff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 12px rgba(0,240,255,0.4);
+  }
+  .cr-launch-cd-label {
+    color: rgba(219,252,255,0.35);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+  }
+  /* In-flight / hold / TBD states get a different color cue */
+  .cr-launch-tracker.is-live .cr-launch-cd-value {
+    color: #ffb5a0;
+    text-shadow: 0 0 12px rgba(255,181,160,0.5);
+    animation: cr-launch-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes cr-launch-pulse {
+    0%, 100% { opacity: 0.85; }
+    50%      { opacity: 1;    }
+  }
+  /* Mobile — stack vertically, lose the eyebrow label, keep icon + countdown prominent */
+  @media (max-width: 640px) {
+    .cr-launch-row {
+      flex-wrap: wrap;
+      gap: 0.5rem 0.85rem;
+      padding: 0.75rem 1rem;
+    }
+    .cr-launch-eyebrow span:last-child { display: none; }
+    .cr-launch-name { width: 100%; order: 3; gap: 0.15rem; }
+    .cr-launch-countdown { margin-left: auto; }
+    .cr-launch-cd-value { font-size: 0.95rem; }
+  }
   /* ── AI TL;DR card in the reading view ──────────────────────
      A subtle cyan-bordered panel above the article body. Caps text
      width to match the article column for visual rhythm. */
@@ -1651,6 +1754,26 @@
 <main id="view-feed" class="view h-screen w-full overflow-hidden">
   <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-7xl mx-auto px-6 py-10">
+
+      <!-- Live Launch Tracker — slim mission-control ticker.
+           Populated by loadNextLaunch() on view-feed activation.
+           Hidden by default; only shown once we have valid data. -->
+      <section id="launch-tracker" class="cr-launch-tracker mb-8" style="display:none">
+        <a id="launch-tracker-link" href="#" target="_blank" rel="noopener" class="cr-launch-row">
+          <span class="cr-launch-eyebrow">
+            <span class="material-symbols-outlined">rocket_launch</span>
+            <span>Next Launch</span>
+          </span>
+          <span class="cr-launch-name">
+            <span id="launch-name" class="cr-launch-name-text"></span>
+            <span id="launch-provider" class="cr-launch-provider"></span>
+          </span>
+          <span class="cr-launch-countdown">
+            <span id="launch-countdown-value" class="cr-launch-cd-value">T-—</span>
+            <span class="cr-launch-cd-label">to liftoff</span>
+          </span>
+        </a>
+      </section>
 
       <!-- Hero Header -->
       <section class="mb-12 flex flex-col md:flex-row justify-between items-end gap-8">
@@ -3418,6 +3541,121 @@ function openReading(idx) {
   loadArticleTldr(a);
 }
 
+// ── Live Launch Tracker ───────────────────────────────────
+// Fetches upcoming launches from /api/launches once per session
+// (Vercel edge cache is 15 min so we honor that locally too).
+// Picks the soonest valid one, runs a 1s countdown ticker.
+// On failure or empty data, the widget stays hidden — non-essential
+// feature, never interrupts the rest of the page.
+const _LAUNCH_CACHE_KEY = 'cr_launch_v1';
+const _LAUNCH_CACHE_TTL_MS = 15 * 60 * 1000;
+let _launchTickInterval = null;
+let _currentLaunch = null;
+
+async function loadNextLaunch() {
+  // Use cached data if fresh
+  try {
+    const cached = JSON.parse(sessionStorage.getItem(_LAUNCH_CACHE_KEY) || 'null');
+    if (cached && cached.ts && (Date.now() - cached.ts) < _LAUNCH_CACHE_TTL_MS) {
+      _renderNextLaunch(cached.launches);
+      return;
+    }
+  } catch(e) {}
+
+  // Fetch
+  try {
+    const res = await fetch('/api/launches', { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return; // silently leave hidden
+    const data = await res.json();
+    const launches = Array.isArray(data.launches) ? data.launches : [];
+    if (!launches.length) return;
+    try {
+      sessionStorage.setItem(_LAUNCH_CACHE_KEY, JSON.stringify({ ts: Date.now(), launches }));
+    } catch(e) {}
+    _renderNextLaunch(launches);
+  } catch(e) { /* network / timeout — leave hidden */ }
+}
+
+function _renderNextLaunch(launches) {
+  // Pick the soonest valid one. LL2 occasionally returns past launches
+  // even with hide_recent_previous=true, so filter manually too.
+  const now = Date.now();
+  const next = launches
+    .map(l => ({ ...l, _ts: l.net ? Date.parse(l.net) : NaN }))
+    .filter(l => l._ts && l._ts > now - 60 * 1000) // up to 1min in the past = still 'live'
+    .sort((a, b) => a._ts - b._ts)[0];
+  if (!next) return;
+
+  _currentLaunch = next;
+
+  const tracker = document.getElementById('launch-tracker');
+  const link    = document.getElementById('launch-tracker-link');
+  const nameEl  = document.getElementById('launch-name');
+  const provEl  = document.getElementById('launch-provider');
+  if (!tracker || !nameEl) return;
+
+  nameEl.textContent = next.name || 'Upcoming launch';
+  const meta = [];
+  if (next.provider) meta.push(next.provider);
+  if (next.padLocation) meta.push(next.padLocation);
+  provEl.textContent = meta.join(' · ');
+
+  if (link) link.href = next.url || 'https://thespacedevs.com/llapi';
+
+  tracker.style.display = '';
+
+  // Start the per-second countdown ticker
+  if (_launchTickInterval) clearInterval(_launchTickInterval);
+  _tickLaunchCountdown(); // immediate render
+  _launchTickInterval = setInterval(_tickLaunchCountdown, 1000);
+}
+
+function _tickLaunchCountdown() {
+  if (!_currentLaunch) return;
+  const tracker = document.getElementById('launch-tracker');
+  const valEl   = document.getElementById('launch-countdown-value');
+  const labelEl = tracker && tracker.querySelector('.cr-launch-cd-label');
+  if (!valEl) return;
+
+  const delta = _currentLaunch._ts - Date.now();
+
+  if (delta <= 0) {
+    // Past T-0 — either lifted off recently or LL2 hasn't updated.
+    // Show 'LIVE' state for ~30 min after T-0 then refresh.
+    if (delta > -30 * 60 * 1000) {
+      tracker.classList.add('is-live');
+      valEl.textContent = 'LIFTOFF';
+      if (labelEl) labelEl.textContent = 'in progress';
+      return;
+    }
+    // Otherwise re-fetch to get the next launch in the list
+    if (_launchTickInterval) clearInterval(_launchTickInterval);
+    _launchTickInterval = null;
+    sessionStorage.removeItem(_LAUNCH_CACHE_KEY);
+    loadNextLaunch();
+    return;
+  }
+
+  tracker.classList.remove('is-live');
+  if (labelEl) labelEl.textContent = 'to liftoff';
+
+  const days  = Math.floor(delta / (24 * 3600 * 1000));
+  const hours = Math.floor((delta % (24 * 3600 * 1000)) / (3600 * 1000));
+  const mins  = Math.floor((delta % (3600 * 1000)) / 60000);
+  const secs  = Math.floor((delta % 60000) / 1000);
+
+  // Format: T-2d 14h 33m / T-14h 33m 12s / T-33m 12s — auto-adapts
+  let str;
+  if (days > 0) {
+    str = `T-${days}d ${hours}h ${mins}m`;
+  } else if (hours > 0) {
+    str = `T-${hours}h ${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`;
+  } else {
+    str = `T-${mins}m ${String(secs).padStart(2,'0')}s`;
+  }
+  valEl.textContent = str;
+}
+
 // ── AI TL;DR ──────────────────────────────────────────────
 // Generates a 2-3 sentence summary of an article via /api/summarize.
 // Result is cached in sessionStorage keyed by the article URL so
@@ -3809,6 +4047,8 @@ renderCurrentPage();
 // in a previous session is visible without needing to interact first.
 if (savedStories.length > 0) renderSavedStories();
 loadLiveFeeds();
+// Live Launch Tracker — fires once at boot, ticks the countdown every second
+loadNextLaunch();
 
 // Draw constellation lines after layout settles, and on resize
 window.addEventListener('load', () => {
