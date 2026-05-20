@@ -216,9 +216,10 @@
     .cr-launch-countdown { margin-left: auto; }
     .cr-launch-cd-value { font-size: 0.95rem; }
   }
-  /* ── AI TL;DR card in the reading view ──────────────────────
-     A subtle cyan-bordered panel above the article body. Caps text
-     width to match the article column for visual rhythm. */
+  /* ── AI "Signal Summary" card in the reading view ───────────
+     (internal class name kept as cr-tldr) A subtle cyan-bordered
+     panel above the article body. Caps text width to match the
+     article column for visual rhythm. */
   .cr-tldr {
     max-width: 42rem;
     margin-left: auto;
@@ -2194,13 +2195,14 @@
         <figcaption id="read-caption" class="mt-3 font-label text-xs text-on-surface-variant text-center uppercase tracking-widest italic"></figcaption>
       </figure>
 
-      <!-- AI TL;DR card — Cosmic AI summarizes the article in 2-3 sentences.
-           Hidden by default; openReading() kicks off a /api/summarize call
-           on view and fills this in (or hides it on failure). -->
-      <aside id="read-tldr" class="cr-tldr mb-10" style="display:none">
+      <!-- AI "Signal Summary" card — Cosmic AI summarizes the article in
+           2-3 sentences. Hidden by default; openReading() kicks off a
+           /api/summarize call on view and fills this in (or hides it on
+           failure). -->
+      <aside id="read-tldr" class="cr-tldr mb-6" style="display:none">
         <div class="cr-tldr-eyebrow">
           <span class="material-symbols-outlined">auto_awesome</span>
-          <span>TL;DR — Cosmic AI</span>
+          <span>Signal Summary — Cosmic AI</span>
         </div>
         <p id="read-tldr-text" class="cr-tldr-text"></p>
         <p id="read-tldr-loading" class="cr-tldr-text cr-tldr-loading">Generating summary…</p>
@@ -3579,7 +3581,7 @@ function openReading(idx) {
   const scrollArea = document.getElementById('reading-scroll-area');
   scrollArea.scrollTop = 0;
 
-  // Kick off TL;DR generation (cached per article URL)
+  // Kick off Signal Summary generation (cached per article URL)
   loadArticleTldr(a);
 }
 
@@ -3698,7 +3700,7 @@ function _tickLaunchCountdown() {
   valEl.textContent = str;
 }
 
-// ── AI TL;DR ──────────────────────────────────────────────
+// ── AI Signal Summary ─────────────────────────────────────
 // Generates a 2-3 sentence summary of an article via /api/summarize.
 // Result is cached in sessionStorage keyed by the article URL so
 // re-opens are instant. Failures hide the card silently — never block
