@@ -134,7 +134,6 @@
     color: inherit;
     transition: background 0.2s;
   }
-  .cr-launch-row:hover { background: rgba(0,240,255,0.04); }
   .cr-launch-eyebrow {
     display: flex; align-items: center; gap: 0.4rem;
     color: rgba(0,240,255,0.85);
@@ -1835,7 +1834,7 @@
            Populated by loadNextLaunch() on view-feed activation.
            Hidden by default; only shown once we have valid data. -->
       <section id="launch-tracker" class="cr-launch-tracker mb-8" style="display:none">
-        <a id="launch-tracker-link" href="#" target="_blank" rel="noopener" class="cr-launch-row">
+        <div id="launch-tracker-link" class="cr-launch-row">
           <span class="cr-launch-eyebrow">
             <span class="material-symbols-outlined">rocket_launch</span>
             <span>Next Launch</span>
@@ -1848,7 +1847,7 @@
             <span id="launch-countdown-value" class="cr-launch-cd-value">T-—</span>
             <span class="cr-launch-cd-label">to liftoff</span>
           </span>
-        </a>
+        </div>
       </section>
 
       <!-- Hero Header -->
@@ -3774,8 +3773,6 @@ function _renderNextLaunch(launches) {
   if (next.provider) meta.push(next.provider);
   if (next.padLocation) meta.push(next.padLocation);
   provEl.textContent = meta.join(' · ');
-
-  if (link) link.href = next.url || 'https://thespacedevs.com/llapi';
 
   tracker.style.display = '';
 
