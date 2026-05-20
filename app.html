@@ -427,9 +427,9 @@
          planet) never sits behind it when scrolled to the top. Was 8rem
          but the HUD is taller than that on most phones; bumped to 11rem
          (176px) which clears the bar fully on iPhone Pro Max sizes. */
-      scroll-padding-top: 13rem;    /* 208px — keeps snap target below HUD with breathing room */
+      scroll-padding-top: 11.125rem;    /* 178px — reduced 30px from 208px */
       scroll-padding-bottom: 4rem;  /* 64px — clears 56px bottom nav */
-      padding-top: 13rem !important; /* 208px — first planet (Moon) sits well below HUD */
+      padding-top: 11.125rem !important; /* 178px — reduced 30px from 208px */
     }
     /* Cross-browser bottom spacer — Chrome ignores padding-bottom in overflow
        flex containers, but DOES extend scroll height for ::after elements. */
@@ -1852,8 +1852,8 @@
 <!-- VIEW 2: MY FEED (Bento Grid)                            -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-feed" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
-    <div class="max-w-7xl mx-auto px-6 py-10">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
+    <div class="max-w-7xl mx-auto px-6 pt-2 pb-10 md:pt-10">
 
       <!-- Live Launch Tracker — slim mission-control ticker.
            Populated by loadNextLaunch() on view-feed activation.
@@ -2135,8 +2135,8 @@
   </div>
   <div class="fixed inset-0 bg-[#131313]/70 z-0"></div>
 
-  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
-    <div class="max-w-5xl mx-auto px-6 py-10">
+  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
+    <div class="max-w-5xl mx-auto px-6 pt-2 pb-10 md:pt-10">
       <!-- Discovery HUD -->
       <div class="glass-panel relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(0,240,255,0.18); box-shadow:0 0 30px rgba(0,240,255,0.1);">
         <!-- Left accent line -->
@@ -2216,8 +2216,8 @@
   <div id="reading-progress-track" class="fixed top-[72px] left-0 md:left-64 right-0 h-0.5 bg-surface-container-highest z-50">
     <div id="reading-progress" class="h-full bg-primary-container shadow-[0_0_8px_rgba(0,240,255,0.8)] w-1/4 reading-progress-bar"></div>
   </div>
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-24 md:pt-20 pb-28 md:pb-24" id="reading-scroll-area">
-    <div class="max-w-7xl mx-auto px-6 md:pr-16 py-10">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-20 md:pt-20 pb-28 md:pb-24" id="reading-scroll-area">
+    <div class="max-w-7xl mx-auto px-6 md:pr-16 pt-2 pb-10 md:pt-10">
 
       <!-- Article Header -->
       <header class="mb-12 space-y-5">
@@ -2330,8 +2330,8 @@
 <!-- VIEW 5: SAVED STORIES                                   -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-saved" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
-    <div class="max-w-5xl mx-auto px-6 py-10">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
+    <div class="max-w-5xl mx-auto px-6 pt-2 pb-10 md:pt-10">
       <div class="mb-8 flex items-end justify-between gap-3">
         <div class="min-w-0">
           <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#00f0ff]/60 block mb-2">Your Collection</span>
@@ -2354,8 +2354,8 @@
 <!-- VIEW 6: TRENDING                                        -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-trending" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
-    <div class="max-w-5xl mx-auto px-6 py-10">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
+    <div class="max-w-5xl mx-auto px-6 pt-2 pb-10 md:pt-10">
       <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-4">
         <div>
           <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#ffb5a0]/60 block mb-2">Last 48 Hours</span>
