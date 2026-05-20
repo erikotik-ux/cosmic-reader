@@ -465,11 +465,12 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #0e0e0e; }
   ::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.3); border-radius: 3px; }
-  /* Reading view: hide the scrollbar entirely. The top progress bar
-     already shows reading position, so the cyan thumb was just noise.
-     Content still scrolls normally. */
-  #reading-scroll-area { scrollbar-width: none; -ms-overflow-style: none; }
-  #reading-scroll-area::-webkit-scrollbar { width: 0; height: 0; display: none; }
+  /* Hide the scrollbar on the article views (detail + reading). The cyan
+     thumb added nothing — the reading view has a top progress bar, and on
+     the detail view it was just visual noise. Content still scrolls.
+     Applied via a shared class so both containers stay in sync. */
+  .cr-hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .cr-hide-scrollbar::-webkit-scrollbar { width: 0; height: 0; display: none; }
   .clock-display { font-variant-numeric: tabular-nums; }
   .article-card-hover:hover { background: rgba(30,30,30,0.8); }
   .sidebar-link { transition: all 0.2s ease; }
@@ -2109,7 +2110,7 @@
   </div>
   <div class="fixed inset-0 bg-[#131313]/70 z-0"></div>
 
-  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
+  <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-24 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <!-- Discovery HUD -->
       <div class="glass-panel relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(0,240,255,0.18); box-shadow:0 0 30px rgba(0,240,255,0.1);">
@@ -2190,7 +2191,7 @@
   <div id="reading-progress-track" class="fixed top-[72px] left-0 md:left-64 right-0 h-0.5 bg-surface-container-highest z-50">
     <div id="reading-progress" class="h-full bg-primary-container shadow-[0_0_8px_rgba(0,240,255,0.8)] w-1/4 reading-progress-bar"></div>
   </div>
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-24 md:pt-20 pb-28 md:pb-24" id="reading-scroll-area">
+  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-24 md:pt-20 pb-28 md:pb-24" id="reading-scroll-area">
     <div class="max-w-7xl mx-auto px-6 md:pr-16 py-10">
 
       <!-- Article Header -->
@@ -2234,27 +2235,30 @@
         <div id="read-body" class="max-w-2xl mx-auto space-y-6 text-lg leading-relaxed text-on-surface/90 font-light font-body">
           <!-- Injected by JS -->
         </div>
-      </article>
 
-      <!-- AI "Signal Summary" — ON DEMAND, anchored bottom-right under the
-           article. openReading() shows the small button; the card stays
-           hidden until the reader clicks it (or shows instantly if cached).
-           Keeping it below the article avoids redundant summaries on
-           short / lede-heavy pieces and only spends an API call on request. -->
-      <div class="cr-tldr-btn-row mt-4">
-        <button id="read-tldr-btn" type="button" class="cr-tldr-btn" style="display:none" onclick="requestArticleTldr()">
-          <span class="material-symbols-outlined">auto_awesome</span>
-          <span>Generate Signal Summary</span>
-        </button>
-      </div>
-      <aside id="read-tldr" class="cr-tldr mt-4" style="display:none">
-        <div class="cr-tldr-eyebrow">
-          <span class="material-symbols-outlined">auto_awesome</span>
-          <span>Signal Summary — Cosmic AI</span>
+        <!-- AI "Signal Summary" — ON DEMAND, sits INSIDE the article frame,
+             bottom-right, aligned to the text column. openReading() shows the
+             small button; the card stays hidden until the reader clicks it
+             (or shows instantly if cached). On-demand avoids redundant
+             summaries on short / lede-heavy pieces and only spends an API
+             call when the reader actually asks for one. -->
+        <div class="max-w-2xl mx-auto">
+          <div class="cr-tldr-btn-row mt-8">
+            <button id="read-tldr-btn" type="button" class="cr-tldr-btn" style="display:none" onclick="requestArticleTldr()">
+              <span class="material-symbols-outlined">auto_awesome</span>
+              <span>Generate Signal Summary</span>
+            </button>
+          </div>
+          <aside id="read-tldr" class="cr-tldr mt-4" style="display:none">
+            <div class="cr-tldr-eyebrow">
+              <span class="material-symbols-outlined">auto_awesome</span>
+              <span>Signal Summary — Cosmic AI</span>
+            </div>
+            <p id="read-tldr-text" class="cr-tldr-text"></p>
+            <p id="read-tldr-loading" class="cr-tldr-text cr-tldr-loading">Generating summary…</p>
+          </aside>
         </div>
-        <p id="read-tldr-text" class="cr-tldr-text"></p>
-        <p id="read-tldr-loading" class="cr-tldr-text cr-tldr-loading">Generating summary…</p>
-      </aside>
+      </article>
 
       <!-- Data Cards -->
       <div id="read-stats" class="grid grid-cols-1 md:grid-cols-2 gap-5 my-10">
