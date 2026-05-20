@@ -1813,10 +1813,9 @@
 </nav>
 
 <!-- ── Back to Feed button (body-level so fixed pos works on mobile Safari).
-     Top-LEFT so it clears the AI chat FAB (bottom-right). On desktop it
-     sits just right of the 256px nav sidebar; on mobile, top-left below
-     the header. ── -->
-<div id="back-btn" style="display:none;" class="fixed top-[80px] md:top-24 left-3 md:left-[17.5rem] z-40">
+     Top-RIGHT: clears the article title (top-left) AND the AI chat FAB
+     (bottom-right). Sits just below the header search bar. ── -->
+<div id="back-btn" style="display:none;" class="fixed top-[80px] md:top-24 right-3 md:right-8 z-40">
   <button onclick="navigate('feed')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95 whitespace-nowrap">
     <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
     <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Feed</span>
@@ -2296,7 +2295,7 @@
   <!-- Back Button — top-LEFT so it clears the AI chat FAB (bottom-right).
        Desktop: just right of the 256px nav sidebar; mobile: top-left
        below the header. -->
-  <div class="fixed top-[80px] md:top-24 left-3 md:left-[17.5rem] z-40">
+  <div class="fixed top-[80px] md:top-24 right-3 md:right-8 z-40">
     <button onclick="navigate('detail')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95">
       <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
       <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Overview</span>
