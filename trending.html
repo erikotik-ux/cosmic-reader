@@ -241,7 +241,7 @@ const FALLBACK_POOL = {
 function _hashTitle(s) { let h=0; for(let i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0;} return Math.abs(h); }
 function pickFallback(cat, title) { const p=FALLBACK_POOL[cat]; if(!p||!p.length)return ''; return p[_hashTitle(title)%p.length]; }
 function guessCategory(title, tags) { const txt=(title+' '+tags).toLowerCase(); for(const[kws,cat]of KEYWORD_CATS){for(const kw of kws){if(txt.includes(kw))return cat;}} return null; }
-function proxyImg(url){if(!url)return '';if(url.startsWith('data:'))return url;if(url.includes('wsrv.nl'))return url;url=url.replace(/^https?:\/\/i[0-9]\.wp\.com\/([^?]+).*$/i,'https://$1');if(url.includes('wikimedia.org')||url.includes('wikipedia.org'))return url;return 'https://wsrv.nl/?url='+encodeURIComponent(url)+'&maxage=7d&output=jpg&q=85';}
+function proxyImg(url){if(!url)return '';if(url.startsWith('data:'))return url;if(url.includes('wsrv.nl'))return url;url=url.replace(/^https?:\/\/i[0-9]\.wp\.com\/([^?]+).*$/i,'https://$1');if(url.includes('wikimedia.org')||url.includes('wikipedia.org'))return url;url=url.replace(/(\/csz\/news\/)tmb(\/)/i,'$1800a$2');return 'https://wsrv.nl/?url='+encodeURIComponent(url)+'&maxage=7d&output=jpg&q=85';}
 const BLOCKED_HOSTS=['kinsta.cloud','kinsta.app'];
 function normaliseImg(u){if(!u)return '';u=u.trim();if(u.startsWith('//'))u='https:'+u;else if(u.startsWith('http:'))u='https'+u.slice(4);try{const p=new URL(u);if(BLOCKED_HOSTS.some(d=>p.hostname===d||p.hostname.endsWith('.'+d)))return '';return p.href;}catch(e){return u;}}
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -377,7 +377,7 @@ function renderTrending() {
 async function loadFeeds() {
   // ── Fast path: use articles cached by app.html ──
   try {
-    const c = JSON.parse(sessionStorage.getItem('cr_cache_v4') || '{}');
+    const c = JSON.parse(sessionStorage.getItem('cr_cache_v5') || '{}');
     if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
       allArticles = c.articles.map(a => ({ ...a, link: a.read_more || a.link })).filter(a => a.link && a.title);
       renderTrending();

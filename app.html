@@ -1812,8 +1812,11 @@
   </button>
 </nav>
 
-<!-- ── Back to Feed button (body-level so fixed pos works on mobile Safari) ── -->
-<div id="back-btn" style="display:none;" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0 z-50">
+<!-- ── Back to Feed button (body-level so fixed pos works on mobile Safari).
+     Top-LEFT so it clears the AI chat FAB (bottom-right). On desktop it
+     sits just right of the 256px nav sidebar; on mobile, top-left below
+     the header. ── -->
+<div id="back-btn" style="display:none;" class="fixed top-[80px] md:top-24 left-3 md:left-[17.5rem] z-40">
   <button onclick="navigate('feed')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95 whitespace-nowrap">
     <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
     <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Feed</span>
@@ -2468,6 +2471,10 @@ function proxyImg(url) {
   // original publisher host serves the same image fine. Strip photon query
   // params too — fit/ssl/quality flags are photon-specific.
   url = url.replace(/^https?:\/\/i[0-9]\.wp\.com\/([^?]+).*$/i, 'https://$1');
+  // Phys.org serves tiny thumbnails in its RSS (/csz/news/tmb/ — ~1KB, very
+  // pixelated when shown larger). Their CDN has a high-res variant at the
+  // same path with /800a/ (~30KB). Upgrade tmb → 800a for a sharp image.
+  url = url.replace(/(\/csz\/news\/)tmb(\/)/i, '$1800a$2');
   // Route everything (including Wikimedia) through wsrv.nl — direct Wikimedia
   // requests from browsers get rate-limited (503); wsrv.nl caches and relays them
   return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&maxage=7d&output=jpg&q=85';
@@ -2970,7 +2977,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v4';
+const _CR_CACHE_KEY = 'cr_cache_v5';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 async function loadLiveFeeds() {
