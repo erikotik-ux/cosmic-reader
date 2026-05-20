@@ -230,6 +230,34 @@
     border-radius: 0.75rem;
     position: relative;
   }
+  /* On-demand summary trigger — a slim cyan-outline pill the reader taps
+     to generate the Signal Summary. Sized to match the article column. */
+  .cr-tldr-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.55rem 1.1rem;
+    background: rgba(0,240,255,0.05);
+    border: 1px solid rgba(0,240,255,0.28);
+    border-radius: 999px;
+    color: rgba(0,240,255,0.9);
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .cr-tldr-btn:hover {
+    background: rgba(0,240,255,0.1);
+    border-color: rgba(0,240,255,0.5);
+    box-shadow: 0 0 16px rgba(0,240,255,0.18);
+  }
+  .cr-tldr-btn .material-symbols-outlined { font-size: 1rem; }
   .cr-tldr-eyebrow {
     display: flex; align-items: center; gap: 0.4rem;
     color: rgba(0,240,255,0.85);
@@ -2195,10 +2223,14 @@
         <figcaption id="read-caption" class="mt-3 font-label text-xs text-on-surface-variant text-center uppercase tracking-widest italic"></figcaption>
       </figure>
 
-      <!-- AI "Signal Summary" card — Cosmic AI summarizes the article in
-           2-3 sentences. Hidden by default; openReading() kicks off a
-           /api/summarize call on view and fills this in (or hides it on
-           failure). -->
+      <!-- AI "Signal Summary" — ON DEMAND. openReading() shows the button;
+           the card stays hidden until the user clicks it. This avoids
+           redundant summaries on short / lede-heavy articles and only
+           spends an API call when the reader actually wants one. -->
+      <button id="read-tldr-btn" type="button" class="cr-tldr-btn mb-6" style="display:none" onclick="requestArticleTldr()">
+        <span class="material-symbols-outlined">auto_awesome</span>
+        <span>Generate Signal Summary</span>
+      </button>
       <aside id="read-tldr" class="cr-tldr mb-6" style="display:none">
         <div class="cr-tldr-eyebrow">
           <span class="material-symbols-outlined">auto_awesome</span>
@@ -3581,8 +3613,10 @@ function openReading(idx) {
   const scrollArea = document.getElementById('reading-scroll-area');
   scrollArea.scrollTop = 0;
 
-  // Kick off Signal Summary generation (cached per article URL)
-  loadArticleTldr(a);
+  // Signal Summary is ON DEMAND — set up the button rather than
+  // auto-generating. If we already have a cached summary for this
+  // article, surface it immediately (no button, no extra API call).
+  setupArticleTldr(a);
 }
 
 // ── Live Launch Tracker ───────────────────────────────────
@@ -3713,16 +3747,59 @@ function _loadTldrCache() {
 function _saveTldrCache(cache) {
   try { sessionStorage.setItem(_TLDR_CACHE_KEY, JSON.stringify(cache)); } catch(e) {}
 }
+// Remember which article the reading view is currently showing, so the
+// on-demand button knows what to summarize.
+let _currentReadingArticle = null;
+
+// Called on openReading(). Decides what to show: a cached summary
+// (instant), or the "Generate Signal Summary" button.
+function setupArticleTldr(article) {
+  _currentReadingArticle = article;
+  const card = document.getElementById('read-tldr');
+  const btn  = document.getElementById('read-tldr-btn');
+  if (!card || !btn) return;
+
+  // Reset both to hidden each time we open an article.
+  card.style.display = 'none';
+  btn.style.display  = 'none';
+
+  const key = article && (article.read_more || article.link || article.title);
+  if (!key) return; // can't summarize without an identifier
+
+  // If we've already generated this article's summary this session,
+  // show it straight away — no need to make the user click again.
+  const cache = _loadTldrCache();
+  if (cache[key]) {
+    const textEl = document.getElementById('read-tldr-text');
+    const loadEl = document.getElementById('read-tldr-loading');
+    card.style.display   = '';
+    loadEl.style.display = 'none';
+    textEl.textContent   = cache[key];
+    textEl.style.display = '';
+    return;
+  }
+
+  // Otherwise offer the on-demand button.
+  btn.style.display = '';
+}
+
+// Button onclick — generates the summary for the current article.
+function requestArticleTldr() {
+  if (_currentReadingArticle) loadArticleTldr(_currentReadingArticle);
+}
+
 async function loadArticleTldr(article) {
   const card    = document.getElementById('read-tldr');
   const textEl  = document.getElementById('read-tldr-text');
   const loadEl  = document.getElementById('read-tldr-loading');
+  const btn     = document.getElementById('read-tldr-btn');
   if (!card || !textEl || !loadEl) return;
 
   const key = article.read_more || article.link || article.title;
   if (!key) { card.style.display = 'none'; return; }
 
-  // Show the card in loading state immediately
+  // Hide the trigger button, show the card in loading state.
+  if (btn) btn.style.display = 'none';
   card.style.display = '';
   textEl.style.display = 'none';
   textEl.textContent   = '';
@@ -3766,8 +3843,13 @@ async function loadArticleTldr(article) {
     textEl.textContent   = summary;
     textEl.style.display = '';
   } catch(e) {
-    // Quietly hide the card on failure — don't distract from the article
+    // On failure, hide the loading card and restore the button so the
+    // reader can retry. Don't leave them stuck on a spinner.
     card.style.display = 'none';
+    if (btn && _currentReadingArticle &&
+        (_currentReadingArticle.read_more || _currentReadingArticle.link || _currentReadingArticle.title) === key) {
+      btn.style.display = '';
+    }
   }
 }
 
