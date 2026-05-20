@@ -623,13 +623,19 @@
      menu should match the rest of the dark UI. Chrome/Edge/Firefox on
      desktop and Android Chrome honor option bg+color; iOS Safari uses
      a native wheel that ignores these (acceptable). */
-  #feed-filter-mobile option {
+  #feed-filter-mobile option,
+  #feed-source-mobile option,
+  #feed-source-desktop option {
     background-color: #0d1515;
     color: #dbfcff;
     font-weight: 400;
   }
   #feed-filter-mobile option:checked,
-  #feed-filter-mobile option:hover {
+  #feed-filter-mobile option:hover,
+  #feed-source-mobile option:checked,
+  #feed-source-mobile option:hover,
+  #feed-source-desktop option:checked,
+  #feed-source-desktop option:hover {
     background-color: #0a1212;
     color: #00f0ff;
   }
@@ -1922,6 +1928,15 @@
         <button onclick="filterFeed('Moon')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Moon</button>
         <button onclick="filterFeed('Missions')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Missions</button>
         <button onclick="filterFeed('AI & Tech')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">AI &amp; Tech</button>
+        <!-- Source / publication filter (works alongside the category chips) -->
+        <div class="cr-source-filter relative ml-auto flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#dbfcff]/40 text-base">filter_list</span>
+          <select id="feed-source-desktop" onchange="filterBySource(this.value)"
+            class="appearance-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+            <option value="All">All Sources</option>
+          </select>
+          <span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
+        </div>
       </div>
       <!-- Mobile filter + compact stats — single horizontal row.
            Filter dropdown (cyan pill, OS-native picker) on the left,
@@ -1958,6 +1973,14 @@
             <div class="mt-1.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Signal</div>
           </div>
         </div>
+      </div>
+      <!-- Mobile source / publication filter -->
+      <div class="md:hidden mb-8 cr-source-filter relative">
+        <select id="feed-source-mobile" onchange="filterBySource(this.value)"
+          class="appearance-none w-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+          <option value="All">All Sources</option>
+        </select>
+        <span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
       </div>
 
       <!-- Bento Grid -->
@@ -3069,6 +3092,7 @@ async function loadLiveFeeds() {
     if (!merged.length) return;
     articles.length = 0;
     merged.forEach(a => articles.push(a));
+    populateSourceFilter();
     renderCurrentPage();
     if (firstFreshRender) {
       firstFreshRender = false;
@@ -3097,6 +3121,7 @@ async function loadLiveFeeds() {
       const liveCount = collectedBuckets.length;
       const feedCountEl = document.getElementById('hud-feed-count');
       if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
+      populateSourceFilter();
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
@@ -3418,10 +3443,44 @@ function renderSavedStories() {
 const ARTICLES_PER_PAGE = 6;
 let currentPage   = 1;
 let currentFilter = 'All';
+let currentSource = 'All';   // publication filter (works alongside category)
 
 function getFilteredArticles() {
-  if (currentFilter === 'All') return articles;
-  return articles.filter(a => a.category.toLowerCase() === currentFilter.toLowerCase());
+  let list = articles;
+  if (currentFilter !== 'All') {
+    list = list.filter(a => a.category.toLowerCase() === currentFilter.toLowerCase());
+  }
+  if (currentSource !== 'All') {
+    list = list.filter(a => (a.source || '') === currentSource);
+  }
+  return list;
+}
+
+// Build the source/publication dropdowns from whatever sources are actually
+// present in the loaded articles, so the list always reflects live feeds.
+function populateSourceFilter() {
+  const sources = [...new Set(articles.map(a => a.source).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  // If the active source vanished (e.g. a feed dropped out), reset to All.
+  if (currentSource !== 'All' && !sources.includes(currentSource)) currentSource = 'All';
+  const optsHtml = ['<option value="All">All Sources</option>']
+    .concat(sources.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`))
+    .join('');
+  ['feed-source-desktop', 'feed-source-mobile'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = optsHtml;
+    sel.value = currentSource;
+  });
+}
+
+function filterBySource(value) {
+  currentSource = value;
+  currentPage   = 1;
+  ['feed-source-desktop', 'feed-source-mobile'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (sel && sel.value !== value) sel.value = value;
+  });
+  renderCurrentPage();
 }
 
 function updatePaginationUI() {
@@ -3577,6 +3636,7 @@ function navigate(viewName, opts) {
     renderSavedStories();
   }
   if (viewName === 'feed') {
+    populateSourceFilter();
     updatePaginationUI();
   }
   if (viewName === 'trending') {
