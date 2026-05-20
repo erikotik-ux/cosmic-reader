@@ -2248,7 +2248,7 @@
           <div class="cr-tldr-btn-row mt-8">
             <button id="read-tldr-btn" type="button" class="cr-tldr-btn" style="display:none" onclick="requestArticleTldr()">
               <span class="material-symbols-outlined">auto_awesome</span>
-              <span>Generate Signal Summary</span>
+              <span>Generate Summary</span>
             </button>
           </div>
           <aside id="read-tldr" class="cr-tldr mt-4" style="display:none">
@@ -3818,6 +3818,12 @@ function setupArticleTldr(article) {
 
   const key = article && (article.read_more || article.link || article.title);
   if (!key) return; // can't summarize without an identifier
+
+  // Only worth summarizing long-form articles. Short pieces are already
+  // about as brief as a summary would be, so we skip the button there.
+  const wordCount = article.body ? article.body.trim().split(/\s+/).length : 0;
+  const LONG_ARTICLE_WORDS = 300;
+  if (wordCount < LONG_ARTICLE_WORDS) return;
 
   // If we've already generated this article's summary this session,
   // show it straight away — no need to make the user click again.
