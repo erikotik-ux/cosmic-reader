@@ -605,6 +605,24 @@
     line-height: 1 !important;
     white-space: nowrap;                  /* keep "AI & Tech" inline */
   }
+  /* ── Already-read feed cards ── dimmed, with a small cyan check badge.
+     Restores to full opacity on hover so re-reading is unobtrusive. */
+  .cr-read { opacity: 0.5; transition: opacity 0.3s ease; }
+  .cr-read:hover { opacity: 1; }
+  .cr-read::after {
+    content: 'check';
+    font-family: 'Material Symbols Outlined';
+    position: absolute;
+    top: 0.6rem; right: 0.6rem;
+    z-index: 30;
+    font-size: 15px; line-height: 1;
+    color: #00f0ff;
+    background: rgba(10,18,18,0.85);
+    border: 1px solid rgba(0,240,255,0.3);
+    border-radius: 9999px;
+    padding: 3px;
+    pointer-events: none;
+  }
   /* Mobile chip styling kept for completeness — the desktop chip row is
      hidden on mobile by the .feed-filter-row's md:hidden modifier (see
      My Feed markup), so this only fires if that ever changes back. */
@@ -2855,8 +2873,10 @@ function renderFeed(list) {
     const cc = CAT_COLOR[a.category] || 'text-[#00f0ff]';
     // Pre-compute fallback URL (Wikimedia, no special chars — safe to inline directly)
     const fb = pickFallback(a.category, a.title);
+    // Dim + badge already-read articles (relative needed for the ::after badge).
+    const readCls = isArticleRead(a) ? ' cr-read relative' : '';
     if (style === 'hero') return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
+      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass}${readCls} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
         <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10${a.title.length > 60 ? ' cr-hero-grad-long' : ''}"></div>
         <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
@@ -2869,7 +2889,7 @@ function renderFeed(list) {
         </div>
       </article>`;
     if (style === 'small') return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low rounded-xl glow-border p-5 flex flex-col justify-between group glass-panel relative overflow-hidden cursor-pointer article-card-hover transition-colors">
+      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass}${readCls} bg-surface-container-low rounded-xl glow-border p-5 flex flex-col justify-between group glass-panel relative overflow-hidden cursor-pointer article-card-hover transition-colors">
         <div>
           <div class="flex justify-between items-start mb-5">
             <div class="w-10 h-10 rounded-lg bg-[#dbfcff]/10 flex items-center justify-center border border-[#dbfcff]/20">
@@ -2886,7 +2906,7 @@ function renderFeed(list) {
         </div>
       </article>`;
     if (style === 'medium') return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
+      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass}${readCls} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
         <div class="relative h-52 md:h-auto overflow-hidden">
           <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
@@ -2901,7 +2921,7 @@ function renderFeed(list) {
     // style === 'row'
     const ic = CAT_ICON[a.category] || 'article';
     return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
+      <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass}${readCls} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
         <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
           <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
@@ -3364,6 +3384,24 @@ window.addEventListener('pagehide', () => { if (_savedSyncTimer) _flushSavedRemo
 
 function _savedKey(a) { return a && (a.read_more || a.link || a.title) || ''; }
 
+// ── Read-state tracking ───────────────────────────────────
+// Remembers which articles the user has opened (localStorage), so the feed
+// can visually dim already-read cards. Keyed the same way as saved stories.
+const _READ_KEY = 'cr_read_v1';
+let _readSet = (function () {
+  try { return new Set(JSON.parse(localStorage.getItem(_READ_KEY) || '[]')); }
+  catch (e) { return new Set(); }
+})();
+function isArticleRead(a) { return _readSet.has(_savedKey(a)); }
+function markArticleRead(a) {
+  const k = _savedKey(a);
+  if (!k || _readSet.has(k)) return;
+  _readSet.add(k);
+  // Cap stored history so localStorage doesn't grow unbounded.
+  if (_readSet.size > 500) _readSet = new Set([..._readSet].slice(-500));
+  try { localStorage.setItem(_READ_KEY, JSON.stringify([..._readSet])); } catch (e) {}
+}
+
 function saveStory(idx) {
   const a = articles[idx];
   if (!a) return;
@@ -3688,6 +3726,12 @@ function openArticle(idx) {
   currentArticle = idx;
   const a = articles[idx];
   if (!a) return;
+  // Mark as read and refresh the (hidden) feed grid so the dimmed card +
+  // check badge are already in place when the user navigates back.
+  if (!isArticleRead(a)) {
+    markArticleRead(a);
+    if (document.getElementById('article-grid')) renderCurrentPage();
+  }
   // Reset save button state
   const saveIcon = document.getElementById('save-story-icon');
   if (saveIcon) {
