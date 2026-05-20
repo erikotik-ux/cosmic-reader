@@ -2212,19 +2212,22 @@
             <p class="font-headline text-[11px] uppercase tracking-widest text-primary/60 font-medium">Signal Summary</p>
             <p id="detail-excerpt" class="text-on-surface/80 leading-relaxed font-body"></p>
           </div>
-          <div class="mt-auto flex flex-wrap items-center gap-3">
-            <button onclick="openReading(currentArticle)" class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-7 py-3 font-headline uppercase tracking-widest text-xs font-bold rounded-sm flex items-center gap-2 transition-transform hover:scale-[1.02] active:scale-95">
+          <div class="mt-auto flex flex-wrap items-center gap-2">
+            <button onclick="openReading(currentArticle)" class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-5 py-3 font-headline uppercase tracking-widest text-xs font-bold rounded-sm flex items-center gap-2 transition-transform hover:scale-[1.02] active:scale-95">
               Read Full Transmission
               <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </button>
-            <button id="save-story-btn" onclick="saveStory(currentArticle)" class="p-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
-              <span id="save-story-icon" class="material-symbols-outlined text-primary">bookmark_add</span>
-              <span class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Save Story</span>
-            </button>
-            <button id="share-story-btn" onclick="shareCurrentArticle()" class="p-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
-              <span id="share-story-icon" class="material-symbols-outlined text-primary">share</span>
-              <span id="share-story-label" class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Share</span>
-            </button>
+            <!-- Save + Share kept together so Share never drops to its own line -->
+            <div class="flex items-center gap-2 shrink-0">
+              <button id="save-story-btn" onclick="saveStory(currentArticle)" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+                <span id="save-story-icon" class="material-symbols-outlined text-primary">bookmark_add</span>
+                <span class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Save</span>
+              </button>
+              <button id="share-story-btn" onclick="shareCurrentArticle()" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+                <span id="share-story-icon" class="material-symbols-outlined text-primary">share</span>
+                <span id="share-story-label" class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Share</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2290,6 +2293,10 @@
             <p id="read-time" class="font-label text-sm text-on-surface">8 min read</p>
             <p class="font-label text-[10px] text-on-surface-variant uppercase tracking-tighter">Estimated</p>
           </div>
+          <button id="read-share-btn" onclick="shareCurrentArticle()" title="Share" class="ml-auto flex items-center gap-2 px-4 py-2 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all shrink-0">
+            <span id="read-share-icon" class="material-symbols-outlined text-primary text-base">share</span>
+            <span id="read-share-label" class="font-label text-[10px] uppercase tracking-widest text-primary hidden sm:inline">Share</span>
+          </button>
         </div>
       </header>
 
@@ -3499,17 +3506,21 @@ async function shareCurrentArticle() {
 }
 
 function _flashShareCopied() {
-  const icon  = document.getElementById('share-story-icon');
-  const label = document.getElementById('share-story-label');
-  if (!icon) return;
-  const prevIcon  = icon.textContent;
-  const prevLabel = label ? label.textContent : '';
-  icon.textContent = 'check';
-  if (label) label.textContent = 'Copied';
-  setTimeout(() => {
-    icon.textContent = prevIcon;
-    if (label) label.textContent = prevLabel;
-  }, 1600);
+  // Update both the detail-view and reading-view share buttons (whichever exist).
+  [['share-story-icon', 'share-story-label'], ['read-share-icon', 'read-share-label']]
+    .forEach(([iconId, labelId]) => {
+      const icon  = document.getElementById(iconId);
+      const label = document.getElementById(labelId);
+      if (!icon) return;
+      const prevIcon  = icon.textContent;
+      const prevLabel = label ? label.textContent : '';
+      icon.textContent = 'check';
+      if (label) label.textContent = 'Copied';
+      setTimeout(() => {
+        icon.textContent = prevIcon;
+        if (label) label.textContent = prevLabel;
+      }, 1600);
+    });
 }
 
 function removeSaved(key) {
@@ -3869,6 +3880,7 @@ const PUBLISHER_BYLINE = {
 function openReading(idx) {
   const a = articles[idx];
   if (!a) return;
+  currentArticle = idx; // keep global in sync so Share targets the right article
 
   document.getElementById('read-title').textContent = a.title;
   document.getElementById('read-tag').textContent = a.category;
