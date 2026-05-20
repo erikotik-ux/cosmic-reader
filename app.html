@@ -2289,15 +2289,14 @@
     </div>
   </div>
 
-  <!-- Side HUD — reading progress indicator -->
-  <div class="fixed left-20 md:left-72 top-1/2 -translate-y-1/2 space-y-3 hidden lg:block pointer-events-none z-20">
-    <div class="w-1 h-24 bg-outline-variant/10 relative rounded-full overflow-hidden">
-      <div id="read-progress-side" class="absolute top-0 w-full h-1/3 bg-primary-container shadow-[0_0_10px_#00f0ff] rounded-full"></div>
-    </div>
-  </div>
+  <!-- (Removed the left-side vertical reading-progress HUD — it read as a
+       stray cyan scrollbar and duplicated the horizontal progress bar at
+       the top of the page.) -->
 
-  <!-- Back Button -->
-  <div class="fixed bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0 z-50">
+  <!-- Back Button — top-LEFT so it clears the AI chat FAB (bottom-right).
+       Desktop: just right of the 256px nav sidebar; mobile: top-left
+       below the header. -->
+  <div class="fixed top-[80px] md:top-24 left-3 md:left-[17.5rem] z-40">
     <button onclick="navigate('detail')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95">
       <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
       <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Overview</span>
