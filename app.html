@@ -703,7 +703,7 @@
     <nav class="hidden md:flex items-center gap-2 text-[#dbfcff]/30">
       <span class="font-headline text-[10px] uppercase tracking-widest">Deep Space Network</span>
       <span class="text-[#00f0ff]/40">›</span>
-      <span id="breadcrumb" class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]">Galaxy Map</span>
+      <span id="breadcrumb" onclick="breadcrumbBack()" class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]">Galaxy Map</span>
     </nav>
   </div>
   <div class="flex items-center gap-4">
@@ -1816,9 +1816,8 @@
      Top-RIGHT: clears the article title (top-left) AND the AI chat FAB
      (bottom-right). Sits just below the header search bar. ── -->
 <div id="back-btn" style="display:none;" class="fixed top-[80px] md:top-24 right-3 md:right-8 z-40">
-  <button onclick="navigate('feed')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95 whitespace-nowrap">
-    <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
-    <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Feed</span>
+  <button onclick="goBack()" title="Back (Esc)" aria-label="Back" class="flex items-center justify-center w-11 h-11 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95">
+    <span class="material-symbols-outlined text-primary group-hover:-translate-x-0.5 transition-transform text-xl">arrow_back</span>
   </button>
 </div>
 
@@ -2296,9 +2295,8 @@
        Desktop: just right of the 256px nav sidebar; mobile: top-left
        below the header. -->
   <div class="fixed top-[80px] md:top-24 right-3 md:right-8 z-40">
-    <button onclick="navigate('detail')" class="flex items-center gap-3 px-5 py-2.5 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95">
-      <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform text-base">arrow_back</span>
-      <span class="font-headline text-sm font-medium tracking-tight text-on-surface">Back to Overview</span>
+    <button onclick="goBack()" title="Back (Esc)" aria-label="Back" class="flex items-center justify-center w-11 h-11 bg-surface-container-highest border border-primary-container/20 rounded-full shadow-2xl backdrop-blur-xl group hover:border-primary-container/60 transition-all active:scale-95">
+      <span class="material-symbols-outlined text-primary group-hover:-translate-x-0.5 transition-transform text-xl">arrow_back</span>
     </button>
   </div>
 </main>
@@ -3492,7 +3490,13 @@ let currentView = 'map';
 let currentArticle = 0;
 
 // ── Navigation ────────────────────────────────────────────
-function navigate(viewName) {
+function navigate(viewName, opts) {
+  opts = opts || {};
+  // Push a browser-history entry so the hardware/trackpad Back gesture works.
+  // Skipped when we're already responding to a popstate (Back) event.
+  if (!opts.fromPop && viewName !== currentView) {
+    try { history.pushState({ crView: viewName }, ''); } catch (e) {}
+  }
   // Hide all views
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   // Show target
@@ -3525,10 +3529,16 @@ function navigate(viewName) {
   const backBtn = document.getElementById('back-btn');
   if (backBtn) backBtn.style.display = (viewName === 'detail') ? 'block' : 'none';
 
-  // Update breadcrumb
+  // Update breadcrumb. On article views it doubles as a clickable Back path.
   const labels = { map:'Galaxy Map', feed:'My Feed', detail:'Signal Detail', reading:'Full Transmission', saved:'Saved Stories', trending:'Trending' };
   const bc = document.getElementById('breadcrumb');
-  if (bc) bc.textContent = labels[viewName] || viewName;
+  if (bc) {
+    const isArticleView = (viewName === 'detail' || viewName === 'reading');
+    bc.textContent = (isArticleView ? '‹ ' : '') + (labels[viewName] || viewName);
+    bc.style.cursor = isArticleView ? 'pointer' : 'default';
+    bc.classList.toggle('hover:text-white', isArticleView);
+    bc.classList.toggle('transition-colors', isArticleView);
+  }
 
   if (viewName === 'reading') {
     setupReadingProgress();
@@ -3547,6 +3557,40 @@ function navigate(viewName) {
     renderTrending();
   }
 }
+
+// ── Back navigation ───────────────────────────────────────
+// Single source of truth for "go back" — used by the floating back button,
+// the Esc key, the clickable breadcrumb, and the browser Back gesture.
+function goBack() {
+  // Logical fallback if there's no in-app history to pop back into.
+  const fallback = { reading: 'detail', detail: 'feed' };
+  if (window.history.length > 1) {
+    history.back();           // triggers the popstate handler below
+  } else {
+    navigate(fallback[currentView] || 'feed');
+  }
+}
+
+// Breadcrumb only acts as Back on the article views.
+function breadcrumbBack() {
+  if (currentView === 'detail' || currentView === 'reading') goBack();
+}
+
+// Browser/trackpad Back → restore the matching in-app view.
+window.addEventListener('popstate', function (e) {
+  const v = (e.state && e.state.crView) || 'map';
+  navigate(v, { fromPop: true });
+});
+
+// Esc closes article views (chat handles its own Esc separately).
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  if (document.body.classList.contains('cr-chat-open')) return; // let chat handle it
+  if (currentView === 'detail' || currentView === 'reading') {
+    e.preventDefault();
+    goBack();
+  }
+});
 
 // ── Open Article Detail ───────────────────────────────────
 function openCategoryArticle(category) {
