@@ -2540,6 +2540,41 @@ function stripHtml(s) {
   return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#\d+;/g,' ').trim();
 }
 
+// Strip publisher boilerplate that some feeds embed around the real
+// article text. Notably NASA's JPL Photojournal entries wrap the actual
+// description in a leading nav block ("1 Min Read … Photojournal Home
+// Search Latest Content … Downloads … Description") and a trailing
+// link list ("Keep Exploring … Discover More Topics From Photojournal …").
+// Each transform is GUARDED so it only fires when the boilerplate
+// signature is present — normal articles pass through untouched.
+function cleanArticleBody(text) {
+  if (!text) return text;
+  let t = text;
+
+  // 1. Leading nav block → the real content follows a "Description" marker.
+  //    Only strip if the lead-in clearly looks like Photojournal cruft.
+  const d = t.match(/\bDescription\s+/);
+  if (d && /Photojournal|Min Read|Credits:\s|PIA\d/i.test(t.slice(0, d.index))) {
+    t = t.slice(d.index + d[0].length);
+  }
+
+  // 2. Trailing link-list boilerplate → cut at the first known marker,
+  //    but only if there's real content before it (avoid nuking short bodies).
+  const tailMarkers = [
+    'Keep Exploring',
+    'Discover More Topics',
+    'Photojournal Navigation',
+    'Related Topics',
+    'More From Photojournal'
+  ];
+  for (const m of tailMarkers) {
+    const i = t.indexOf(m);
+    if (i > 60) { t = t.slice(0, i); break; }
+  }
+
+  return t.trim();
+}
+
 async function fetchFeed(feedInfo) {
   const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
 
@@ -2557,8 +2592,9 @@ async function fetchFeed(feedInfo) {
         const read_more = item.link || item.guid || '#';
         if (!/^https?:\/\/.+\..+/i.test(read_more)) return null;
         const descRaw  = item.content || item.description || '';
-        const excerpt  = stripHtml(descRaw).slice(0, 280).replace(/\s+/g,' ').trim();
-        const body     = stripHtml(descRaw).slice(0, 2000);
+        const cleaned  = cleanArticleBody(stripHtml(descRaw));
+        const excerpt  = cleaned.slice(0, 280).replace(/\s+/g,' ').trim();
+        const body     = cleaned.slice(0, 2000);
         const date     = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
         const tags     = (item.categories || []).join(' ');
         const category = guessCategory(title, tags, excerpt) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
@@ -2666,8 +2702,9 @@ async function fetchFeed(feedInfo) {
     const descRaw = item.querySelector('description')?.textContent
                  || item.querySelector('summary')?.textContent
                  || item.querySelector('content')?.textContent || '';
-    const excerpt = stripHtml(descRaw).slice(0, 280).replace(/\s+/g,' ').trim();
-    const body    = stripHtml(item.querySelector('encoded')?.textContent || descRaw).slice(0, 2000);
+    const cleanedX = cleanArticleBody(stripHtml(item.querySelector('encoded')?.textContent || descRaw));
+    const excerpt = cleanedX.slice(0, 280).replace(/\s+/g,' ').trim();
+    const body    = cleanedX.slice(0, 2000);
     // RSS uses <pubDate>, Atom uses <published> or <updated>
     const pubDate = item.querySelector('pubDate')?.textContent
                  || item.querySelector('published')?.textContent
@@ -2933,7 +2970,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v3';
+const _CR_CACHE_KEY = 'cr_cache_v4';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 async function loadLiveFeeds() {

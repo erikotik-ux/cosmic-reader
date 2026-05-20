@@ -1871,7 +1871,7 @@
 
     // ── Fast path: sessionStorage cache written by app.html ──
     try {
-      const c = JSON.parse(sessionStorage.getItem('cr_cache_v3') || '{}');
+      const c = JSON.parse(sessionStorage.getItem('cr_cache_v4') || '{}');
       if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
         // Pick first article that has a real (non-Wikimedia) image
         const pick = c.articles.find(a => a.image && !/wikimedia\.org/.test(a.image)) || c.articles[0];
