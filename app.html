@@ -30,9 +30,20 @@
       return;
     }
 
+    // flowType pinned to 'pkce' to match home.html — see the comment there.
+    // Mismatched flow types were why the OAuth tokens never turned into a
+    // session and sign-in looped.
     const _sb = supabase.createClient(
       'https://hckgxwcppqrtanjdmrhi.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA',
+      {
+        auth: {
+          flowType: 'pkce',
+          detectSessionInUrl: true,
+          persistSession: true,
+          autoRefreshToken: true
+        }
+      }
     );
     window._supabase = _sb;
 

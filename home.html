@@ -1593,7 +1593,21 @@
   // ── Supabase Auth ─────────────────────────────────────────
   const SUPA_URL = 'https://hckgxwcppqrtanjdmrhi.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA';
-  const _supabase = supabase.createClient(SUPA_URL, SUPA_KEY);
+  // Pin the auth flow explicitly. Without this the SDK's flow type was
+  // ambiguous — signInWithOAuth produced an implicit-flow URL while the
+  // callback-side client expected PKCE, so the returned tokens were never
+  // processed and sign-in looped back to the homepage. Forcing 'pkce' on
+  // BOTH home.html and app.html makes initiation and callback-handling
+  // agree: signInWithOAuth stores a code_verifier, the callback returns
+  // ?code=, and detectSessionInUrl exchanges it for a session.
+  const _supabase = supabase.createClient(SUPA_URL, SUPA_KEY, {
+    auth: {
+      flowType: 'pkce',
+      detectSessionInUrl: true,
+      persistSession: true,
+      autoRefreshToken: true
+    }
+  });
 
   // Send a signed-in user straight to the dashboard. We listen TWO ways
   // because an OAuth callback can land back here (when Supabase uses the
