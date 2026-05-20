@@ -3238,6 +3238,31 @@ function _applyOgImg(img, src, idx) {
 // ── Search ─────────────────────────────────────────────────
 let _searchIdx = -1;
 
+// Build a single combined, case-insensitive regex that matches any search
+// term, then wrap matches in <mark>. Operates on already-escaped HTML.
+function _searchHighlight(rawText, terms) {
+  const esc = escHtml(rawText || '');
+  if (!terms.length) return esc;
+  const re = new RegExp('(' + terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
+  return esc.replace(re, '<mark class="bg-[#00f0ff]/20 text-[#00f0ff] rounded px-0.5">$1</mark>');
+}
+
+// Extract a short context window around the first matching term in the body
+// text, so full-text matches show WHERE they hit (not just the title).
+function _searchSnippet(text, terms) {
+  if (!text) return '';
+  const lower = text.toLowerCase();
+  let pos = -1;
+  for (const t of terms) {
+    const p = lower.indexOf(t);
+    if (p !== -1 && (pos === -1 || p < pos)) pos = p;
+  }
+  if (pos === -1) return text.slice(0, 120) + (text.length > 120 ? '…' : '');
+  const start = Math.max(0, pos - 45);
+  const end   = Math.min(text.length, pos + 90);
+  return (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
+}
+
 function handleSearch(q) {
   const wrap = document.getElementById('search-results');
   const inner = document.getElementById('search-results-inner');
@@ -3248,16 +3273,27 @@ function handleSearch(q) {
 
   if (!q.trim()) { wrap.style.display = 'none'; return; }
 
-  const term = q.trim().toLowerCase();
-  const matches = articles
-    .map((a, i) => ({ a, i }))
-    .filter(({ a }) =>
-      a.title.toLowerCase().includes(term) ||
-      (a.source || '').toLowerCase().includes(term) ||
-      (a.category || '').toLowerCase().includes(term) ||
-      (a.excerpt || '').toLowerCase().includes(term)
-    )
-    .slice(0, 8);
+  // Multi-word AND search across title, source, category, excerpt AND body.
+  const terms = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const scored = [];
+  articles.forEach((a, i) => {
+    const titleL = (a.title || '').toLowerCase();
+    const metaL  = ((a.source || '') + ' ' + (a.category || '')).toLowerCase();
+    const bodyRaw = ((a.excerpt || '') + ' ' + (a.body || '')).trim();
+    const bodyL  = bodyRaw.toLowerCase();
+    // Every term must appear somewhere (AND semantics).
+    if (!terms.every(t => titleL.includes(t) || metaL.includes(t) || bodyL.includes(t))) return;
+    // Rank: title hits weigh most, then source/category, then body.
+    let score = 0;
+    terms.forEach(t => {
+      if (titleL.includes(t)) score += 3;
+      if (metaL.includes(t))  score += 2;
+      if (bodyL.includes(t))  score += 1;
+    });
+    scored.push({ a, i, score, bodyRaw });
+  });
+  scored.sort((x, y) => y.score - x.score);
+  const matches = scored.slice(0, 10);
 
   if (!matches.length) {
     inner.innerHTML = `<div class="px-5 py-6 text-center text-[#dbfcff]/30 font-headline text-xs uppercase tracking-widest">No results for "${escHtml(q)}"</div>`;
@@ -3266,13 +3302,18 @@ function handleSearch(q) {
   }
 
   const cc = (cat) => CAT_COLOR[cat] || 'text-[#00f0ff]';
-  inner.innerHTML = matches.map(({ a, i }, ri) => {
-    const hi = (str) => str.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark class="bg-[#00f0ff]/20 text-[#00f0ff] rounded px-0.5">$1</mark>');
+  inner.innerHTML = matches.map(({ a, i, bodyRaw }, ri) => {
+    const titleHtml = _searchHighlight(a.title || '', terms);
+    // Show a body snippet only when the match isn't already obvious in the title.
+    const titleHasAll = terms.every(t => (a.title || '').toLowerCase().includes(t));
+    const snippetHtml = titleHasAll ? '' :
+      `<p class="text-[11px] font-body text-[#dbfcff]/45 leading-snug mt-1 line-clamp-2">${_searchHighlight(_searchSnippet(bodyRaw, terms), terms)}</p>`;
     return `<button data-ri="${ri}" onclick="searchOpen(${i})" class="search-result-item w-full text-left px-5 py-3.5 border-b border-white/5 last:border-0 hover:bg-[#00f0ff]/5 transition-colors flex items-start gap-3">
       <span class="material-symbols-outlined text-[#dbfcff]/30 text-lg mt-0.5">${CAT_ICON[a.category]||'article'}</span>
       <div class="flex-1 min-w-0">
-        <p class="text-sm font-headline text-[#dbfcff] leading-snug mb-1 line-clamp-2">${hi(escHtml(a.title))}</p>
+        <p class="text-sm font-headline text-[#dbfcff] leading-snug mb-1 line-clamp-2">${titleHtml}</p>
         <p class="text-[10px] font-headline uppercase tracking-widest ${cc(a.category)}">${escHtml(a.category)} · ${escHtml(a.source||'')}</p>
+        ${snippetHtml}
       </div>
     </button>`;
   }).join('');
