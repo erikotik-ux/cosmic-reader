@@ -1595,9 +1595,29 @@
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA';
   const _supabase = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-  // Redirect to dashboard only if a valid session already exists
+  // Send a signed-in user straight to the dashboard. We listen TWO ways
+  // because an OAuth callback can land back here (when Supabase uses the
+  // Site URL fallback instead of the app.html redirect_to):
+  //
+  //   1. onAuthStateChange — fires SIGNED_IN once detectSessionInUrl has
+  //      finished processing the #access_token / ?code in the URL. This
+  //      is the critical one: the old code only did a one-shot getSession()
+  //      that raced against (and lost to) hash processing, so an OAuth
+  //      return would silently strand the user on the homepage — looking
+  //      like the login "looped" back to the start.
+  //   2. getSession() — covers the already-signed-in revisit case where
+  //      no auth event fires because the session was restored from storage.
+  let _crRedirected = false;
+  function _goToApp() {
+    if (_crRedirected) return;
+    _crRedirected = true;
+    window.location.replace('app.html');
+  }
+  _supabase.auth.onAuthStateChange((event, session) => {
+    if (session) _goToApp();
+  });
   _supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) window.location.replace('app.html');
+    if (session) _goToApp();
   });
 
   // ── Modal helpers ──────────────────────────────────────────
