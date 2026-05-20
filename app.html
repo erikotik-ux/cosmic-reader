@@ -3097,7 +3097,6 @@ async function loadLiveFeeds() {
       const liveCount = collectedBuckets.length;
       const feedCountEl = document.getElementById('hud-feed-count');
       if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
-      updateIntegrity(liveCount);
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
@@ -4017,22 +4016,6 @@ function filterFeed(category) {
   renderCurrentPage();
 }
 
-// ── Integrity Bar ─────────────────────────────────────────
-function updateIntegrity(liveCount) {
-  const total = FEEDS.length;
-  const bar = document.getElementById('integrity-bar');
-  const label = document.getElementById('integrity-pct');
-  if (liveCount === 0) {
-    // Feeds couldn't load — show indeterminate state, not "0%"
-    if (bar) bar.style.width = '0%';
-    if (label) label.textContent = '—%';
-    return;
-  }
-  const pct = Math.round((liveCount / total) * 100);
-  if (bar) bar.style.width = pct + '%';
-  if (label) label.textContent = pct + '%';
-}
-
 // ── Clock ─────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
@@ -4216,7 +4199,6 @@ async function deployProbe() {
     const liveCount = buckets.length;
     const feedCountEl = document.getElementById('hud-feed-count');
     if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length;
-    updateIntegrity(liveCount);
 
     if (merged.length > 0) {
       articles.length = 0;
