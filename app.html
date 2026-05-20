@@ -217,8 +217,23 @@
       padding: 0.75rem 1rem;
     }
     .cr-launch-eyebrow span:last-child { display: none; }
-    .cr-launch-name { width: 100%; order: 3; gap: 0.15rem; }
-    .cr-launch-countdown { margin-left: auto; }
+    /* Mobile keeps the stacked (two-line) layout */
+    .cr-launch-name {
+      width: 100%;
+      order: 3;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.15rem;
+    }
+    .cr-launch-name-text { max-width: 100%; }
+    .cr-launch-provider { padding-left: 0; border-left: none; }
+    .cr-launch-countdown {
+      margin-left: auto;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.1rem;
+    }
+    .cr-launch-cd-label { margin-top: 0.15rem; }
     .cr-launch-cd-value { font-size: 0.95rem; }
   }
   /* ── AI "Signal Summary" card in the reading view ───────────
