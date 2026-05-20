@@ -339,8 +339,11 @@
       position: relative;
       z-index: 1;
       margin-bottom: 0.5rem;
-      width: 408px;
-      height: 408px;
+      /* Cap at the 408px design size, but shrink on short viewports so the
+         whole hero (logo + headline + subtitle + CTA) fits above the fold
+         on laptop screens. 46vh only bites when viewport height < ~887px. */
+      width: min(408px, 46vh);
+      height: min(408px, 46vh);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -453,6 +456,18 @@
       z-index: 1;
       flex-wrap: wrap;
       justify-content: center;
+    }
+    /* Short-viewport fit (laptops, split screens). Independent of width so
+       it applies on wide-but-short laptop displays. Trims the hero's
+       vertical padding and the gaps so the CTA buttons stay above the
+       fold even when the browser chrome eats into the height. */
+    @media (max-height: 820px) {
+      .hero { padding-top: 4rem; padding-bottom: 2.5rem; }
+      .hero-logo-wrap { margin-bottom: 0.25rem; }
+    }
+    @media (max-height: 720px) {
+      .hero { padding-top: 3rem; padding-bottom: 2rem; }
+      .hero-logo-wrap { width: min(408px, 40vh); height: min(408px, 40vh); }
     }
     .btn-ghost {
       background: transparent;

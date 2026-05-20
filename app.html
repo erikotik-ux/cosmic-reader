@@ -12,12 +12,18 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ── Auth guard — redirect to home.html if not signed in ──
-  (function() {
+  // Rewritten to be loop-proof. The previous version reacted to the
+  // INITIAL_SESSION event, which races against the PKCE code exchange:
+  // it could fire with a null session mid-exchange and bounce the user,
+  // producing an OAuth redirect loop. This version EXPLICITLY waits for
+  // the code exchange to finish (polling getSession) before deciding
+  // whether to redirect.
+  (async function() {
     var _params = new URLSearchParams(window.location.search);
     var _isOAuthCallback = _params.has('code')
       || window.location.hash.indexOf('access_token') !== -1;
 
-    // If Supabase returned an OAuth error, bounce to home with the message
+    // If Supabase returned an OAuth error, bounce to home with the message.
     if (_params.has('error')) {
       var _desc = _params.get('error_description') || 'Sign-in failed';
       window.location.replace('home.html?auth_error=' + encodeURIComponent(_desc));
@@ -29,22 +35,47 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhja2d4d2NwcHFydGFuamRtcmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTUwODEsImV4cCI6MjA5MzYzMTA4MX0.Z7TdbPnMLMt-csXU4xWO2QcgzWkqtF11Mm1b0HzahVA'
     );
     window._supabase = _sb;
+
+    // Keep _crUser fresh on later auth changes (sign-out, token refresh).
     _sb.auth.onAuthStateChange((event, session) => {
-      if (event === 'INITIAL_SESSION') {
-        if (session) {
-          window._crUser = session.user;
-        } else if (!_isOAuthCallback) {
-          // Visitor isn't signed in. Bounce them to home.html with a signal
-          // to open the auth modal so the redirect is visible, not confusing.
-          // Also skip the homepage intro animation during this bounce.
-          try { sessionStorage.setItem('cr_skip_intro_next', '1'); } catch(e) {}
-          window.location.replace('home.html?openauth=signin');
-        }
-      } else if (event === 'SIGNED_IN' && session) {
-        window._crUser = session.user;
-        _isOAuthCallback = false;
-      }
+      if (session) window._crUser = session.user;
     });
+
+    async function getSessionNow() {
+      try { return (await _sb.auth.getSession()).data.session; }
+      catch (e) { return null; }
+    }
+
+    if (_isOAuthCallback) {
+      // detectSessionInUrl (on by default) exchanges the ?code= for a
+      // session asynchronously. Poll up to ~6s for it to land rather than
+      // reacting to a single event that may fire too early.
+      var _session = null;
+      for (var i = 0; i < 30; i++) {
+        _session = await getSessionNow();
+        if (_session) break;
+        await new Promise(function(r) { setTimeout(r, 200); });
+      }
+      if (_session) {
+        window._crUser = _session.user;
+        // Strip the ?code=/token from the URL so a refresh doesn't re-trigger.
+        try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+      } else {
+        // Exchange genuinely failed — go home with a clear error, NOT a loop.
+        window.location.replace('home.html?auth_error=' +
+          encodeURIComponent('Sign-in could not be completed. Please try again.'));
+      }
+      return;
+    }
+
+    // Normal page load (no OAuth callback) — require an existing session.
+    var session = await getSessionNow();
+    if (session) {
+      window._crUser = session.user;
+    } else {
+      try { sessionStorage.setItem('cr_skip_intro_next', '1'); } catch (e) {}
+      window.location.replace('home.html?openauth=signin');
+    }
   })();
 </script>
 <style>
