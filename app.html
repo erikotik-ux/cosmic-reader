@@ -149,8 +149,9 @@
     flex: 1;
     min-width: 0;
     display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.7rem;
   }
   .cr-launch-name-text {
     color: #dbfcff;
@@ -161,6 +162,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex-shrink: 0;
+    max-width: 60%;
   }
   .cr-launch-provider {
     color: rgba(219,252,255,0.4);
@@ -171,9 +174,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 0;
+    padding-left: 0.7rem;
+    border-left: 1px solid rgba(0,240,255,0.18);
   }
   .cr-launch-countdown {
-    display: flex; flex-direction: column; align-items: flex-end;
+    display: flex; flex-direction: row; align-items: baseline;
+    gap: 0.5rem;
     flex-shrink: 0;
     font-family: 'Exo 2', 'Space Grotesk', sans-serif;
   }
@@ -191,7 +198,6 @@
     font-size: 0.6rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    margin-top: 0.25rem;
   }
   /* In-flight / hold / TBD states get a different color cue */
   .cr-launch-tracker.is-live .cr-launch-cd-value {
