@@ -771,12 +771,12 @@
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Trending</span>
     </a>
   </nav>
-  <div class="mt-auto p-6 hidden md:block">
-    <p id="deploy-probe-help" class="text-[10px] font-body leading-snug text-center text-[#dbfcff]/45 mb-2">Refresh every active feed.<br/>Pulls the newest signals in.</p>
-    <button id="deploy-probe-btn" onclick="deployProbe()" class="w-full py-3 bg-gradient-to-br from-[#dbfcff] to-[#00f0ff] text-[#00363a] font-headline uppercase tracking-widest text-[10px] font-bold rounded-lg transition-all scale-95 active:scale-90 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] flex items-center justify-center gap-2">
+  <div class="mt-auto p-6 hidden md:block relative">
+    <button id="deploy-probe-btn" onclick="deployProbe()" class="peer w-full py-3 bg-gradient-to-br from-[#dbfcff] to-[#00f0ff] text-[#00363a] font-headline uppercase tracking-widest text-[10px] font-bold rounded-lg transition-all scale-95 active:scale-90 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] flex items-center justify-center gap-2">
       <span id="deploy-probe-icon" class="material-symbols-outlined text-sm">rocket_launch</span>
       <span id="deploy-probe-label">Deploy Probe</span>
     </button>
+    <p id="deploy-probe-help" class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap px-2.5 py-1 rounded-md bg-[#0a0a0a]/90 border border-[#00f0ff]/20 text-[10px] font-body text-[#dbfcff]/70 opacity-0 peer-hover:opacity-100 transition-opacity duration-200">Refreshes every active feed with the latest signals.</p>
     <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
   </div>
   <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent w-[1px] h-3/4"></div>
@@ -5034,7 +5034,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bottom: 6rem;             /* clear of mobile bottom nav */
     right: 1.25rem;
     z-index: 900;
-    width: 56px; height: 56px;
+    width: 50px; height: 50px;
     border-radius: 50%;
     background: linear-gradient(135deg, #dbfcff 0%, #00f0ff 100%);
     color: #00363a;
@@ -5048,7 +5048,7 @@ document.addEventListener('DOMContentLoaded', () => {
   .cr-chat-fab:active { transform: scale(0.96); }
   .cr-chat-fab .material-symbols-outlined { font-size: 26px; }
   @media (min-width: 768px) {
-    .cr-chat-fab { bottom: 1.5rem; right: 1.5rem; width: 60px; height: 60px; }
+    .cr-chat-fab { bottom: 1.5rem; right: 1.5rem; width: 54px; height: 54px; }
   }
   /* Hide FAB when the panel is open */
   body.cr-chat-open .cr-chat-fab { display: none; }

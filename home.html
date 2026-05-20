@@ -342,8 +342,8 @@
       /* Cap at the 408px design size, but shrink on short viewports so the
          whole hero (logo + headline + subtitle + CTA) fits above the fold
          on laptop screens. 46vh only bites when viewport height < ~887px. */
-      width: min(408px, 46vh);
-      height: min(408px, 46vh);
+      width: min(428px, 48vh);
+      height: min(428px, 48vh);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -467,7 +467,7 @@
     }
     @media (max-height: 720px) {
       .hero { padding-top: 3rem; padding-bottom: 2rem; }
-      .hero-logo-wrap { width: min(408px, 40vh); height: min(408px, 40vh); }
+      .hero-logo-wrap { width: min(428px, 42vh); height: min(428px, 42vh); }
     }
     .btn-ghost {
       background: transparent;
@@ -913,7 +913,7 @@
 
       .hero { padding: 1.5rem 1.25rem 3rem; }
       .why-cta-row { flex-direction: column; align-items: center; gap: 0.75rem; }
-      .hero-logo-wrap { width: clamp(220px, 72vw, 320px); height: clamp(220px, 72vw, 320px); }
+      .hero-logo-wrap { width: clamp(240px, 77vw, 340px); height: clamp(240px, 77vw, 340px); }
       /* Tone down the floating-state glow on mobile (desktop unchanged) */
       .hero-logo-wrap::before {
         width: 460px; height: 460px;
@@ -1004,7 +1004,7 @@
     }
 
     @media (max-width: 480px) {
-      .hero-logo-wrap { width: clamp(180px, 65vw, 240px); height: clamp(180px, 65vw, 240px); }
+      .hero-logo-wrap { width: clamp(200px, 70vw, 260px); height: clamp(200px, 70vw, 260px); }
       .hero-title { font-size: clamp(1.9rem, 10vw, 2.5rem); letter-spacing: 0.08em; }
       .category-grid { grid-template-columns: repeat(2, 1fr); }
     }
