@@ -2221,6 +2221,10 @@
               <span id="save-story-icon" class="material-symbols-outlined text-primary">bookmark_add</span>
               <span class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Save Story</span>
             </button>
+            <button id="share-story-btn" onclick="shareCurrentArticle()" class="p-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+              <span id="share-story-icon" class="material-symbols-outlined text-primary">share</span>
+              <span id="share-story-label" class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Share</span>
+            </button>
           </div>
         </div>
       </div>
@@ -3424,6 +3428,47 @@ function saveStory(idx) {
     renderSavedStories();
     if (icon) { icon.textContent = 'bookmark'; icon.style.color = '#00f0ff'; }
   }
+}
+
+// ── Share ─────────────────────────────────────────────────
+// Native share sheet when available (mobile/modern browsers); otherwise
+// copies the article link to the clipboard with brief in-button feedback.
+async function shareCurrentArticle() {
+  const a = articles[currentArticle];
+  if (!a) return;
+  const url   = a.read_more || a.link || location.href;
+  const title = a.title || 'Cosmic Reader';
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text: title, url });
+      return;
+    } catch (e) {
+      // User dismissed the share sheet — do nothing.
+      if (e && e.name === 'AbortError') return;
+      // Otherwise fall through to clipboard copy.
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    _flashShareCopied();
+  } catch (e) {
+    // Last resort if clipboard API is blocked.
+    window.prompt('Copy this article link:', url);
+  }
+}
+
+function _flashShareCopied() {
+  const icon  = document.getElementById('share-story-icon');
+  const label = document.getElementById('share-story-label');
+  if (!icon) return;
+  const prevIcon  = icon.textContent;
+  const prevLabel = label ? label.textContent : '';
+  icon.textContent = 'check';
+  if (label) label.textContent = 'Copied';
+  setTimeout(() => {
+    icon.textContent = prevIcon;
+    if (label) label.textContent = prevLabel;
+  }, 1600);
 }
 
 function removeSaved(key) {
