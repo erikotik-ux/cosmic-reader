@@ -631,7 +631,6 @@
     pointer-events: none;
     opacity: 0;
     background: radial-gradient(circle, transparent 54%, rgba(var(--pw-col, 0,240,255), 0.3) 67%, transparent 80%);
-    will-change: transform, opacity;
   }
   /* Touch trigger (JS toggles .pw-touch with a clean ~1.2s auto-stop). */
   .planet-node.pw-touch .pw-ripple { animation: pw-ripple 3.4s ease-out infinite; }
@@ -4845,6 +4844,9 @@ document.addEventListener('DOMContentLoaded', () => {
       var parent = canvas.parentNode;
       if (!parent) return;
       var color = canvas.dataset.color || '0,240,255';
+      // Capture the planet node BEFORE removing the canvas — once removed,
+      // canvas.closest() has no ancestors and returns null (so touch never bound).
+      var node = canvas.closest ? canvas.closest('.planet-node') : null;
       canvas.remove(); // remove the unused canvas
       if (parent.querySelector('.pw-ripple')) return; // guard against double-init
       for (var k = 0; k < 2; k++) {
@@ -4855,7 +4857,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       // Touch devices have no :hover — toggle a .pw-touch class while a finger
       // is held on the planet so the ripple plays on mobile too.
-      var node = canvas.closest ? canvas.closest('.planet-node') : null;
       if (node && !node._pwTouchBound) {
         node._pwTouchBound = true;
         var offTimer = null;

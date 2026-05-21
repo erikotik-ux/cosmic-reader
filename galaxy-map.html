@@ -97,7 +97,6 @@ if (window.innerWidth <= 768) {
     pointer-events: none;
     opacity: 0;
     background: radial-gradient(circle, transparent 54%, rgba(var(--pw-col, 0,240,255), 0.3) 67%, transparent 80%);
-    will-change: transform, opacity;
   }
   /* Touch trigger (JS toggles .pw-touch with a clean ~1.2s auto-stop). */
   .planet-node.pw-touch .pw-ripple { animation: pw-ripple 3.4s ease-out infinite; }
@@ -1771,6 +1770,9 @@ setTimeout(() => getArticles(), 1200);
       var parent = canvas.parentNode;
       if (!parent) return;
       var color = canvas.dataset.color || '0,240,255';
+      // Capture the planet node BEFORE removing the canvas — once removed,
+      // canvas.closest() has no ancestors and returns null (so touch never bound).
+      var node = canvas.closest ? canvas.closest('.planet-node') : null;
       canvas.remove();
       if (parent.querySelector('.pw-ripple')) return;
       for (var k = 0; k < 2; k++) {
@@ -1780,7 +1782,6 @@ setTimeout(() => getArticles(), 1200);
         parent.appendChild(ring);
       }
       // Touch devices have no :hover — toggle .pw-touch while a finger is held.
-      var node = canvas.closest ? canvas.closest('.planet-node') : null;
       if (node && !node._pwTouchBound) {
         node._pwTouchBound = true;
         var offTimer = null;
