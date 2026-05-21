@@ -474,11 +474,15 @@
     #mobile-galaxy {
       display: flex !important;
       padding-top: 7rem !important;
+      gap: 0 !important;            /* tighten the vertical spacing on iPad */
       scroll-snap-type: y proximity;
       touch-action: pan-y;
     }
     #mobile-galaxy::after { order: 999; min-height: 9rem; }
-    #mobile-galaxy .planet-node { scroll-snap-align: start; }
+    #mobile-galaxy .planet-node {
+      scroll-snap-align: start;
+      margin-top: -1.5rem;          /* pull planets closer together (iPad only) */
+    }
   }
   .drop-cap-para::first-letter {
     font-size: 3.5rem;
