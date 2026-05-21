@@ -458,6 +458,28 @@
       height: 3.5rem; /* 56px — exactly matches the bottom-nav height */
     }
   }
+  /* ── iPad / tablet portrait (768–1024px) ──────────────────────────────────
+     At this width the desktop W-galaxy and bento are too cramped, so present
+     the mobile layout: vertical galaxy + bottom nav, no sidebar offset, full-
+     width feed. Scoped strictly to 768–1024px — phones (<768) and desktop
+     (>1024) are intentionally left exactly as they are. */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    #main-sidebar { display: none !important; }        /* hide desktop sidebar */
+    nav.md\:hidden { display: flex !important; }        /* show mobile bottom nav */
+    .md\:pl-64 { padding-left: 0 !important; }           /* drop the 256px sidebar offset → full width */
+    .mobile-safe-scroll { padding-bottom: 6rem !important; } /* clear the bottom nav */
+
+    /* Galaxy: vertical mobile stack instead of the cramped W-pattern */
+    #desktop-galaxy { display: none !important; }
+    #mobile-galaxy {
+      display: flex !important;
+      padding-top: 7rem !important;
+      scroll-snap-type: y proximity;
+      touch-action: pan-y;
+    }
+    #mobile-galaxy::after { order: 999; min-height: 9rem; }
+    #mobile-galaxy .planet-node { scroll-snap-align: start; }
+  }
   .drop-cap-para::first-letter {
     font-size: 3.5rem;
     line-height: 1;
