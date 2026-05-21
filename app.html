@@ -612,6 +612,29 @@
     border-color: #00f0ff;
     font-weight: 700;
   }
+  /* Planet hover effect — Option A: Energy Ripple.
+     Two soft gradient rings pulse outward from the planet on hover. Pure CSS,
+     animated with transform + opacity only (GPU-composited), replacing the old
+     per-frame canvas dot-wave. Rings are injected per planet by JS, which sets
+     --pw-col to the planet's "R,G,B" colour. */
+  .pw-ripple {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle, transparent 54%, rgba(var(--pw-col, 0,240,255), 0.5) 67%, transparent 80%);
+    will-change: transform, opacity;
+  }
+  .planet-node:hover .pw-ripple { animation: pw-ripple 2s ease-out infinite; }
+  .planet-node:hover .pw-ripple-2 { animation-delay: 1s; }
+  @keyframes pw-ripple {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    100% { transform: scale(2.7); opacity: 0;   }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .planet-node:hover .pw-ripple { animation: none; }
+  }
   /* ── Already-read feed cards ── dimmed, with a small cyan check badge.
      Restores to full opacity on hover so re-reading is unobtrusive. */
   .cr-read { opacity: 0.5; transition: opacity 0.3s ease; }
@@ -4797,8 +4820,24 @@ document.addEventListener('DOMContentLoaded', () => {
     node.addEventListener('touchcancel', stop,  { passive: true });
   }
 
+  // Option A — Energy Ripple. Replaces the canvas dot-wave: drop each planet's
+  // unused canvas and inject two lightweight CSS ripple rings (animated on hover
+  // via CSS). The legacy initCanvas/start/stop/frame above are intentionally left
+  // defined but no longer called, so this is a clean, reversible swap.
   function initAll() {
-    document.querySelectorAll('.pw-canvas').forEach(initCanvas);
+    document.querySelectorAll('.pw-canvas').forEach(function (canvas) {
+      var parent = canvas.parentNode;
+      if (!parent) return;
+      var color = canvas.dataset.color || '0,240,255';
+      canvas.remove(); // remove the unused canvas
+      if (parent.querySelector('.pw-ripple')) return; // guard against double-init
+      for (var k = 0; k < 2; k++) {
+        var ring = document.createElement('div');
+        ring.className = 'pw-ripple' + (k === 1 ? ' pw-ripple-2' : '');
+        ring.style.setProperty('--pw-col', color);
+        parent.appendChild(ring);
+      }
+    });
   }
 
   if (document.readyState === 'loading') {
