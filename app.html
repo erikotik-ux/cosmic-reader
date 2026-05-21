@@ -437,6 +437,7 @@
       min-height: 9rem; /* 144px — extra bottom room so the last planet (Physics & Cosmos) clears the bottom nav */
       flex-shrink: 0;
       width: 100%;
+      order: 999; /* planets use positive flex `order`; without this the spacer (order 0) sits ABOVE them and adds no bottom gap */
     }
     /* Each planet snaps by its TOP edge to the scroll-padding-top line */
     #mobile-galaxy .planet-node {
@@ -624,14 +625,17 @@
     background: radial-gradient(circle, transparent 54%, rgba(var(--pw-col, 0,240,255), 0.3) 67%, transparent 80%);
     will-change: transform, opacity;
   }
-  .planet-node:hover .pw-ripple { animation: pw-ripple 3.4s ease-out infinite; }
-  .planet-node:hover .pw-ripple-2 { animation-delay: 1.7s; }
+  .planet-node:hover .pw-ripple,
+  .planet-node.pw-touch .pw-ripple { animation: pw-ripple 3.4s ease-out infinite; }
+  .planet-node:hover .pw-ripple-2,
+  .planet-node.pw-touch .pw-ripple-2 { animation-delay: 1.7s; }
   @keyframes pw-ripple {
     0%   { transform: scale(1);   opacity: 0.42; }
     100% { transform: scale(2.7); opacity: 0;    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .planet-node:hover .pw-ripple { animation: none; }
+    .planet-node:hover .pw-ripple,
+    .planet-node.pw-touch .pw-ripple { animation: none; }
   }
   /* ── Already-read feed cards ── dimmed, with a small cyan check badge.
      Restores to full opacity on hover so re-reading is unobtrusive. */
@@ -4835,6 +4839,17 @@ document.addEventListener('DOMContentLoaded', () => {
         ring.className = 'pw-ripple' + (k === 1 ? ' pw-ripple-2' : '');
         ring.style.setProperty('--pw-col', color);
         parent.appendChild(ring);
+      }
+      // Touch devices have no :hover — toggle a .pw-touch class while a finger
+      // is held on the planet so the ripple plays on mobile too.
+      var node = canvas.closest ? canvas.closest('.planet-node') : null;
+      if (node && !node._pwTouchBound) {
+        node._pwTouchBound = true;
+        var on  = function () { node.classList.add('pw-touch'); };
+        var off = function () { node.classList.remove('pw-touch'); };
+        node.addEventListener('touchstart', on, { passive: true });
+        node.addEventListener('touchend', off, { passive: true });
+        node.addEventListener('touchcancel', off, { passive: true });
       }
     });
   }
