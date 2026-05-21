@@ -671,6 +671,42 @@
     border-color: #00f0ff;
     font-weight: 700;
   }
+  /* ── Toast (themed feedback for Save / Share) ──────────────────────────
+     Single reusable element (no stacking): new toasts replace the content. */
+  .cr-toast {
+    position: fixed;
+    left: 50%; bottom: 1.5rem;
+    transform: translateX(-50%) translateY(10px);
+    z-index: 1000;
+    display: flex; align-items: center; gap: 0.7rem;
+    max-width: calc(100vw - 2rem);
+    padding: 0.65rem 0.9rem;
+    background: rgba(10,18,18,0.94);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,240,255,0.32);
+    border-radius: 0.6rem;
+    box-shadow: 0 10px 34px rgba(0,0,0,0.45), 0 0 18px rgba(0,240,255,0.12);
+    color: #dbfcff;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.82rem; line-height: 1.2;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .cr-toast.cr-toast-show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .cr-toast .cr-toast-icon { font-size: 1.15rem; color: #00f0ff; }
+  .cr-toast .cr-toast-msg { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cr-toast .cr-toast-action {
+    background: none; border: none; cursor: pointer;
+    color: #00f0ff; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; font-size: 0.7rem;
+    padding: 0.25rem 0.45rem; margin-left: 0.15rem; border-radius: 0.3rem;
+    flex-shrink: 0;
+  }
+  .cr-toast .cr-toast-action:hover { background: rgba(0,240,255,0.14); }
+  .cr-toast.cr-toast-error { border-color: rgba(255,150,120,0.5); box-shadow: 0 10px 34px rgba(0,0,0,0.45), 0 0 18px rgba(255,150,120,0.14); }
+  .cr-toast.cr-toast-error .cr-toast-icon { color: #ffb5a0; }
+  @media (max-width: 767px) { .cr-toast { bottom: 4.75rem; } }
+  @media (prefers-reduced-motion: reduce) { .cr-toast { transition: opacity 0.15s ease; } }
   /* Planet hover effect — Option A: Energy Ripple.
      Two soft gradient rings pulse outward from the planet on hover. Pure CSS,
      animated with transform + opacity only (GPU-composited), replacing the old
@@ -2352,9 +2388,9 @@
             </button>
             <!-- Save + Share kept together so Share never drops to its own line -->
             <div class="flex items-center gap-2 shrink-0">
-              <button id="save-story-btn" onclick="saveStory(currentArticle)" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+              <button id="save-story-btn" onclick="saveStory(currentArticle)" aria-pressed="false" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
                 <span id="save-story-icon" class="material-symbols-outlined text-primary">bookmark_add</span>
-                <span class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Save</span>
+                <span id="save-story-label" class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Save</span>
               </button>
               <button id="share-story-btn" onclick="shareCurrentArticle()" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
                 <span id="share-story-icon" class="material-symbols-outlined text-primary">share</span>
@@ -3617,33 +3653,85 @@ function markArticleRead(a) {
   try { localStorage.setItem(_READ_KEY, JSON.stringify([..._readSet])); } catch (e) {}
 }
 
+// ── Toast (themed feedback) ───────────────────────────────
+// One reusable element so toasts never stack: each call replaces the
+// content and resets the auto-dismiss timer.
+let _toastTimer = null;
+function showToast(message, opts) {
+  opts = opts || {};
+  let el = document.getElementById('cr-toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'cr-toast';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+  }
+  el.className = 'cr-toast' + (opts.variant === 'error' ? ' cr-toast-error' : '');
+  el.innerHTML = '';
+  const ic = document.createElement('span');
+  ic.className = 'material-symbols-outlined cr-toast-icon';
+  ic.textContent = opts.icon || (opts.variant === 'error' ? 'error' : 'check_circle');
+  const msg = document.createElement('span');
+  msg.className = 'cr-toast-msg';
+  msg.textContent = message;
+  el.appendChild(ic);
+  el.appendChild(msg);
+  if (opts.actionLabel && typeof opts.onAction === 'function') {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cr-toast-action';
+    btn.textContent = opts.actionLabel;
+    btn.addEventListener('click', () => { try { opts.onAction(); } finally { hideToast(); } });
+    el.appendChild(btn);
+  }
+  requestAnimationFrame(() => el.classList.add('cr-toast-show'));
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(hideToast, opts.duration || (opts.actionLabel ? 5000 : 3200));
+}
+function hideToast() {
+  const el = document.getElementById('cr-toast');
+  if (el) el.classList.remove('cr-toast-show');
+  if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
+}
+
+// Reflect saved state on the detail-view Save button (icon + label + aria).
+function _updateSaveButton(isSaved) {
+  const icon  = document.getElementById('save-story-icon');
+  const label = document.getElementById('save-story-label');
+  const btn   = document.getElementById('save-story-btn');
+  if (icon)  { icon.textContent = isSaved ? 'bookmark_added' : 'bookmark_add'; icon.style.color = isSaved ? '#00f0ff' : ''; }
+  if (label) label.textContent = isSaved ? 'Saved' : 'Save';
+  if (btn)   btn.setAttribute('aria-pressed', isSaved ? 'true' : 'false');
+}
+
 function saveStory(idx) {
   const a = articles[idx];
   if (!a) return;
-  const icon = document.getElementById('save-story-icon');
   const key = _savedKey(a);
   const savedIdx = savedStories.findIndex(s => _savedKey(s) === key);
   if (savedIdx !== -1) {
-    // Already saved — toggle off (unsave). Add to tombstone so a stale remote
-    // can't resurrect it after a refresh on this or another device.
+    // Already saved — toggle off (unsave). Tombstone blocks stale-remote resurrection.
     savedStories.splice(savedIdx, 1);
     if (key) removedKeys.add(key);
     _persistSaved();
     renderSavedStories();
-    if (icon) { icon.textContent = 'bookmark_add'; icon.style.color = ''; }
+    _updateSaveButton(false);
+    showToast('Removed from saved stories', { icon: 'bookmark_remove', actionLabel: 'Undo', onAction: () => saveStory(idx) });
   } else {
     // Not saved — save it. Clear any tombstone so this re-save sticks across devices.
     savedStories.push(a);
     if (key) removedKeys.delete(key);
     _persistSaved();
     renderSavedStories();
-    if (icon) { icon.textContent = 'bookmark'; icon.style.color = '#00f0ff'; }
+    _updateSaveButton(true);
+    showToast('Signal saved to your collection', { icon: 'bookmark_added', actionLabel: 'Undo', onAction: () => saveStory(idx) });
   }
 }
 
 // ── Share ─────────────────────────────────────────────────
-// Native share sheet when available (mobile/modern browsers); otherwise
-// copies the article link to the clipboard with brief in-button feedback.
+// Native share sheet when available; otherwise copy the link to the
+// clipboard. Visible toast confirmation on success and on failure.
 async function shareCurrentArticle() {
   const a = articles[currentArticle];
   if (!a) return;
@@ -3652,46 +3740,47 @@ async function shareCurrentArticle() {
   if (navigator.share) {
     try {
       await navigator.share({ title, text: title, url });
-      return;
+      return; // the OS share sheet is its own confirmation
     } catch (e) {
-      // User dismissed the share sheet — do nothing.
-      if (e && e.name === 'AbortError') return;
-      // Otherwise fall through to clipboard copy.
+      if (e && e.name === 'AbortError') return; // user dismissed — no feedback needed
+      // otherwise fall through to clipboard
     }
   }
   try {
+    if (!navigator.clipboard) throw new Error('no clipboard');
     await navigator.clipboard.writeText(url);
-    _flashShareCopied();
+    showToast('Transmission link copied', { icon: 'link' });
   } catch (e) {
-    // Last resort if clipboard API is blocked.
-    window.prompt('Copy this article link:', url);
+    // Clipboard blocked/unavailable — offer manual copy and show an error toast.
+    try { window.prompt('Copy this transmission link:', url); } catch (e2) {}
+    showToast('Could not copy the link automatically', { variant: 'error', icon: 'error' });
   }
-}
-
-function _flashShareCopied() {
-  // Update both the detail-view and reading-view share buttons (whichever exist).
-  [['share-story-icon', 'share-story-label'], ['read-share-icon', 'read-share-label']]
-    .forEach(([iconId, labelId]) => {
-      const icon  = document.getElementById(iconId);
-      const label = document.getElementById(labelId);
-      if (!icon) return;
-      const prevIcon  = icon.textContent;
-      const prevLabel = label ? label.textContent : '';
-      icon.textContent = 'check';
-      if (label) label.textContent = 'Copied';
-      setTimeout(() => {
-        icon.textContent = prevIcon;
-        if (label) label.textContent = prevLabel;
-      }, 1600);
-    });
 }
 
 function removeSaved(key) {
   const i = savedStories.findIndex(s => _savedKey(s) === key);
+  const removed = (i !== -1) ? savedStories[i] : null;
   if (i !== -1) savedStories.splice(i, 1);
   if (key) removedKeys.add(key); // tombstone — blocks resurrection from stale remote
   _persistSaved();
   renderSavedStories();
+  // Keep the detail Save button in sync if the open article is the one removed.
+  const cur = articles[currentArticle];
+  if (cur && _savedKey(cur) === key) _updateSaveButton(false);
+  showToast('Removed from saved stories', {
+    icon: 'bookmark_remove',
+    actionLabel: 'Undo',
+    onAction: () => {
+      if (!removed) return;
+      savedStories.push(removed);
+      if (key) removedKeys.delete(key);
+      _persistSaved();
+      renderSavedStories();
+      const c = articles[currentArticle];
+      if (c && _savedKey(c) === key) _updateSaveButton(true);
+      showToast('Signal saved to your collection', { icon: 'bookmark_added' });
+    }
+  });
 }
 
 function renderSavedStories() {
@@ -4080,13 +4169,8 @@ function openArticle(idx) {
     const card = document.querySelector('#article-grid article[onclick*="openArticle(' + idx + ')"]');
     if (card) card.classList.add('cr-read', 'relative');
   }
-  // Reset save button state
-  const saveIcon = document.getElementById('save-story-icon');
-  if (saveIcon) {
-    const isSaved = savedStories.some(s => _savedKey(s) === _savedKey(a));
-    saveIcon.textContent = isSaved ? 'bookmark' : 'bookmark_add';
-    saveIcon.style.color = '';
-  }
+  // Reset save button state (icon + "Save"/"Saved" label + aria-pressed)
+  _updateSaveButton(savedStories.some(s => _savedKey(s) === _savedKey(a)));
 
   const _dfb = pickFallback(a.category, a.title);
   const _dImg = document.getElementById('detail-bg');
