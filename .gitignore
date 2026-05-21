@@ -30,3 +30,6 @@ pinecone-setup.py
 .font-backup-space-grotesk/
 app.backup.html
 galaxy-map.backup.html
+
+# Local-only FX/demo previews — not deployed
+planet-fx-demo.html
