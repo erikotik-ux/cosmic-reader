@@ -502,8 +502,11 @@
       align-items: start;
     }
     .cr-feed-hero-text   { grid-column: 1; grid-row: 1 / 3; align-self: stretch; }
-    .cr-feed-stats       { grid-column: 2; grid-row: 1; justify-self: end; }
-    #feed-ipad-controls  { grid-column: 2; grid-row: 2; display: flex !important; justify-self: end; }
+    .cr-feed-hero-text p { text-wrap: balance; }   /* avoid the lone "sectors" widow line */
+    /* Stretch the stats card and the controls to the same column width, so the
+       stats box spans from the For You button to the All Sources dropdown. */
+    .cr-feed-stats       { grid-column: 2; grid-row: 1; justify-self: stretch; justify-content: space-around; }
+    #feed-ipad-controls  { grid-column: 2; grid-row: 2; display: flex !important; justify-self: stretch; justify-content: space-between; }
     .feed-filter-row .cr-foryou-toggle,
     .feed-filter-row .cr-source-filter { display: none !important; }
   }
