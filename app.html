@@ -605,6 +605,13 @@
     line-height: 1 !important;
     white-space: nowrap;                  /* keep "AI & Tech" inline */
   }
+  /* "For You" toggle active state */
+  .cr-foryou-toggle.cr-foryou-on {
+    background: #00f0ff;
+    color: #00363a;
+    border-color: #00f0ff;
+    font-weight: 700;
+  }
   /* ── Already-read feed cards ── dimmed, with a small cyan check badge.
      Restores to full opacity on hover so re-reading is unobtrusive. */
   .cr-read { opacity: 0.5; transition: opacity 0.3s ease; }
@@ -1946,8 +1953,14 @@
         <button onclick="filterFeed('Moon')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Moon</button>
         <button onclick="filterFeed('Missions')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Missions</button>
         <button onclick="filterFeed('AI & Tech')" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">AI &amp; Tech</button>
+        <!-- For You ranking toggle (off by default) -->
+        <button onclick="toggleForYou()" aria-pressed="false" title="Prioritize your selected topics"
+          class="cr-foryou-toggle ml-auto px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">auto_awesome</span>
+          For You
+        </button>
         <!-- Source / publication filter (works alongside the category chips) -->
-        <div class="cr-source-filter relative ml-auto flex items-center gap-2">
+        <div class="cr-source-filter relative flex items-center gap-2">
           <span class="material-symbols-outlined text-[#dbfcff]/40 text-base">filter_list</span>
           <select id="feed-source-desktop" onchange="filterBySource(this.value)"
             class="appearance-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
@@ -1992,13 +2005,20 @@
           </div>
         </div>
       </div>
-      <!-- Mobile source / publication filter -->
-      <div class="md:hidden mb-8 cr-source-filter relative">
-        <select id="feed-source-mobile" onchange="filterBySource(this.value)"
-          class="appearance-none w-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
-          <option value="All">All Sources</option>
-        </select>
-        <span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
+      <!-- Mobile For You toggle + source / publication filter -->
+      <div class="md:hidden mb-8 flex items-center gap-3">
+        <button onclick="toggleForYou()" aria-pressed="false" title="Prioritize your selected topics"
+          class="cr-foryou-toggle shrink-0 px-4 py-2.5 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">auto_awesome</span>
+          For You
+        </button>
+        <div class="cr-source-filter relative flex-1">
+          <select id="feed-source-mobile" onchange="filterBySource(this.value)"
+            class="appearance-none w-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+            <option value="All">All Sources</option>
+          </select>
+          <span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
+        </div>
       </div>
 
       <!-- Bento Grid -->
@@ -3579,6 +3599,12 @@ const ARTICLES_PER_PAGE = 6;
 let currentPage   = 1;
 let currentFilter = 'All';
 let currentSource = 'All';   // publication filter (works alongside category)
+let forYouMode    = false;   // "For You" ranking toggle (off by default)
+// Seed selected topics from localStorage so ranking works before settings hydrate.
+if (typeof window._crTopics === 'undefined') {
+  try { window._crTopics = JSON.parse(localStorage.getItem('cr_topics_v1') || '[]'); }
+  catch (e) { window._crTopics = []; }
+}
 
 function getFilteredArticles() {
   let list = articles;
@@ -3589,6 +3615,36 @@ function getFilteredArticles() {
     list = list.filter(a => (a.source || '') === currentSource);
   }
   return list;
+}
+
+// Apply ordering on top of filtering. When "For You" is on, articles whose
+// category is one of the user's selected topics float to the top; original
+// (recency) order is preserved within each group via a stable index sort.
+function getOrderedArticles() {
+  const list = getFilteredArticles();
+  if (!forYouMode) return list;
+  const topics = Array.isArray(window._crTopics) ? window._crTopics : [];
+  if (!topics.length) return list; // nothing selected → no re-rank
+  const tset = new Set(topics);
+  return list
+    .map((a, i) => ({ a, i }))
+    .sort((x, y) => {
+      const bx = tset.has(x.a.category) ? 0 : 1;
+      const by = tset.has(y.a.category) ? 0 : 1;
+      if (bx !== by) return bx - by;
+      return x.i - y.i; // stable: keep original order within a group
+    })
+    .map(o => o.a);
+}
+
+function toggleForYou() {
+  forYouMode = !forYouMode;
+  currentPage = 1;
+  document.querySelectorAll('.cr-foryou-toggle').forEach(btn => {
+    btn.classList.toggle('cr-foryou-on', forYouMode);
+    btn.setAttribute('aria-pressed', forYouMode ? 'true' : 'false');
+  });
+  renderCurrentPage();
 }
 
 // Build the source/publication dropdowns from whatever sources are actually
@@ -3632,7 +3688,7 @@ function updatePaginationUI() {
 }
 
 function renderCurrentPage() {
-  const filtered = getFilteredArticles();
+  const filtered = getOrderedArticles();
   const start    = (currentPage - 1) * ARTICLES_PER_PAGE;
   const slice    = filtered.slice(start, start + ARTICLES_PER_PAGE);
   renderFeed(slice);
@@ -4906,6 +4962,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function applySettingsToUI(meta) {
     if (!meta) return;
+    // Expose selected topics globally + cache locally so the "For You" feed
+    // ranking can read them without reaching into this module's scope.
+    try {
+      window._crTopics = Array.isArray(meta.topics) ? meta.topics.slice() : [];
+      localStorage.setItem('cr_topics_v1', JSON.stringify(window._crTopics));
+    } catch (e) {}
     // Swap the top-right avatar icon for the user's choice — either
     // a custom uploaded image (meta.avatarImage takes priority) or an emoji.
     const btn = document.querySelector('#user-menu-wrap > button');
