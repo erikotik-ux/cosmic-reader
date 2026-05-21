@@ -87,6 +87,27 @@ if (window.innerWidth <= 768) {
     transform: translate(-50%, -50%);
     pointer-events: none;
   }
+  /* Planet hover effect — Option A: Energy Ripple (matches app.html).
+     Two soft gradient rings pulse outward on hover. Pure CSS, GPU-composited
+     (transform + opacity only), replacing the old canvas dot-wave. */
+  .pw-ripple {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle, transparent 54%, rgba(var(--pw-col, 0,240,255), 0.3) 67%, transparent 80%);
+    will-change: transform, opacity;
+  }
+  .planet-node:hover .pw-ripple { animation: pw-ripple 3.4s ease-out infinite; }
+  .planet-node:hover .pw-ripple-2 { animation-delay: 1.7s; }
+  @keyframes pw-ripple {
+    0%   { transform: scale(1);   opacity: 0.42; }
+    100% { transform: scale(2.7); opacity: 0;    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .planet-node:hover .pw-ripple { animation: none; }
+  }
   .orbit-3d {
     position: absolute;
     top: 50%; left: 50%;
@@ -1724,8 +1745,24 @@ setTimeout(() => getArticles(), 1200);
     node.addEventListener('touchcancel', stop,  { passive: true });
   }
 
+  // Option A — Energy Ripple (matches app.html). Replaces the canvas dot-wave:
+  // drop each planet's unused canvas and inject two lightweight CSS ripple rings
+  // (animated on hover via CSS). Legacy initCanvas/start/stop/frame above are
+  // left defined but no longer called — clean, reversible swap.
   function initAll() {
-    document.querySelectorAll('.pw-canvas').forEach(initCanvas);
+    document.querySelectorAll('.pw-canvas').forEach(function (canvas) {
+      var parent = canvas.parentNode;
+      if (!parent) return;
+      var color = canvas.dataset.color || '0,240,255';
+      canvas.remove();
+      if (parent.querySelector('.pw-ripple')) return;
+      for (var k = 0; k < 2; k++) {
+        var ring = document.createElement('div');
+        ring.className = 'pw-ripple' + (k === 1 ? ' pw-ripple-2' : '');
+        ring.style.setProperty('--pw-col', color);
+        parent.appendChild(ring);
+      }
+    });
   }
 
   if (document.readyState === 'loading') {
