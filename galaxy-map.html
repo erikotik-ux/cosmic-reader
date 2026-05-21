@@ -118,7 +118,15 @@ if (window.innerWidth <= 768) {
     transform-style: preserve-3d;
   }
   /* ── Planet node interactions ── */
-  .planet-node { cursor: pointer; transition: transform 0.4s ease; }
+  .planet-node {
+    cursor: pointer;
+    transition: transform 0.4s ease;
+    /* Stop iOS Safari from hijacking a press-and-hold with the image
+       save/copy callout (which cancels the touch and kills the ripple). */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
   .planet-node:hover .planet-sphere { transform: scale(1.08); }
   .planet-sphere { transition: transform 0.4s ease; isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black); }
   .phys-wrap { transition: transform 0.4s ease; }
@@ -1769,8 +1777,11 @@ setTimeout(() => getArticles(), 1200);
       var node = canvas.closest ? canvas.closest('.planet-node') : null;
       if (node && !node._pwTouchBound) {
         node._pwTouchBound = true;
-        var on  = function () { node.classList.add('pw-touch'); };
-        var off = function () { node.classList.remove('pw-touch'); };
+        var offTimer = null;
+        var on  = function () { if (offTimer) { clearTimeout(offTimer); offTimer = null; } node.classList.add('pw-touch'); };
+        // Keep the ripple alive ~1.2s after the finger lifts so a quick tap
+        // still shows a full pulse (not just while held).
+        var off = function () { if (offTimer) clearTimeout(offTimer); offTimer = setTimeout(function () { node.classList.remove('pw-touch'); offTimer = null; }, 1200); };
         node.addEventListener('touchstart', on, { passive: true });
         node.addEventListener('touchend', off, { passive: true });
         node.addEventListener('touchcancel', off, { passive: true });
