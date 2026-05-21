@@ -227,8 +227,8 @@
       align-items: baseline;
       gap: 0.5rem;
     }
-    .cr-launch-name-text { max-width: 62%; }
-    .cr-launch-prov-loc { display: none; }   /* hide pad location to save space */
+    .cr-launch-name-text { max-width: 100%; }
+    .cr-launch-provider { display: none; }   /* hide provider entirely on mobile to save space */
     .cr-launch-countdown {
       flex-shrink: 0;
       flex-direction: column;
@@ -434,7 +434,7 @@
     #mobile-galaxy::after {
       content: '';
       display: block;
-      min-height: 5rem; /* 80px — clears 56px bottom nav */
+      min-height: 9rem; /* 144px — extra bottom room so the last planet (Physics & Cosmos) clears the bottom nav */
       flex-shrink: 0;
       width: 100%;
     }
