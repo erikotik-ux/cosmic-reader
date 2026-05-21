@@ -474,15 +474,16 @@
     #mobile-galaxy {
       display: flex !important;
       padding-top: 7rem !important;
-      gap: 0 !important;            /* tighten the vertical spacing on iPad */
+      /* Cap the stagger band + center it so the left/right-aligned planets
+         sit closer together horizontally (instead of hugging the wide edges). */
+      max-width: 30rem;
+      margin-left: auto;
+      margin-right: auto;
       scroll-snap-type: y proximity;
       touch-action: pan-y;
     }
     #mobile-galaxy::after { order: 999; min-height: 9rem; }
-    #mobile-galaxy .planet-node {
-      scroll-snap-align: start;
-      margin-top: -1.5rem;          /* pull planets closer together (iPad only) */
-    }
+    #mobile-galaxy .planet-node { scroll-snap-align: start; }
   }
   .drop-cap-para::first-letter {
     font-size: 3.5rem;
