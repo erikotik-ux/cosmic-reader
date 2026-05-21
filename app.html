@@ -211,34 +211,32 @@
   }
   /* Mobile — stack vertically, lose the eyebrow label, keep icon + countdown prominent */
   @media (max-width: 640px) {
+    /* Single-line banner: [icon] [mission · provider]  ...  [countdown / to liftoff] */
     .cr-launch-row {
-      flex-wrap: wrap;
-      gap: 0.5rem 0.85rem;
-      padding: 0.75rem 1rem;
+      flex-wrap: nowrap;
+      gap: 0.6rem;
+      padding: 0.7rem 0.9rem;
+      align-items: center;
     }
-    .cr-launch-eyebrow span:last-child { display: none; }
-    /* Mobile keeps the stacked (two-line) layout */
+    .cr-launch-eyebrow { flex-shrink: 0; }
+    .cr-launch-eyebrow span:last-child { display: none; } /* keep rocket icon, drop the label */
     .cr-launch-name {
-      flex: 0 0 100%;
-      width: 100%;
-      order: 3;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.15rem;
+      flex: 1 1 auto;
+      min-width: 0;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.5rem;
     }
-    .cr-launch-name-text { max-width: 100%; text-align: right; }
-    .cr-launch-provider { text-align: right; }
-    .cr-launch-provider { padding-left: 0; border-left: none; }
+    .cr-launch-name-text { max-width: 62%; }
+    .cr-launch-prov-loc { display: none; }   /* hide pad location to save space */
     .cr-launch-countdown {
-      margin-left: auto;
+      flex-shrink: 0;
       flex-direction: column;
       align-items: flex-end;
-      gap: 0.1rem;
+      gap: 0.05rem;
     }
-    .cr-launch-cd-label { margin-top: 0.15rem; }
     .cr-launch-cd-value { font-size: 0.95rem; }
-    /* Bigger rocket icon on mobile */
-    .cr-launch-eyebrow .material-symbols-outlined { font-size: 1.45rem; }
+    .cr-launch-eyebrow .material-symbols-outlined { font-size: 1.3rem; }
   }
   /* ── AI "Signal Summary" card in the reading view ───────────
      (internal class name kept as cr-tldr) A subtle cyan-bordered
@@ -1915,7 +1913,7 @@
 <!-- VIEW 2: MY FEED (Bento Grid)                            -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-feed" class="view h-screen w-full overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
+  <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden mobile-safe-scroll md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-7xl mx-auto px-6 pt-2 pb-10 md:pt-10">
 
       <!-- Live Launch Tracker — slim mission-control ticker.
@@ -4165,10 +4163,11 @@ function _renderNextLaunch(launches) {
   if (!tracker || !nameEl) return;
 
   nameEl.textContent = next.name || 'Upcoming launch';
-  const meta = [];
-  if (next.provider) meta.push(next.provider);
-  if (next.padLocation) meta.push(next.padLocation);
-  provEl.textContent = meta.join(' · ');
+  // Provider name and pad location as separate spans so the location can be
+  // hidden on mobile (to keep the banner on one line).
+  provEl.innerHTML =
+    (next.provider ? '<span class="cr-launch-prov-name">' + escHtml(next.provider) + '</span>' : '') +
+    (next.padLocation ? '<span class="cr-launch-prov-loc"> · ' + escHtml(next.padLocation) + '</span>' : '');
 
   // Mirror into the galaxy-map HUD panel (replaces old Sys. Integrity bar)
   const hud     = document.getElementById('hud-launch');
