@@ -4436,8 +4436,17 @@ function setupReadingProgress() {
     bar.style.width = pct + '%';
     if (side) side.style.height = pct + '%';
   }
-  scrollArea.removeEventListener('scroll', onScroll);
-  scrollArea.addEventListener('scroll', onScroll);
+  // Update the bar for the freshly opened article right away.
+  onScroll();
+  // Attach the scroll listener ONCE. Previously a new onScroll closure was
+  // created on every reading-view open and removeEventListener (passed the
+  // new reference) removed nothing, so listeners accumulated and scrolling
+  // got progressively slower the more articles were opened in a session.
+  // #reading-scroll-area + the bar elements are stable, so binding once is safe.
+  if (!scrollArea._crProgressBound) {
+    scrollArea.addEventListener('scroll', onScroll);
+    scrollArea._crProgressBound = true;
+  }
 }
 
 // ── Constellation Lines ───────────────────────────────────
