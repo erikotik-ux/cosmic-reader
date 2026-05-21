@@ -3961,11 +3961,17 @@ function openArticle(idx) {
   currentArticle = idx;
   const a = articles[idx];
   if (!a) return;
-  // Mark as read and refresh the (hidden) feed grid so the dimmed card +
-  // check badge are already in place when the user navigates back.
+  // Mark as read and dim the just-opened card IN PLACE. We deliberately do
+  // NOT re-render the whole feed here: a full renderCurrentPage() rebuilds the
+  // grid's <img> elements mid-flight and races with enrichOgImages(), which
+  // left some cards stuck on fallback images. The .cr-read class drives the
+  // dim + check badge via CSS, so a class toggle is all that's needed. Cards
+  // opened from other views (trending/saved) get the badge on the next feed
+  // render, since cardHtml() already checks isArticleRead().
   if (!isArticleRead(a)) {
     markArticleRead(a);
-    if (document.getElementById('article-grid')) renderCurrentPage();
+    const card = document.querySelector('#article-grid article[onclick*="openArticle(' + idx + ')"]');
+    if (card) card.classList.add('cr-read', 'relative');
   }
   // Reset save button state
   const saveIcon = document.getElementById('save-story-icon');
