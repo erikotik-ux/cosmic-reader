@@ -650,7 +650,9 @@
      a native wheel that ignores these (acceptable). */
   #feed-filter-mobile option,
   #feed-source-mobile option,
-  #feed-source-desktop option {
+  #feed-source-desktop option,
+  #saved-cat option,
+  #saved-sort option {
     background-color: #0d1515;
     color: #dbfcff;
     font-weight: 400;
@@ -660,7 +662,11 @@
   #feed-source-mobile option:checked,
   #feed-source-mobile option:hover,
   #feed-source-desktop option:checked,
-  #feed-source-desktop option:hover {
+  #feed-source-desktop option:hover,
+  #saved-cat option:checked,
+  #saved-cat option:hover,
+  #saved-sort option:checked,
+  #saved-sort option:hover {
     background-color: #0a1212;
     color: #00f0ff;
   }
@@ -2414,6 +2420,36 @@
         </div>
         <button onclick="navigate('feed')" class="cr-saved-cta border border-[#00f0ff]/20 text-[#dbfcff]/60 font-headline uppercase tracking-widest text-[10px] rounded-lg hover:border-[#00f0ff] hover:text-[#dbfcff] transition-all shrink-0">← Explore Feed</button>
       </div>
+      <!-- Saved Stories controls: search + category filter + sort.
+           Hidden until there is at least one saved story. -->
+      <div id="saved-controls" class="mb-6 flex flex-col sm:flex-row gap-3" style="display:none">
+        <div class="relative flex-1">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/30 text-base">search</span>
+          <input id="saved-search" type="text" oninput="renderSavedStories()" placeholder="Search saved…" autocomplete="off"
+            class="w-full bg-surface-container-high border border-[#00f0ff]/20 rounded-full pl-9 pr-4 py-2.5 text-sm font-body text-[#dbfcff] placeholder-[#dbfcff]/30 focus:outline-none focus:border-[#00f0ff] transition-all"/>
+        </div>
+        <div class="relative">
+          <select id="saved-cat" onchange="renderSavedStories()"
+            class="appearance-none w-full sm:w-auto bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:border-[#00f0ff] cursor-pointer">
+            <option value="All">All Categories</option>
+            <option value="Planets">Planets</option>
+            <option value="Physics">Physics</option>
+            <option value="Moon">Moon</option>
+            <option value="Missions">Missions</option>
+            <option value="AI & Tech">AI &amp; Tech</option>
+          </select>
+          <span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
+        </div>
+        <div class="relative">
+          <select id="saved-sort" onchange="renderSavedStories()"
+            class="appearance-none w-full sm:w-auto bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:border-[#00f0ff] cursor-pointer">
+            <option value="saved">Saved order</option>
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+          <span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
+        </div>
+      </div>
       <div id="saved-articles-container">
         <div class="text-center py-16">
           <span class="material-symbols-outlined text-[#00f0ff]/40 text-6xl mb-6 block">bookmark</span>
@@ -3554,7 +3590,11 @@ function removeSaved(key) {
 function renderSavedStories() {
   const container = document.getElementById('saved-articles-container');
   if (!container) return;
+  const controls = document.getElementById('saved-controls');
+
+  // Empty state — hide controls entirely.
   if (savedStories.length === 0) {
+    if (controls) controls.style.display = 'none';
     container.innerHTML = `
       <div class="text-center py-16">
         <span class="material-symbols-outlined text-[#00f0ff]/40 text-6xl mb-6 block">bookmark</span>
@@ -3563,13 +3603,55 @@ function renderSavedStories() {
       </div>`;
     return;
   }
+  if (controls) controls.style.display = '';
+
+  // Read controls (search / category / sort).
+  const q    = (document.getElementById('saved-search')?.value || '').trim().toLowerCase();
+  const cat  = document.getElementById('saved-cat')?.value  || 'All';
+  const sort = document.getElementById('saved-sort')?.value || 'saved';
+
+  // Filter by category + free-text (title/excerpt/source). Keep original index
+  // for the stable 'Saved order' option.
+  let list = savedStories.map((a, i) => ({ a, i }));
+  if (cat !== 'All') list = list.filter(o => o.a.category === cat);
+  if (q) list = list.filter(o =>
+    (o.a.title || '').toLowerCase().includes(q) ||
+    (o.a.excerpt || '').toLowerCase().includes(q) ||
+    (o.a.source || '').toLowerCase().includes(q));
+
+  // Sort.
+  if (sort === 'newest' || sort === 'oldest') {
+    list.sort((x, y) => {
+      const dx = Date.parse(x.a.date) || 0;
+      const dy = Date.parse(y.a.date) || 0;
+      if (dx !== dy) return sort === 'newest' ? dy - dx : dx - dy;
+      return x.i - y.i;
+    });
+  }
+
+  const totalSaved = savedStories.length;
+  const shown      = list.length;
+  const countLabel = (q || cat !== 'All')
+    ? `${shown} of ${totalSaved} saved`
+    : `${totalSaved} article${totalSaved !== 1 ? 's' : ''} saved`;
+
+  if (shown === 0) {
+    container.innerHTML = `
+      <div class="mb-4 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-[#00f0ff] rounded-full"></span>
+        <span class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]/60">${countLabel}</span>
+      </div>
+      <div class="text-center py-12 text-[#dbfcff]/30 font-body text-sm">No saved stories match your filters.</div>`;
+    return;
+  }
+
   container.innerHTML = `
     <div class="mb-4 flex items-center gap-2">
       <span class="w-1.5 h-1.5 bg-[#00f0ff] rounded-full animate-pulse"></span>
-      <span class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]/60">${savedStories.length} article${savedStories.length !== 1 ? 's' : ''} saved</span>
+      <span class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]/60">${countLabel}</span>
     </div>
     <div class="flex flex-col gap-4">` +
-    savedStories.map((a, i) => {
+    list.map(({ a }) => {
       const cc = CAT_COLOR[a.category] || 'text-[#00f0ff]';
       const artIdx = articles.findIndex(x => x.title === a.title);
       const fb = pickFallback(a.category, a.title);
