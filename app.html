@@ -3730,29 +3730,38 @@ function saveStory(idx) {
 }
 
 // ── Share ─────────────────────────────────────────────────
-// Native share sheet when available; otherwise copy the link to the
-// clipboard. Visible toast confirmation on success and on failure.
+// Always copy the article link to the clipboard and confirm with a toast
+// (consistent on every device — no native share sheet). Falls back to
+// execCommand, then a manual prompt + error toast if the clipboard is blocked.
 async function shareCurrentArticle() {
   const a = articles[currentArticle];
   if (!a) return;
-  const url   = a.read_more || a.link || location.href;
-  const title = a.title || 'Cosmic Reader';
-  if (navigator.share) {
+  const url = a.read_more || a.link || location.href;
+  // Modern async clipboard (secure context + user gesture).
+  if (navigator.clipboard && navigator.clipboard.writeText) {
     try {
-      await navigator.share({ title, text: title, url });
-      return; // the OS share sheet is its own confirmation
-    } catch (e) {
-      if (e && e.name === 'AbortError') return; // user dismissed — no feedback needed
-      // otherwise fall through to clipboard
-    }
+      await navigator.clipboard.writeText(url);
+      showToast('Transmission link copied', { icon: 'link' });
+      return;
+    } catch (e) { /* fall through to legacy copy */ }
   }
+  // Legacy fallback: hidden textarea + execCommand('copy').
   try {
-    if (!navigator.clipboard) throw new Error('no clipboard');
-    await navigator.clipboard.writeText(url);
-    showToast('Transmission link copied', { icon: 'link' });
-  } catch (e) {
-    // Clipboard blocked/unavailable — offer manual copy and show an error toast.
-    try { window.prompt('Copy this transmission link:', url); } catch (e2) {}
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (ok) { showToast('Transmission link copied', { icon: 'link' }); return; }
+    throw new Error('execCommand copy failed');
+  } catch (e2) {
+    // Last resort: let the user copy manually, and show clear error feedback.
+    try { window.prompt('Copy this transmission link:', url); } catch (e3) {}
     showToast('Could not copy the link automatically', { variant: 'error', icon: 'error' });
   }
 }
