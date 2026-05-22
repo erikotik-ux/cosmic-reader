@@ -749,6 +749,34 @@
   }
   .cr-share-copy:hover { background: rgba(0,240,255,0.14); border-color: #00f0ff; }
   @media (prefers-reduced-motion: reduce) { .cr-share-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; } }
+  /* ── Probe Report card (post-refresh summary) ───────────────────────── */
+  .cr-probe-report {
+    position: fixed; left: 1.5rem; bottom: 1.5rem; z-index: 1000;
+    width: 282px; max-width: calc(100vw - 2rem);
+    background: rgba(13,21,21,0.95);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,240,255,0.3); border-radius: 0.7rem;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 0 18px rgba(0,240,255,0.1);
+    color: #dbfcff; font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    opacity: 0; transform: translateY(10px); pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+  }
+  .cr-probe-report.cr-pr-show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .cr-probe-report.cr-probe-report-error { border-color: rgba(255,150,120,0.5); }
+  .cr-pr-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.7rem 0.85rem; border-bottom: 1px solid rgba(0,240,255,0.14); }
+  .cr-pr-headicon { font-size: 1.05rem; color: #00f0ff; }
+  .cr-probe-report-error .cr-pr-headicon { color: #ffb5a0; }
+  .cr-pr-title { flex: 1; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,240,255,0.85); }
+  .cr-probe-report-error .cr-pr-title { color: #ffb5a0; }
+  .cr-pr-close { background: none; border: none; cursor: pointer; color: rgba(219,252,255,0.45); font-size: 1.05rem; line-height: 1; padding: 0; }
+  .cr-pr-close:hover { color: #dbfcff; }
+  .cr-pr-body { padding: 0.55rem 0.85rem 0.75rem; display: flex; flex-direction: column; gap: 0.42rem; }
+  .cr-pr-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; min-width: 0; }
+  .cr-pr-rowicon { font-size: 0.95rem; color: rgba(0,240,255,0.6); flex-shrink: 0; }
+  .cr-pr-label { color: rgba(219,252,255,0.5); width: 5.4rem; flex-shrink: 0; }
+  .cr-pr-val { color: #dbfcff; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  @media (max-width: 767px) { .cr-probe-report { left: 1rem; right: 1rem; width: auto; bottom: 4.75rem; } }
+  @media (prefers-reduced-motion: reduce) { .cr-probe-report { transition: opacity 0.15s ease; } }
   /* Planet hover effect — Option A: Energy Ripple.
      Two soft gradient rings pulse outward from the planet on hover. Pure CSS,
      animated with transform + opacity only (GPU-composited), replacing the old
@@ -4772,6 +4800,56 @@ function drawConstellationLines() {
 
 // ── Deploy Probe ──────────────────────────────────────────
 let probeDeployed = false;
+// ── Probe Report ──────────────────────────────────────────
+// Themed summary card shown after Deploy Probe finishes. One reusable
+// element so reports never stack.
+let _probeReportTimer = null;
+function _prRow(icon, label, val) {
+  return '<div class="cr-pr-row"><span class="material-symbols-outlined cr-pr-rowicon">' + icon + '</span>' +
+    '<span class="cr-pr-label">' + label + '</span><span class="cr-pr-val">' + escHtml(val) + '</span></div>';
+}
+function showProbeReport(d) {
+  d = d || {};
+  let el = document.getElementById('probe-report');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'probe-report';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+  }
+  el.className = 'cr-probe-report' + (d.error ? ' cr-probe-report-error' : '');
+  let rows;
+  if (d.error) {
+    rows = _prRow('sensors_off', 'Relay', 'Lost contact') +
+           _prRow('inventory_2', 'Fallback', d.detail || 'Showing cached signals') +
+           _prRow('schedule', 'Last try', d.time || new Date().toLocaleTimeString());
+  } else {
+    rows = _prRow('cell_tower', 'Relays', d.feedsOnline + ' of ' + d.feedsTotal + ' online') +
+           _prRow('auto_awesome', 'New signals', d.newCount > 0 ? ('+' + d.newCount + ' detected') : 'No new signals detected') +
+           _prRow('leaderboard', 'Ranking', 'Recalibrated') +
+           (d.top && d.top.title ? _prRow('kid_star', 'Top signal', d.top.title) : '') +
+           _prRow('schedule', 'Last relay', d.time);
+  }
+  el.innerHTML =
+    '<div class="cr-pr-head">' +
+      '<span class="material-symbols-outlined cr-pr-headicon">' + (d.error ? 'sensors_off' : 'satellite_alt') + '</span>' +
+      '<span class="cr-pr-title">Probe Report</span>' +
+      '<button class="cr-pr-close material-symbols-outlined" aria-label="Dismiss">close</button>' +
+    '</div>' +
+    '<div class="cr-pr-body">' + rows + '</div>';
+  const close = el.querySelector('.cr-pr-close');
+  if (close) close.addEventListener('click', hideProbeReport);
+  requestAnimationFrame(() => el.classList.add('cr-pr-show'));
+  if (_probeReportTimer) clearTimeout(_probeReportTimer);
+  _probeReportTimer = setTimeout(hideProbeReport, 9000);
+}
+function hideProbeReport() {
+  const el = document.getElementById('probe-report');
+  if (el) el.classList.remove('cr-pr-show');
+  if (_probeReportTimer) { clearTimeout(_probeReportTimer); _probeReportTimer = null; }
+}
+
 async function deployProbe() {
   if (probeDeployed) return;
   probeDeployed = true;
@@ -4780,6 +4858,9 @@ async function deployProbe() {
   const icon   = document.getElementById('deploy-probe-icon');
   const label  = document.getElementById('deploy-probe-label');
   const status = document.getElementById('deploy-probe-status');
+
+  // Snapshot current signals so we can report a real new-signal diff after refresh.
+  const _beforeKeys = new Set(articles.map(a => a.read_more || a.link || a.title));
 
   // Launch animation sequence
   const stages = [
@@ -4825,15 +4906,32 @@ async function deployProbe() {
       if (icon)   icon.textContent   = 'check_circle';
       if (label)  label.textContent  = 'Probe Complete';
       if (status) status.textContent = merged.length + ' signals retrieved';
+      // Real new-signal diff against the pre-refresh snapshot.
+      const newCount = merged.reduce((n, a) => n + (_beforeKeys.has(a.read_more || a.link || a.title) ? 0 : 1), 0);
+      showProbeReport({
+        feedsOnline: liveCount,
+        feedsTotal:  FEEDS.length,
+        newCount:    newCount,
+        top:         articles[0],
+        time:        new Date().toLocaleTimeString()
+      });
     } else {
       if (icon)   icon.textContent   = 'signal_disconnected';
       if (label)  label.textContent  = 'No Signal';
       if (status) status.textContent = 'Using cached data';
+      showProbeReport({
+        feedsOnline: liveCount,
+        feedsTotal:  FEEDS.length,
+        newCount:    0,
+        top:         articles[0],
+        time:        new Date().toLocaleTimeString()
+      });
     }
   } catch(e) {
     if (icon)   icon.textContent   = 'error';
     if (label)  label.textContent  = 'Probe Failed';
     if (status) status.textContent = 'Check connection';
+    showProbeReport({ error: true, detail: 'Check connection — cached signals kept', time: new Date().toLocaleTimeString() });
   }
 
   // Re-enable after 8s so it can be used again
