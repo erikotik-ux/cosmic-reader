@@ -777,8 +777,8 @@
   .cr-pr-val { color: #dbfcff; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   @media (max-width: 767px) { .cr-probe-report { left: 1rem; right: 1rem; width: auto; bottom: 4.75rem; } }
   @media (prefers-reduced-motion: reduce) { .cr-probe-report { transition: opacity 0.15s ease; } }
-  /* Deploy Probe hover hint — SVG text auto-scaled to the button width */
-  .cr-probe-help { display: block; width: 100%; height: auto; overflow: visible; }
+  /* Deploy Probe hover hint — SVG text stretched to the button width */
+  .cr-probe-help { display: block; width: 100%; height: auto; }
   /* Planet hover effect — Option A: Energy Ripple.
      Two soft gradient rings pulse outward from the planet on hover. Pure CSS,
      animated with transform + opacity only (GPU-composited), replacing the old
@@ -1034,11 +1034,11 @@
       <span id="deploy-probe-icon" class="material-symbols-outlined text-sm">rocket_launch</span>
       <span id="deploy-probe-label">Deploy Probe</span>
     </button>
-    <!-- Hover hint: an SVG whose text auto-scales to exactly fill the button
-         width on one line (viewBox is fitted to the text's bbox by JS). Change
-         the wording and it re-fits itself — no fixed font-size to tune. -->
-    <svg id="deploy-probe-help" class="cr-probe-help pointer-events-none absolute bottom-full left-6 right-6 mb-1 opacity-0 peer-hover:opacity-100 transition-opacity duration-200" viewBox="0 0 100 12" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <text id="deploy-probe-help-text" x="0" y="10" font-size="12" font-family="'Exo 2','Space Grotesk',sans-serif" fill="rgba(219,252,255,0.55)">Scan feeds for the latest signals</text>
+    <!-- Hover hint: SVG text forced to span the viewBox width via textLength,
+         with preserveAspectRatio="none" so it always fills the button width on
+         one line. No JS measuring; change the wording and it still fills. -->
+    <svg id="deploy-probe-help" class="cr-probe-help pointer-events-none absolute bottom-full left-6 right-6 mb-1 opacity-0 peer-hover:opacity-100 transition-opacity duration-200" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
+      <text x="0" y="6" textLength="100" lengthAdjust="spacingAndGlyphs" font-size="5.7" font-family="'Exo 2','Space Grotesk',sans-serif" fill="rgba(219,252,255,0.55)">Scan feeds for the latest signals</text>
     </svg>
     <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
   </div>
@@ -5014,23 +5014,6 @@ if (savedStories.length > 0) renderSavedStories();
 loadLiveFeeds();
 // Live Launch Tracker — fires once at boot, ticks the countdown every second
 loadNextLaunch();
-
-// Fit the Deploy Probe hover hint: size its SVG viewBox to the text's bbox so
-// the text scales to exactly fill the button width on one line. Re-run once
-// web fonts load (their metrics differ from the fallback) for an exact fit.
-function _fitProbeHelp() {
-  const svg = document.getElementById('deploy-probe-help');
-  const txt = document.getElementById('deploy-probe-help-text');
-  if (!svg || !txt || !txt.getBBox) return;
-  try {
-    const bb = txt.getBBox();
-    if (bb.width > 0) svg.setAttribute('viewBox', bb.x + ' ' + bb.y + ' ' + bb.width + ' ' + bb.height);
-  } catch (e) {}
-}
-_fitProbeHelp();
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(_fitProbeHelp);
-setTimeout(_fitProbeHelp, 600);
-window.addEventListener('resize', _fitProbeHelp);
 
 // Draw constellation lines after layout settles, and on resize
 window.addEventListener('load', () => {
