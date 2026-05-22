@@ -1034,11 +1034,11 @@
       <span id="deploy-probe-icon" class="material-symbols-outlined text-sm">rocket_launch</span>
       <span id="deploy-probe-label">Deploy Probe</span>
     </button>
-    <!-- Hover hint: SVG text forced to span the viewBox width via textLength,
-         with preserveAspectRatio="none" so it always fills the button width on
-         one line. No JS measuring; change the wording and it still fills. -->
-    <svg id="deploy-probe-help" class="cr-probe-help pointer-events-none absolute bottom-full left-6 right-6 mb-1 opacity-0 peer-hover:opacity-100 transition-opacity duration-200" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
-      <text x="0" y="6" textLength="100" lengthAdjust="spacingAndGlyphs" font-size="5.7" font-family="'Exo 2','Space Grotesk',sans-serif" fill="rgba(219,252,255,0.55)">Scan feeds for the latest signals</text>
+    <!-- Hover hint: SVG text scaled UNIFORMLY (preserveAspectRatio meet) to the
+         button width — no glyph stretching. The viewBox is sized to the text's
+         natural proportions so it nearly fills the width on one line, centered. -->
+    <svg id="deploy-probe-help" class="cr-probe-help pointer-events-none absolute bottom-full left-6 right-6 mb-1 opacity-0 peer-hover:opacity-100 transition-opacity duration-200" viewBox="0 0 196 15" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <text x="98" y="11" text-anchor="middle" font-size="12" font-family="'Exo 2','Space Grotesk',sans-serif" fill="rgba(219,252,255,0.55)">Scan feeds for the latest signals</text>
     </svg>
     <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
   </div>
