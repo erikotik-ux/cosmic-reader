@@ -749,34 +749,8 @@
   }
   .cr-share-copy:hover { background: rgba(0,240,255,0.14); border-color: #00f0ff; }
   @media (prefers-reduced-motion: reduce) { .cr-share-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; } }
-  /* ── Probe Report card (post-refresh summary) ───────────────────────── */
-  .cr-probe-report {
-    position: fixed; left: 1.5rem; bottom: 1.5rem; z-index: 1000;
-    width: 282px; max-width: calc(100vw - 2rem);
-    background: rgba(13,21,21,0.95);
-    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-    border: 1px solid rgba(0,240,255,0.3); border-radius: 0.7rem;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 0 18px rgba(0,240,255,0.1);
-    color: #dbfcff; font-family: 'Exo 2', 'Space Grotesk', sans-serif;
-    opacity: 0; transform: translateY(10px); pointer-events: none;
-    transition: opacity 0.28s ease, transform 0.28s ease;
-  }
-  .cr-probe-report.cr-pr-show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  .cr-probe-report.cr-probe-report-error { border-color: rgba(255,150,120,0.5); }
-  .cr-pr-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.7rem 0.85rem; border-bottom: 1px solid rgba(0,240,255,0.14); }
-  .cr-pr-headicon { font-size: 1.05rem; color: #00f0ff; }
-  .cr-probe-report-error .cr-pr-headicon { color: #ffb5a0; }
-  .cr-pr-title { flex: 1; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,240,255,0.85); }
-  .cr-probe-report-error .cr-pr-title { color: #ffb5a0; }
-  .cr-pr-close { background: none; border: none; cursor: pointer; color: rgba(219,252,255,0.45); font-size: 1.05rem; line-height: 1; padding: 0; }
-  .cr-pr-close:hover { color: #dbfcff; }
-  .cr-pr-body { padding: 0.55rem 0.85rem 0.75rem; display: flex; flex-direction: column; gap: 0.42rem; }
-  .cr-pr-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; min-width: 0; }
-  .cr-pr-rowicon { font-size: 0.95rem; color: rgba(0,240,255,0.6); flex-shrink: 0; }
-  .cr-pr-label { color: rgba(219,252,255,0.5); width: 5.4rem; flex-shrink: 0; }
-  .cr-pr-val { color: #dbfcff; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-  @media (max-width: 767px) { .cr-probe-report { left: 1rem; right: 1rem; width: auto; bottom: 4.75rem; } }
-  @media (prefers-reduced-motion: reduce) { .cr-probe-report { transition: opacity 0.15s ease; } }
+  /* (Probe Report is now a persistent sidebar panel built with utility classes
+     in showProbeReport(); the old floating-card CSS was removed.) */
   /* Deploy Probe hover hint — SVG text stretched to the button width */
   .cr-probe-help { display: block; width: 100%; height: auto; }
   /* Planet hover effect — Option A: Energy Ripple.
@@ -1029,7 +1003,19 @@
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Trending</span>
     </a>
   </nav>
-  <div class="mt-auto p-6 hidden md:block relative">
+  <!-- Probe Report — fills the sidebar's mid space, pinned above the Deploy
+       Probe footer (mt-auto). The gap it leaves under the nav is reserved for
+       the upcoming Chat button. Desktop sidebar only. -->
+  <div id="probe-report-panel" class="mt-auto hidden md:block px-5 pb-3">
+    <div class="flex items-center gap-2 mb-2.5 pb-2.5 border-b border-[#00f0ff]/10">
+      <span class="material-symbols-outlined text-[#00f0ff] text-[15px]">satellite_alt</span>
+      <span id="probe-report-title" class="font-headline text-[9px] uppercase tracking-widest text-[#00f0ff]/80">Probe Report</span>
+    </div>
+    <div id="probe-report-rows" class="flex flex-col gap-2">
+      <div class="text-[10px] text-[#dbfcff]/30 font-body italic">Awaiting probe telemetry…</div>
+    </div>
+  </div>
+  <div class="p-6 hidden md:block relative">
     <button id="deploy-probe-btn" onclick="deployProbe()" class="peer w-full py-3 bg-gradient-to-br from-[#dbfcff] to-[#00f0ff] text-[#00363a] font-headline uppercase tracking-widest text-[10px] font-bold rounded-lg transition-all scale-95 active:scale-90 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] flex items-center justify-center gap-2">
       <span id="deploy-probe-icon" class="material-symbols-outlined text-sm">rocket_launch</span>
       <span id="deploy-probe-label">Deploy Probe</span>
@@ -3431,6 +3417,8 @@ async function loadLiveFeeds() {
       const feedCountEl = document.getElementById('hud-feed-count');
       if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
       populateSourceFilter();
+      // Seed the sidebar Probe Report panel with the initial sync stats.
+      showProbeReport({ feedsOnline: liveCount, feedsTotal: FEEDS.length, total: articles.length, top: articles[0], time: new Date().toLocaleTimeString(), initial: true });
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
@@ -4810,53 +4798,39 @@ function drawConstellationLines() {
 // ── Deploy Probe ──────────────────────────────────────────
 let probeDeployed = false;
 // ── Probe Report ──────────────────────────────────────────
-// Themed summary card shown after Deploy Probe finishes. One reusable
-// element so reports never stack.
-let _probeReportTimer = null;
+// Persistent panel in the sidebar (below the nav, above Deploy Probe).
+// Populated after the initial feed load and refreshed after Deploy Probe.
 function _prRow(icon, label, val) {
-  return '<div class="cr-pr-row"><span class="material-symbols-outlined cr-pr-rowicon">' + icon + '</span>' +
-    '<span class="cr-pr-label">' + label + '</span><span class="cr-pr-val">' + escHtml(val) + '</span></div>';
+  return '<div class="flex items-center gap-2 text-[11px] leading-tight">' +
+    '<span class="material-symbols-outlined text-[#00f0ff]/55 text-[14px] shrink-0">' + icon + '</span>' +
+    '<span class="text-[#dbfcff]/40 uppercase tracking-wider text-[9px] w-[4.4rem] shrink-0">' + label + '</span>' +
+    '<span class="text-[#dbfcff]/90 font-medium truncate min-w-0">' + escHtml(val) + '</span></div>';
 }
 function showProbeReport(d) {
   d = d || {};
-  let el = document.getElementById('probe-report');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'probe-report';
-    el.setAttribute('role', 'status');
-    el.setAttribute('aria-live', 'polite');
-    document.body.appendChild(el);
-  }
-  el.className = 'cr-probe-report' + (d.error ? ' cr-probe-report-error' : '');
+  const rowsEl = document.getElementById('probe-report-rows');
+  const titleEl = document.getElementById('probe-report-title');
+  if (!rowsEl) return;
   let rows;
   if (d.error) {
     rows = _prRow('sensors_off', 'Relay', 'Lost contact') +
-           _prRow('inventory_2', 'Fallback', d.detail || 'Showing cached signals') +
+           _prRow('inventory_2', 'Fallback', d.detail || 'Cached signals kept') +
            _prRow('schedule', 'Last try', d.time || new Date().toLocaleTimeString());
+  } else if (d.initial) {
+    rows = _prRow('cell_tower', 'Relays', d.feedsOnline + ' of ' + d.feedsTotal + ' online') +
+           _prRow('inventory_2', 'Signals', d.total + ' loaded') +
+           _prRow('leaderboard', 'Ranking', 'Synced') +
+           (d.top && d.top.title ? _prRow('kid_star', 'Top signal', d.top.title) : '') +
+           _prRow('schedule', 'Last sync', d.time);
   } else {
     rows = _prRow('cell_tower', 'Relays', d.feedsOnline + ' of ' + d.feedsTotal + ' online') +
-           _prRow('auto_awesome', 'New signals', d.newCount > 0 ? ('+' + d.newCount + ' detected') : 'No new signals detected') +
+           _prRow('auto_awesome', 'New signals', d.newCount > 0 ? ('+' + d.newCount + ' detected') : 'No new signals') +
            _prRow('leaderboard', 'Ranking', 'Recalibrated') +
            (d.top && d.top.title ? _prRow('kid_star', 'Top signal', d.top.title) : '') +
            _prRow('schedule', 'Last relay', d.time);
   }
-  el.innerHTML =
-    '<div class="cr-pr-head">' +
-      '<span class="material-symbols-outlined cr-pr-headicon">' + (d.error ? 'sensors_off' : 'satellite_alt') + '</span>' +
-      '<span class="cr-pr-title">Probe Report</span>' +
-      '<button class="cr-pr-close material-symbols-outlined" aria-label="Dismiss">close</button>' +
-    '</div>' +
-    '<div class="cr-pr-body">' + rows + '</div>';
-  const close = el.querySelector('.cr-pr-close');
-  if (close) close.addEventListener('click', hideProbeReport);
-  requestAnimationFrame(() => el.classList.add('cr-pr-show'));
-  if (_probeReportTimer) clearTimeout(_probeReportTimer);
-  _probeReportTimer = setTimeout(hideProbeReport, 9000);
-}
-function hideProbeReport() {
-  const el = document.getElementById('probe-report');
-  if (el) el.classList.remove('cr-pr-show');
-  if (_probeReportTimer) { clearTimeout(_probeReportTimer); _probeReportTimer = null; }
+  rowsEl.innerHTML = rows;
+  if (titleEl) titleEl.textContent = d.error ? 'Probe Report — Error' : 'Probe Report';
 }
 
 async function deployProbe() {
