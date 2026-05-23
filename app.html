@@ -4771,7 +4771,7 @@ function setupArticleTldr(article) {
   // Only worth summarizing long-form articles. Short pieces are already
   // about as brief as a summary would be, so we skip the button there.
   const wordCount = article.body ? article.body.trim().split(/\s+/).length : 0;
-  const LONG_ARTICLE_WORDS = 300;
+  const LONG_ARTICLE_WORDS = 200;
   if (wordCount < LONG_ARTICLE_WORDS) return;
 
   // If we've already generated this article's summary this session,
