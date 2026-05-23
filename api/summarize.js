@@ -76,7 +76,7 @@ export default async function handler(req) {
         ],
         max_tokens: 140,
         temperature: 0.3,
-        stream: false
+        stream: true
       }),
       signal: AbortSignal.timeout(12000)
     });
@@ -87,7 +87,7 @@ export default async function handler(req) {
     return jsonError(500, 'Summarize error.');
   }
 
-  if (!llmRes.ok) {
+  if (!llmRes.ok || !llmRes.body) {
     const errText = await llmRes.text().catch(() => '');
     let detail = errText.slice(0, 200);
     try {
@@ -97,18 +97,49 @@ export default async function handler(req) {
     return jsonError(502, 'AI service returned ' + llmRes.status + ': ' + detail);
   }
 
-  const data = await llmRes.json();
-  const summary = (data && data.choices && data.choices[0] && data.choices[0].message
-    && data.choices[0].message.content || '').trim();
+  // Stream the summary back as plain-text deltas so the reader sees words
+  // appear almost immediately instead of waiting for the whole completion.
+  // We parse the upstream OpenAI-style SSE ("data: {…delta.content}") and
+  // forward just the text. The client accumulates the full text and caches
+  // it in sessionStorage, so re-opening an article is still instant.
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      const reader = llmRes.body.getReader();
+      let buffer = '';
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith('data:')) continue;
+            const payload = trimmed.slice(5).trim();
+            if (payload === '[DONE]') { controller.close(); return; }
+            try {
+              const json = JSON.parse(payload);
+              const delta = json.choices && json.choices[0] && json.choices[0].delta
+                && json.choices[0].delta.content;
+              if (delta) controller.enqueue(encoder.encode(delta));
+            } catch (e) { /* ignore keep-alives / partial frames */ }
+          }
+        }
+        controller.close();
+      } catch (e) {
+        controller.error(e);
+      }
+    }
+  });
 
-  if (!summary) return jsonError(502, 'Empty summary.');
-
-  // Cache aggressively — same article rarely changes
-  return new Response(JSON.stringify({ summary }), {
+  return new Response(stream, {
     status: 200,
     headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 's-maxage=86400, stale-while-revalidate=604800',
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-store',
       'Access-Control-Allow-Origin': '*'
     }
   });

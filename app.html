@@ -4822,9 +4822,10 @@ async function loadArticleTldr(article, attempt) {
     return;
   }
 
-  // Cache miss → call backend. 20s client timeout gives comfortable headroom
-  // over the API's 12s upstream timeout (the old 15s could abort a response
-  // that was actually on its way).
+  // Cache miss → call backend. The API streams the summary back as plain
+  // text, so we read the body progressively and show words as they arrive.
+  // 20s client timeout gives comfortable headroom over the API's 12s upstream
+  // timeout (a shorter window could abort a response that was on its way).
   try {
     const res = await fetch('/api/summarize', {
       method: 'POST',
@@ -4837,15 +4838,31 @@ async function loadArticleTldr(article, attempt) {
       }),
       signal: AbortSignal.timeout(20000)
     });
-    if (!res.ok) throw new Error('summarize ' + res.status);
-    const data = await res.json();
-    const summary = (data && data.summary || '').trim();
+    if (!res.ok || !res.body) throw new Error('summarize ' + res.status);
+
+    // Read the stream, appending each chunk to the card as it arrives.
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+    let summary = '';
+    let firstChunk = true;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      // If the reader moved on to another article mid-stream, stop quietly.
+      if (!stillCurrent()) { try { reader.cancel(); } catch(e){} return; }
+      summary += decoder.decode(value, { stream: true });
+      if (firstChunk) {
+        // Swap the spinner for the live text the moment the first token lands.
+        loadEl.style.display = 'none';
+        textEl.style.display = '';
+        firstChunk = false;
+      }
+      textEl.textContent = summary;
+    }
+    summary = summary.trim();
     if (!summary) throw new Error('empty summary');
 
-    // Guard: openReading may have moved on to a different article by
-    // the time the response arrives. Only render if it's still showing.
     if (!stillCurrent()) return;
-
     cache[key] = summary;
     _saveTldrCache(cache);
     loadEl.style.display = 'none';
