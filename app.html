@@ -319,6 +319,10 @@
     font-style: italic;
     position: relative;
   }
+  .cr-tldr-error {
+    color: rgba(255,181,160,0.85);
+    font-style: italic;
+  }
   .cr-tldr-loading::after {
     content: '';
     display: inline-block;
@@ -4792,7 +4796,8 @@ function requestArticleTldr() {
   if (_currentReadingArticle) loadArticleTldr(_currentReadingArticle);
 }
 
-async function loadArticleTldr(article) {
+async function loadArticleTldr(article, attempt) {
+  attempt = attempt || 0;
   const card    = document.getElementById('read-tldr');
   const textEl  = document.getElementById('read-tldr-text');
   const loadEl  = document.getElementById('read-tldr-loading');
@@ -4802,11 +4807,17 @@ async function loadArticleTldr(article) {
   const key = article.read_more || article.link || article.title;
   if (!key) { card.style.display = 'none'; return; }
 
+  // Is the reading view still showing THIS article? (Used both to guard the
+  // late response and to decide whether to restore the retry button.)
+  const stillCurrent = () => _currentReadingArticle &&
+    (_currentReadingArticle.read_more || _currentReadingArticle.link || _currentReadingArticle.title) === key;
+
   // Hide the trigger button, show the card in loading state.
   if (btn) btn.style.display = 'none';
   card.style.display = '';
   textEl.style.display = 'none';
   textEl.textContent   = '';
+  textEl.classList.remove('cr-tldr-error');
   loadEl.style.display = '';
 
   // Cache hit → instant
@@ -4818,7 +4829,9 @@ async function loadArticleTldr(article) {
     return;
   }
 
-  // Cache miss → call backend
+  // Cache miss → call backend. 20s client timeout gives comfortable headroom
+  // over the API's 12s upstream timeout (the old 15s could abort a response
+  // that was actually on its way).
   try {
     const res = await fetch('/api/summarize', {
       method: 'POST',
@@ -4829,7 +4842,7 @@ async function loadArticleTldr(article) {
         source: article.source || '',
         url:    key
       }),
-      signal: AbortSignal.timeout(15000)
+      signal: AbortSignal.timeout(20000)
     });
     if (!res.ok) throw new Error('summarize ' + res.status);
     const data = await res.json();
@@ -4837,9 +4850,8 @@ async function loadArticleTldr(article) {
     if (!summary) throw new Error('empty summary');
 
     // Guard: openReading may have moved on to a different article by
-    // the time the response arrives. Only render if URL still matches.
-    const currentEl = document.getElementById('read-title');
-    if (currentEl && currentEl.textContent !== article.title) return;
+    // the time the response arrives. Only render if it's still showing.
+    if (!stillCurrent()) return;
 
     cache[key] = summary;
     _saveTldrCache(cache);
@@ -4847,13 +4859,21 @@ async function loadArticleTldr(article) {
     textEl.textContent   = summary;
     textEl.style.display = '';
   } catch(e) {
-    // On failure, hide the loading card and restore the button so the
-    // reader can retry. Don't leave them stuck on a spinner.
-    card.style.display = 'none';
-    if (btn && _currentReadingArticle &&
-        (_currentReadingArticle.read_more || _currentReadingArticle.link || _currentReadingArticle.title) === key) {
-      btn.style.display = '';
+    // The summarize function frequently needs a warm-up call — a cold start
+    // or transient upstream latency made the FIRST click silently do nothing,
+    // so the reader had to click again. Auto-retry once before surfacing an
+    // error, but only if we're still on the same article.
+    if (attempt < 1 && stillCurrent()) {
+      return loadArticleTldr(article, attempt + 1);
     }
+    // Final failure → show a clear, actionable message instead of silently
+    // vanishing, and restore the button so a manual retry is one click away.
+    if (!stillCurrent()) { card.style.display = 'none'; return; }
+    loadEl.style.display = 'none';
+    textEl.textContent   = 'Summary is taking longer than expected. Tap Generate Summary to try again.';
+    textEl.classList.add('cr-tldr-error');
+    textEl.style.display = '';
+    if (btn) btn.style.display = '';
   }
 }
 
