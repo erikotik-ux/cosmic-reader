@@ -278,6 +278,22 @@
   }
   .cr-tldr-btn .material-symbols-outlined { font-size: 0.85rem; }
   .cr-tldr-btn-row { display: flex; justify-content: flex-end; }
+  /* "Curated excerpt" label atop the Full Transmission body — sets the
+     expectation that this is a preview, not the hosted full article. */
+  .cr-excerpt-label {
+    display: inline-block;
+    color: rgba(0,240,255,0.75);
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 0 0.25rem;
+    padding: 0.2rem 0.65rem;
+    border: 1px solid rgba(0,240,255,0.25);
+    border-radius: 999px;
+    background: rgba(0,240,255,0.05);
+  }
   .cr-tldr-eyebrow {
     display: flex; align-items: center; gap: 0.4rem;
     color: rgba(0,240,255,0.85);
@@ -2958,7 +2974,84 @@ function cleanArticleBody(text) {
     if (i > 60) { t = t.slice(0, i); break; }
   }
 
+  // 3. Common feed-scrape boilerplate endings. Many RSS descriptions append
+  //    nav/share/CTA fragments to the real text ("… Read full article",
+  //    "… Comments", "The post X appeared first on Y", share-bar leftovers).
+  //    Each regex is anchored to the END of the string and only trims when a
+  //    reasonable amount of real text remains, so genuine sentences survive.
+  const tailPatterns = [
+    /\bread\s+(the\s+)?(full|more|rest of(\s+this)?(\s+the)?)\s+(article|story|post)\b[\s.!…»>-]*$/i,
+    /\bcontinue\s+reading\b[\s.!…»>-]*$/i,
+    /\b(\d+\s+)?comments?\b[\s.!…»>-]*$/i,
+    /\bshare\s+(this|on)\b[\s\S]{0,80}$/i,
+    /\bsubscribe\s+to\s+(our\s+)?newsletter\b[\s\S]{0,120}$/i,
+    /\bsign\s+up\s+for\s+(our\s+)?(free\s+)?newsletter\b[\s\S]{0,120}$/i,
+    /\bfollow\s+us\s+on\b[\s\S]{0,80}$/i,
+    /\bthe\s+post\s+[\s\S]{0,140}\s+appeared\s+first\s+on\s+[\s\S]{0,60}$/i,
+    /\brelated\s*:?\s*$/i,
+    /\[\s*…?\s*\]\s*$/,
+    /\bappeared\s+first\s+on\b[\s\S]{0,60}$/i
+  ];
+  // Apply repeatedly — feeds often stack several fragments ("… Read full
+  // article Comments"). Stop once nothing more is trimmed or text gets short.
+  let prev;
+  do {
+    prev = t;
+    for (const re of tailPatterns) {
+      const stripped = t.replace(re, '').trim();
+      if (stripped !== t && stripped.length > 40) t = stripped;
+    }
+  } while (t !== prev && t.length > 40);
+
   return t.trim();
+}
+
+// Turn a single wall of excerpt text into readable paragraphs using safe,
+// content-preserving heuristics. Never rewords — only inserts breaks.
+//  1. Honour any real paragraph breaks already present (\n\n).
+//  2. Otherwise, group sentences into ~2-3 sentence paragraphs so a long
+//     scraped blob isn't displayed as one giant block.
+// Returns an array of paragraph strings (always at least one entry).
+function splitIntoParagraphs(text) {
+  if (!text) return [];
+  const t = text.trim();
+  if (!t) return [];
+
+  // 1. Respect existing breaks (double newline, or single newlines from feeds).
+  let blocks = t.split(/\n{2,}/).map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  if (blocks.length > 1) return blocks;
+
+  // Single newlines sometimes mark paragraphs too — use them if they produce
+  // multiple substantial chunks.
+  const nlBlocks = t.split(/\n+/).map(s => s.replace(/\s+/g, ' ').trim()).filter(s => s.length > 0);
+  if (nlBlocks.length > 1 && nlBlocks.every(b => b.length > 30)) return nlBlocks;
+
+  // 2. Fall back to sentence grouping for a single long blob.
+  const flat = t.replace(/\s+/g, ' ').trim();
+  if (flat.length < 280) return [flat]; // short enough — leave as one paragraph
+
+  // Split on sentence boundaries (period/question/exclamation + space + capital
+  // or quote/number). Conservative so abbreviations rarely over-split.
+  const sentences = flat.match(/[^.!?]+[.!?]+(?=\s+[A-Z0-9"“'(]|\s*$)|[^.!?]+$/g) || [flat];
+  const paras = [];
+  let buf = '';
+  let count = 0;
+  for (const s of sentences) {
+    buf += (buf ? ' ' : '') + s.trim();
+    count++;
+    // Break after ~3 sentences or once the paragraph is comfortably long.
+    if (count >= 3 || buf.length >= 320) {
+      paras.push(buf.trim());
+      buf = '';
+      count = 0;
+    }
+  }
+  if (buf.trim()) {
+    // Avoid orphaning a tiny trailing fragment — fold it into the last para.
+    if (paras.length && buf.trim().length < 80) paras[paras.length - 1] += ' ' + buf.trim();
+    else paras.push(buf.trim());
+  }
+  return paras.length ? paras : [flat];
 }
 
 async function fetchFeed(feedInfo) {
@@ -4411,10 +4504,21 @@ function openReading(idx) {
   document.getElementById('read-caption').textContent = 'Visual reference — ' + a.category + ' Sector';
   document.getElementById('read-link').href = a.read_more;
 
-  // Render body
+  // Render body — clean any residual feed boilerplate, then split the excerpt
+  // into readable paragraphs (safe heuristics, never reworded).
   const bodyEl = document.getElementById('read-body');
   bodyEl.innerHTML = '';
-  const paragraphs = a.body.trim().split('\n\n');
+  const cleanedBody = cleanArticleBody((a.body || '').trim());
+  const paragraphs = splitIntoParagraphs(cleanedBody);
+
+  // "Curated excerpt" label — sets honest expectations that this is a preview,
+  // not the hosted full article. Source attribution stays in the byline + the
+  // View Original CTA below.
+  const label = document.createElement('p');
+  label.className = 'cr-excerpt-label';
+  label.textContent = 'Curated excerpt — ' + (a.source || 'External Source');
+  bodyEl.appendChild(label);
+
   paragraphs.forEach((p, i) => {
     const el = document.createElement('p');
     if (i === 0) {
