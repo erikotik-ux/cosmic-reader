@@ -671,6 +671,41 @@
     border-color: #00f0ff;
     font-weight: 700;
   }
+  /* ── For You explanation banner ───────────────────────────────────────── */
+  .cr-foryou-banner {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid rgba(0,240,255,0.25); border-radius: 0.6rem;
+    background: linear-gradient(90deg, rgba(0,240,255,0.08), rgba(0,240,255,0.02));
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+  }
+  .cr-foryou-banner-icon { color: #00f0ff; font-size: 1.15rem; flex-shrink: 0; }
+  .cr-foryou-banner-text { flex: 1; min-width: 0; font-size: 0.8rem; line-height: 1.35; color: rgba(219,252,255,0.75); }
+  .cr-foryou-banner-text strong { color: #00f0ff; font-weight: 700; }
+  .cr-foryou-banner-link {
+    flex-shrink: 0; background: none; cursor: pointer;
+    border: 1px solid rgba(0,240,255,0.4); color: #00f0ff; border-radius: 999px;
+    padding: 0.32rem 0.85rem;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.64rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .cr-foryou-banner-link:hover { background: rgba(0,240,255,0.14); border-color: #00f0ff; }
+  .cr-foryou-banner-empty { border-color: rgba(255,181,160,0.35); background: linear-gradient(90deg, rgba(255,181,160,0.07), transparent); }
+  .cr-foryou-banner-empty .cr-foryou-banner-icon { color: #ffb5a0; }
+  /* Per-card "Because you follow …" reason pill (For You mode) */
+  .cr-reason {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    max-width: 100%;
+    padding: 0.13rem 0.5rem; border-radius: 999px;
+    background: rgba(10,18,18,0.82);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    border: 1px solid rgba(0,240,255,0.35); color: #00f0ff;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cr-reason .cr-reason-icon { font-size: 11px; flex-shrink: 0; }
   /* ── Toast (themed feedback for Save / Share) ──────────────────────────
      Single reusable element (no stacking): new toasts replace the content. */
   .cr-toast {
@@ -2241,6 +2276,11 @@
         <span id="feed-status-text">Loading live signals...</span>
       </div>
 
+      <!-- For You explanation banner — only visible in For You mode.
+           Populated by renderForYouBanner(): "Tuned to your interests…" when
+           topics are set, or an onboarding prompt linking to Settings if not. -->
+      <div id="foryou-banner" class="hidden mb-5"></div>
+
       <div id="article-grid" class="grid grid-cols-1 md:grid-cols-12 gap-5">
 
         <!-- Large Feature Card (col-8) -->
@@ -3150,10 +3190,16 @@ function renderFeed(list) {
     const fb = pickFallback(a.category, a.title);
     // Dim + badge already-read articles (relative needed for the ::after badge).
     const readCls = isArticleRead(a) ? ' cr-read relative' : '';
+    // For You reason label — only in For You mode, only for matched topics.
+    const matched = forYouMode && Array.isArray(window._crTopics) && window._crTopics.indexOf(a.category) !== -1;
+    const reasonPill = matched ? '<span class="cr-reason"><span class="material-symbols-outlined cr-reason-icon">auto_awesome</span>Because you follow ' + escHtml(a.category) + '</span>' : '';
+    const reasonRow = matched ? '<div class="mb-2">' + reasonPill + '</div>' : '';
+    const reasonOverlay = matched ? '<div class="absolute z-30" style="top:0.75rem;left:0.75rem;">' + reasonPill + '</div>' : '';
     if (style === 'hero') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass}${readCls} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
         <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10${a.title.length > 60 ? ' cr-hero-grad-long' : ''}"></div>
         <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        ${reasonOverlay}
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
           <h2 class="text-3xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight max-w-2xl">${escHtml(a.title)}</h2>
@@ -3166,6 +3212,7 @@ function renderFeed(list) {
     if (style === 'small') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" class="${colClass}${readCls} bg-surface-container-low rounded-xl glow-border p-5 flex flex-col justify-between group glass-panel relative overflow-hidden cursor-pointer article-card-hover transition-colors">
         <div>
+          ${reasonRow}
           <div class="flex justify-between items-start mb-5">
             <div class="w-10 h-10 rounded-lg bg-[#dbfcff]/10 flex items-center justify-center border border-[#dbfcff]/20">
               <span class="material-symbols-outlined text-[#dbfcff] text-xl">${CAT_ICON[a.category]||'article'}</span>
@@ -3187,6 +3234,7 @@ function renderFeed(list) {
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
         </div>
         <div class="p-7 flex flex-col justify-center">
+          ${reasonRow}
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-3 block">${a.category}</span>
           <h2 class="text-xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight">${escHtml(a.title)}</h2>
           <p class="text-[#dbfcff]/50 text-sm font-body mb-4 leading-relaxed line-clamp-3">${escHtml(a.excerpt)}</p>
@@ -3201,6 +3249,7 @@ function renderFeed(list) {
           <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
         <div class="flex-grow min-w-0">
+          ${reasonRow}
           <div class="flex items-center gap-2 mb-1">
             <span class="material-symbols-outlined ${cc} text-sm">${ic}</span>
             <h4 class="font-headline font-bold text-[#dbfcff] truncate">${escHtml(a.title)}</h4>
@@ -4011,7 +4060,33 @@ function toggleForYou() {
     btn.classList.toggle('cr-foryou-on', forYouMode);
     btn.setAttribute('aria-pressed', forYouMode ? 'true' : 'false');
   });
+  renderForYouBanner();
   renderCurrentPage();
+}
+
+// Explanation banner shown only in For You mode: lists the user's tuned
+// topics, or prompts them to pick some in Settings if none are selected.
+function renderForYouBanner() {
+  const el = document.getElementById('foryou-banner');
+  if (!el) return;
+  if (!forYouMode) { el.className = 'hidden mb-5'; el.innerHTML = ''; return; }
+  el.className = 'mb-5';
+  const topics = Array.isArray(window._crTopics) ? window._crTopics : [];
+  if (topics.length) {
+    el.innerHTML =
+      '<div class="cr-foryou-banner">' +
+        '<span class="material-symbols-outlined cr-foryou-banner-icon">auto_awesome</span>' +
+        '<span class="cr-foryou-banner-text">Tuned to your interests: <strong>' + escHtml(topics.join(', ')) + '</strong></span>' +
+        '<button type="button" onclick="openSettingsModal()" class="cr-foryou-banner-link">Adjust</button>' +
+      '</div>';
+  } else {
+    el.innerHTML =
+      '<div class="cr-foryou-banner cr-foryou-banner-empty">' +
+        '<span class="material-symbols-outlined cr-foryou-banner-icon">tune</span>' +
+        '<span class="cr-foryou-banner-text">Your For You feed isn’t tuned yet — pick topics of interest to prioritize your signals.</span>' +
+        '<button type="button" onclick="openSettingsModal()" class="cr-foryou-banner-link">Open Settings</button>' +
+      '</div>';
+  }
 }
 
 // Build the source/publication dropdowns from whatever sources are actually
@@ -4059,6 +4134,7 @@ function renderCurrentPage() {
   const start    = (currentPage - 1) * ARTICLES_PER_PAGE;
   const slice    = filtered.slice(start, start + ARTICLES_PER_PAGE);
   renderFeed(slice);
+  renderForYouBanner();
   updatePaginationUI();
   // Scroll feed to top
   const scrollEl = document.querySelector('#view-feed .overflow-y-auto');
@@ -5420,6 +5496,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (error) throw error;
       _cachedSettings = (data && data.user && data.user.user_metadata) || { avatar, username, topics };
       applySettingsToUI(_cachedSettings);
+      // Topics may have changed — refresh the feed/banner so For You reflects them now.
+      if (typeof renderCurrentPage === 'function') renderCurrentPage();
       if (msg) { msg.textContent = 'Preferences saved.'; msg.className = 'settings-msg success'; }
       setTimeout(closeSettingsModal, 900);
     } catch (err) {
