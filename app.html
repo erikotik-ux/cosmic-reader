@@ -2974,6 +2974,13 @@ function cleanArticleBody(text) {
     if (i > 60) { t = t.slice(0, i); break; }
   }
 
+  // 2b. NASA newsroom footer block. NASA.gov articles append a metadata
+  //     trailer: "Share Details Last Updated <date> Editor <name> Location
+  //     <place> Related Terms <tag tag tag>". Cut at the earliest strong
+  //     signature, but only when real article text precedes it.
+  const nasaFooter = t.search(/\bShare\s+Details\b|\bDetails\s+Last\s+Updated\b|\bLast\s+Updated\b[\s\S]{0,40}\bEditor\b|\bRelated\s+Terms\b/i);
+  if (nasaFooter > 60) t = t.slice(0, nasaFooter);
+
   // 3. Common feed-scrape boilerplate endings. Many RSS descriptions append
   //    nav/share/CTA fragments to the real text ("… Read full article",
   //    "… Comments", "The post X appeared first on Y", share-bar leftovers).
@@ -3017,14 +3024,30 @@ function splitIntoParagraphs(text) {
   const t = text.trim();
   if (!t) return [];
 
+  // Fold short trailing "widow" paragraphs (a stray word or fragment left
+  // dangling at the bottom — e.g. a leftover tag like "Artemis") back into the
+  // preceding paragraph so no article ever ends on an orphaned word. Runs on
+  // EVERY return path. A trailing block is a widow when it's < 25 chars OR
+  // fewer than 4 words; loops so several stacked widows all get absorbed.
+  function foldWidows(arr) {
+    while (arr.length > 1) {
+      const last = arr[arr.length - 1].trim();
+      const isWidow = last.length < 25 || last.split(/\s+/).length < 4;
+      if (!isWidow) break;
+      arr[arr.length - 2] = (arr[arr.length - 2] + ' ' + last).trim();
+      arr.pop();
+    }
+    return arr;
+  }
+
   // 1. Respect existing breaks (double newline, or single newlines from feeds).
   let blocks = t.split(/\n{2,}/).map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
-  if (blocks.length > 1) return blocks;
+  if (blocks.length > 1) return foldWidows(blocks);
 
   // Single newlines sometimes mark paragraphs too — use them if they produce
   // multiple substantial chunks.
   const nlBlocks = t.split(/\n+/).map(s => s.replace(/\s+/g, ' ').trim()).filter(s => s.length > 0);
-  if (nlBlocks.length > 1 && nlBlocks.every(b => b.length > 30)) return nlBlocks;
+  if (nlBlocks.length > 1 && nlBlocks.every(b => b.length > 30)) return foldWidows(nlBlocks);
 
   // 2. Fall back to sentence grouping for a single long blob.
   const flat = t.replace(/\s+/g, ' ').trim();
@@ -3051,7 +3074,7 @@ function splitIntoParagraphs(text) {
     if (paras.length && buf.trim().length < 80) paras[paras.length - 1] += ' ' + buf.trim();
     else paras.push(buf.trim());
   }
-  return paras.length ? paras : [flat];
+  return foldWidows(paras.length ? paras : [flat]);
 }
 
 async function fetchFeed(feedInfo) {
