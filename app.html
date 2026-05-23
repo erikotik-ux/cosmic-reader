@@ -2981,6 +2981,36 @@ function cleanArticleBody(text) {
   const nasaFooter = t.search(/\bShare\s+Details\b|\bDetails\s+Last\s+Updated\b|\bLast\s+Updated\b[\s\S]{0,40}\bEditor\b|\bRelated\s+Terms\b/i);
   if (nasaFooter > 60) t = t.slice(0, nasaFooter);
 
+  // 2c. Press-release tail. NASA/agency releases end with a "-end-" / "-30-"
+  //     marker followed by a media-contact block (names, phone numbers,
+  //     emails). Cut at the marker when real text precedes it.
+  const endMark = t.search(/-\s*(end|30)\s*-/i);
+  if (endMark > 60) t = t.slice(0, endMark);
+
+  // 2d. Strip trailing "for more info / contact" lines — bare URLs, email
+  //     addresses, phone numbers, and the CTA lead-ins that introduce them
+  //     ("Full requirements … available online:"). Users who want links or
+  //     contacts can use View Original. Works line-by-line from the end and
+  //     stops at the first real prose line, so mid-article links survive.
+  const isContactTail = (ln) => {
+    const s = ln.trim();
+    if (!s) return true;
+    if (/^https?:\/\/\S+$/i.test(s)) return true;                          // bare URL
+    if (/[\w.+-]+@[\w.-]+\.\w{2,}/.test(s)) return true;                   // contains email
+    if (/\b\d{3}[-.\s)]?\s?\d{3}[-.\s]?\d{4}\b/.test(s)) return true;      // phone number
+    if (/^-\s*(end|30)\s*-$/i.test(s)) return true;                        // stray end marker
+    if (/(available online|for more (information|info|details)|more information|learn more|details are available|full requirements)[\s\S]{0,50}:?\s*$/i.test(s)) return true;
+    if (/^(media\s+)?contacts?\s*:?\s*$/i.test(s)) return true;
+    return false;
+  };
+  let _lines = t.split(/\n+/);
+  while (_lines.length > 1 && isContactTail(_lines[_lines.length - 1])) {
+    const candidate = _lines.slice(0, -1).join('\n\n').trim();
+    if (candidate.length < 40) break; // never strip down to nothing
+    _lines.pop();
+  }
+  t = _lines.join('\n\n');
+
   // 3. Common feed-scrape boilerplate endings. Many RSS descriptions append
   //    nav/share/CTA fragments to the real text ("… Read full article",
   //    "… Comments", "The post X appeared first on Y", share-bar leftovers).
@@ -2997,7 +3027,11 @@ function cleanArticleBody(text) {
     /\bthe\s+post\s+[\s\S]{0,140}\s+appeared\s+first\s+on\s+[\s\S]{0,60}$/i,
     /\brelated\s*:?\s*$/i,
     /\[\s*…?\s*\]\s*$/,
-    /\bappeared\s+first\s+on\b[\s\S]{0,60}$/i
+    /\bappeared\s+first\s+on\b[\s\S]{0,60}$/i,
+    // Inline (no-newline) press-release tails: a trailing email address or a
+    // "for more info / available online:" CTA running to the end of the blob.
+    /\b[\w.+-]+@[\w.-]+\.\w{2,}[\s\S]*$/i,
+    /\b(for more (information|info|details)|full requirements[\s\S]{0,40}available online|details are available online)\b[\s\S]*$/i
   ];
   // Apply repeatedly — feeds often stack several fragments ("… Read full
   // article Comments"). Stop once nothing more is trimmed or text gets short.
