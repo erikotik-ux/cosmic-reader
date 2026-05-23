@@ -6,7 +6,8 @@
   },
   "scripts": {
     "build": "tailwindcss -i input.css -o cosmic-reader.css --minify",
-    "build:watch": "tailwindcss -i input.css -o cosmic-reader.css --watch"
+    "build:watch": "tailwindcss -i input.css -o cosmic-reader.css --watch",
+    "test": "node tests/classify.test.js"
   },
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0"

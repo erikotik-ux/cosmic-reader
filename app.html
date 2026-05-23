@@ -2791,6 +2791,95 @@ const FALLBACK_IMAGES = {
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
 const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
 
+// ─────────────────────────────────────────────────────────────────────────
+// FEED RELEVANCE & CLASSIFICATION  —  centralized, transparent rules.
+// Everything that decides "what category is this?" and "does this even
+// belong in Cosmic Reader?" lives here so it's easy to audit and tune.
+// No ML: keyword + source rules only, first-match-wins. classifyArticle()
+// is the single entry point both feed parsers call.
+//
+// Precedence:  keyword match  >  off-theme exclusion  >  source default.
+// ─────────────────────────────────────────────────────────────────────────
+
+// The ONLY categories the product surfaces. Anything that can't be confidently
+// mapped to one of these is treated as off-theme and dropped.
+const CORE_CATEGORIES = ['Moon', 'Planets', 'Physics', 'Missions', 'AI & Tech'];
+
+// Per-source default category, used ONLY when no keyword rule matches. This
+// replaces the old scattered "if space source → Missions else → AI & Tech"
+// logic with one explicit, editable mapping per publisher.
+const SOURCE_DEFAULT_CAT = {
+  'Space.com':         'Missions',
+  'Universe Today':    'Physics',
+  'SpaceNews':         'Missions',
+  'NASA':              'Missions',
+  'Phys.org':          'Physics',
+  'Teslarati':         'Missions',
+  'Planetary Society': 'Planets',
+  'Sky & Telescope':   'Physics',
+  'Ars Technica':      'AI & Tech',
+  "Ben's Bites":       'AI & Tech',
+};
+
+// Obviously off-theme topics. An article is hidden ONLY when one of these
+// matches AND no core-category keyword matched — so anything genuinely about
+// space/science/AI/frontier-tech is never dropped just for mentioning one of
+// these words in passing. Word-boundary matched (see classifyArticle).
+const EXCLUDE_KEYWORDS = [
+  // sports
+  'nfl','nba','mlb','nhl','super bowl','world series','premier league','la liga',
+  'fifa','touchdown','quarterback','playoff',
+  // celebrity / entertainment
+  'celebrity','red carpet','box office','grammy','oscars','met gala','reality tv',
+  'kardashian','tabloid','gossip','royal family',
+  // lifestyle / commerce
+  'horoscope','astrology sign','zodiac','recipe','weight loss','skincare',
+  'fashion week','coupon','black friday deal','prime day deal','deal of the day',
+  'gift guide','discount code','best deals',
+  // off-theme consumer
+  'video game review','playstation','xbox','nintendo switch','gambling','casino',
+];
+
+// Classify an article from its text + source. Returns:
+//   { category: <core category>, excluded: false }              → keep
+//   { category: null, excluded: true, reason: '…' }             → drop
+// Pure function (no DOM/network) so it's trivial to unit-test.
+function classifyArticle(opts) {
+  const title   = (opts && opts.title)   || '';
+  const tags    = (opts && opts.tags)    || '';
+  const excerpt = (opts && opts.excerpt) || '';
+  const source  = (opts && opts.source)  || '';
+  const hay = (title + ' ' + tags + ' ' + excerpt).toLowerCase();
+
+  // 1. Keyword classification (core categories). First match wins.
+  const kw = guessCategory(title, tags, excerpt); // → core category or null
+
+  // 2. Off-theme exclusion — only when nothing core matched, so we never
+  //    drop a real space/science/AI story for a passing mention.
+  if (!kw && _matchesAny(hay, EXCLUDE_KEYWORDS)) {
+    return { category: null, excluded: true, reason: 'off-theme' };
+  }
+
+  // 3. Resolve: keyword wins, else the source's declared default.
+  const category = kw || SOURCE_DEFAULT_CAT[source] || null;
+
+  // 4. Final guard — must land in a recognized core category.
+  if (!category || CORE_CATEGORIES.indexOf(category) === -1) {
+    return { category: null, excluded: true, reason: 'unclassified' };
+  }
+  return { category: category, excluded: false };
+}
+
+// Word-boundary keyword test shared by the exclusion rules (mirrors the
+// matching guessCategory uses, with optional trailing 's').
+function _matchesAny(haystack, keywords) {
+  for (const kw of keywords) {
+    const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (new RegExp('\\b' + escaped + 's?\\b').test(haystack)) return true;
+  }
+  return false;
+}
+
 // Pool of 8-10 varied images per category — used when a feed provides no image.
 // pickFallback() hashes the article title so each article consistently gets a
 // different image, preventing the same placeholder from repeating across the feed.
@@ -3110,7 +3199,6 @@ function splitIntoParagraphs(text) {
 }
 
 async function fetchFeed(feedInfo) {
-  const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
 
   // ── Primary: rss2json.com — purpose-built RSS service, returns clean JSON ──
   try {
@@ -3131,7 +3219,11 @@ async function fetchFeed(feedInfo) {
         const body     = cleaned.slice(0, 2000);
         const date     = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
         const tags     = (item.categories || []).join(' ');
-        const category = guessCategory(title, tags, excerpt) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
+        // Centralized relevance + classification. Off-theme / unclassifiable
+        // articles are dropped (return null → filtered by .filter(Boolean)).
+        const _cls = classifyArticle({ title, tags, excerpt, source: feedInfo.source });
+        if (_cls.excluded) return null;
+        const category = _cls.category;
         // Helper: normalise a raw URL — fix protocol-relative, strip WP resize params but keep CDN ssl param
         function normaliseImg(u) {
           if (!u) return '';
@@ -3246,11 +3338,10 @@ async function fetchFeed(feedInfo) {
     const date    = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
     const catEls  = Array.from(item.querySelectorAll('category'));
     const tags    = catEls.map(c => c.textContent).join(' ');
-    const PURE_SPACE_SOURCES = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
-    const PURE_AI_SOURCES    = ["Ben's Bites"];
-    const category = guessCategory(title, tags, excerpt)
-      || (PURE_SPACE_SOURCES.includes(feedInfo.source) ? 'Missions'   : null)
-      || (PURE_AI_SOURCES.includes(feedInfo.source)    ? 'AI & Tech'  : null);
+    // Centralized relevance + classification (same rules as the JSON path).
+    // category may be null here → the validity filter below drops it.
+    const _cls = classifyArticle({ title, tags, excerpt, source: feedInfo.source });
+    const category = _cls.category;
     // Helper: normalise image URL — fix protocol-relative, strip known resize params
     function _normImg(u) {
       if (!u) return '';
