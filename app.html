@@ -2594,8 +2594,31 @@
         </div>
       </header>
 
-      <!-- Featured Image — sits directly above the article body now that
-           the Signal Summary moved below (no gap between image & text). -->
+      <!-- AI "Signal Summary" — ON DEMAND, placed at the TOP of the article
+           (right below the header) so a reader can triage the piece before
+           investing time reading it. Button sits top-right; the card expands
+           directly beneath it. openReading() shows the button; the card stays
+           hidden until clicked (or shows instantly if cached). On-demand
+           avoids redundant summaries on short / lede-heavy pieces and only
+           spends an API call when the reader actually asks for one. -->
+      <div class="mb-8">
+        <div class="cr-tldr-btn-row">
+          <button id="read-tldr-btn" type="button" class="cr-tldr-btn" style="display:none" onclick="requestArticleTldr()">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <span>Generate Summary</span>
+          </button>
+        </div>
+        <aside id="read-tldr" class="cr-tldr mt-4" style="display:none">
+          <div class="cr-tldr-eyebrow">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <span>Signal Summary — Cosmic AI</span>
+          </div>
+          <p id="read-tldr-text" class="cr-tldr-text"></p>
+          <p id="read-tldr-loading" class="cr-tldr-text cr-tldr-loading">Generating summary…</p>
+        </aside>
+      </div>
+
+      <!-- Featured Image -->
       <figure class="mb-8 relative group">
         <div class="absolute -inset-1 bg-gradient-to-r from-primary-container/20 to-tertiary-container/20 blur opacity-20 group-hover:opacity-40 transition duration-1000 rounded-xl"></div>
         <img id="read-img" class="relative w-full rounded-xl border border-outline-variant/20 object-cover" style="max-height:400px;" src="" alt=""/>
@@ -2608,29 +2631,6 @@
         <div class="absolute bottom-0 right-0 w-7 h-7 border-r-2 border-b-2 border-primary-container/40"></div>
         <div id="read-body" class="max-w-2xl mx-auto space-y-6 text-lg leading-relaxed text-on-surface/90 font-light font-body">
           <!-- Injected by JS -->
-        </div>
-
-        <!-- AI "Signal Summary" — ON DEMAND, sits INSIDE the article frame,
-             bottom-right, aligned to the text column. openReading() shows the
-             small button; the card stays hidden until the reader clicks it
-             (or shows instantly if cached). On-demand avoids redundant
-             summaries on short / lede-heavy pieces and only spends an API
-             call when the reader actually asks for one. -->
-        <div class="max-w-2xl mx-auto">
-          <div class="cr-tldr-btn-row mt-8">
-            <button id="read-tldr-btn" type="button" class="cr-tldr-btn" style="display:none" onclick="requestArticleTldr()">
-              <span class="material-symbols-outlined">auto_awesome</span>
-              <span>Generate Summary</span>
-            </button>
-          </div>
-          <aside id="read-tldr" class="cr-tldr mt-4" style="display:none">
-            <div class="cr-tldr-eyebrow">
-              <span class="material-symbols-outlined">auto_awesome</span>
-              <span>Signal Summary — Cosmic AI</span>
-            </div>
-            <p id="read-tldr-text" class="cr-tldr-text"></p>
-            <p id="read-tldr-loading" class="cr-tldr-text cr-tldr-loading">Generating summary…</p>
-          </aside>
         </div>
       </article>
 
