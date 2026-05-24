@@ -562,9 +562,15 @@
      sector cards). Centered in the map area to the right of the 256px nav. */
   .cr-map-hint { display: none; }
   @media (min-width: 768px) {
+    /* Nudge the whole desktop galaxy down a touch to make room for the
+       hint at the top. Shifting the container (not each planet) keeps the
+       constellation SVG aligned — it lives inside and moves with it, and
+       drawConstellationLines measures positions relative to this container,
+       so the line math is unaffected. */
+    #desktop-galaxy { transform: translateY(18px); }
     .cr-map-hint {
       position: absolute;
-      bottom: 1.9rem;
+      top: 5.5rem;
       left: calc(50% + 8rem);
       transform: translateX(-50%);
       display: flex;
