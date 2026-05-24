@@ -65,6 +65,7 @@ t('Drop gaming',     cat({ title: 'PlayStation rumored specs leak', source: 'Ars
 t('Drop Transformers movie (Space.com)', cat({ title: "The original (and best) 'Transformers' movie is rolling back out into theaters for its 40th anniversary", excerpt: 'Relive the trauma when Autobots and Decepticons reassemble in this animated cult classic.', source: 'Space.com' }), 'DROP:off-theme');
 t('Drop Star Wars day fluff',  cat({ title: 'Celebrate Star Wars day with these fan favorites', source: 'Space.com' }), 'DROP:off-theme');
 t('Drop sci-fi TV recap',      cat({ title: 'The best sci-fi tv series to stream this month', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop sci-fi book listicle', cat({ title: '15 sci-fi books to read before you die', excerpt: 'Put these science fiction gems on your bucket list.', source: 'Space.com' }), 'DROP:off-theme');
 
 // ── Exclusion must NOT fire when a real core topic is present ─────────────
 t('Keep space despite "recipe"',  cat({ title: 'A recipe for finding exoplanets in Hubble data', source: 'NASA' }), 'Planets');

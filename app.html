@@ -2056,7 +2056,7 @@
         Telemetry suggests a 70% probability of successful stage separation. New heat shield tile configurations are being finalized at Starbase...
       </p>
       <div class="flex items-center gap-4">
-        <button onclick="navigate('feed')" class="px-4 py-2 bg-primary-container/20 text-primary font-headline text-[10px] tracking-widest uppercase border border-primary/30 rounded hover:bg-primary-container/40 transition-colors">
+        <button onclick="openPrioritySignal()" class="px-4 py-2 bg-primary-container/20 text-primary font-headline text-[10px] tracking-widest uppercase border border-primary/30 rounded hover:bg-primary-container/40 transition-colors">
           Access Data
         </button>
         <a id="priority-link" href="#" target="_blank" class="px-4 py-2 text-on-surface-variant font-headline text-[10px] tracking-widest uppercase hover:text-on-surface transition-colors">
@@ -2847,6 +2847,7 @@ const EXCLUDE_KEYWORDS = [
   'comic con','cosplay','blu-ray','dvd','box set','franchise','sequel',
   'prequel','reboot','trailer','soundtrack','star wars','star trek',
   'transformers','godzilla','marvel','dc comics','superhero',
+  'sci-fi','science fiction','space opera','best books','reading list',
 ];
 
 // Classify an article from its text + source. Returns:
@@ -3745,14 +3746,32 @@ async function loadLiveFeeds() {
   }
 }
 
+// The article currently shown in the Priority Signal panel. Kept as an object
+// reference (not an index) because the articles array is re-merged/re-sorted
+// as feeds stream in, so a stored index would go stale.
+let _prioritySignalArticle = null;
+
 function updatePrioritySignal(a) {
   if (!a) return;
+  _prioritySignalArticle = a;
   const titleEl = document.getElementById('priority-title');
   const bodyEl  = document.getElementById('priority-body');
   const linkEl  = document.getElementById('priority-link');
   if (titleEl) titleEl.textContent = a.title;
   if (bodyEl)  bodyEl.textContent  = a.excerpt.slice(0, 200) + (a.excerpt.length > 200 ? '…' : '');
   if (linkEl)  linkEl.href         = a.read_more;
+}
+
+// "Access Data" → open the specific Priority Signal article (not the whole
+// feed). Resolve its current index by identity, then by stable read_more URL;
+// fall back to the feed only if the article is no longer present.
+function openPrioritySignal() {
+  const a = _prioritySignalArticle;
+  if (!a) { navigate('feed'); return; }
+  let idx = articles.indexOf(a);
+  if (idx === -1 && a.read_more) idx = articles.findIndex(x => x.read_more === a.read_more);
+  if (idx === -1) { navigate('feed'); return; }
+  openArticle(idx);
 }
 
 // ── og:image enrichment — fills in images for feeds (e.g. SpaceNews) that omit them from RSS ──
