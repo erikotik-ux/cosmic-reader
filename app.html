@@ -556,6 +556,39 @@
   .phys-wrap { transition: transform 0.4s ease; }
   .planet-node:hover .phys-wrap { transform: scale(1.08); }
   .planet-node:hover .phys-wrap .planet-sphere { transform: none; }
+  /* Subtle affordance hint telling users the galaxy sectors are clickable.
+     Isolated, pointer-events:none element — never affects planet hit-testing
+     or the constellation-line math. Desktop only (mobile shows tappable
+     sector cards). Centered in the map area to the right of the 256px nav. */
+  .cr-map-hint { display: none; }
+  @media (min-width: 768px) {
+    .cr-map-hint {
+      position: absolute;
+      bottom: 1.9rem;
+      left: calc(50% + 8rem);
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(0, 240, 255, 0.55);
+      pointer-events: none;
+      z-index: 5;
+      white-space: nowrap;
+      animation: cr-map-hint-pulse 3.6s ease-in-out infinite;
+    }
+  }
+  .cr-map-hint .material-symbols-outlined { font-size: 14px; }
+  @keyframes cr-map-hint-pulse {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 0.8; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cr-map-hint { animation: none; }
+  }
   .hud-card { transition: opacity 0.3s ease, transform 0.3s ease; }
   .article-img { transition: transform 0.7s ease; }
   article:hover .article-img { transform: scale(1.05); }
@@ -1093,6 +1126,12 @@
   <!-- Ambient glows -->
   <div class="absolute top-1/4 left-20 w-96 h-96 bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
   <div class="absolute bottom-1/4 right-20 w-96 h-96 bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <!-- Subtle interactivity hint (desktop). Isolated, non-interactive. -->
+  <div class="cr-map-hint" aria-hidden="true">
+    <span class="material-symbols-outlined">ads_click</span>
+    Select a sector to decode its latest signals
+  </div>
 
   <!-- Galaxy Map content -->
   <div class="relative w-full h-full flex items-center justify-center pointer-events-none md:pl-64">
