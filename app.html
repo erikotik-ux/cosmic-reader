@@ -570,8 +570,12 @@
     #desktop-galaxy { transform: translateY(18px); }
     .cr-map-hint {
       position: absolute;
-      top: 5.5rem;
-      left: calc(50% + 8rem);
+      /* Inside #desktop-galaxy: 44.6% = mean of the five planet centers, so
+         the hint sits over the visual center of the planet composition.
+         top accounts for the galaxy's 18px downward shift (lands just below
+         the header). */
+      top: 3.4rem;
+      left: 44.6%;
       transform: translateX(-50%);
       display: flex;
       align-items: center;
@@ -1133,12 +1137,6 @@
   <div class="absolute top-1/4 left-20 w-96 h-96 bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
   <div class="absolute bottom-1/4 right-20 w-96 h-96 bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-  <!-- Subtle interactivity hint (desktop). Isolated, non-interactive. -->
-  <div class="cr-map-hint" aria-hidden="true">
-    <span class="material-symbols-outlined">ads_click</span>
-    Select a sector to decode its latest signals
-  </div>
-
   <!-- Galaxy Map content -->
   <div class="relative w-full h-full flex items-center justify-center pointer-events-none md:pl-64">
 
@@ -1156,6 +1154,15 @@
         <line id="cl5" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
         <line id="cl6" stroke="#00f0ff" stroke-width="0.65" stroke-opacity="0.28" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
+
+      <!-- Subtle interactivity hint. Lives INSIDE the galaxy so it shares the
+           planets' coordinate system and centers on their composition (their
+           centers average ~44.6%), not the page. Isolated + pointer-events:none;
+           not a .planet-node, so the constellation math ignores it. -->
+      <div class="cr-map-hint" aria-hidden="true">
+        <span class="material-symbols-outlined">ads_click</span>
+        Select a sector to decode its latest signals
+      </div>
 
       <!-- PLANET: Planets & Exoplanets (Upper Left) -->
       <div class="planet-node absolute pointer-events-auto" style="top:calc(28% - 88px); left:calc(27% - 88px);" onclick="openCategoryArticle('Planets')">
