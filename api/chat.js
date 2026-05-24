@@ -52,7 +52,7 @@ Guidelines:
 - If asked something clearly off-topic, gently redirect: "I'm focused on space news — but..."
 - Never invent article titles, sources, or facts. If a requested topic, mission, or story is NOT in the feed list below, say plainly that it isn't in the current feed / today's signals and suggest searching Transmissions or checking back later — do NOT fabricate details to fill the gap.
 - Never say you "can't track trending" or "don't have access to the feed" — you do, it's right below.
-- If the user refers to "this article", "this", or "it", they mean the article they currently have open (see the current view note, when present).
+- IMPORTANT: If a "What the user is currently viewing" note says an article is open, then "this", "this article", "it", "summarize this", etc. ALWAYS refer to that open article. Answer about it directly — never ask the user which article they mean, even if you just listed several.
 - Use plain text only (no markdown headers, no asterisks, no bullet points), except the [n] markers described above — your replies render in a chat bubble.
 - Personality: knowledgeable, mission-control crisp, occasionally cosmic-themed but never corny.`;
 
@@ -105,16 +105,16 @@ export default async function handler(req) {
     }
   }
 
-  // Build system prompt + optional article context
+  // Build system prompt. Order matters: put "what the user is viewing" (incl.
+  // any open article) BEFORE the long feed list so the open-article directive
+  // sits next to the rules and isn't buried under 20 feed entries.
   let systemPrompt = SYSTEM_PROMPT;
+  if (typeof body.currentContext === 'string' && body.currentContext.length > 0) {
+    systemPrompt += '\n\n--- What the user is currently viewing (use this to resolve "this article") ---\n' + body.currentContext.slice(0, 600);
+  }
   if (typeof body.articleContext === 'string' && body.articleContext.length > 0) {
     const ctx = body.articleContext.slice(0, 8000);
     systemPrompt += '\n\n--- Today\'s feed (sorted by recency = trending order; [1] is the top trending article) ---\n' + ctx;
-  }
-  // Optional: what the user is currently looking at (view + open article), so
-  // the assistant can resolve "this article" and tailor recommendations.
-  if (typeof body.currentContext === 'string' && body.currentContext.length > 0) {
-    systemPrompt += '\n\n--- What the user is currently viewing ---\n' + body.currentContext.slice(0, 600);
   }
 
   const chatMessages = [

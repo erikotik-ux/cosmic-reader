@@ -6617,8 +6617,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if ((view === 'detail' || view === 'reading') && typeof currentArticle !== 'undefined') {
         const a = _liveArticles()[currentArticle];
         if (a && a.title) {
-          s += ' They currently have this article open: "' + String(a.title).slice(0, 160) +
-               '" — ' + (a.source || 'Unknown source') + '. "This article"/"this"/"it" refers to it.';
+          // Include the feed [n] index of the open article so the AI can both
+          // reference it (clickable chip) and resolve "this" unambiguously.
+          const ctx = _ctxList();
+          let n = ctx.indexOf(a);
+          if (n === -1 && a.read_more) n = ctx.findIndex(x => x.read_more === a.read_more);
+          const tag = n >= 0 ? ('[' + (n + 1) + '] ') : '';
+          s += ' RIGHT NOW they have this exact article OPEN and are reading it: ' + tag +
+               '"' + String(a.title).slice(0, 180) + '" — ' + (a.source || 'Unknown source') + '.' +
+               ' If they say "this", "this article", "it", "summarize this", or anything similar, they mean THIS open article above — answer about it directly and do NOT ask them which article they mean, even if other articles were just listed.';
         }
       }
       return s;
