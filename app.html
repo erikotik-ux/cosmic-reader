@@ -4530,23 +4530,36 @@ function navigate(viewName, opts) {
     bc.classList.toggle('transition-colors', isArticleView);
   }
 
-  if (viewName === 'reading') {
-    setupReadingProgress();
-  }
-  if (viewName === 'map') {
-    setTimeout(drawConstellationLines, 50);
-    setTimeout(drawMobileConstellationLines, 80);
-  }
-  if (viewName === 'saved') {
-    renderSavedStories();
-  }
-  if (viewName === 'feed') {
-    populateSourceFilter();
-    updatePaginationUI();
-  }
-  if (viewName === 'trending') {
-    renderTrending();
-  }
+  // Defer per-view work until AFTER the browser has painted the view swap.
+  // Running these inside the click handler blocked the next paint (INP):
+  // the click couldn't visibly do anything until the render work finished.
+  // Double requestAnimationFrame guarantees the new view is painted first,
+  // then the content/layout work runs on the following frame. This does NOT
+  // change any visuals or animation behavior — only WHEN the work runs.
+  // (Constellation drawing also needs the map laid out first, which a
+  // post-paint frame guarantees just as the old setTimeout did.)
+  _afterPaint(() => {
+    if (viewName === 'reading') {
+      setupReadingProgress();
+    } else if (viewName === 'map') {
+      drawConstellationLines();
+      drawMobileConstellationLines();
+    } else if (viewName === 'saved') {
+      renderSavedStories();
+    } else if (viewName === 'feed') {
+      populateSourceFilter();
+      updatePaginationUI();
+    } else if (viewName === 'trending') {
+      renderTrending();
+    }
+  });
+}
+
+// Run fn after the next paint. Two rAFs: the first fires before the upcoming
+// paint, the second on the frame after it — so by the time fn runs the view
+// swap is on screen and layout is settled (safe for getBoundingClientRect).
+function _afterPaint(fn) {
+  requestAnimationFrame(() => requestAnimationFrame(fn));
 }
 
 // ── Back navigation ───────────────────────────────────────
