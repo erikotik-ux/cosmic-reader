@@ -562,19 +562,21 @@
      sector cards). Centered in the map area to the right of the 256px nav. */
   .cr-map-hint { display: none; }
   @media (min-width: 768px) {
-    /* Nudge the whole desktop galaxy down a touch to make room for the
-       hint at the top. Shifting the container (not each planet) keeps the
-       constellation SVG aligned — it lives inside and moves with it, and
-       drawConstellationLines measures positions relative to this container,
-       so the line math is unaffected. */
-    #desktop-galaxy { transform: translateY(18px); }
+    /* Shift the whole desktop galaxy (planets + constellation SVG) down so it
+       clears the top hint. Transforming the container keeps the lines aligned
+       — the SVG lives inside and moves with it, and drawConstellationLines
+       measures relative to this container, so the math is unaffected. */
+    #desktop-galaxy { transform: translateY(33px); }
     .cr-map-hint {
       position: absolute;
       /* Inside #desktop-galaxy: 44.6% = mean of the five planet centers, so
          the hint sits over the visual center of the planet composition.
-         top clears the ~72px fixed header (plus the galaxy's 18px shift →
-         ~106px from the top of the viewport). */
-      top: 5.5rem;
+         NOTE: the hint also inherits the galaxy's translateY above, so `top`
+         is counter-set to keep the hint visually fixed (~105px from the
+         viewport top, clearing the ~72px header) while the planets shift
+         down. If you change the translateY, adjust this top by the same delta
+         in the opposite direction to keep the hint in place. */
+      top: 4.5rem;
       left: 44.6%;
       transform: translateX(-50%);
       display: flex;
