@@ -572,9 +572,9 @@
       position: absolute;
       /* Inside #desktop-galaxy: 44.6% = mean of the five planet centers, so
          the hint sits over the visual center of the planet composition.
-         top accounts for the galaxy's 18px downward shift (lands just below
-         the header). */
-      top: 3.4rem;
+         top clears the ~72px fixed header (plus the galaxy's 18px shift →
+         ~106px from the top of the viewport). */
+      top: 5.5rem;
       left: 44.6%;
       transform: translateX(-50%);
       display: flex;
