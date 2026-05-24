@@ -61,9 +61,16 @@ t('Drop celebrity',  cat({ title: 'Celebrity red carpet looks from the grammy aw
 t('Drop recipe',     cat({ title: 'The best recipe for holiday cookies', source: 'Ars Technica' }), 'DROP:off-theme');
 t('Drop gaming',     cat({ title: 'PlayStation rumored specs leak', source: 'Ars Technica' }), 'DROP:off-theme');
 
+// ── Entertainment / sci-fi media from space sources gets dropped ──────────
+t('Drop Transformers movie (Space.com)', cat({ title: "The original (and best) 'Transformers' movie is rolling back out into theaters for its 40th anniversary", excerpt: 'Relive the trauma when Autobots and Decepticons reassemble in this animated cult classic.', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop Star Wars day fluff',  cat({ title: 'Celebrate Star Wars day with these fan favorites', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop sci-fi TV recap',      cat({ title: 'The best sci-fi tv series to stream this month', source: 'Space.com' }), 'DROP:off-theme');
+
 // ── Exclusion must NOT fire when a real core topic is present ─────────────
 t('Keep space despite "recipe"',  cat({ title: 'A recipe for finding exoplanets in Hubble data', source: 'NASA' }), 'Planets');
 t('Keep AI despite "casino"',     cat({ title: 'How machine learning detects casino fraud', source: 'Ars Technica' }), 'AI & Tech');
+t('Keep real story despite "movie"', cat({ title: 'NASA releases a stunning movie of the Mars Perseverance landing', source: 'Space.com' }), 'Planets');
+t('Keep launch despite "trailer"',   cat({ title: 'SpaceX rocket spotted on a trailer ahead of Falcon 9 launch', source: 'Space.com' }), 'Missions');
 
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
