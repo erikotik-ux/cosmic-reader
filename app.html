@@ -3049,6 +3049,19 @@ function cleanArticleBody(text) {
   if (!text) return text;
   let t = text;
 
+  // 0. Leading image-credit / caption line. Some feeds (notably NASA) start
+  //    the body with a credit such as "Credit: NASA", "Image credit:
+  //    ESA/Hubble", or "Photo: SpaceX" before the real article begins. Strip
+  //    ONLY a short standalone leading credit line (must end at a line break),
+  //    so genuine prose that merely mentions a credit is never touched. Loops
+  //    in case two stacked credit lines lead the body.
+  let _creditPrev;
+  do {
+    _creditPrev = t;
+    t = t.replace(/^\s*\(?\s*(?:(?:image|photo|photograph|illustration|video|art)\s+)?credits?\s*[:\-–—][^\n]{1,80}\r?\n+/i, '');
+  } while (t !== _creditPrev);
+  t = t.trim();
+
   // 1. Leading nav block → the real content follows a "Description" marker.
   //    Only strip if the lead-in clearly looks like Photojournal cruft.
   const d = t.match(/\bDescription\s+/);
