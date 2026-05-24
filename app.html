@@ -6340,6 +6340,54 @@ document.addEventListener('DOMContentLoaded', () => {
     color: #ffb5a0;
     font-size: 0.78rem;
   }
+  /* Retry button inside an error bubble */
+  .cr-chat-retry {
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    margin-left: 0.5rem; padding: 0.1rem 0.5rem;
+    background: rgba(255,181,160,0.12); border: 1px solid rgba(255,181,160,0.4);
+    color: #ffb5a0; border-radius: 6px; font-size: 0.7rem; cursor: pointer;
+    font-family: inherit; vertical-align: middle;
+  }
+  .cr-chat-retry:hover { background: rgba(255,181,160,0.22); }
+  .cr-chat-retry .material-symbols-outlined { font-size: 13px; }
+
+  /* Inline [n] reference chip inside an assistant reply */
+  .cr-chat-refchip {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 1.15rem; height: 1.15rem; padding: 0 0.25rem; margin: 0 1px;
+    background: rgba(0,240,255,0.12); border: 1px solid rgba(0,240,255,0.4);
+    color: #00f0ff; border-radius: 5px; font-size: 0.7rem; font-weight: 600;
+    cursor: pointer; font-family: inherit; vertical-align: baseline; line-height: 1;
+  }
+  .cr-chat-refchip:hover { background: rgba(0,240,255,0.25); }
+
+  /* Per-article action rows beneath an assistant reply */
+  .cr-chat-refs {
+    align-self: flex-start; max-width: 92%;
+    display: flex; flex-direction: column; gap: 0.4rem;
+    margin: -0.2rem 0 0.2rem;
+  }
+  .cr-chat-ref {
+    background: rgba(0,240,255,0.04); border: 1px solid rgba(0,240,255,0.16);
+    border-radius: 10px; padding: 0.5rem 0.6rem;
+  }
+  .cr-chat-ref-head { font-size: 0.74rem; line-height: 1.35; margin-bottom: 0.4rem; }
+  .cr-chat-ref-idx { color: #00f0ff; font-weight: 700; }
+  .cr-chat-ref-title { color: #dbfcff; }
+  .cr-chat-ref-src {
+    color: rgba(219,252,255,0.45); text-transform: uppercase;
+    letter-spacing: 0.04em; font-size: 0.62rem;
+  }
+  .cr-chat-ref-acts { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .cr-chat-ref-act {
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    padding: 0.2rem 0.5rem; border-radius: 6px;
+    background: rgba(0,240,255,0.08); border: 1px solid rgba(0,240,255,0.25);
+    color: #00f0ff; font-size: 0.68rem; cursor: pointer;
+    font-family: inherit; text-decoration: none;
+  }
+  .cr-chat-ref-act:hover { background: rgba(0,240,255,0.18); border-color: #00f0ff; }
+  .cr-chat-ref-act .material-symbols-outlined { font-size: 13px; }
 
   /* Typing indicator */
   .cr-chat-typing {
@@ -6523,23 +6571,34 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── Article context for the AI ──────────────────────────────
-  // Builds a compact summary of today's feed (article index) the model
-  // can reference. Capped at 20 articles + 120-char excerpts.
+  // The live `articles` array is a top-level binding in the main page script —
+  // visible here via the shared global lexical scope (window.articles is
+  // undefined because top-level `const` doesn't attach to window).
+  function _liveArticles() {
+    if (typeof articles !== 'undefined' && Array.isArray(articles)) return articles;
+    if (Array.isArray(window.articles)) return window.articles;
+    return [];
+  }
+
+  // The exact list (and order) the AI sees, capped at 20. Sorted by recency so
+  // [1] lines up with the top of the Trending Signals view. This SAME list maps
+  // the [n] markers in the AI's replies back to real articles for the action
+  // buttons, so context-building and ref-resolution never disagree.
+  function _ctxList() {
+    const list = _liveArticles();
+    if (list.length === 0) return [];
+    const sorted = list.slice().sort((a, b) => {
+      const ta = new Date(a.pub_date || a.pubDate || a.date || 0).getTime() || 0;
+      const tb = new Date(b.pub_date || b.pubDate || b.date || 0).getTime() || 0;
+      return tb - ta;
+    });
+    return sorted.slice(0, 20);
+  }
+
+  // Compact feed index the model can reference (title + source + short excerpt).
   function _buildArticleContext() {
     try {
-      // `articles` is a top-level const in the main page script — visible via
-      // lexical scope from inside this IIFE. (window.articles is undefined
-      // because top-level `const` doesn't attach to window.)
-      const list = (typeof articles !== 'undefined' && Array.isArray(articles)) ? articles
-                  : (Array.isArray(window.articles) ? window.articles : []);
-      if (list.length === 0) return '';
-      // Sort by recency so "top trending" lines up with the Trending Signals view.
-      const sorted = list.slice().sort((a, b) => {
-        const ta = new Date(a.pub_date || a.pubDate || a.date || 0).getTime() || 0;
-        const tb = new Date(b.pub_date || b.pubDate || b.date || 0).getTime() || 0;
-        return tb - ta;
-      });
-      return sorted.slice(0, 20).map((a, i) =>
+      return _ctxList().map((a, i) =>
         '[' + (i + 1) + '] "' + (a.title || '').slice(0, 120) +
         '" — ' + (a.source || 'Unknown') +
         ' (' + (a.category || 'Other') + '): ' +
@@ -6547,6 +6606,63 @@ document.addEventListener('DOMContentLoaded', () => {
       ).join('\n');
     } catch(e) { return ''; }
   }
+
+  // Tells the AI what the user is currently looking at, so it can resolve
+  // "this article" and tailor answers to the current screen.
+  function _buildCurrentContext() {
+    try {
+      const view = (typeof currentView !== 'undefined') ? currentView : '';
+      const labels = { map: 'Galaxy Map', feed: 'My Feed', detail: 'an article (Signal Detail)', reading: 'an article (Full Transmission)', saved: 'Saved Stories', trending: 'Trending Signals' };
+      let s = 'The user is on the ' + (labels[view] || view || 'app') + ' view.';
+      if ((view === 'detail' || view === 'reading') && typeof currentArticle !== 'undefined') {
+        const a = _liveArticles()[currentArticle];
+        if (a && a.title) {
+          s += ' They currently have this article open: "' + String(a.title).slice(0, 160) +
+               '" — ' + (a.source || 'Unknown source') + '. "This article"/"this"/"it" refers to it.';
+        }
+      }
+      return s;
+    } catch(e) { return ''; }
+  }
+
+  // ── Article references in AI replies → clickable actions ─────
+  // The model cites feed articles with [n] markers (see api/chat.js). These
+  // helpers turn those markers into Open / Save / View original actions.
+  // Pure, dependency-free, and unit-tested in tests/chat-refs.test.js.
+  function _parseRefs(text) {
+    const out = [];
+    const re = /\[(\d{1,2})\]/g;
+    let m;
+    while ((m = re.exec(String(text || '')))) {
+      const n = parseInt(m[1], 10);
+      if (n >= 1 && n <= 20 && out.indexOf(n) === -1) out.push(n);
+    }
+    return out;
+  }
+
+  // Map a 1-based [n] marker → index in the live `articles` array (or -1).
+  function _resolveRefIndex(n) {
+    const ctx = _ctxList();
+    const a = ctx[n - 1];
+    if (!a) return -1;
+    const list = _liveArticles();
+    let i = list.indexOf(a);
+    if (i === -1 && a.read_more) i = list.findIndex(x => x.read_more === a.read_more);
+    return i;
+  }
+
+  // Action handlers exposed for the inline chips / action rows.
+  window.crChatOpenRef = function(n) {
+    const i = _resolveRefIndex(n);
+    if (i < 0) return;
+    crChatClose();
+    if (typeof openArticle === 'function') openArticle(i);
+  };
+  window.crChatSaveRef = function(n) {
+    const i = _resolveRefIndex(n);
+    if (i < 0) return;
+    if (typeof saveStory === 'function') saveStory(i);
+  };
 
   // ── Render ─────────────────────────────────────────────────
   function _renderEmpty() {
@@ -6556,20 +6672,64 @@ document.addEventListener('DOMContentLoaded', () => {
       '  <h4>Cosmic AI Operator</h4>' +
       '  <p>Ask about today\'s headlines, get a summary, or explore a space topic.</p>' +
       '  <div class="cr-chat-suggestions">' +
-      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="Summarize today\'s top headlines in 3 bullet points.">' +
+      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="What should I read first in 5 minutes? Give me a short reading order from today\'s feed.">' +
+      '      <span class="material-symbols-outlined">schedule</span>' +
+      '      What should I read first in 5 minutes?' +
+      '    </button>' +
+      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="Explain the most important science story in today\'s feed simply.">' +
+      '      <span class="material-symbols-outlined">school</span>' +
+      '      Explain the most important science story simply' +
+      '    </button>' +
+      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="Summarize today\'s top headlines.">' +
       '      <span class="material-symbols-outlined">summarize</span>' +
       '      Summarize today\'s top headlines' +
       '    </button>' +
-      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="Pick one article from today\'s feed that I should read first, and tell me why.">' +
-      '      <span class="material-symbols-outlined">recommend</span>' +
-      '      Recommend one to read first' +
-      '    </button>' +
-      '    <button class="cr-chat-suggest-btn" onclick="crChatSuggest(this.dataset.q)" data-q="What\'s the latest on Artemis 3?">' +
-      '      <span class="material-symbols-outlined">rocket_launch</span>' +
-      '      What\'s new with Artemis 3?' +
-      '    </button>' +
       '  </div>' +
       '</div>';
+  }
+
+  // Render an assistant bubble: escape text, turn resolvable [n] markers into
+  // inline clickable chips, and append an action row (Open / Save / View
+  // original) for each referenced article that still exists in the feed.
+  function _renderAssistant(content) {
+    let safe = _escapeHtml(content);
+    // Inline [n] → clickable chip, but only when it resolves to a real article.
+    safe = safe.replace(/\[(\d{1,2})\]/g, function(full, d) {
+      const n = parseInt(d, 10);
+      if (_resolveRefIndex(n) === -1) return full; // leave stray markers as text
+      return '<button class="cr-chat-refchip" type="button" onclick="crChatOpenRef(' + n +
+             ')" title="Open this signal">[' + n + ']</button>';
+    });
+    let bubble = '<div class="cr-chat-msg assistant">' + safe + '</div>';
+
+    const refs = _parseRefs(content).filter(n => _resolveRefIndex(n) !== -1).slice(0, 5);
+    if (refs.length) {
+      const ctx = _ctxList();
+      let rows = '';
+      refs.forEach(n => {
+        const a = ctx[n - 1];
+        if (!a) return;
+        const title = _escapeHtml((a.title || '').slice(0, 90));
+        const src   = _escapeHtml(a.source || '');
+        const url   = /^https?:\/\//i.test(a.read_more || '') ? _escapeHtml(a.read_more) : '';
+        const orig  = url
+          ? '<a class="cr-chat-ref-act" href="' + url + '" target="_blank" rel="noopener">' +
+            '<span class="material-symbols-outlined">open_in_new</span>View original</a>'
+          : '';
+        rows += '<div class="cr-chat-ref">' +
+          '<div class="cr-chat-ref-head"><span class="cr-chat-ref-idx">[' + n + ']</span> ' +
+          '<span class="cr-chat-ref-title">' + title + '</span>' +
+          (src ? ' <span class="cr-chat-ref-src">' + src + '</span>' : '') + '</div>' +
+          '<div class="cr-chat-ref-acts">' +
+          '<button class="cr-chat-ref-act" type="button" onclick="crChatOpenRef(' + n + ')">' +
+          '<span class="material-symbols-outlined">open_in_full</span>Open signal</button>' +
+          '<button class="cr-chat-ref-act" type="button" onclick="crChatSaveRef(' + n + ')">' +
+          '<span class="material-symbols-outlined">bookmark_add</span>Save</button>' +
+          orig + '</div></div>';
+      });
+      if (rows) bubble += '<div class="cr-chat-refs">' + rows + '</div>';
+    }
+    return bubble;
   }
 
   function _renderMessages() {
@@ -6581,10 +6741,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     let html = '';
     chatHistory.forEach(m => {
-      const cls = m.role === 'user' ? 'user'
-                : m.role === 'error' ? 'assistant error'
-                : 'assistant';
-      html += '<div class="cr-chat-msg ' + cls + '">' + _escapeHtml(m.content) + '</div>';
+      if (m.role === 'user') {
+        html += '<div class="cr-chat-msg user">' + _escapeHtml(m.content) + '</div>';
+      } else if (m.role === 'error') {
+        html += '<div class="cr-chat-msg assistant error">' + _escapeHtml(m.content) +
+                '<button class="cr-chat-retry" type="button" onclick="crChatRetry()">' +
+                '<span class="material-symbols-outlined">refresh</span>Retry</button></div>';
+      } else {
+        html += _renderAssistant(m.content);
+      }
     });
     if (isSending) {
       html += '<div class="cr-chat-typing" aria-label="Cosmic AI is typing">' +
@@ -6644,7 +6809,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e && e.preventDefault) e.preventDefault();
     if (isSending) return;
     const input = document.getElementById('cr-chat-input');
-    const sendBtn = document.getElementById('cr-chat-send-btn');
     if (!input) return;
     const text = (input.value || '').trim();
     if (!text) return;
@@ -6659,18 +6823,41 @@ document.addEventListener('DOMContentLoaded', () => {
     input.value = '';
     crChatAutosize(input);
 
+    await _runChatRequest();
+  };
+
+  // Retry after an error: drop the trailing error bubble and re-run the
+  // request against the existing history (the user's last message is still
+  // there). Graceful recovery without retyping.
+  window.crChatRetry = async function() {
+    if (isSending) return;
+    if (chatHistory.length && chatHistory[chatHistory.length - 1].role === 'error') {
+      chatHistory.pop();
+    }
+    if (!chatHistory.some(m => m.role === 'user')) return;
+    _persist();
+    await _runChatRequest();
+  };
+
+  // Shared request + stream runner. Assumes the user's message is already in
+  // chatHistory. Used by both send and retry.
+  async function _runChatRequest() {
+    const sendBtn = document.getElementById('cr-chat-send-btn');
+
     // Render + show typing
     isSending = true;
     if (sendBtn) sendBtn.disabled = true;
     _renderMessages();
 
     try {
-      // Build the messages payload (only role+content, no extras)
+      // Build the messages payload (only role+content, no extras) plus the
+      // feed index and what the user is currently viewing.
       const payload = {
         messages: chatHistory
           .filter(m => m.role === 'user' || m.role === 'assistant')
           .map(m => ({ role: m.role, content: m.content })),
-        articleContext: _buildArticleContext()
+        articleContext: _buildArticleContext(),
+        currentContext: _buildCurrentContext()
       };
 
       const res = await fetch('/api/chat', {
@@ -6763,7 +6950,7 @@ document.addEventListener('DOMContentLoaded', () => {
       _persist();
       _renderMessages();
     }
-  };
+  }
 
   // ── ESC to close ───────────────────────────────────────────
   document.addEventListener('keydown', function(e) {
