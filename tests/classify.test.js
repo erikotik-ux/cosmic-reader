@@ -64,8 +64,9 @@ t('Drop gaming',     cat({ title: 'PlayStation rumored specs leak', source: 'Ars
 // ── Entertainment / sci-fi media from space sources gets dropped ──────────
 t('Drop Transformers movie (Space.com)', cat({ title: "The original (and best) 'Transformers' movie is rolling back out into theaters for its 40th anniversary", excerpt: 'Relive the trauma when Autobots and Decepticons reassemble in this animated cult classic.', source: 'Space.com' }), 'DROP:off-theme');
 t('Drop Star Wars day fluff',  cat({ title: 'Celebrate Star Wars day with these fan favorites', source: 'Space.com' }), 'DROP:off-theme');
-t('Drop sci-fi TV recap',      cat({ title: 'The best sci-fi tv series to stream this month', source: 'Space.com' }), 'DROP:off-theme');
-t('Drop sci-fi book listicle', cat({ title: '15 sci-fi books to read before you die', excerpt: 'Put these science fiction gems on your bucket list.', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop TV series recap',      cat({ title: 'The best tv series to stream this month', source: 'Space.com' }), 'DROP:off-theme');
+// Sci-fi BOOKS are on-theme for Cosmic Reader (an allowed exception) — must NOT be dropped.
+t('Keep sci-fi book listicle', cat({ title: '15 sci-fi books to read before you die', excerpt: 'Put these science fiction gems on your bucket list.', source: 'Space.com' }), 'Missions');
 
 // ── Exclusion must NOT fire when a real core topic is present ─────────────
 t('Keep space despite "recipe"',  cat({ title: 'A recipe for finding exoplanets in Hubble data', source: 'NASA' }), 'Planets');
