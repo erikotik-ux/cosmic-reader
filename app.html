@@ -3577,7 +3577,12 @@ async function fetchSpaceNewsFeed() {
       const date      = post.date
         ? new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : '';
-      const category  = guessCategory(title, '', excerpt) || 'Missions';
+      // Same centralized classifier as the other feed paths. SpaceNews is a
+      // pure space source (default → Missions), so this preserves prior
+      // behavior while keeping all category logic in one place.
+      const _cls = classifyArticle({ title, tags: '', excerpt, source: 'SpaceNews' });
+      if (_cls.excluded) return null;
+      const category  = _cls.category;
       const image     = proxyImg((post.image && post.image.startsWith('http'))
         ? post.image
         : pickFallback(category, title));
