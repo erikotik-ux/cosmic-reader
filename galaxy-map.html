@@ -1400,6 +1400,18 @@ function categorize(title='', desc='') {
   return 'Missions';
 }
 
+// Off-theme exclusion — mirrors app.html's classifyArticle. categorize()
+// always returns a category (defaults to Missions), so we check core-keyword
+// presence separately: drop only when NO core keyword matched AND an exclude
+// keyword is present. Keep EXCLUDE_KEYWORDS in sync with app.html.
+function _hasCoreKeyword(title='', desc='') {
+  const txt = (title + ' ' + desc).toLowerCase();
+  return KEYWORD_CATS.some(({ kw }) => kw.some(w => txt.includes(w)));
+}
+const EXCLUDE_KEYWORDS=['nfl','nba','mlb','nhl','super bowl','world series','premier league','la liga','fifa','touchdown','quarterback','playoff','celebrity','red carpet','box office','grammy','oscars','met gala','reality tv','kardashian','tabloid','gossip','royal family','horoscope','astrology sign','zodiac','recipe','weight loss','skincare','fashion week','coupon','black friday deal','prime day deal','deal of the day','gift guide','discount code','best deals','video game review','playstation','xbox','nintendo switch','gambling','casino','movie','film festival','tv series','tv show','television series','season finale','episode','cartoon','animated','anime','comic book','comic con','cosplay','blu-ray','dvd','box set','franchise','sequel','prequel','reboot','trailer','soundtrack','star wars','star trek','transformers','godzilla','marvel','dc comics','superhero'];
+function _matchesAnyKw(hay,kws){for(const kw of kws){const e=kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');if(new RegExp('\\b'+e+'s?\\b').test(hay))return true;}return false;}
+function isOffThemeArticle(a){if(!a)return false;const hay=((a.title||'')+' '+(a.desc||'')).toLowerCase();return !_hasCoreKeyword(a.title,a.desc)&&_matchesAnyKw(hay,EXCLUDE_KEYWORDS);}
+
 async function fetchFeed(feedObj) {
   // Try Vercel proxy first
   try {
@@ -1444,8 +1456,9 @@ async function getArticles() {
   const results = await Promise.allSettled(FEEDS.map(f => fetchFeed(f)));
   const all = [];
   results.forEach(r => { if (r.status === 'fulfilled') all.push(...r.value); });
-  _articles = all;
-  return all;
+  const clean = all.filter(a => !isOffThemeArticle(a)); // drop off-theme (movies, sports, etc.)
+  _articles = clean;
+  return clean;
 }
 
 // ── Overlay ────────────────────────────────────────────────
