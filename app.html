@@ -2158,19 +2158,19 @@
         </span>
         <span id="hud-launch-cd" class="font-headline text-[11px] tracking-wide text-[#00f0ff] whitespace-nowrap" style="font-variant-numeric:tabular-nums;text-shadow:0 0 10px rgba(0,240,255,0.4);">T-—</span>
       </div>
-      <span id="hud-launch-name" class="font-label text-[9px] text-on-surface-variant block uppercase tracking-tighter truncate mt-0.5"></span>
+      <span id="hud-launch-name" class="font-label text-[8px] md:text-[9px] text-on-surface-variant block uppercase tracking-tighter truncate mt-0.5"></span>
     </div>
     <!-- Local Time + Active Feeds — side by side -->
     <div class="flex gap-2">
       <div class="glass-panel p-3 border border-outline-variant/15 rounded-lg flex-1">
         <span class="font-label text-[10px] text-tertiary/60 uppercase block mb-0.5">Local Time</span>
         <span id="clock" class="font-headline text-base tracking-widest text-[#dbfcff] clock-display">00:00:00</span>
-        <span class="font-label text-[9px] text-on-surface-variant block uppercase tracking-tighter">Local</span>
+        <span class="font-label text-[8px] md:text-[9px] text-on-surface-variant block uppercase tracking-tighter">Local</span>
       </div>
       <div class="glass-panel p-3 border border-outline-variant/15 rounded-lg flex-1">
         <span class="font-label text-[10px] text-secondary/60 uppercase block mb-0.5">Active Feeds</span>
         <span id="hud-feed-count" class="font-headline text-base tracking-widest text-[#ffb5a0]">6</span>
-        <span class="font-label text-[9px] text-on-surface-variant block uppercase tracking-tighter">Online</span>
+        <span class="font-label text-[8px] md:text-[9px] text-on-surface-variant block uppercase tracking-tighter">Online</span>
       </div>
     </div>
   </div>
@@ -2181,19 +2181,19 @@
 <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
   <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
     <span class="material-symbols-outlined" style="font-size:22px">radar</span>
-    <span class="font-label text-[10px] uppercase tracking-widest">Galaxy</span>
+    <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
   </button>
   <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('feed')">
     <span class="material-symbols-outlined" style="font-size:22px">satellite_alt</span>
-    <span class="font-label text-[10px] uppercase tracking-widest">Feed</span>
+    <span class="font-label text-[9px] uppercase tracking-widest">Feed</span>
   </button>
   <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('saved')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-    <span class="font-label text-[10px] uppercase tracking-widest">Saved</span>
+    <span class="font-label text-[9px] uppercase tracking-widest">Saved</span>
   </button>
   <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('trending')">
     <span class="material-symbols-outlined" style="font-size:22px">local_fire_department</span>
-    <span class="font-label text-[10px] uppercase tracking-widest">Trending</span>
+    <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
   </button>
 </nav>
 
@@ -2332,17 +2332,17 @@
           <span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#00363a] text-base">expand_more</span>
         </div>
         <div class="flex items-center py-2 px-1 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/[0.04]">
-          <div class="px-3 text-center">
+          <div class="px-2.5 text-center">
             <div class="text-base font-bold font-headline text-[#00f0ff] leading-none">9</div>
             <div class="mt-1.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Articles</div>
           </div>
           <span class="w-px h-7 bg-[#00f0ff]/20"></span>
-          <div class="px-3 text-center">
+          <div class="px-2.5 text-center">
             <div class="text-base font-bold font-headline text-[#ffb5a0] leading-none">4</div>
             <div class="mt-1.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Topics</div>
           </div>
           <span class="w-px h-7 bg-[#00f0ff]/20"></span>
-          <div class="px-3 text-center">
+          <div class="px-2.5 text-center">
             <div class="flex items-center justify-center h-4">
               <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#00f0ff] animate-pulse" style="animation-duration:3.2s; box-shadow:0 0 8px rgba(0,240,255,0.5)"></span>
             </div>
