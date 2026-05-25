@@ -525,6 +525,17 @@
     .feed-filter-row .cr-foryou-toggle,
     .feed-filter-row .cr-source-filter { display: none !important; }
   }
+  /* Desktop (>1024px): widen the My Feed stats card so its LEFT edge lines up
+     with the For You button in the filter row below. Both the card (hero,
+     justify-between) and the For You + All Sources group (filter row, ml-auto)
+     are right-anchored to the same edge, so matching their widths aligns their
+     left edges. min-width grows the card leftward; space-around spreads the
+     three stats across the wider box. Tune min-width if it over/undershoots.
+     Scoped to >1024px so the 768–1024 hero grid (which already stretches the
+     card to match) is untouched. */
+  @media (min-width: 1025px) {
+    .cr-feed-stats { min-width: 20rem; justify-content: space-around; }
+  }
   .drop-cap-para::first-letter {
     font-size: 3.5rem;
     line-height: 1;
