@@ -1131,7 +1131,7 @@
   <div id="probe-report-panel" class="mt-auto hidden md:block px-5 pb-3 mb-[9px]">
     <div class="flex items-center gap-2 mb-2.5 pb-2.5 border-b border-[#00f0ff]/10">
       <span class="material-symbols-outlined text-[#00f0ff] text-[15px]">satellite_alt</span>
-      <span id="probe-report-title" class="font-headline text-[9px] uppercase tracking-widest text-[#00f0ff]/80">Probe Report</span>
+      <span id="probe-report-title" class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]/80">Probe Report</span>
     </div>
     <div id="probe-report-rows" class="flex flex-col gap-2">
       <div class="text-[10px] text-[#dbfcff]/30 font-body italic">Awaiting probe telemetry…</div>
@@ -1150,7 +1150,7 @@
         <text x="98" y="11" text-anchor="middle" font-size="12" font-family="'Exo 2','Space Grotesk',sans-serif" fill="rgba(219,252,255,0.55)">Scan feeds for the latest signals</text>
       </svg>
     </div>
-    <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
+    <p id="deploy-probe-status" class="text-[10px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
   </div>
   <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent w-[1px] h-3/4"></div>
 </aside>
@@ -2152,25 +2152,25 @@
     <!-- Next Launch countdown (replaces the old Sys. Integrity bar) -->
     <div id="hud-launch" class="glass-panel px-3 py-2 border border-outline-variant/15 rounded-lg" style="display:none">
       <div class="flex items-center justify-between gap-2">
-        <span class="flex items-center gap-1 font-label text-[9px] text-primary/60 uppercase whitespace-nowrap">
+        <span class="flex items-center gap-1 font-label text-[10px] text-primary/60 uppercase whitespace-nowrap">
           <span class="material-symbols-outlined" style="font-size:13px;line-height:1;">rocket_launch</span>
           Next Launch
         </span>
         <span id="hud-launch-cd" class="font-headline text-[11px] tracking-wide text-[#00f0ff] whitespace-nowrap" style="font-variant-numeric:tabular-nums;text-shadow:0 0 10px rgba(0,240,255,0.4);">T-—</span>
       </div>
-      <span id="hud-launch-name" class="font-label text-[8px] text-on-surface-variant block uppercase tracking-tighter truncate mt-0.5"></span>
+      <span id="hud-launch-name" class="font-label text-[9px] text-on-surface-variant block uppercase tracking-tighter truncate mt-0.5"></span>
     </div>
     <!-- Local Time + Active Feeds — side by side -->
     <div class="flex gap-2">
       <div class="glass-panel p-3 border border-outline-variant/15 rounded-lg flex-1">
-        <span class="font-label text-[9px] text-tertiary/60 uppercase block mb-0.5">Local Time</span>
+        <span class="font-label text-[10px] text-tertiary/60 uppercase block mb-0.5">Local Time</span>
         <span id="clock" class="font-headline text-base tracking-widest text-[#dbfcff] clock-display">00:00:00</span>
-        <span class="font-label text-[8px] text-on-surface-variant block uppercase tracking-tighter">Local</span>
+        <span class="font-label text-[9px] text-on-surface-variant block uppercase tracking-tighter">Local</span>
       </div>
       <div class="glass-panel p-3 border border-outline-variant/15 rounded-lg flex-1">
-        <span class="font-label text-[9px] text-secondary/60 uppercase block mb-0.5">Active Feeds</span>
+        <span class="font-label text-[10px] text-secondary/60 uppercase block mb-0.5">Active Feeds</span>
         <span id="hud-feed-count" class="font-headline text-base tracking-widest text-[#ffb5a0]">6</span>
-        <span class="font-label text-[8px] text-on-surface-variant block uppercase tracking-tighter">Online</span>
+        <span class="font-label text-[9px] text-on-surface-variant block uppercase tracking-tighter">Online</span>
       </div>
     </div>
   </div>
@@ -2181,19 +2181,19 @@
 <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden items-center justify-around bg-[#0a0f14]/90 backdrop-blur-xl border-t border-[#00f0ff]/15 h-14">
   <button id="mnav-map" class="mnav-link flex flex-col items-center gap-0.5 text-[#00f0ff] active" onclick="navigate('map')">
     <span class="material-symbols-outlined" style="font-size:22px">radar</span>
-    <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Galaxy</span>
   </button>
   <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('feed')">
     <span class="material-symbols-outlined" style="font-size:22px">satellite_alt</span>
-    <span class="font-label text-[9px] uppercase tracking-widest">Feed</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Feed</span>
   </button>
   <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('saved')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-    <span class="font-label text-[9px] uppercase tracking-widest">Saved</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Saved</span>
   </button>
   <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('trending')">
     <span class="material-symbols-outlined" style="font-size:22px">local_fire_department</span>
-    <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Trending</span>
   </button>
 </nav>
 
@@ -2334,19 +2334,19 @@
         <div class="flex items-center py-2 px-1 rounded-full border border-[#00f0ff]/20 bg-[#00f0ff]/[0.04]">
           <div class="px-3 text-center">
             <div class="text-base font-bold font-headline text-[#00f0ff] leading-none">9</div>
-            <div class="mt-1.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Articles</div>
+            <div class="mt-1.5 text-[9px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Articles</div>
           </div>
           <span class="w-px h-7 bg-[#00f0ff]/20"></span>
           <div class="px-3 text-center">
             <div class="text-base font-bold font-headline text-[#ffb5a0] leading-none">4</div>
-            <div class="mt-1.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Topics</div>
+            <div class="mt-1.5 text-[9px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Topics</div>
           </div>
           <span class="w-px h-7 bg-[#00f0ff]/20"></span>
           <div class="px-3 text-center">
             <div class="flex items-center justify-center h-4">
               <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#00f0ff] animate-pulse" style="animation-duration:3.2s; box-shadow:0 0 8px rgba(0,240,255,0.5)"></span>
             </div>
-            <div class="mt-1.5 text-[8px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Signal</div>
+            <div class="mt-1.5 text-[9px] uppercase tracking-[0.14em] text-[#dbfcff]/45 leading-none">Signal</div>
           </div>
         </div>
       </div>
@@ -4578,16 +4578,16 @@ function renderTrending() {
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2 mb-1">
           <span class="material-symbols-outlined ${cc} text-sm">${ic}</span>
-          <span class="${cc} font-headline text-[9px] uppercase tracking-widest">${a.category}</span>
-          <span class="text-[#dbfcff]/20 text-[9px]">·</span>
-          <span class="font-headline text-[9px] uppercase tracking-widest text-[#dbfcff]/30">${escHtml(a.source)}</span>
+          <span class="${cc} font-headline text-[10px] uppercase tracking-widest">${a.category}</span>
+          <span class="text-[#dbfcff]/20 text-[10px]">·</span>
+          <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/30">${escHtml(a.source)}</span>
         </div>
         <h4 class="font-headline font-bold text-[#dbfcff] text-sm leading-tight truncate">${escHtml(a.title)}</h4>
       </div>
       <!-- Meta -->
       <div class="shrink-0 hidden md:flex flex-col items-end gap-1">
-        <span class="font-headline text-[9px] text-[#dbfcff]/20 uppercase tracking-widest">${a.date || 'Recent'}</span>
-        <span class="font-headline text-[9px] text-[#dbfcff]/20">${a.readTime || '—'} read</span>
+        <span class="font-headline text-[10px] text-[#dbfcff]/20 uppercase tracking-widest">${a.date || 'Recent'}</span>
+        <span class="font-headline text-[10px] text-[#dbfcff]/20">${a.readTime || '—'} read</span>
       </div>
       <span class="material-symbols-outlined text-[#00f0ff] opacity-0 group-hover:opacity-100 transition-all shrink-0 text-sm">arrow_forward</span>
     </article>`;
@@ -5235,6 +5235,32 @@ function initStarfield() {
 }
 initStarfield();
 
+// ── Keyboard operability for custom click controls ─────────
+// The sidebar nav uses <a onclick> (no href) and the galaxy planets are
+// <div onclick> — by default neither is in the tab order or operable by
+// keyboard. Make them focusable and activatable via Enter/Space, without
+// changing any visual behavior. A single delegated keydown handler keeps it
+// cheap; the :focus-visible ring (CSS) shows where focus is.
+(function () {
+  function enhance(selector, role) {
+    document.querySelectorAll(selector).forEach(function (el) {
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+      if (!el.hasAttribute('role')) el.setAttribute('role', role);
+      el.setAttribute('data-keyactivate', '');
+    });
+  }
+  enhance('.sidebar-link', 'link');
+  enhance('.planet-node', 'button');
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+    const t = e.target;
+    if (t && t.getAttribute && t.getAttribute('data-keyactivate') !== null && typeof t.click === 'function') {
+      e.preventDefault();
+      t.click();
+    }
+  });
+})();
+
 // ── Reading Progress ──────────────────────────────────────
 function setupReadingProgress() {
   const scrollArea = document.getElementById('reading-scroll-area');
@@ -5325,7 +5351,7 @@ let probeDeployed = false;
 function _prRow(icon, label, val) {
   return '<div class="flex items-center gap-2 text-[11px] leading-tight">' +
     '<span class="material-symbols-outlined text-[#00f0ff]/55 text-[14px] shrink-0">' + icon + '</span>' +
-    '<span class="text-[#dbfcff]/40 uppercase tracking-wider text-[9px] w-[4.4rem] shrink-0">' + label + '</span>' +
+    '<span class="text-[#dbfcff]/40 uppercase tracking-wider text-[10px] w-[4.4rem] shrink-0">' + label + '</span>' +
     '<span class="text-[#dbfcff]/90 font-medium truncate min-w-0">' + escHtml(val) + '</span></div>';
 }
 function showProbeReport(d) {
