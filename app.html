@@ -4259,6 +4259,29 @@ function removeSaved(key) {
   });
 }
 
+// Open a saved story reliably. The live feed cycles, so a saved article may
+// no longer be present — previously the card fell back to openArticle(0),
+// which opened whatever was at the top of the current feed (the same wrong
+// article for every expired save). Resolve by stable key (read_more/link/
+// title); if the article isn't in the live feed, inject the saved copy so it
+// opens to ITS own content and the detail view's Save/Share act on it.
+function openSavedStory(key) {
+  if (!key) return;
+  const saved = savedStories.find(s => _savedKey(s) === key);
+  if (!saved) return;
+  let idx = articles.findIndex(x => _savedKey(x) === key);
+  if (idx === -1) {
+    // Outdated save — not in the live feed. Inject a copy so it opens to its
+    // own content and Save/Share resolve correctly. id = its real index (feed
+    // cards open by a.id), and _savedInjected keeps it OUT of the feed/trending
+    // so it never pollutes those views.
+    const inj = Object.assign({}, saved, { id: articles.length, _savedInjected: true });
+    articles.push(inj);
+    idx = articles.length - 1;
+  }
+  openArticle(idx);
+}
+
 function renderSavedStories() {
   const container = document.getElementById('saved-articles-container');
   if (!container) return;
@@ -4325,10 +4348,9 @@ function renderSavedStories() {
     <div class="flex flex-col gap-4">` +
     list.map(({ a }) => {
       const cc = CAT_COLOR[a.category] || 'text-[#00f0ff]';
-      const artIdx = articles.findIndex(x => x.title === a.title);
       const fb = pickFallback(a.category, a.title);
       return `
-      <article onclick="openArticle(${artIdx >= 0 ? artIdx : 0})" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
+      <article data-k="${escHtml(_savedKey(a))}" onclick="openSavedStory(this.dataset.k)" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
         <div class="w-32 self-stretch shrink-0 overflow-hidden relative">
           <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image||fb)}" alt="${escHtml(a.title)}" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
@@ -4361,7 +4383,9 @@ if (typeof window._crTopics === 'undefined') {
 }
 
 function getFilteredArticles() {
-  let list = articles;
+  // Exclude saved-story copies injected by openSavedStory — they exist only so
+  // an outdated saved article can be opened, and must not appear in the feed.
+  let list = articles.filter(a => !a._savedInjected);
   if (currentFilter !== 'All') {
     list = list.filter(a => a.category.toLowerCase() === currentFilter.toLowerCase());
   }
@@ -4499,7 +4523,8 @@ function renderTrending() {
   }
 
   // Sort a copy by most recent (articles loaded from RSS are already in date order — use index as proxy)
-  const ranked = [...articles].slice(0, 20);
+  // Exclude injected saved-story copies (see openSavedStory) from trending.
+  const ranked = articles.filter(a => !a._savedInjected).slice(0, 20);
 
   const rankColors = ['text-[#ffb5a0]','text-[#00f0ff]','text-[#fcf2ff]'];
   const rankBg     = ['border-[#ffb5a0]/30','border-[#00f0ff]/30','border-[#fcf2ff]/20'];
