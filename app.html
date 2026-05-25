@@ -1131,7 +1131,7 @@
   <div id="probe-report-panel" class="mt-auto hidden md:block px-5 pb-3 mb-[9px]">
     <div class="flex items-center gap-2 mb-2.5 pb-2.5 border-b border-[#00f0ff]/10">
       <span class="material-symbols-outlined text-[#00f0ff] text-[15px]">satellite_alt</span>
-      <span id="probe-report-title" class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]/80">Probe Report</span>
+      <span id="probe-report-title" class="font-headline text-[9px] uppercase tracking-widest text-[#00f0ff]/80">Probe Report</span>
     </div>
     <div id="probe-report-rows" class="flex flex-col gap-2">
       <div class="text-[10px] text-[#dbfcff]/30 font-body italic">Awaiting probe telemetry…</div>
@@ -1150,7 +1150,7 @@
         <text x="98" y="11" text-anchor="middle" font-size="12" font-family="'Exo 2','Space Grotesk',sans-serif" fill="rgba(219,252,255,0.55)">Scan feeds for the latest signals</text>
       </svg>
     </div>
-    <p id="deploy-probe-status" class="text-[10px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
+    <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
   </div>
   <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent w-[1px] h-3/4"></div>
 </aside>
@@ -2810,19 +2810,20 @@
 <main id="view-trending" class="view h-screen w-full overflow-hidden">
   <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 pt-2 pb-10 md:pt-10">
-      <div class="mb-10">
-        <!-- Eyebrow + Live Rankings share the top line (rankings right-aligned);
-             title + subtitle sit full-width below so everything aligns to the
-             same left grid edge on all screen sizes. -->
-        <div class="flex items-center justify-between gap-3 mb-2">
-          <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#ffb5a0]/60 whitespace-nowrap">Last 48 Hours</span>
-          <div class="flex items-center gap-2 shrink-0">
-            <div class="w-2 h-2 rounded-full bg-[#ffb5a0] animate-pulse shadow-[0_0_8px_#ffb5a0]"></div>
-            <span class="font-headline text-[10px] uppercase tracking-widest text-[#ffb5a0]/60 whitespace-nowrap">Live Rankings</span>
-          </div>
+      <!-- Desktop keeps main's layout exactly (rankings bottom-right via the
+           md:flex-row / items-end flow). Mobile pins Live Rankings to the
+           top-right (over the eyebrow line) via absolute positioning, so it's
+           only different on mobile. -->
+      <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-4 relative md:static">
+        <div>
+          <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#ffb5a0]/60 block mb-2">Last 48 Hours</span>
+          <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff]">Trending Signals</h1>
+          <p class="text-[#dbfcff]/60 font-body text-sm mt-2 cr-subhead-nowrap">The freshest transmissions ranked by recency across all active feeds.</p>
         </div>
-        <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff]">Trending Signals</h1>
-        <p class="text-[#dbfcff]/60 font-body text-sm mt-2 cr-subhead-nowrap">The freshest transmissions ranked by recency across all active feeds.</p>
+        <div class="flex items-center gap-2 shrink-0 whitespace-nowrap absolute top-0 right-0 md:static">
+          <div class="w-2 h-2 rounded-full bg-[#ffb5a0] animate-pulse shadow-[0_0_8px_#ffb5a0]"></div>
+          <span class="font-headline text-[10px] uppercase tracking-widest text-[#ffb5a0]/60">Live Rankings</span>
+        </div>
       </div>
       <div id="trending-list" class="flex flex-col gap-3">
         <p class="text-[#dbfcff]/30 font-body text-sm">Loading signals…</p>
@@ -4581,16 +4582,16 @@ function renderTrending() {
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2 mb-1">
           <span class="material-symbols-outlined ${cc} text-sm">${ic}</span>
-          <span class="${cc} font-headline text-[10px] uppercase tracking-widest">${a.category}</span>
-          <span class="text-[#dbfcff]/20 text-[10px]">·</span>
-          <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/30">${escHtml(a.source)}</span>
+          <span class="${cc} font-headline text-[9px] uppercase tracking-widest">${a.category}</span>
+          <span class="text-[#dbfcff]/20 text-[9px]">·</span>
+          <span class="font-headline text-[9px] uppercase tracking-widest text-[#dbfcff]/30">${escHtml(a.source)}</span>
         </div>
         <h4 class="font-headline font-bold text-[#dbfcff] text-sm leading-tight truncate">${escHtml(a.title)}</h4>
       </div>
       <!-- Meta -->
       <div class="shrink-0 hidden md:flex flex-col items-end gap-1">
-        <span class="font-headline text-[10px] text-[#dbfcff]/20 uppercase tracking-widest">${a.date || 'Recent'}</span>
-        <span class="font-headline text-[10px] text-[#dbfcff]/20">${a.readTime || '—'} read</span>
+        <span class="font-headline text-[9px] text-[#dbfcff]/20 uppercase tracking-widest">${a.date || 'Recent'}</span>
+        <span class="font-headline text-[9px] text-[#dbfcff]/20">${a.readTime || '—'} read</span>
       </div>
       <span class="material-symbols-outlined text-[#00f0ff] opacity-0 group-hover:opacity-100 transition-all shrink-0 text-sm">arrow_forward</span>
     </article>`;
@@ -5354,7 +5355,7 @@ let probeDeployed = false;
 function _prRow(icon, label, val) {
   return '<div class="flex items-center gap-2 text-[11px] leading-tight">' +
     '<span class="material-symbols-outlined text-[#00f0ff]/55 text-[14px] shrink-0">' + icon + '</span>' +
-    '<span class="text-[#dbfcff]/40 uppercase tracking-wider text-[10px] w-[4.4rem] shrink-0">' + label + '</span>' +
+    '<span class="text-[#dbfcff]/40 uppercase tracking-wider text-[9px] w-[4.4rem] shrink-0">' + label + '</span>' +
     '<span class="text-[#dbfcff]/90 font-medium truncate min-w-0">' + escHtml(val) + '</span></div>';
 }
 function showProbeReport(d) {
