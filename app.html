@@ -632,6 +632,17 @@
   .cr-hide-scrollbar::-webkit-scrollbar { width: 0; height: 0; display: none; }
   .clock-display { font-variant-numeric: tabular-nums; }
   .article-card-hover:hover { background: rgba(30,30,30,0.8); }
+
+  /* ── Accessibility: visible keyboard focus ──────────────────────────────
+     Keyboard users previously had almost no focus indicator. :focus-visible
+     only triggers for keyboard navigation (not mouse clicks), so this adds a
+     clear on-brand cyan ring without affecting the look during normal use. */
+  :focus-visible {
+    outline: 2px solid rgba(0, 240, 255, 0.9);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   .sidebar-link { transition: all 0.2s ease; }
   .sidebar-link.active { background: rgba(0,240,255,0.1); color: #00f0ff; border-right: 2px solid #00f0ff; }
   .sidebar-link:not(.active):hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); }
@@ -1101,15 +1112,15 @@
       <span class="material-symbols-outlined">radar</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Galaxy Map</span>
     </a>
-    <a id="nav-feed" onclick="navigate('feed')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
+    <a id="nav-feed" onclick="navigate('feed')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/55 cursor-pointer select-none">
       <span class="material-symbols-outlined">satellite_alt</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">My Feed</span>
     </a>
-    <a id="nav-saved" onclick="navigate('saved')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
+    <a id="nav-saved" onclick="navigate('saved')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/55 cursor-pointer select-none">
       <span class="material-symbols-outlined">bookmark</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Saved Stories</span>
     </a>
-    <a id="nav-trending" onclick="navigate('trending')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/40 cursor-pointer select-none">
+    <a id="nav-trending" onclick="navigate('trending')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/55 cursor-pointer select-none">
       <span class="material-symbols-outlined">local_fire_department</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Trending</span>
     </a>
@@ -2172,15 +2183,15 @@
     <span class="material-symbols-outlined" style="font-size:22px">radar</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Galaxy</span>
   </button>
-  <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('feed')">
+  <button id="mnav-feed" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('feed')">
     <span class="material-symbols-outlined" style="font-size:22px">satellite_alt</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Feed</span>
   </button>
-  <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('saved')">
+  <button id="mnav-saved" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('saved')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
     <span class="font-label text-[9px] uppercase tracking-widest">Saved</span>
   </button>
-  <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/40" onclick="navigate('trending')">
+  <button id="mnav-trending" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('trending')">
     <span class="material-symbols-outlined" style="font-size:22px">local_fire_department</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
   </button>
@@ -2456,7 +2467,7 @@
               <span class="material-symbols-outlined text-[#00f0ff] text-sm">bolt</span>
               <h4 class="font-headline font-bold text-[#dbfcff]">Jupiter's Lightning Is Up To 1 Million Times More Powerful Than Earth's</h4>
             </div>
-            <p class="text-xs text-[#dbfcff]/40 font-body">Juno observations show Jupiter's lightning triggered by a stealth superstorm — measurements decoded from Juno orbital data packets.</p>
+            <p class="text-xs text-[#dbfcff]/60 font-body">Juno observations show Jupiter's lightning triggered by a stealth superstorm — measurements decoded from Juno orbital data packets.</p>
           </div>
           <div class="flex items-center gap-10 shrink-0 pr-2">
             <div class="hidden lg:block text-right">
@@ -2483,7 +2494,7 @@
               <span class="material-symbols-outlined text-[#7dd3fc] text-sm">smart_toy</span>
               <h4 class="font-headline font-bold text-[#dbfcff]">AI Models Reach New Frontier: Reasoning at Human Expert Level</h4>
             </div>
-            <p class="text-xs text-[#dbfcff]/40 font-body">Foundation models from leading labs demonstrate breakthrough performance on scientific benchmarks, opening new possibilities for automated discovery.</p>
+            <p class="text-xs text-[#dbfcff]/60 font-body">Foundation models from leading labs demonstrate breakthrough performance on scientific benchmarks, opening new possibilities for automated discovery.</p>
           </div>
           <div class="flex items-center gap-10 shrink-0 pr-2">
             <div class="hidden lg:block text-right">
@@ -2509,7 +2520,7 @@
           <span class="text-[10px] font-headline uppercase tracking-[0.3em] text-[#dbfcff]/40">System Status: Live Feed Active</span>
         </div>
         <div class="flex items-center gap-2">
-          <button id="page-prev" onclick="prevPage()" class="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-[#dbfcff]/40 hover:text-[#00f0ff] hover:border-[#00f0ff]/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
+          <button id="page-prev" onclick="prevPage()" aria-label="Previous page" class="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-[#dbfcff]/55 hover:text-[#00f0ff] hover:border-[#00f0ff]/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
             <span class="material-symbols-outlined text-sm">chevron_left</span>
           </button>
           <div class="px-4 py-2 rounded-lg bg-surface-container-high border border-[#00f0ff]/20 min-w-[110px] text-center">
@@ -2517,7 +2528,7 @@
             <span class="text-xs font-headline text-[#dbfcff]/40 mx-2">/</span>
             <span id="page-total" class="text-xs font-headline text-[#dbfcff]/40">01</span>
           </div>
-          <button id="page-next" onclick="nextPage()" class="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-[#dbfcff]/40 hover:text-[#00f0ff] hover:border-[#00f0ff]/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
+          <button id="page-next" onclick="nextPage()" aria-label="Next page" class="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-[#dbfcff]/55 hover:text-[#00f0ff] hover:border-[#00f0ff]/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
             <span class="material-symbols-outlined text-sm">chevron_right</span>
           </button>
         </div>
@@ -2578,11 +2589,11 @@
             </button>
             <!-- Save + Share kept together so Share never drops to its own line -->
             <div class="flex items-center gap-2 shrink-0">
-              <button id="save-story-btn" onclick="saveStory(currentArticle)" aria-pressed="false" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+              <button id="save-story-btn" onclick="saveStory(currentArticle)" aria-pressed="false" aria-label="Save story" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
                 <span id="save-story-icon" class="material-symbols-outlined text-primary">bookmark_add</span>
                 <span id="save-story-label" class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Save</span>
               </button>
-              <button id="share-story-btn" onclick="shareCurrentArticle()" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+              <button id="share-story-btn" onclick="shareCurrentArticle()" aria-label="Share story" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
                 <span id="share-story-icon" class="material-symbols-outlined text-primary">share</span>
                 <span id="share-story-label" class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Share</span>
               </button>
@@ -2803,7 +2814,7 @@
         <div>
           <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#ffb5a0]/60 block mb-2">Last 48 Hours</span>
           <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff]">Trending Signals</h1>
-          <p class="text-[#dbfcff]/40 font-body text-sm mt-2 cr-subhead-nowrap">The freshest transmissions ranked by recency across all active feeds.</p>
+          <p class="text-[#dbfcff]/60 font-body text-sm mt-2 cr-subhead-nowrap">The freshest transmissions ranked by recency across all active feeds.</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <div class="w-2 h-2 rounded-full bg-[#ffb5a0] animate-pulse shadow-[0_0_8px_#ffb5a0]"></div>
@@ -3585,7 +3596,7 @@ function renderFeed(list) {
             <span class="material-symbols-outlined ${cc} text-sm">${ic}</span>
             <h4 class="font-headline font-bold text-[#dbfcff] truncate">${escHtml(a.title)}</h4>
           </div>
-          <p class="text-xs text-[#dbfcff]/40 font-body line-clamp-2">${escHtml(a.excerpt)}</p>
+          <p class="text-xs text-[#dbfcff]/60 font-body line-clamp-2">${escHtml(a.excerpt)}</p>
         </div>
         <div class="flex items-center gap-6 shrink-0 pr-2">
           <div class="hidden lg:block text-right">
@@ -4374,7 +4385,7 @@ function renderSavedStories() {
           <div>
             <span class="${cc} font-headline text-[10px] uppercase tracking-widest mb-1 block">${a.category} · ${escHtml(a.source)}</span>
             <h3 class="font-headline font-bold text-[#dbfcff] leading-tight truncate">${escHtml(a.title)}</h3>
-            <p class="text-[10px] text-[#dbfcff]/40 font-body mt-1 line-clamp-1">${escHtml(a.excerpt.slice(0,120))}</p>
+            <p class="text-[10px] text-[#dbfcff]/60 font-body mt-1 line-clamp-1">${escHtml(a.excerpt.slice(0,120))}</p>
           </div>
           <div class="flex items-center justify-between mt-2">
             <span class="text-[10px] text-[#dbfcff]/30 font-headline">${a.date}</span>
@@ -4603,24 +4614,24 @@ function navigate(viewName, opts) {
   // Update sidebar nav
   document.querySelectorAll('[id^="nav-"]').forEach(n => {
     n.classList.remove('active');
-    n.classList.add('text-white/40');
+    n.classList.add('text-white/55');
   });
   const navEl = document.getElementById('nav-' + viewName);
   if (navEl) {
     navEl.classList.add('active');
-    navEl.classList.remove('text-white/40');
+    navEl.classList.remove('text-white/55');
   }
   // Update mobile bottom nav
   document.querySelectorAll('[id^="mnav-"]').forEach(n => {
     n.classList.remove('active');
     n.classList.remove('text-[#00f0ff]');
-    n.classList.add('text-white/40');
+    n.classList.add('text-white/55');
   });
   const mnavEl = document.getElementById('mnav-' + viewName);
   if (mnavEl) {
     mnavEl.classList.add('active');
     mnavEl.classList.add('text-[#00f0ff]');
-    mnavEl.classList.remove('text-white/40');
+    mnavEl.classList.remove('text-white/55');
   }
   currentView = viewName;
   // Show Back button only on detail view
