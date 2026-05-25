@@ -2810,16 +2810,19 @@
 <main id="view-trending" class="view h-screen w-full overflow-hidden">
   <div class="flex-1 min-h-0 overflow-y-auto mobile-safe-scroll md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 pt-2 pb-10 md:pt-10">
-      <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-4">
-        <div>
-          <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#ffb5a0]/60 block mb-2">Last 48 Hours</span>
-          <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff]">Trending Signals</h1>
-          <p class="text-[#dbfcff]/60 font-body text-sm mt-2 cr-subhead-nowrap">The freshest transmissions ranked by recency across all active feeds.</p>
+      <div class="mb-10">
+        <!-- Eyebrow + Live Rankings share the top line (rankings right-aligned);
+             title + subtitle sit full-width below so everything aligns to the
+             same left grid edge on all screen sizes. -->
+        <div class="flex items-center justify-between gap-3 mb-2">
+          <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#ffb5a0]/60 whitespace-nowrap">Last 48 Hours</span>
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="w-2 h-2 rounded-full bg-[#ffb5a0] animate-pulse shadow-[0_0_8px_#ffb5a0]"></div>
+            <span class="font-headline text-[10px] uppercase tracking-widest text-[#ffb5a0]/60 whitespace-nowrap">Live Rankings</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <div class="w-2 h-2 rounded-full bg-[#ffb5a0] animate-pulse shadow-[0_0_8px_#ffb5a0]"></div>
-          <span class="font-headline text-[10px] uppercase tracking-widest text-[#ffb5a0]/60">Live Rankings</span>
-        </div>
+        <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff]">Trending Signals</h1>
+        <p class="text-[#dbfcff]/60 font-body text-sm mt-2 cr-subhead-nowrap">The freshest transmissions ranked by recency across all active feeds.</p>
       </div>
       <div id="trending-list" class="flex flex-col gap-3">
         <p class="text-[#dbfcff]/30 font-body text-sm">Loading signals…</p>
