@@ -536,6 +536,11 @@
   @media (min-width: 1025px) {
     .cr-feed-stats { min-width: 23rem; justify-content: space-around; }
   }
+  /* Prevent typographic widows (a lone word on the last line) in wrapping feed
+     card titles. text-wrap:balance evens the lines; browsers without support
+     just fall back to normal wrapping. Truncated titles are unaffected. */
+  #article-grid h2,
+  #article-grid h3 { text-wrap: balance; }
   .drop-cap-para::first-letter {
     font-size: 3.5rem;
     line-height: 1;
