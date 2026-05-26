@@ -3206,6 +3206,13 @@ function cleanArticleBody(text) {
   } while (t !== _creditPrev);
   t = t.trim();
 
+  // 0a. Leading "N Min Read" badge. NASA.gov newsroom articles prefix the body
+  //     with a read-time badge (e.g. "3 Min Read") before the headline. Strip a
+  //     SINGLE leading occurrence — guarded to the very start so genuine prose
+  //     that mentions a read time elsewhere is never touched. (Also fixes the
+  //     drop-cap, which would otherwise enlarge the leading digit.)
+  t = t.replace(/^\s*\d+\s*min\s+read\b[\s.:;,–—-]*/i, '').trim();
+
   // 1. Leading nav block → the real content follows a "Description" marker.
   //    Only strip if the lead-in clearly looks like Photojournal cruft.
   const d = t.match(/\bDescription\s+/);
