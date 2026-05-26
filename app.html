@@ -4197,7 +4197,7 @@ async function _crLoadUserData() {
   try {
     const { data, error } = await window._supabase
       .from('user_data')
-      .select('saved,removed_keys,avatar_image,chat')
+      .select('saved,removed_keys,avatar_image,avatar_url,chat')
       .eq('user_id', window._crUser.id)
       .maybeSingle();
     if (error) { console.warn('user_data load:', error.message); return {}; }
