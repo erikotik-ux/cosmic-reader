@@ -4224,11 +4224,25 @@ async function _crUploadAvatar(dataUri) {
     const blob = await (await fetch(dataUri)).blob();
     const ext = (blob.type && blob.type.indexOf('png') >= 0) ? 'png' : 'jpg';
     // Timestamp in the name busts the CDN cache when the avatar changes.
+    // No upsert: a unique name never collides, and upsert would require a
+    // SELECT policy (which we deliberately omit to prevent bucket listing).
     const path = window._crUser.id + '/avatar_' + Date.now() + '.' + ext;
     const { error } = await window._supabase.storage
       .from('avatars')
-      .upload(path, blob, { contentType: blob.type || 'image/jpeg', upsert: true });
+      .upload(path, blob, { contentType: blob.type || 'image/jpeg' });
     if (error) { console.warn('avatar upload:', error.message); return null; }
+    // Best-effort cleanup: remove the user's previous avatar file so old
+    // images don't accumulate (delete-own policy covers this).
+    try {
+      const prev = window._crUserData && window._crUserData.avatar_url;
+      const marker = '/avatars/';
+      if (prev && prev.indexOf(marker) >= 0) {
+        const prevPath = prev.slice(prev.indexOf(marker) + marker.length).split('?')[0];
+        if (prevPath && prevPath !== path) {
+          await window._supabase.storage.from('avatars').remove([prevPath]);
+        }
+      }
+    } catch (e) { /* non-fatal */ }
     const { data } = window._supabase.storage.from('avatars').getPublicUrl(path);
     return (data && data.publicUrl) || null;
   } catch (e) { console.warn('avatar upload threw:', e); return null; }
@@ -7586,6 +7600,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (f) f.scrollTop = f.scrollHeight;
   }
 
+  // True when the feed is scrolled at/near the bottom — used to decide whether
+  // an incoming message should auto-scroll (don't yank the user up if they've
+  // scrolled back to read history).
+  function isNearBottom() {
+    var f = feedEl();
+    if (!f) return true;
+    return (f.scrollHeight - f.scrollTop - f.clientHeight) < 140;
+  }
+
   // Append one message bubble. Skips duplicates by id. Returns true if added.
   function append(msg, opts) {
     if (!msg || !msg.id || seen[msg.id]) return false;
@@ -7620,7 +7643,14 @@ document.addEventListener('DOMContentLoaded', () => {
     channel = sb.channel('public:messages')
       .on('postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'messages' },
-          function(payload) { append(payload.new); })
+          function(payload) {
+            var stick = isNearBottom();
+            var mine = window._crUser && payload.new && payload.new.user_id === window._crUser.id;
+            var added = append(payload.new, { scroll: false });
+            // Auto-scroll for new messages when already at the bottom, and
+            // always for your own outgoing message.
+            if (added && (stick || mine)) scrollToBottom();
+          })
       .subscribe();
   }
 
