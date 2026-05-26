@@ -2861,7 +2861,7 @@
      chat. -->
 <main id="view-comms" class="view h-screen w-full overflow-hidden">
   <div class="h-full flex flex-col md:pl-64 pt-20 md:pt-20 pb-20 md:pb-6">
-    <div class="max-w-3xl w-full mx-auto px-6 pt-2 md:pt-4 flex-1 min-h-0 flex flex-col">
+    <div class="max-w-none w-full mx-auto px-6 md:px-10 pt-2 md:pt-4 flex-1 min-h-0 flex flex-col">
       <!-- Header -->
       <header class="mb-3 shrink-0">
         <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#00f0ff]/60 block mb-2">Deep Space Network</span>
@@ -4152,6 +4152,59 @@ function _persistSaved() {
   _queueSavedRemoteSync(); // debounced upload to Supabase for cross-device sync
 }
 
+// ── Bulk user data: stored in the `user_data` table, NOT user_metadata ──────
+// Saved stories, tombstones, custom avatar image, and AI-chat history used to
+// live in Supabase auth user_metadata. That bloated the user's JWT past the
+// API gateway's header limit, so every authenticated REST call (e.g. the Comms
+// chat) was rejected with HTTP 400. These now live in a per-user row of the
+// `user_data` table; user_metadata holds only tiny prefs (topics/username/
+// avatar-emoji/hidden). See migration create_user_data_table.
+window._crUserData = null; // cached row { saved, removed_keys, avatar_image, chat }
+
+// Force a fresh (small) access token if the cached one is still the old bloated
+// JWT. refreshSession uses the refresh_token grant (tiny request), so it isn't
+// subject to the oversized-header rejection. One-time per stale session.
+async function _crEnsureSlimToken() {
+  try {
+    if (!window._supabase) return;
+    const { data } = await window._supabase.auth.getSession();
+    const tok = data && data.session && data.session.access_token;
+    if (tok && tok.length > 7000) {
+      await window._supabase.auth.refreshSession();
+    }
+  } catch (e) { /* offline / no session — leave as-is */ }
+}
+
+// Fetch this user's bulk row. Returns {} on miss/error (never throws).
+async function _crLoadUserData() {
+  if (!window._supabase || !window._crUser) return {};
+  await _crEnsureSlimToken();
+  try {
+    const { data, error } = await window._supabase
+      .from('user_data')
+      .select('saved,removed_keys,avatar_image,chat')
+      .eq('user_id', window._crUser.id)
+      .maybeSingle();
+    if (error) { console.warn('user_data load:', error.message); return {}; }
+    window._crUserData = data || {};
+    return window._crUserData;
+  } catch (e) { console.warn('user_data load threw:', e); return {}; }
+}
+
+// Upsert a partial patch ({saved}, {chat}, {avatar_image}, …) for this user.
+async function _crSaveUserData(patch) {
+  if (!window._supabase || !window._crUser) return;
+  await _crEnsureSlimToken();
+  try {
+    const row = Object.assign({ user_id: window._crUser.id, updated_at: new Date().toISOString() }, patch);
+    const { error } = await window._supabase
+      .from('user_data')
+      .upsert(row, { onConflict: 'user_id' });
+    if (error) console.warn('user_data save:', error.message);
+    else if (window._crUserData) Object.assign(window._crUserData, patch);
+  } catch (e) { console.warn('user_data save threw:', e); }
+}
+
 // Background sync of savedStories + tombstones to Supabase user_metadata.
 // Cross-device: saving on desktop ⟶ visible on mobile after reload.
 // Short debounce (200ms) + visibilitychange flush so removals stick even
@@ -4164,11 +4217,8 @@ function _queueSavedRemoteSync() {
 async function _flushSavedRemoteSync() {
   if (_savedSyncTimer) { clearTimeout(_savedSyncTimer); _savedSyncTimer = null; }
   if (!window._supabase || !window._crUser) return;
-  try {
-    await window._supabase.auth.updateUser({
-      data: { saved: savedStories.slice(), removedKeys: [...removedKeys] }
-    });
-  } catch(e) { /* offline / not signed in — localStorage still has the data */ }
+  // Stored in the user_data table (not user_metadata) to keep the JWT small.
+  await _crSaveUserData({ saved: savedStories.slice(), removed_keys: [...removedKeys] });
 }
 // Flush on tab hide — covers the "tap remove → swipe away tab" case on mobile
 // where the 200ms debounce wouldn't otherwise fire before the tab is killed.
@@ -6142,11 +6192,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
     try {
+      // Tiny prefs live in user_metadata; the (potentially large) custom avatar
+      // image goes to the user_data table so it never bloats the JWT.
       const { data, error } = await window._supabase.auth.updateUser({
-        data: { avatar, avatarImage, username, topics }
+        data: { avatar, username, topics }
       });
       if (error) throw error;
-      _cachedSettings = (data && data.user && data.user.user_metadata) || { avatar, username, topics };
+      await _crSaveUserData({ avatar_image: avatarImage || null });
+      const baseMeta = (data && data.user && data.user.user_metadata) || { avatar, username, topics };
+      _cachedSettings = Object.assign({}, baseMeta, { avatarImage: avatarImage || '' });
       applySettingsToUI(_cachedSettings);
       // Topics may have changed — refresh the feed/banner so For You reflects them now.
       if (typeof renderCurrentPage === 'function') renderCurrentPage();
@@ -6219,16 +6273,21 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const { data } = await window._supabase.auth.getUser();
       const meta = (data && data.user && data.user.user_metadata) || {};
-      _cachedSettings = meta;
-      applySettingsToUI(meta);
+      // Bulk data (saved, tombstones, avatar image, chat) now lives in the
+      // user_data table — fetch it (this also slims a stale oversized token).
+      const ud = await _crLoadUserData();
+      // Merge the custom avatar image back into cached settings so the avatar
+      // UI + Settings form behave exactly as before.
+      _cachedSettings = Object.assign({}, meta, { avatarImage: ud.avatar_image || '' });
+      applySettingsToUI(_cachedSettings);
 
       // ── Saved Stories cross-device sync ─────────────────────────
-      // Merge remote (Supabase user_metadata) into local (localStorage) by
-      // URL key. UNION so saves from any device show up everywhere — but
-      // any key in EITHER tombstone list (local or remote) is filtered out
-      // first, so a remove on one device removes everywhere.
-      const remote        = Array.isArray(meta.saved)        ? meta.saved        : [];
-      const remoteRemoved = Array.isArray(meta.removedKeys)  ? meta.removedKeys  : [];
+      // Merge remote (user_data table) into local (localStorage) by URL key.
+      // UNION so saves from any device show up everywhere — but any key in
+      // EITHER tombstone list (local or remote) is filtered out first, so a
+      // remove on one device removes everywhere.
+      const remote        = Array.isArray(ud.saved)         ? ud.saved          : [];
+      const remoteRemoved = Array.isArray(ud.removed_keys)  ? ud.removed_keys   : [];
       // Merge tombstones first — both sides contribute
       let tombsChanged = false;
       remoteRemoved.forEach(k => { if (k && !removedKeys.has(k)) { removedKeys.add(k); tombsChanged = true; } });
@@ -6269,10 +6328,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // ── Chat history cross-device sync ──────────────────────────
-      // Pull any chat history stored in user_metadata. Empty tabs hydrate
+      // Pull any chat history from the user_data table. Empty tabs hydrate
       // from remote; active conversations stay put (see _crHydrateChat).
       if (typeof window._crHydrateChat === 'function') {
-        window._crHydrateChat(Array.isArray(meta.chat) ? meta.chat : []);
+        window._crHydrateChat(Array.isArray(ud.chat) ? ud.chat : []);
       }
     } catch(e) { /* not signed in yet — skip */ }
   })();
@@ -6953,20 +7012,18 @@ document.addEventListener('DOMContentLoaded', () => {
     _queueChatRemoteSync(); // debounced upload to Supabase for cross-device sync
   }
 
-  // Debounced background sync of chat history to Supabase user_metadata.
+  // Debounced background sync of chat history to the user_data table.
   // Survives tab close + appears on other devices after reload.
   let _chatSyncTimer = null;
   function _queueChatRemoteSync() {
     if (_chatSyncTimer) clearTimeout(_chatSyncTimer);
     _chatSyncTimer = setTimeout(async () => {
-      if (!window._supabase || !window._crUser) return;
-      try {
-        // Strip 'error' bubbles — those are transient, no point persisting
-        const snapshot = chatHistory
-          .filter(m => m.role === 'user' || m.role === 'assistant')
-          .slice(-MAX_HISTORY);
-        await window._supabase.auth.updateUser({ data: { chat: snapshot } });
-      } catch(e) { /* offline / not signed in — sessionStorage still has the data */ }
+      if (!window._supabase || !window._crUser || typeof _crSaveUserData !== 'function') return;
+      // Strip 'error' bubbles — those are transient, no point persisting
+      const snapshot = chatHistory
+        .filter(m => m.role === 'user' || m.role === 'assistant')
+        .slice(-MAX_HISTORY);
+      await _crSaveUserData({ chat: snapshot });
     }, 1000);
   }
 
@@ -7477,12 +7534,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Load the 50 most recent messages, then subscribe to realtime inserts.
-  window.crCommsLoad = function() {
+  window.crCommsLoad = async function() {
     setTimeout(function() { var t = textEl(); if (t) t.focus(); }, 60);
     if (loaded) { subscribe(); scrollToBottom(); return; }
     loaded = true;
     var sb = window._supabase;
     if (!sb) { showEmpty('Comms unavailable — not signed in.'); return; }
+    // Ensure the (possibly stale, oversized) JWT is slim before any REST call.
+    if (typeof window._crEnsureSlimToken === 'function') { try { await window._crEnsureSlimToken(); } catch(e){} }
     sb.from('messages')
       .select('id,user_id,username,content,created_at')
       .order('created_at', { ascending: false })
