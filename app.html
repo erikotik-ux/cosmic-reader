@@ -4213,6 +4213,27 @@ async function _crSaveUserData(patch) {
   } catch (e) { console.warn('user_data save threw:', e); }
 }
 
+// Upload a (data-URI) avatar image to the public `avatars` Storage bucket
+// under the user's own folder, and return its public URL (or null on failure).
+// Images live in Storage — only the small URL is kept in the DB, so neither
+// the JWT nor the chat feed payload carries image bytes.
+async function _crUploadAvatar(dataUri) {
+  if (!window._supabase || !window._crUser || !dataUri) return null;
+  await _crEnsureSlimToken();
+  try {
+    const blob = await (await fetch(dataUri)).blob();
+    const ext = (blob.type && blob.type.indexOf('png') >= 0) ? 'png' : 'jpg';
+    // Timestamp in the name busts the CDN cache when the avatar changes.
+    const path = window._crUser.id + '/avatar_' + Date.now() + '.' + ext;
+    const { error } = await window._supabase.storage
+      .from('avatars')
+      .upload(path, blob, { contentType: blob.type || 'image/jpeg', upsert: true });
+    if (error) { console.warn('avatar upload:', error.message); return null; }
+    const { data } = window._supabase.storage.from('avatars').getPublicUrl(path);
+    return (data && data.publicUrl) || null;
+  } catch (e) { console.warn('avatar upload threw:', e); return null; }
+}
+
 // Background sync of savedStories + tombstones to Supabase user_metadata.
 // Cross-device: saving on desktop ⟶ visible on mobile after reload.
 // Short debounce (200ms) + visibilitychange flush so removals stick even
@@ -6130,12 +6151,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function hydrateSettingsForm() {
     const meta = _cachedSettings || {};
     const avatar      = meta.avatar      || '🚀';
-    const avatarImage = meta.avatarImage || '';
+    const avatarSrc   = meta.avatarUrl || meta.avatarImage || '';
     const username    = meta.username    || '';
     const topics      = Array.isArray(meta.topics) ? meta.topics : [];
     const usernameInput = document.getElementById('settings-username');
     if (usernameInput) usernameInput.value = username;
-    renderAvatarPicker(avatar, avatarImage);
+    renderAvatarPicker(avatar, avatarSrc);
     renderTopicPicker(new Set(topics));
     renderHiddenPrefs();
     // Wire the file input each time (handler is idempotent because the
@@ -6186,12 +6207,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const picked = document.querySelector('.settings-avatar-btn.is-selected');
     let avatar = '🚀';
-    let avatarImage = null;
+    // pickedImage is whatever the upload tile holds: a data: URI for a fresh
+    // pick (needs uploading) or an existing https Storage URL (keep as-is).
+    let pickedImage = null;
     if (picked) {
       if (picked.classList.contains('settings-avatar-upload')) {
-        avatarImage = picked.dataset.customImage || null;
+        pickedImage = picked.dataset.customImage || null;
       } else {
-        avatar = picked.textContent;
+        avatar = picked.textContent;   // emoji chosen → no image
       }
     }
     const username = (document.getElementById('settings-username').value || '').trim().slice(0, 40);
@@ -6200,15 +6223,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
     try {
-      // Tiny prefs live in user_metadata; the (potentially large) custom avatar
-      // image goes to the user_data table so it never bloats the JWT.
+      // Resolve the avatar URL: upload a fresh data-URI pick to Storage; keep an
+      // existing https URL; null when an emoji was chosen.
+      let avatarUrl = null;
+      if (pickedImage) {
+        if (pickedImage.indexOf('data:') === 0) {
+          avatarUrl = await _crUploadAvatar(pickedImage);
+          if (!avatarUrl) throw new Error('Could not upload that image. Try a different one.');
+        } else {
+          avatarUrl = pickedImage; // already a hosted URL
+        }
+      }
+      // Tiny prefs live in user_metadata; the avatar image lives in Storage and
+      // only its URL is kept in user_data, so neither bloats the JWT.
       const { data, error } = await window._supabase.auth.updateUser({
         data: { avatar, username, topics }
       });
       if (error) throw error;
-      await _crSaveUserData({ avatar_image: avatarImage || null });
+      // Persist the URL; drop any legacy base64 now that we use Storage.
+      await _crSaveUserData({ avatar_url: avatarUrl || null, avatar_image: null });
       const baseMeta = (data && data.user && data.user.user_metadata) || { avatar, username, topics };
-      _cachedSettings = Object.assign({}, baseMeta, { avatarImage: avatarImage || '' });
+      _cachedSettings = Object.assign({}, baseMeta, { avatarUrl: avatarUrl || '', avatarImage: '' });
       applySettingsToUI(_cachedSettings);
       // Topics may have changed — refresh the feed/banner so For You reflects them now.
       if (typeof renderCurrentPage === 'function') renderCurrentPage();
@@ -6229,11 +6264,13 @@ document.addEventListener('DOMContentLoaded', () => {
       window._crTopics = Array.isArray(meta.topics) ? meta.topics.slice() : [];
       localStorage.setItem('cr_topics_v1', JSON.stringify(window._crTopics));
     } catch (e) {}
-    // Swap the top-right avatar icon for the user's choice — either
-    // a custom uploaded image (meta.avatarImage takes priority) or an emoji.
+    // Swap the top-right avatar icon for the user's choice — either a custom
+    // uploaded image (Storage URL preferred, base64 fallback pre-migration) or
+    // an emoji.
+    const avatarSrc = meta.avatarUrl || meta.avatarImage || '';
     const btn = document.querySelector('#user-menu-wrap > button');
     if (btn) {
-      if (meta.avatarImage) {
+      if (avatarSrc) {
         // Custom image — replace text content with an <img> child
         btn.classList.remove('material-symbols-outlined');
         btn.textContent = '';
@@ -6245,7 +6282,7 @@ document.addEventListener('DOMContentLoaded', () => {
           img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
           btn.appendChild(img);
         }
-        img.src = meta.avatarImage;
+        img.src = avatarSrc;
         btn.style.padding = '0';
         btn.style.overflow = 'hidden';
         btn.style.width = '2.25rem';
@@ -6284,10 +6321,21 @@ document.addEventListener('DOMContentLoaded', () => {
       // Bulk data (saved, tombstones, avatar image, chat) now lives in the
       // user_data table — fetch it (this also slims a stale oversized token).
       const ud = await _crLoadUserData();
-      // Merge the custom avatar image back into cached settings so the avatar
-      // UI + Settings form behave exactly as before.
-      _cachedSettings = Object.assign({}, meta, { avatarImage: ud.avatar_image || '' });
+      // Merge the avatar (Storage URL preferred, legacy base64 fallback) into
+      // cached settings so the avatar UI + Settings form behave as before.
+      _cachedSettings = Object.assign({}, meta, { avatarUrl: ud.avatar_url || '', avatarImage: ud.avatar_image || '' });
       applySettingsToUI(_cachedSettings);
+      // One-time lazy migration: if a legacy base64 avatar exists but hasn't
+      // been moved to Storage yet, upload it now (background) so it can show in
+      // the community chat and stay light.
+      if (!ud.avatar_url && ud.avatar_image && typeof _crUploadAvatar === 'function') {
+        _crUploadAvatar(ud.avatar_image).then(function(url) {
+          if (!url) return;
+          _crSaveUserData({ avatar_url: url, avatar_image: null });
+          _cachedSettings.avatarUrl = url; _cachedSettings.avatarImage = '';
+          applySettingsToUI(_cachedSettings);
+        });
+      }
 
       // ── Saved Stories cross-device sync ─────────────────────────
       // Merge remote (user_data table) into local (localStorage) by URL key.
@@ -6655,7 +6703,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   /* All messages left-aligned (channel style); own messages keep a subtle
      cyan tint so you can still spot yours at a glance. */
-  .cr-comms-msg { display: flex; justify-content: flex-start; max-width: 100%; }
+  .cr-comms-msg { display: flex; justify-content: flex-start; align-items: flex-start; gap: 0.6rem; max-width: 100%; }
+  .cr-comms-avatar {
+    flex: 0 0 auto;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 0.1rem;
+    border: 1px solid rgba(0,240,255,0.25);
+    background: rgba(0,240,255,0.06);
+  }
+  .cr-comms-avatar--fallback {
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-headline, inherit);
+    font-size: 0.85rem; font-weight: 700;
+    color: #00f0ff;
+    text-transform: uppercase;
+  }
   .cr-comms-bubble {
     max-width: 78%;
     background: rgba(255,255,255,0.04);
@@ -7493,6 +7557,23 @@ document.addEventListener('DOMContentLoaded', () => {
            (u.email ? u.email.split('@')[0] : 'Operator');
   }
 
+  // The current user's avatar image URL (Storage), if any, to stamp onto
+  // outgoing messages so other operators see it.
+  function myAvatarUrl() {
+    return (window._crUserData && window._crUserData.avatar_url) || null;
+  }
+
+  // Avatar circle for a message: the sender's image if present, else a
+  // colored initial derived from their callsign.
+  function avatarMarkup(msg, mine) {
+    if (msg.avatar_url) {
+      return '<img class="cr-comms-avatar" src="' + esc(msg.avatar_url) + '" alt="" loading="lazy">';
+    }
+    var name = (mine ? myName() : (msg.username || 'Operator')).trim();
+    var initial = esc((name.charAt(0) || 'O').toUpperCase());
+    return '<div class="cr-comms-avatar cr-comms-avatar--fallback">' + initial + '</div>';
+  }
+
   function fmtTime(iso) {
     try {
       var d = new Date(iso);
@@ -7515,6 +7596,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var row = document.createElement('div');
     row.className = 'cr-comms-msg' + (mine ? ' mine' : '');
     row.innerHTML =
+      avatarMarkup(msg, mine) +
       '<div class="cr-comms-bubble">' +
         '<div class="cr-comms-meta">' +
           '<span class="cr-comms-author">' + esc(mine ? 'You' : (msg.username || 'Operator')) + '</span>' +
@@ -7555,7 +7637,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof window._crEnsureSlimToken === 'function') { try { await window._crEnsureSlimToken(); } catch(e){} }
     try {
       const res = await sb.from('messages')
-        .select('id,user_id,username,content,created_at')
+        .select('id,user_id,username,avatar_url,content,created_at')
         .order('created_at', { ascending: false })
         .limit(50);
       if (res.error) throw res.error;
@@ -7590,7 +7672,7 @@ document.addEventListener('DOMContentLoaded', () => {
     t.value = '';
     crCommsAutosize(t);
     sb.from('messages')
-      .insert({ user_id: u.id, username: myName(), content: content })
+      .insert({ user_id: u.id, username: myName(), avatar_url: myAvatarUrl(), content: content })
       .then(function(res) {
         if (btn) btn.disabled = false;
         if (res.error) {
