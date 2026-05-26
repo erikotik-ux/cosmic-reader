@@ -4179,7 +4179,10 @@ function showToast(message, opts) {
     btn.type = 'button';
     btn.className = 'cr-toast-action';
     btn.textContent = opts.actionLabel;
-    btn.addEventListener('click', () => { try { opts.onAction(); } finally { hideToast(); } });
+    // Dismiss THIS toast first, then run the action. If the action shows its
+    // own toast (e.g. Undo → re-save), doing it in this order avoids clearing
+    // the new toast's auto-hide timer (which left the replacement stuck on screen).
+    btn.addEventListener('click', () => { hideToast(); try { opts.onAction(); } catch (e) {} });
     el.appendChild(btn);
   }
   requestAnimationFrame(() => el.classList.add('cr-toast-show'));
