@@ -1124,6 +1124,10 @@
       <span class="material-symbols-outlined">local_fire_department</span>
       <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Trending</span>
     </a>
+    <a id="nav-comms" onclick="navigate('comms')" class="sidebar-link flex items-center justify-center md:justify-start gap-4 px-4 md:px-6 py-4 text-white/55 cursor-pointer select-none">
+      <span class="material-symbols-outlined">forum</span>
+      <span class="hidden md:block font-headline uppercase tracking-widest text-[10px]">Comms</span>
+    </a>
   </nav>
   <!-- Probe Report — fills the sidebar's mid space, pinned above the Deploy
        Probe footer (mt-auto). The gap it leaves under the nav is reserved for
@@ -2195,6 +2199,10 @@
     <span class="material-symbols-outlined" style="font-size:22px">local_fire_department</span>
     <span class="font-label text-[9px] uppercase tracking-widest">Trending</span>
   </button>
+  <button id="mnav-comms" class="mnav-link flex flex-col items-center gap-0.5 text-white/55" onclick="navigate('comms')">
+    <span class="material-symbols-outlined" style="font-size:22px">forum</span>
+    <span class="font-label text-[9px] uppercase tracking-widest">Comms</span>
+  </button>
 </nav>
 
 <!-- ── Back to Feed button (body-level so fixed pos works on mobile Safari).
@@ -2840,6 +2848,44 @@
       <div id="trending-list" class="flex flex-col gap-3">
         <p class="text-[#dbfcff]/30 font-body text-sm">Loading signals…</p>
       </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- VIEW 7: COMMS (Cosmic AI — full-page chat)              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- A spacious, full-page home for the Cosmic AI operator. Shares ONE live
+     conversation with the floating chat widget (same history + backend) via
+     the data-cr-chat-* hooks — this is just a roomier surface, not a second
+     chat. -->
+<main id="view-comms" class="view h-screen w-full overflow-hidden">
+  <div class="h-full flex flex-col md:pl-64 pt-20 md:pt-20 pb-20 md:pb-6">
+    <div class="max-w-3xl w-full mx-auto px-6 pt-2 md:pt-4 flex-1 min-h-0 flex flex-col">
+      <!-- Header -->
+      <header class="mb-3 shrink-0">
+        <span class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#00f0ff]/60 block mb-2">Cosmic AI</span>
+        <h1 class="text-4xl font-headline font-bold tracking-tighter text-[#dbfcff] flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#00f0ff]" style="font-size:32px">auto_awesome</span>
+          Mission Comms
+        </h1>
+        <p class="text-[#dbfcff]/60 font-body text-sm mt-2 max-w-xl">Ask the operator about today's signals — summaries, what to read first, or the science explained simply.</p>
+      </header>
+
+      <!-- Messages (shared live conversation) -->
+      <div id="comms-messages" data-cr-chat-list class="cr-chat-messages" style="padding-left:0;padding-right:0;"></div>
+
+      <!-- Composer -->
+      <form class="cr-chat-form cr-comms-form" onsubmit="crChatSend(event)">
+        <textarea id="comms-input" data-cr-chat-input
+                  placeholder="Ask about today's space news…"
+                  rows="1" maxlength="1800"
+                  onkeydown="crChatKey(event)" oninput="crChatAutosize(this)"></textarea>
+        <button type="submit" id="comms-send-btn" data-cr-chat-send aria-label="Send message">
+          <span class="material-symbols-outlined">send</span>
+        </button>
+      </form>
+      <div class="cr-chat-footnote">Powered by Gemini — replies may be inaccurate. Verify at the source.</div>
     </div>
   </div>
 </main>
@@ -4737,12 +4783,14 @@ function navigate(viewName, opts) {
     mnavEl.classList.remove('text-white/55');
   }
   currentView = viewName;
+  // Hide the floating chat FAB on the Comms section (it's the chat home there).
+  document.body.classList.toggle('cr-view-comms', viewName === 'comms');
   // Show Back button only on detail view
   const backBtn = document.getElementById('back-btn');
   if (backBtn) backBtn.style.display = (viewName === 'detail') ? 'block' : 'none';
 
   // Update breadcrumb. On article views it doubles as a clickable Back path.
-  const labels = { map:'Galaxy Map', feed:'My Feed', detail:'Signal Detail', reading:'Full Transmission', saved:'Saved Stories', trending:'Trending' };
+  const labels = { map:'Galaxy Map', feed:'My Feed', detail:'Signal Detail', reading:'Full Transmission', saved:'Saved Stories', trending:'Trending', comms:'Comms' };
   const bc = document.getElementById('breadcrumb');
   if (bc) {
     const isArticleView = (viewName === 'detail' || viewName === 'reading');
@@ -4773,6 +4821,8 @@ function navigate(viewName, opts) {
       updatePaginationUI();
     } else if (viewName === 'trending') {
       renderTrending();
+    } else if (viewName === 'comms') {
+      if (typeof crCommsEnter === 'function') crCommsEnter();
     }
   });
 }
@@ -6513,6 +6563,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   /* Hide FAB when the panel is open */
   body.cr-chat-open .cr-chat-fab { display: none; }
+  /* On the full-page Comms section the FAB is redundant — hide it there. */
+  body.cr-view-comms .cr-chat-fab { display: none; }
+  /* Comms composer: roomier than the floating panel + comfortable max width. */
+  .cr-comms-form { border-top: 1px solid rgba(0,240,255,0.1); padding-top: 0.85rem; }
 
   /* Slide-in chat panel — full-screen on mobile, side panel on desktop */
   .cr-chat-panel {
@@ -6810,16 +6864,16 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </header>
 
-  <div class="cr-chat-messages" id="cr-chat-messages"></div>
+  <div class="cr-chat-messages" id="cr-chat-messages" data-cr-chat-list></div>
 
   <form class="cr-chat-form" onsubmit="crChatSend(event)">
-    <textarea id="cr-chat-input"
+    <textarea id="cr-chat-input" data-cr-chat-input
               placeholder="Ask about today's space news…"
               rows="1"
               maxlength="1800"
               onkeydown="crChatKey(event)"
               oninput="crChatAutosize(this)"></textarea>
-    <button type="submit" id="cr-chat-send-btn" aria-label="Send">
+    <button type="submit" id="cr-chat-send-btn" data-cr-chat-send aria-label="Send">
       <span class="material-symbols-outlined">send</span>
     </button>
   </form>
@@ -7045,32 +7099,33 @@ document.addEventListener('DOMContentLoaded', () => {
     return bubble;
   }
 
+  // Renders into EVERY chat surface present (the floating panel AND the
+  // full-page Comms section), so both share one live conversation.
   function _renderMessages() {
-    const root = document.getElementById('cr-chat-messages');
-    if (!root) return;
+    const roots = document.querySelectorAll('[data-cr-chat-list]');
+    if (!roots.length) return;
+    let html;
     if (chatHistory.length === 0 && !isSending) {
-      root.innerHTML = _renderEmpty();
-      return;
-    }
-    let html = '';
-    chatHistory.forEach(m => {
-      if (m.role === 'user') {
-        html += '<div class="cr-chat-msg user">' + _escapeHtml(m.content) + '</div>';
-      } else if (m.role === 'error') {
-        html += '<div class="cr-chat-msg assistant error">' + _escapeHtml(m.content) +
-                '<button class="cr-chat-retry" type="button" onclick="crChatRetry()">' +
-                '<span class="material-symbols-outlined">refresh</span>Retry</button></div>';
-      } else {
-        html += _renderAssistant(m.content);
+      html = _renderEmpty();
+    } else {
+      html = '';
+      chatHistory.forEach(m => {
+        if (m.role === 'user') {
+          html += '<div class="cr-chat-msg user">' + _escapeHtml(m.content) + '</div>';
+        } else if (m.role === 'error') {
+          html += '<div class="cr-chat-msg assistant error">' + _escapeHtml(m.content) +
+                  '<button class="cr-chat-retry" type="button" onclick="crChatRetry()">' +
+                  '<span class="material-symbols-outlined">refresh</span>Retry</button></div>';
+        } else {
+          html += _renderAssistant(m.content);
+        }
+      });
+      if (isSending) {
+        html += '<div class="cr-chat-typing" aria-label="Cosmic AI is typing">' +
+                '<span></span><span></span><span></span></div>';
       }
-    });
-    if (isSending) {
-      html += '<div class="cr-chat-typing" aria-label="Cosmic AI is typing">' +
-              '<span></span><span></span><span></span></div>';
     }
-    root.innerHTML = html;
-    // Scroll to bottom
-    root.scrollTop = root.scrollHeight;
+    roots.forEach(root => { root.innerHTML = html; root.scrollTop = root.scrollHeight; });
   }
 
   // ── Open / close ───────────────────────────────────────────
@@ -7086,6 +7141,12 @@ document.addEventListener('DOMContentLoaded', () => {
   window.crChatClose = function() {
     document.body.classList.remove('cr-chat-open');
   };
+  // Entering the full-page Comms section — render the shared conversation into
+  // it and focus its composer (the floating panel stays in sync automatically).
+  window.crCommsEnter = function() {
+    _renderMessages();
+    setTimeout(() => { const i = document.getElementById('comms-input'); if (i) i.focus(); }, 60);
+  };
   window.crChatClear = function() {
     if (chatHistory.length === 0) return;
     if (!confirm('Clear this conversation?')) return;
@@ -7094,14 +7155,26 @@ document.addEventListener('DOMContentLoaded', () => {
     _renderMessages();
   };
 
+  // Resolve which composer triggered an event (floating panel vs Comms
+  // section), falling back to the floating input. Lets one send/key handler
+  // serve both surfaces.
+  function _activeChatInput(e) {
+    const t = e && e.target;
+    if (t) {
+      if (t.tagName === 'TEXTAREA') return t;
+      if (t.querySelector) { const ta = t.querySelector('[data-cr-chat-input]'); if (ta) return ta; }
+    }
+    return document.getElementById('cr-chat-input');
+  }
+  function _allChatInputs() { return document.querySelectorAll('[data-cr-chat-input]'); }
+
   // ── Suggestion click ───────────────────────────────────────
   window.crChatSuggest = function(text) {
-    const input = document.getElementById('cr-chat-input');
-    if (input) {
-      input.value = text;
-      crChatAutosize(input);
-      input.focus();
-    }
+    _allChatInputs().forEach(input => { input.value = text; crChatAutosize(input); });
+    // Focus the composer on whichever surface is active.
+    const onComms = (typeof currentView !== 'undefined' && currentView === 'comms');
+    const focusEl = onComms ? document.getElementById('comms-input') : document.getElementById('cr-chat-input');
+    if (focusEl) focusEl.focus();
   };
 
   // ── Composer behaviour ─────────────────────────────────────
@@ -7121,7 +7194,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.crChatSend = async function(e) {
     if (e && e.preventDefault) e.preventDefault();
     if (isSending) return;
-    const input = document.getElementById('cr-chat-input');
+    const input = _activeChatInput(e);
     if (!input) return;
     const text = (input.value || '').trim();
     if (!text) return;
@@ -7132,9 +7205,8 @@ document.addEventListener('DOMContentLoaded', () => {
     while (chatHistory.length > MAX_HISTORY) chatHistory.shift();
     _persist();
 
-    // Clear input
-    input.value = '';
-    crChatAutosize(input);
+    // Clear every composer (both surfaces share one conversation)
+    _allChatInputs().forEach(i => { i.value = ''; crChatAutosize(i); });
 
     await _runChatRequest();
   };
@@ -7155,11 +7227,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Shared request + stream runner. Assumes the user's message is already in
   // chatHistory. Used by both send and retry.
   async function _runChatRequest() {
-    const sendBtn = document.getElementById('cr-chat-send-btn');
+    const sendBtns = document.querySelectorAll('[data-cr-chat-send]');
 
     // Render + show typing
     isSending = true;
-    if (sendBtn) sendBtn.disabled = true;
+    sendBtns.forEach(b => { b.disabled = true; });
     _renderMessages();
 
     try {
@@ -7259,7 +7331,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chatHistory.push({ role: 'error', content: 'Network error. Check connection and try again.' });
     } finally {
       isSending = false;
-      if (sendBtn) sendBtn.disabled = false;
+      sendBtns.forEach(b => { b.disabled = false; });
       _persist();
       _renderMessages();
     }
