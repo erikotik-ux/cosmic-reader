@@ -2598,6 +2598,18 @@
                 <span id="share-story-label" class="font-headline uppercase tracking-widest text-[10px] text-primary hidden sm:inline">Share</span>
               </button>
             </div>
+            <!-- Feed tuning: hide this source / show fewer like this topic.
+                 Reversible via the Undo toast and in Settings. -->
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="crHideCurrentSource()" aria-label="Hide this source" title="Hide this source from your feed" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#ffb5a0]">visibility_off</span>
+                <span class="font-headline uppercase tracking-widest text-[10px] text-[#ffb5a0] hidden sm:inline">Hide source</span>
+              </button>
+              <button onclick="crHideCurrentTopic()" aria-label="Show fewer like this topic" title="Show fewer stories in this category" class="px-3 py-3 border border-outline-variant/30 rounded-sm hover:border-primary/50 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#ffb5a0]">do_not_disturb_on</span>
+                <span class="font-headline uppercase tracking-widest text-[10px] text-[#ffb5a0] hidden sm:inline">Less like this</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -4412,11 +4424,95 @@ if (typeof window._crTopics === 'undefined') {
   try { window._crTopics = JSON.parse(localStorage.getItem('cr_topics_v1') || '[]'); }
   catch (e) { window._crTopics = []; }
 }
+// ── Hidden sources / topics (feed tuning) ───────────────────
+// Same persistence pattern as topics/saved: localStorage now, mirrored to
+// Supabase user_metadata for cross-device sync. Preferences only — nothing is
+// ever deleted, and every hide is reversible in Settings.
+if (typeof window._crHiddenSources === 'undefined') {
+  try { window._crHiddenSources = JSON.parse(localStorage.getItem('cr_hidden_sources_v1') || '[]'); }
+  catch (e) { window._crHiddenSources = []; }
+}
+if (typeof window._crHiddenTopics === 'undefined') {
+  try { window._crHiddenTopics = JSON.parse(localStorage.getItem('cr_hidden_topics_v1') || '[]'); }
+  catch (e) { window._crHiddenTopics = []; }
+}
+function _crPersistHidden() {
+  try { localStorage.setItem('cr_hidden_sources_v1', JSON.stringify(window._crHiddenSources || [])); } catch (e) {}
+  try { localStorage.setItem('cr_hidden_topics_v1',  JSON.stringify(window._crHiddenTopics  || [])); } catch (e) {}
+  _crQueueHiddenSync();
+}
+let _crHiddenSyncTimer = null;
+function _crQueueHiddenSync() {
+  if (_crHiddenSyncTimer) clearTimeout(_crHiddenSyncTimer);
+  _crHiddenSyncTimer = setTimeout(_crFlushHiddenSync, 200);
+}
+async function _crFlushHiddenSync() {
+  if (_crHiddenSyncTimer) { clearTimeout(_crHiddenSyncTimer); _crHiddenSyncTimer = null; }
+  if (!window._supabase || !window._crUser) return;
+  try {
+    await window._supabase.auth.updateUser({
+      data: { hiddenSources: (window._crHiddenSources || []).slice(), hiddenTopics: (window._crHiddenTopics || []).slice() }
+    });
+  } catch (e) { /* offline / not signed in — localStorage still holds it */ }
+}
+// Mutators (global so the article detail view + Settings can call them).
+window.crHideSource = function (src) {
+  if (!src) return;
+  const a = window._crHiddenSources || (window._crHiddenSources = []);
+  if (a.indexOf(src) === -1) a.push(src);
+  _crPersistHidden();
+  if (typeof renderCurrentPage === 'function') renderCurrentPage();
+};
+window.crUnhideSource = function (src) {
+  window._crHiddenSources = (window._crHiddenSources || []).filter(s => s !== src);
+  _crPersistHidden();
+  if (typeof renderCurrentPage === 'function') renderCurrentPage();
+};
+window.crHideTopic = function (cat) {
+  if (!cat) return;
+  const a = window._crHiddenTopics || (window._crHiddenTopics = []);
+  if (a.indexOf(cat) === -1) a.push(cat);
+  _crPersistHidden();
+  if (typeof renderCurrentPage === 'function') renderCurrentPage();
+};
+window.crUnhideTopic = function (cat) {
+  window._crHiddenTopics = (window._crHiddenTopics || []).filter(c => c !== cat);
+  _crPersistHidden();
+  if (typeof renderCurrentPage === 'function') renderCurrentPage();
+};
+// Detail-view actions: hide the open article's source / category, with an
+// Undo toast, then return to the feed so the change is visible immediately.
+window.crHideCurrentSource = function () {
+  const a = articles[currentArticle];
+  if (!a || !a.source) return;
+  const src = a.source;
+  window.crHideSource(src);
+  if (typeof showToast === 'function') showToast('Hidden "' + src + '" from your feed', { icon: 'visibility_off', actionLabel: 'Undo', onAction: () => window.crUnhideSource(src) });
+  if (typeof navigate === 'function') navigate('feed');
+};
+window.crHideCurrentTopic = function () {
+  const a = articles[currentArticle];
+  if (!a || !a.category) return;
+  const cat = a.category;
+  window.crHideTopic(cat);
+  if (typeof showToast === 'function') showToast('Showing fewer "' + cat + '" stories', { icon: 'do_not_disturb_on', actionLabel: 'Undo', onAction: () => window.crUnhideTopic(cat) });
+  if (typeof navigate === 'function') navigate('feed');
+};
+
+// Pure predicate (no globals) — unit-tested in tests/hidden-prefs.test.js.
+function _crIsHiddenArticle(a, hiddenSources, hiddenTopics) {
+  if (!a) return false;
+  if (Array.isArray(hiddenSources) && hiddenSources.indexOf(a.source) !== -1) return true;
+  if (Array.isArray(hiddenTopics)  && hiddenTopics.indexOf(a.category) !== -1) return true;
+  return false;
+}
 
 function getFilteredArticles() {
   // Exclude saved-story copies injected by openSavedStory — they exist only so
   // an outdated saved article can be opened, and must not appear in the feed.
-  let list = articles.filter(a => !a._savedInjected);
+  // Also exclude user-hidden sources/topics (feed tuning).
+  let list = articles.filter(a => !a._savedInjected &&
+    !_crIsHiddenArticle(a, window._crHiddenSources, window._crHiddenTopics));
   if (currentFilter !== 'All') {
     list = list.filter(a => a.category.toLowerCase() === currentFilter.toLowerCase());
   }
@@ -5894,6 +5990,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Render the hidden sources/topics as removable chips (× to un-hide).
+  function renderHiddenPrefs() {
+    const wrap = document.getElementById('settings-hidden-wrap');
+    if (!wrap) return;
+    const hs = window._crHiddenSources || [];
+    const ht = window._crHiddenTopics  || [];
+    if (!hs.length && !ht.length) {
+      wrap.innerHTML = '<p class="settings-hint" style="opacity:0.55;margin:0;">Nothing hidden yet.</p>';
+      return;
+    }
+    const group = (label, items, fn) =>
+      '<div class="cr-hidden-group"><span class="cr-hidden-label">' + label + '</span>' +
+      items.map(v => '<button type="button" class="cr-hidden-chip" onclick="' + fn + '(this.dataset.v)" data-v="' +
+        _escAttr(v) + '">' + _escHtmlSettings(v) + '<span class="material-symbols-outlined">close</span></button>').join('') +
+      '</div>';
+    let html = '';
+    if (hs.length) html += group('Sources', hs, 'crSettingsUnhideSource');
+    if (ht.length) html += group('Topics',  ht, 'crSettingsUnhideTopic');
+    wrap.innerHTML = html;
+  }
+  function _escHtmlSettings(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function _escAttr(s) { return _escHtmlSettings(s).replace(/"/g,'&quot;'); }
+  window.crSettingsUnhideSource = function (s) { if (window.crUnhideSource) window.crUnhideSource(s); renderHiddenPrefs(); };
+  window.crSettingsUnhideTopic  = function (c) { if (window.crUnhideTopic)  window.crUnhideTopic(c);  renderHiddenPrefs(); };
+
   function hydrateSettingsForm() {
     const meta = _cachedSettings || {};
     const avatar      = meta.avatar      || '🚀';
@@ -5904,6 +6025,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (usernameInput) usernameInput.value = username;
     renderAvatarPicker(avatar, avatarImage);
     renderTopicPicker(new Set(topics));
+    renderHiddenPrefs();
     // Wire the file input each time (handler is idempotent because the
     // input element is the same; we just rebind to capture the current
     // upload tile).
@@ -6077,6 +6199,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      // ── Hidden sources/topics cross-device sync ─────────────────
+      // Adopt remote hidden prefs only when local is empty (fresh device/tab),
+      // mirroring the chat-hydrate rule — avoids resurrecting items the user
+      // just un-hid on this device.
+      const remoteHS = Array.isArray(meta.hiddenSources) ? meta.hiddenSources : [];
+      const remoteHT = Array.isArray(meta.hiddenTopics)  ? meta.hiddenTopics  : [];
+      let _hidChanged = false;
+      if ((window._crHiddenSources || []).length === 0 && remoteHS.length) { window._crHiddenSources = remoteHS.slice(); _hidChanged = true; }
+      if ((window._crHiddenTopics  || []).length === 0 && remoteHT.length) { window._crHiddenTopics  = remoteHT.slice(); _hidChanged = true; }
+      if (_hidChanged) {
+        try { localStorage.setItem('cr_hidden_sources_v1', JSON.stringify(window._crHiddenSources)); } catch (e) {}
+        try { localStorage.setItem('cr_hidden_topics_v1',  JSON.stringify(window._crHiddenTopics)); }  catch (e) {}
+        if (typeof renderCurrentPage === 'function') renderCurrentPage();
+      }
+
       // ── Chat history cross-device sync ──────────────────────────
       // Pull any chat history stored in user_metadata. Empty tabs hydrate
       // from remote; active conversations stay put (see _crHydrateChat).
@@ -6138,6 +6275,17 @@ document.addEventListener('DOMContentLoaded', () => {
     margin-bottom: 1.75rem;
   }
   .settings-section { margin-bottom: 1.5rem; }
+  /* Feed Tuning — hidden source/topic chips */
+  .cr-hidden-group { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-bottom: 0.55rem; }
+  .cr-hidden-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(219,252,255,0.4); margin-right: 0.15rem; }
+  .cr-hidden-chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.25rem 0.55rem; border-radius: 999px;
+    background: rgba(255,181,160,0.08); border: 1px solid rgba(255,181,160,0.3);
+    color: #ffb5a0; font-family: 'Exo 2','Space Grotesk',sans-serif; font-size: 0.72rem; cursor: pointer;
+  }
+  .cr-hidden-chip:hover { background: rgba(255,181,160,0.18); border-color: #ffb5a0; }
+  .cr-hidden-chip .material-symbols-outlined { font-size: 13px; }
   .settings-section h3 {
     font-size: 0.7rem; letter-spacing: 0.24em; text-transform: uppercase;
     color: rgba(0,240,255,0.6);
@@ -6319,6 +6467,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <h3>Topics of Interest</h3>
         <p class="settings-hint">Tap every category you want more of. This signals what to prioritize in the next build.</p>
         <div id="settings-topic-grid" class="settings-topic-grid"></div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Feed Tuning</h3>
+        <p class="settings-hint">Sources and topics you've hidden. Tap × to show them again. Hide more from any signal's page.</p>
+        <div id="settings-hidden-wrap"></div>
       </div>
 
       <div class="settings-actions">
