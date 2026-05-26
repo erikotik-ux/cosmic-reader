@@ -6653,8 +6653,9 @@ document.addEventListener('DOMContentLoaded', () => {
     font-size: 0.85rem;
     padding: 2rem 1rem;
   }
-  .cr-comms-msg { display: flex; max-width: 100%; }
-  .cr-comms-msg.mine { justify-content: flex-end; }
+  /* All messages left-aligned (channel style); own messages keep a subtle
+     cyan tint so you can still spot yours at a glance. */
+  .cr-comms-msg { display: flex; justify-content: flex-start; max-width: 100%; }
   .cr-comms-bubble {
     max-width: 78%;
     background: rgba(255,255,255,0.04);
@@ -6663,8 +6664,8 @@ document.addEventListener('DOMContentLoaded', () => {
     padding: 0.5rem 0.75rem;
   }
   .cr-comms-msg.mine .cr-comms-bubble {
-    background: rgba(0,240,255,0.10);
-    border-color: rgba(0,240,255,0.3);
+    background: rgba(0,240,255,0.08);
+    border-color: rgba(0,240,255,0.22);
   }
   .cr-comms-meta {
     display: flex;
