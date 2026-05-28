@@ -6797,6 +6797,23 @@ document.addEventListener('DOMContentLoaded', () => {
     font-size: 0.62rem;
     color: rgba(219,252,255,0.4);
   }
+  /* Delete control on own messages — subtle, brightens on hover/focus. */
+  .cr-comms-del {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    border: none;
+    background: none;
+    color: rgba(219,252,255,0.3);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.15s;
+  }
+  .cr-comms-del .material-symbols-outlined { font-size: 15px; }
+  .cr-comms-msg:hover .cr-comms-del,
+  .cr-comms-del:focus-visible { opacity: 1; }
+  .cr-comms-del:hover { color: #ff6b6b; }
   .cr-comms-body {
     font-size: 0.9rem;
     line-height: 1.45;
@@ -7654,12 +7671,18 @@ document.addEventListener('DOMContentLoaded', () => {
     var mine = window._crUser && msg.user_id === window._crUser.id;
     var row = document.createElement('div');
     row.className = 'cr-comms-msg' + (mine ? ' mine' : '');
+    row.dataset.mid = msg.id;
+    // Own messages get a delete control (RLS allows delete only on own rows).
+    var del = mine
+      ? '<button class="cr-comms-del" title="Delete message" aria-label="Delete message" onclick="crCommsDelete(\'' + esc(msg.id) + '\')"><span class="material-symbols-outlined">delete</span></button>'
+      : '';
     row.innerHTML =
       avatarMarkup(msg, mine) +
       '<div class="cr-comms-bubble">' +
         '<div class="cr-comms-meta">' +
           '<span class="cr-comms-author">' + esc(mine ? 'You' : (msg.username || 'Operator')) + '</span>' +
           '<span class="cr-comms-time">' + esc(fmtTime(msg.created_at)) + '</span>' +
+          del +
         '</div>' +
         '<div class="cr-comms-body">' + esc(msg.content) + '</div>' +
       '</div>';
@@ -7667,6 +7690,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (opts && opts.scroll !== false) scrollToBottom();
     return true;
   }
+
+  // Remove a message bubble from the DOM by id (used by own-delete + realtime
+  // DELETE from other clients). Clears the dedupe flag too.
+  function removeMessage(id) {
+    if (!id) return;
+    delete seen[id];
+    var f = feedEl();
+    var row = f && f.querySelector('[data-mid="' + (window.CSS && CSS.escape ? CSS.escape(String(id)) : String(id)) + '"]');
+    if (row) row.remove();
+  }
+
+  // Delete one of the current user's own messages.
+  window.crCommsDelete = async function(id) {
+    if (!id) return;
+    if (!confirm('Delete this message? This cannot be undone.')) return;
+    var sb = window._supabase, u = window._crUser;
+    if (!sb || !u) return;
+    if (typeof window._crEnsureSlimToken === 'function') { try { await window._crEnsureSlimToken(); } catch(e){} }
+    try {
+      const { error } = await sb.from('messages').delete().eq('id', id).eq('user_id', u.id);
+      if (error) { console.warn('Comms delete:', error.message); return; }
+      removeMessage(id); // optimistic — realtime DELETE updates other clients
+    } catch (e) { console.warn('Comms delete threw:', e); }
+  };
 
   function showEmpty(text) {
     var f = feedEl();
@@ -7686,6 +7733,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Auto-scroll for new messages when already at the bottom, and
             // always for your own outgoing message.
             if (added && (stick || mine)) scrollToBottom();
+          })
+      .on('postgres_changes',
+          { event: 'DELETE', schema: 'public', table: 'messages' },
+          function(payload) {
+            // payload.old carries the deleted row's PK (id) — remove its bubble.
+            if (payload.old && payload.old.id) removeMessage(payload.old.id);
           })
       .subscribe();
   }
