@@ -3092,6 +3092,22 @@ function pickFallback(category, title) {
   if (!pool || !pool.length) return '';
   return pool[_hashTitle(title) % pool.length];
 }
+// Decorative / system images that WordPress (and similar CMSs) embed inside
+// post content but which are NOT the article's hero image: emoji glyphs
+// (s.w.org/images/core/emoji — tiny 72x72 PNGs), wp-includes system assets,
+// gravatar author avatars, and spacer/pixel images. If we mistake one of these
+// for the hero it gets upscaled to full width and looks blurry (and, for feeds
+// in NO_IMG_SRCS, it suppresses the og:image enrichment that would fetch the
+// real hero). Used by both feed-parse paths to skip them during extraction.
+function _isDecorativeImg(u) {
+  if (!u) return true;
+  return /\/(emoji|emojis)\//i.test(u)
+      || /\/\/s\.w\.org\//i.test(u)
+      || /\/wp-includes\//i.test(u)
+      || /gravatar\.com/i.test(u)
+      || /\/(spacer|blank|pixel|1x1)\.(?:gif|png)/i.test(u);
+}
+
 // Route publisher CDN images through wsrv.nl — a dedicated image-proxy CDN
 // that fetches images server-side and re-serves them. Its IPs are not in AWS
 // data-center ranges, so Cloudflare WAF rules that block hosting providers
@@ -3422,16 +3438,23 @@ async function fetchFeed(feedInfo) {
         // 2. Scan the content HTML — rss2json strips <img> from item.content but WordPress
         //    featured images often survive in item.description. Also check srcset (WP generates these).
         if (!_hasRealImg) {
-          const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/i;
+          const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/ig;
           const SRCSET_RE = /srcset=["']([^"']+)["']/i;
           for (const html of [item.description || '', item.content || '']) {
-            const m = html.match(IMG_RE);
-            if (m) { image = normaliseImg(m[1]); break; }
-            // srcset: pick the largest (last) URL before a comma or end
+            // First non-decorative <img> (skip emoji/system images like the
+            // WordPress 72x72 emoji PNGs that would otherwise blur full-width).
+            let found = '';
+            for (const m of html.matchAll(IMG_RE)) {
+              if (_isDecorativeImg(m[1])) continue;
+              const u = normaliseImg(m[1]); if (u) { found = u; break; }
+            }
+            if (found) { image = found; break; }
+            // srcset: pick the largest (last) non-decorative URL
             const ss = html.match(SRCSET_RE);
             if (ss) {
-              const parts = ss[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(Boolean);
-              if (parts.length) { image = normaliseImg(parts[parts.length - 1]); break; }
+              const parts = ss[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(Boolean).reverse();
+              for (const p of parts) { if (_isDecorativeImg(p)) continue; const u = normaliseImg(p); if (u) { found = u; break; } }
+              if (found) { image = found; break; }
             }
           }
           if (image && /^https?:/.test(image)) _hasRealImg = true;
@@ -3544,16 +3567,22 @@ async function fetchFeed(feedInfo) {
       // WordPress (SpaceNews, NASASpaceFlight, etc.) embeds featured image in
       // <content:encoded> and sometimes <description>. Also check srcset (WP uses these).
       const encodedRaw = item.querySelector('encoded')?.textContent || '';
-      const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/i;
+      const IMG_RE = /(?:src|data-src|data-lazy-src)=["']((?:https?:|\/\/)[^"']+\.(?:jpg|jpeg|png|webp|gif)[^"']*?)["']/ig;
       const SRCSET_RE = /srcset=["']([^"']+)["']/i;
       for (const text of [descRaw, encodedRaw]) {
         if (!text) continue;
-        const m = text.match(IMG_RE);
-        if (m) { image = _normImg(m[1]); break; }
+        // First non-decorative <img> (skip emoji/system images).
+        let found = '';
+        for (const m of text.matchAll(IMG_RE)) {
+          if (_isDecorativeImg(m[1])) continue;
+          const u = _normImg(m[1]); if (u) { found = u; break; }
+        }
+        if (found) { image = found; break; }
         const ss = text.match(SRCSET_RE);
         if (ss) {
-          const parts = ss[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(Boolean);
-          if (parts.length) { image = _normImg(parts[parts.length - 1]); break; }
+          const parts = ss[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(Boolean).reverse();
+          for (const p of parts) { if (_isDecorativeImg(p)) continue; const u = _normImg(p); if (u) { found = u; break; } }
+          if (found) { image = found; break; }
         }
       }
     }
