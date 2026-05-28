@@ -1257,6 +1257,24 @@
       transition: color 0.2s;
     }
     .auth-change-email:hover { color: #00f0ff; }
+    .auth-sub {
+      font-size: 0.72rem;
+      color: rgba(219,252,255,0.55);
+      text-align: center;
+      margin: 0 0 0.875rem;
+      letter-spacing: 0.03em;
+    }
+    .auth-forgot {
+      display: block;
+      width: 100%;
+      margin-top: 0.6rem;
+      background: none; border: none;
+      color: rgba(219,252,255,0.45);
+      font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.08em;
+      text-align: center; cursor: pointer;
+    }
+    .auth-forgot:hover { color: #00f0ff; }
   </style>
 </head>
 <body>
@@ -1450,6 +1468,7 @@
         <input id="signin-password" class="auth-field" type="password" placeholder="Password" required />
         <button id="signin-btn" class="auth-submit" type="submit">Access Terminal</button>
       </form>
+      <button type="button" class="auth-forgot" onclick="showForgotPassword()">Forgot password?</button>
     </div>
 
     <!-- Sign Up form -->
@@ -1478,6 +1497,40 @@
         <button id="auth-resend-btn" class="auth-resend" onclick="resendConfirmation()">Resend confirmation email</button>
         <button class="auth-change-email" onclick="resetAuthToSignup()">← Use a different email</button>
       </div>
+    </div>
+
+    <!-- Forgot password — request a reset link -->
+    <div id="auth-reset-form" style="display:none">
+      <p class="auth-sub">Enter your email and we'll send a link to reset your password.</p>
+      <form onsubmit="handleResetRequest(event)">
+        <input id="reset-email" class="auth-field" type="email" placeholder="Email address" required />
+        <button id="reset-btn" class="auth-submit" type="submit">Send reset link</button>
+      </form>
+      <button class="auth-change-email" onclick="backToSignIn()">← Back to sign in</button>
+    </div>
+
+    <!-- Reset link sent confirmation -->
+    <div id="auth-reset-sent" class="auth-sent" style="display:none">
+      <div class="auth-sent-icon" aria-hidden="true"><span class="material-symbols-outlined">mark_email_read</span></div>
+      <h3>Reset link sent</h3>
+      <p class="sent-email">If an account exists for <strong id="auth-reset-address"></strong>, a password reset link is on its way.</p>
+      <div class="auth-sent-warn">
+        <span class="material-symbols-outlined">warning</span>
+        <p><strong>Check your spam / junk folder.</strong> Open the email and click the link to set a new password.</p>
+      </div>
+      <div class="auth-sent-actions">
+        <button class="auth-change-email" onclick="backToSignIn()">← Back to sign in</button>
+      </div>
+    </div>
+
+    <!-- Set a new password (shown when landing from a recovery email link) -->
+    <div id="auth-newpw-form" style="display:none">
+      <p class="auth-sub">Set a new password for your account.</p>
+      <form onsubmit="handleSetNewPassword(event)">
+        <input id="newpw-password" class="auth-field" type="password" placeholder="New password (min 6 characters)" minlength="6" required />
+        <input id="newpw-confirm" class="auth-field" type="password" placeholder="Confirm new password" minlength="6" required />
+        <button id="newpw-btn" class="auth-submit" type="submit">Update Password</button>
+      </form>
     </div>
 
     <p id="auth-msg" class="auth-msg"></p>
@@ -1627,11 +1680,20 @@
     _crRedirected = true;
     window.location.replace('app.html');
   }
+  // Password-recovery landing: when a user clicks the reset email link they
+  // arrive here with a recovery token. That establishes a (recovery) session,
+  // so we must NOT auto-redirect them to app.html — instead show the
+  // "set new password" form. Detect it synchronously from the URL so the
+  // async getSession()/onAuthStateChange below can't win the race, and also
+  // honor the PASSWORD_RECOVERY event.
+  let _recovering = false;
+  try { _recovering = /[?&#].*\breset=1\b/.test(location.search + location.hash) || /\btype=recovery\b/.test(location.search + location.hash); } catch (e) {}
   _supabase.auth.onAuthStateChange((event, session) => {
-    if (session) _goToApp();
+    if (event === 'PASSWORD_RECOVERY') { _recovering = true; openAuthModal('signin'); showNewPasswordView(); return; }
+    if (session && !_recovering) _goToApp();
   });
   _supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) _goToApp();
+    if (session && !_recovering) _goToApp();
   });
 
   // ── Modal helpers ──────────────────────────────────────────
@@ -1648,6 +1710,11 @@
     // (re)opening the modal — restore the default OAuth + form layout.
     const sentBlock = document.getElementById('auth-signup-sent');
     if (sentBlock) sentBlock.style.display = 'none';
+    // Also clear the password-reset / set-new-password views.
+    ['auth-reset-form', 'auth-reset-sent', 'auth-newpw-form'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
     document.querySelectorAll('.auth-google').forEach(b => b.style.display = '');
     const divider = document.querySelector('#auth-overlay .auth-divider');
     if (divider) divider.style.display = '';
@@ -1796,6 +1863,73 @@
     }, 1000);
   }
 
+  // ── Password reset / recovery ──────────────────────────────
+  // Hide the OAuth buttons / divider / tabs and all auth forms — used by the
+  // reset + set-new-password states (mirrors showSignupSentState).
+  function _hideAuthChrome() {
+    ['auth-signin-form','auth-signup-form','auth-signup-sent','auth-reset-form','auth-reset-sent','auth-newpw-form']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+    document.querySelectorAll('#auth-overlay .auth-google').forEach(b => b.style.display = 'none');
+    const d = document.querySelector('#auth-overlay .auth-divider'); if (d) d.style.display = 'none';
+    const t = document.querySelector('#auth-overlay .auth-tabs');    if (t) t.style.display = 'none';
+  }
+  // Show the "request a reset link" view (from the "Forgot password?" link).
+  function showForgotPassword() {
+    _hideAuthChrome();
+    const re = document.getElementById('reset-email');
+    const se = document.getElementById('signin-email');
+    if (re && se && se.value) re.value = se.value.trim(); // carry over a typed email
+    document.getElementById('auth-reset-form').style.display = 'block';
+    clearAuthMsg();
+  }
+  // Back to the normal sign-in layout.
+  function backToSignIn() { setAuthTab('signin'); }
+  // Confirmation after a reset email is requested.
+  function showResetSentView(email) {
+    _hideAuthChrome();
+    document.getElementById('auth-reset-address').textContent = email;
+    document.getElementById('auth-reset-sent').style.display = 'block';
+  }
+  // Show the "set a new password" view (recovery landing).
+  function showNewPasswordView() {
+    _hideAuthChrome();
+    document.getElementById('auth-newpw-form').style.display = 'block';
+    clearAuthMsg();
+  }
+  // Request a password-reset email. We always show success on a clean call
+  // (Supabase doesn't reveal whether the address exists — anti-enumeration).
+  async function handleResetRequest(e) {
+    e.preventDefault();
+    const btn = document.getElementById('reset-btn');
+    const email = document.getElementById('reset-email').value.trim();
+    btn.disabled = true; btn.textContent = 'Sending...';
+    const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/home.html?reset=1'
+    });
+    btn.disabled = false; btn.textContent = 'Send reset link';
+    if (error) { setAuthMsg(error.message, 'error'); return; }
+    showResetSentView(email);
+  }
+  // Set the new password using the active recovery session.
+  async function handleSetNewPassword(e) {
+    e.preventDefault();
+    const btn = document.getElementById('newpw-btn');
+    const pw  = document.getElementById('newpw-password').value;
+    const pw2 = document.getElementById('newpw-confirm').value;
+    if (pw.length < 6) { setAuthMsg('Password must be at least 6 characters.', 'error'); return; }
+    if (pw !== pw2)    { setAuthMsg('Passwords do not match.', 'error'); return; }
+    btn.disabled = true; btn.textContent = 'Updating...';
+    const { error } = await _supabase.auth.updateUser({ password: pw });
+    if (error) {
+      setAuthMsg(error.message, 'error');
+      btn.disabled = false; btn.textContent = 'Update Password';
+      return;
+    }
+    _recovering = false; // allow the normal redirect now
+    setAuthMsg('Password updated. Entering terminal...', 'success');
+    setTimeout(() => window.location.replace('app.html'), 800);
+  }
+
   // ── Legacy newsletter signup handler (keep for the signup section) ──
   function handleSignup(e) {
     e.preventDefault();
@@ -1824,6 +1958,13 @@
       openAuthModal(openauth);
       setAuthMsg('Sign in to enter the terminal.', 'success');
       history.replaceState(null, '', window.location.pathname);
+    }
+    // Landing from a password-reset email: show the set-new-password form.
+    // Do NOT strip the URL here — the recovery token still needs to be
+    // processed by detectSessionInUrl; the PASSWORD_RECOVERY event also fires.
+    if (_recovering) {
+      openAuthModal('signin');
+      showNewPasswordView();
     }
   })();
 

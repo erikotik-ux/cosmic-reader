@@ -6310,6 +6310,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Change the signed-in user's password (separate from Save Preferences).
+  // Password is not stored in user_metadata, so this never affects the JWT size.
+  window.crChangePassword = async function() {
+    const msg = document.getElementById('settings-pw-msg');
+    const btn = document.getElementById('settings-pw-btn');
+    const f1  = document.getElementById('settings-newpw');
+    const f2  = document.getElementById('settings-newpw2');
+    function m(t, c) { if (msg) { msg.textContent = t; msg.className = 'settings-msg ' + (c || ''); } }
+    const pw = f1 ? f1.value : '', pw2 = f2 ? f2.value : '';
+    if (pw.length < 6) { m('Password must be at least 6 characters.', 'error'); return; }
+    if (pw !== pw2)    { m('Passwords do not match.', 'error'); return; }
+    if (!window._supabase) { m('Not signed in.', 'error'); return; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Updating…'; }
+    try {
+      const { error } = await window._supabase.auth.updateUser({ password: pw });
+      if (error) { m(error.message || 'Could not update password.', 'error'); }
+      else { m('Password updated.', 'success'); if (f1) f1.value = ''; if (f2) f2.value = ''; }
+    } catch (e) {
+      m('Could not update password. Try again.', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Change Password'; }
+    }
+  };
+
   function applySettingsToUI(meta) {
     if (!meta) return;
     // Expose selected topics globally + cache locally so the "For You" feed
@@ -6704,6 +6728,16 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <p id="settings-msg" class="settings-msg"></p>
     </form>
+
+    <!-- Password — separate from the preferences form (its own action). -->
+    <div class="settings-section">
+      <h3>Password</h3>
+      <p class="settings-hint">Set a new password for signing in with email.</p>
+      <input id="settings-newpw" class="settings-input" type="password" minlength="6" placeholder="New password (min 6 characters)" autocomplete="new-password" />
+      <input id="settings-newpw2" class="settings-input" type="password" minlength="6" placeholder="Confirm new password" autocomplete="new-password" style="margin-top:0.5rem" />
+      <button type="button" id="settings-pw-btn" class="settings-save" style="margin-top:0.6rem" onclick="crChangePassword()">Change Password</button>
+      <p id="settings-pw-msg" class="settings-msg"></p>
+    </div>
   </div>
 </div>
 
