@@ -2879,6 +2879,9 @@
 
       <!-- Composer -->
       <form id="comms-form" class="cr-chat-form cr-comms-form" onsubmit="crCommsSend(event)">
+        <button type="button" id="comms-emoji-btn" aria-label="Insert emoji" title="Emoji" onclick="crCommsToggleEmoji(event)">
+          <span class="material-symbols-outlined">mood</span>
+        </button>
         <textarea id="comms-text"
                   placeholder="Transmit a message to the network…"
                   rows="1" maxlength="2000"
@@ -2886,6 +2889,7 @@
         <button type="submit" id="comms-send" aria-label="Send message">
           <span class="material-symbols-outlined">send</span>
         </button>
+        <div id="comms-emoji-palette" hidden></div>
       </form>
     </div>
   </div>
@@ -6732,7 +6736,34 @@ document.addEventListener('DOMContentLoaded', () => {
   /* On the full-page Comms section the FAB is redundant — hide it there. */
   body.cr-view-comms .cr-chat-fab { display: none; }
   /* Comms composer: roomier than the floating panel + comfortable max width. */
-  .cr-comms-form { border-top: 1px solid rgba(0,240,255,0.1); padding-top: 0.85rem; }
+  .cr-comms-form { border-top: 1px solid rgba(0,240,255,0.1); padding-top: 0.85rem; position: relative; }
+
+  /* Emoji picker popover above the composer */
+  #comms-emoji-palette {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    width: min(300px, 92vw);
+    max-height: 190px;
+    overflow-y: auto;
+    background: #0d1515;
+    border: 1px solid rgba(0,240,255,0.3);
+    border-radius: 10px;
+    padding: 0.4rem;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  }
+  #comms-emoji-palette[hidden] { display: none; }
+  #comms-emoji-palette:not([hidden]) { display: grid; }
+  #comms-emoji-palette button {
+    width: auto; height: auto; min-width: 0;
+    background: none; border: none; box-shadow: none;
+    font-size: 1.15rem; line-height: 1;
+    padding: 0.25rem; border-radius: 6px; cursor: pointer;
+  }
+  #comms-emoji-palette button:hover { background: rgba(0,240,255,0.15); }
 
   /* ── Community Comms feed ─────────────────────────────────── */
   .cr-comms-feed {
@@ -7817,6 +7848,46 @@ document.addEventListener('DOMContentLoaded', () => {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 140) + 'px';
   };
+
+  // ── Emoji picker ────────────────────────────────────────────
+  var EMOJI = ['😀','😂','😍','😎','🤔','😅','😭','😡','😴','🥳','😮','🤯',
+    '👍','👎','🙏','👏','🙌','💪','🫡','👀','❤️','🔥','✨','💯',
+    '🚀','🛰️','🌙','⭐','🪐','☄️','🌍','🌌','👽','🤖','🔭','📡',
+    '✅','❌','⚠️','💡','⚡','🎉','💀','🤝'];
+  function paletteEl() { return document.getElementById('comms-emoji-palette'); }
+  function insertEmoji(ch) {
+    var t = textEl(); if (!t) return;
+    var s = t.selectionStart != null ? t.selectionStart : t.value.length;
+    var e = t.selectionEnd != null ? t.selectionEnd : t.value.length;
+    t.value = t.value.slice(0, s) + ch + t.value.slice(e);
+    var pos = s + ch.length;
+    try { t.selectionStart = t.selectionEnd = pos; } catch(_) {}
+    crCommsAutosize(t);
+    t.focus();
+    var p = paletteEl(); if (p) p.hidden = true;
+  }
+  window.crCommsToggleEmoji = function(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    var p = paletteEl(); if (!p) return;
+    if (!p.dataset.built) {
+      EMOJI.forEach(function(ch) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = ch;
+        b.addEventListener('click', function() { insertEmoji(ch); });
+        p.appendChild(b);
+      });
+      p.dataset.built = '1';
+    }
+    p.hidden = !p.hidden;
+  };
+  // Close the palette on an outside click.
+  document.addEventListener('click', function(e) {
+    var p = paletteEl();
+    if (!p || p.hidden) return;
+    if (e.target.closest && (e.target.closest('#comms-emoji-palette') || e.target.closest('#comms-emoji-btn'))) return;
+    p.hidden = true;
+  });
 })();
 </script>
 
