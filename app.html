@@ -6310,6 +6310,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Free alternative to Supabase Pro leaked-password protection: check the
+  // password against HaveIBeenPwned via k-anonymity (only the first 5 hex
+  // chars of its SHA-1 leave the browser). Returns the breach count; fails
+  // OPEN (0) on any error so an outage can't block a password change.
+  async function _crPwnedCount(password) {
+    try {
+      if (!password || !(window.crypto && crypto.subtle)) return 0;
+      const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
+      const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+      const prefix = hex.slice(0, 5), suffix = hex.slice(5);
+      const res = await fetch('https://api.pwnedpasswords.com/range/' + prefix, { headers: { 'Add-Padding': 'true' } });
+      if (!res.ok) return 0;
+      const text = await res.text();
+      const hit = text.split('\n').find(l => l.slice(0, suffix.length).toUpperCase() === suffix);
+      if (!hit) return 0;
+      const n = parseInt(hit.split(':')[1], 10);
+      return isNaN(n) ? 0 : n;
+    } catch (e) { return 0; }
+  }
+
   // Change the signed-in user's password (separate from Save Preferences).
   // Password is not stored in user_metadata, so this never affects the JWT size.
   window.crChangePassword = async function() {
@@ -6322,7 +6342,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pw.length < 6) { m('Password must be at least 6 characters.', 'error'); return; }
     if (pw !== pw2)    { m('Passwords do not match.', 'error'); return; }
     if (!window._supabase) { m('Not signed in.', 'error'); return; }
-    if (btn) { btn.disabled = true; btn.textContent = 'Updating…'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+    if (await _crPwnedCount(pw) > 0) {
+      m('This password has appeared in a known data breach. Please choose a different one.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Change Password'; }
+      return;
+    }
+    if (btn) { btn.textContent = 'Updating…'; }
     try {
       const { error } = await window._supabase.auth.updateUser({ password: pw });
       if (error) { m(error.message || 'Could not update password.', 'error'); }

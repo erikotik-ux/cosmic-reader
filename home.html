@@ -1734,6 +1734,31 @@
   }
   function clearAuthMsg() { setAuthMsg('', ''); }
 
+  // ── Breach check (free alternative to Supabase Pro's leaked-password
+  //     protection) ──────────────────────────────────────────────────────
+  // HaveIBeenPwned "Pwned Passwords" via k-anonymity: we SHA-1 the password
+  // locally and send only the first 5 hex chars of the hash; HIBP returns all
+  // suffixes for that prefix and we match the rest in-browser. The password
+  // (and its full hash) never leave the device. Returns the breach count
+  // (0 = not found). Fails OPEN (returns 0) on any network/API error so an
+  // outage can never block a user from setting a password.
+  async function _crPwnedCount(password) {
+    try {
+      if (!password || !(window.crypto && crypto.subtle)) return 0;
+      const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
+      const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+      const prefix = hex.slice(0, 5), suffix = hex.slice(5);
+      const res = await fetch('https://api.pwnedpasswords.com/range/' + prefix, { headers: { 'Add-Padding': 'true' } });
+      if (!res.ok) return 0;
+      const text = await res.text();
+      const hit = text.split('\n').find(l => l.slice(0, suffix.length).toUpperCase() === suffix);
+      if (!hit) return 0;
+      const n = parseInt(hit.split(':')[1], 10);
+      return isNaN(n) ? 0 : n;
+    } catch (e) { return 0; }
+  }
+  const _crBreachMsg = 'This password has appeared in a known data breach. Please choose a different one.';
+
   // ── OAuth providers ────────────────────────────────────────
   // Shared helper. We use skipBrowserRedirect:true and navigate
   // manually because the SDK's built-in auto-redirect can silently
@@ -1788,7 +1813,13 @@
     const btn = document.getElementById('signup-btn');
     const email = document.getElementById('signup-email-new').value.trim();
     const password = document.getElementById('signup-password-new').value;
-    btn.disabled = true; btn.textContent = 'Transmitting...';
+    btn.disabled = true; btn.textContent = 'Checking...';
+    if (await _crPwnedCount(password) > 0) {
+      setAuthMsg(_crBreachMsg, 'error');
+      btn.disabled = false; btn.textContent = 'Create Account';
+      return;
+    }
+    btn.textContent = 'Transmitting...';
     const { error } = await _supabase.auth.signUp({
       email,
       password,
@@ -1918,7 +1949,13 @@
     const pw2 = document.getElementById('newpw-confirm').value;
     if (pw.length < 6) { setAuthMsg('Password must be at least 6 characters.', 'error'); return; }
     if (pw !== pw2)    { setAuthMsg('Passwords do not match.', 'error'); return; }
-    btn.disabled = true; btn.textContent = 'Updating...';
+    btn.disabled = true; btn.textContent = 'Checking...';
+    if (await _crPwnedCount(pw) > 0) {
+      setAuthMsg(_crBreachMsg, 'error');
+      btn.disabled = false; btn.textContent = 'Update Password';
+      return;
+    }
+    btn.textContent = 'Updating...';
     const { error } = await _supabase.auth.updateUser({ password: pw });
     if (error) {
       setAuthMsg(error.message, 'error');
