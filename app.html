@@ -6383,6 +6383,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // ── Change email ────────────────────────────────────────────
+  window.crToggleEmailFields = function() {
+    const fields = document.getElementById('settings-email-fields');
+    const toggle = document.getElementById('settings-email-toggle');
+    if (fields) fields.hidden = false;
+    if (toggle) toggle.style.display = 'none';
+    const f = document.getElementById('settings-newemail');
+    if (f) f.focus();
+  };
+  window.crCancelEmailChange = function() {
+    const fields = document.getElementById('settings-email-fields');
+    const toggle = document.getElementById('settings-email-toggle');
+    const f = document.getElementById('settings-newemail');
+    const msg = document.getElementById('settings-email-msg');
+    if (f) f.value = '';
+    if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
+    if (fields) fields.hidden = true;
+    if (toggle) toggle.style.display = '';
+  };
+  window.crChangeEmail = async function() {
+    const msg = document.getElementById('settings-email-msg');
+    const btn = document.getElementById('settings-email-btn');
+    const f   = document.getElementById('settings-newemail');
+    function m(t, c) { if (msg) { msg.textContent = t; msg.className = 'settings-msg ' + (c || ''); } }
+    const email = f ? f.value.trim() : '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { m('Enter a valid email address.', 'error'); return; }
+    if (!window._supabase) { m('Not signed in.', 'error'); return; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+    try {
+      const { error } = await window._supabase.auth.updateUser(
+        { email: email },
+        { emailRedirectTo: window.location.origin + '/app.html' }
+      );
+      if (error) { m(error.message || 'Could not change email.', 'error'); }
+      else { m('Confirmation sent to ' + email + '. Check that inbox (and spam) to finish the change.', 'success'); if (f) f.value = ''; }
+    } catch (e) {
+      m('Could not change email. Try again.', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Update Email'; }
+    }
+  };
+
+  // ── Sign out of all devices ─────────────────────────────────
+  window.crSignOutAllDevices = async function() {
+    if (!window._supabase) return;
+    if (!confirm('Sign out of all devices? You will need to sign in again everywhere, including here.')) return;
+    const msg = document.getElementById('settings-signout-msg');
+    const btn = document.getElementById('settings-signout-all');
+    if (btn) btn.disabled = true;
+    if (msg) { msg.textContent = 'Signing out everywhere…'; msg.className = 'settings-msg'; }
+    try {
+      await window._supabase.auth.signOut({ scope: 'global' });
+    } catch (e) { /* still redirect — local session is cleared */ }
+    window.location.replace('home.html');
+  };
+
   function applySettingsToUI(meta) {
     if (!meta) return;
     // Expose selected topics globally + cache locally so the "For You" feed
@@ -6810,6 +6866,26 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <p id="settings-pw-msg" class="settings-msg"></p>
       </div>
+
+      <!-- Change email -->
+      <button type="button" id="settings-email-toggle" class="settings-pw-toggle" style="margin-top:0.7rem" onclick="crToggleEmailFields()">
+        <span class="material-symbols-outlined">alternate_email</span> Change email
+      </button>
+      <div id="settings-email-fields" hidden>
+        <p class="settings-hint">We'll send a confirmation link to the new address. The change takes effect once you confirm it.</p>
+        <input id="settings-newemail" class="settings-input" type="email" placeholder="New email address" autocomplete="off" />
+        <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
+          <button type="button" id="settings-email-btn" class="settings-save" style="flex:1" onclick="crChangeEmail()">Update Email</button>
+          <button type="button" class="settings-cancel" onclick="crCancelEmailChange()">Cancel</button>
+        </div>
+        <p id="settings-email-msg" class="settings-msg"></p>
+      </div>
+
+      <!-- Sign out of all devices -->
+      <button type="button" id="settings-signout-all" class="settings-pw-toggle" style="margin-top:0.7rem" onclick="crSignOutAllDevices()">
+        <span class="material-symbols-outlined">devices</span> Sign out of all devices
+      </button>
+      <p id="settings-signout-msg" class="settings-msg"></p>
     </div>
   </div>
 </div>
