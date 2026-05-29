@@ -3433,11 +3433,17 @@ async function fetchFeed(feedInfo) {
             return p.href;
           } catch(e) { return u; }
         }
-        // 1. rss2json thumbnail / enclosure — skip audio/video enclosures (e.g. Planetary Society podcasts)
+        // 1. rss2json thumbnail / enclosure — skip audio/video enclosures (e.g. Planetary Society podcasts).
+        //    Also reject DECORATIVE images here: rss2json/the proxy often sets item.thumbnail
+        //    to the first <img> in the content, which for WordPress posts is a 72x72 emoji
+        //    (s.w.org/.../emoji). If we accept it, _hasRealImg flips true, the content scan +
+        //    og:image enrichment are skipped, and the emoji gets blown up full-width.
         const _encLink = item.enclosure?.link || '';
         const _encType = item.enclosure?.type || '';
         const _encIsImg = /^image/i.test(_encType) || (!_encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(_encLink));
-        let image = normaliseImg(item.thumbnail || (_encIsImg ? _encLink : '') || '');
+        let _imgCand = item.thumbnail || (_encIsImg ? _encLink : '') || '';
+        if (_isDecorativeImg(_imgCand)) _imgCand = '';
+        let image = normaliseImg(_imgCand);
         let _hasRealImg = !!(image && /^https?:/.test(image));
         // 2. Scan the content HTML — rss2json strips <img> from item.content but WordPress
         //    featured images often survive in item.description. Also check srcset (WP generates these).
@@ -6330,27 +6336,23 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { return 0; }
   }
 
-  // Reveal the change-password fields (collapsed by default so the modal
-  // doesn't show a wide-open password prompt).
+  // Toggle the change-password fields open/closed. The toggle button STAYS
+  // visible; the fields drop down beneath it (with a gap, via CSS).
   window.crTogglePasswordFields = function() {
     const fields = document.getElementById('settings-pw-fields');
-    const toggle = document.getElementById('settings-pw-toggle');
-    if (fields) fields.hidden = false;
-    if (toggle) toggle.style.display = 'none';
-    const f1 = document.getElementById('settings-newpw');
-    if (f1) f1.focus();
+    if (!fields) return;
+    fields.hidden = !fields.hidden;
+    if (!fields.hidden) { const f1 = document.getElementById('settings-newpw'); if (f1) f1.focus(); }
   };
-  // Collapse + clear the change-password fields.
+  // Collapse + clear the change-password fields (Cancel).
   window.crCancelPasswordChange = function() {
     const fields = document.getElementById('settings-pw-fields');
-    const toggle = document.getElementById('settings-pw-toggle');
     const f1 = document.getElementById('settings-newpw');
     const f2 = document.getElementById('settings-newpw2');
     const msg = document.getElementById('settings-pw-msg');
     if (f1) f1.value = ''; if (f2) f2.value = '';
     if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
     if (fields) fields.hidden = true;
-    if (toggle) toggle.style.display = '';
   };
 
   // Change the signed-in user's password (separate from Save Preferences).
@@ -6386,21 +6388,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Change email ────────────────────────────────────────────
   window.crToggleEmailFields = function() {
     const fields = document.getElementById('settings-email-fields');
-    const toggle = document.getElementById('settings-email-toggle');
-    if (fields) fields.hidden = false;
-    if (toggle) toggle.style.display = 'none';
-    const f = document.getElementById('settings-newemail');
-    if (f) f.focus();
+    if (!fields) return;
+    fields.hidden = !fields.hidden;
+    if (!fields.hidden) { const f = document.getElementById('settings-newemail'); if (f) f.focus(); }
   };
   window.crCancelEmailChange = function() {
     const fields = document.getElementById('settings-email-fields');
-    const toggle = document.getElementById('settings-email-toggle');
     const f = document.getElementById('settings-newemail');
     const msg = document.getElementById('settings-email-msg');
     if (f) f.value = '';
     if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
     if (fields) fields.hidden = true;
-    if (toggle) toggle.style.display = '';
   };
   window.crChangeEmail = async function() {
     const msg = document.getElementById('settings-email-msg');
@@ -6803,6 +6801,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   .settings-pw-toggle:hover { border-color: rgba(0,240,255,0.55); background: rgba(0,240,255,0.08); }
   .settings-pw-toggle .material-symbols-outlined { font-size: 16px; }
+  /* Gap between a Security toggle button and the fields that drop down below it. */
+  #settings-pw-fields:not([hidden]),
+  #settings-email-fields:not([hidden]) { margin-top: 0.75rem; }
 </style>
 
 <div id="settings-overlay" class="settings-overlay" onclick="if(event.target===this)closeSettingsModal()">
