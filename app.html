@@ -6842,25 +6842,18 @@ document.addEventListener('DOMContentLoaded', () => {
         <div id="settings-hidden-wrap"></div>
       </div>
 
-      <div class="settings-actions">
-        <button type="button" class="settings-cancel" onclick="closeSettingsModal()">Cancel</button>
-        <button id="settings-save-btn" class="settings-save" type="submit">Save Preferences</button>
-      </div>
-      <p id="settings-msg" class="settings-msg"></p>
-    </form>
-
-    <!-- Password — separate from the preferences form (its own action).
-         Collapsed by default behind a small toggle so it isn't a wide-open
-         "change your password" prompt sitting there. -->
-    <div class="settings-section">
-      <h3>Security</h3>
+      <!-- Security — sits inside the prefs form, after Feed Tuning and above the
+           Cancel/Save actions. All its buttons are type=button so they never
+           submit the preferences form, and the inputs guard Enter too. -->
+      <div class="settings-section">
+        <h3>Security</h3>
       <button type="button" id="settings-pw-toggle" class="settings-pw-toggle" onclick="crTogglePasswordFields()">
         <span class="material-symbols-outlined">lock_reset</span> Change password
       </button>
       <div id="settings-pw-fields" hidden>
         <p class="settings-hint">Set a new password for signing in with email.</p>
-        <input id="settings-newpw" class="settings-input" type="password" minlength="6" placeholder="New password (min 6 characters)" autocomplete="new-password" />
-        <input id="settings-newpw2" class="settings-input" type="password" minlength="6" placeholder="Confirm new password" autocomplete="new-password" style="margin-top:0.5rem" />
+        <input id="settings-newpw" class="settings-input" type="password" minlength="6" placeholder="New password (min 6 characters)" autocomplete="new-password" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangePassword();}" />
+        <input id="settings-newpw2" class="settings-input" type="password" minlength="6" placeholder="Confirm new password" autocomplete="new-password" style="margin-top:0.5rem" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangePassword();}" />
         <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
           <button type="button" id="settings-pw-btn" class="settings-save" style="flex:1" onclick="crChangePassword()">Update Password</button>
           <button type="button" class="settings-cancel" onclick="crCancelPasswordChange()">Cancel</button>
@@ -6873,8 +6866,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="material-symbols-outlined">alternate_email</span> Change email
       </button>
       <div id="settings-email-fields" hidden>
-        <p class="settings-hint">We'll send a confirmation link to the new address. The change takes effect once you confirm it.</p>
-        <input id="settings-newemail" class="settings-input" type="email" placeholder="New email address" autocomplete="off" />
+        <p class="settings-hint">We'll send a confirmation link to the new address.</p>
+        <input id="settings-newemail" class="settings-input" type="email" placeholder="New email address" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangeEmail();}" />
         <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
           <button type="button" id="settings-email-btn" class="settings-save" style="flex:1" onclick="crChangeEmail()">Update Email</button>
           <button type="button" class="settings-cancel" onclick="crCancelEmailChange()">Cancel</button>
@@ -6887,7 +6880,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="material-symbols-outlined">devices</span> Sign out of all devices
       </button>
       <p id="settings-signout-msg" class="settings-msg"></p>
-    </div>
+      </div>
+
+      <div class="settings-actions">
+        <button type="button" class="settings-cancel" onclick="closeSettingsModal()">Cancel</button>
+        <button id="settings-save-btn" class="settings-save" type="submit">Save Preferences</button>
+      </div>
+      <p id="settings-msg" class="settings-msg"></p>
+    </form>
   </div>
 </div>
 
