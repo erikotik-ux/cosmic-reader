@@ -6330,6 +6330,29 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { return 0; }
   }
 
+  // Reveal the change-password fields (collapsed by default so the modal
+  // doesn't show a wide-open password prompt).
+  window.crTogglePasswordFields = function() {
+    const fields = document.getElementById('settings-pw-fields');
+    const toggle = document.getElementById('settings-pw-toggle');
+    if (fields) fields.hidden = false;
+    if (toggle) toggle.style.display = 'none';
+    const f1 = document.getElementById('settings-newpw');
+    if (f1) f1.focus();
+  };
+  // Collapse + clear the change-password fields.
+  window.crCancelPasswordChange = function() {
+    const fields = document.getElementById('settings-pw-fields');
+    const toggle = document.getElementById('settings-pw-toggle');
+    const f1 = document.getElementById('settings-newpw');
+    const f2 = document.getElementById('settings-newpw2');
+    const msg = document.getElementById('settings-pw-msg');
+    if (f1) f1.value = ''; if (f2) f2.value = '';
+    if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
+    if (fields) fields.hidden = true;
+    if (toggle) toggle.style.display = '';
+  };
+
   // Change the signed-in user's password (separate from Save Preferences).
   // Password is not stored in user_metadata, so this never affects the JWT size.
   window.crChangePassword = async function() {
@@ -6710,6 +6733,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   .settings-msg.error   { color: #ff6b6b; }
   .settings-msg.success { color: #00f0ff; }
+  /* Compact "Change password" toggle — reveals the password fields on click */
+  .settings-pw-toggle {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,240,255,0.25);
+    border-radius: 8px;
+    color: #00f0ff;
+    font-family: 'Exo 2', 'Space Grotesk', sans-serif;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+    padding: 0.5rem 0.85rem; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .settings-pw-toggle:hover { border-color: rgba(0,240,255,0.55); background: rgba(0,240,255,0.08); }
+  .settings-pw-toggle .material-symbols-outlined { font-size: 16px; }
 </style>
 
 <div id="settings-overlay" class="settings-overlay" onclick="if(event.target===this)closeSettingsModal()">
@@ -6755,14 +6792,24 @@ document.addEventListener('DOMContentLoaded', () => {
       <p id="settings-msg" class="settings-msg"></p>
     </form>
 
-    <!-- Password — separate from the preferences form (its own action). -->
+    <!-- Password — separate from the preferences form (its own action).
+         Collapsed by default behind a small toggle so it isn't a wide-open
+         "change your password" prompt sitting there. -->
     <div class="settings-section">
       <h3>Password</h3>
-      <p class="settings-hint">Set a new password for signing in with email.</p>
-      <input id="settings-newpw" class="settings-input" type="password" minlength="6" placeholder="New password (min 6 characters)" autocomplete="new-password" />
-      <input id="settings-newpw2" class="settings-input" type="password" minlength="6" placeholder="Confirm new password" autocomplete="new-password" style="margin-top:0.5rem" />
-      <button type="button" id="settings-pw-btn" class="settings-save" style="margin-top:0.6rem" onclick="crChangePassword()">Change Password</button>
-      <p id="settings-pw-msg" class="settings-msg"></p>
+      <button type="button" id="settings-pw-toggle" class="settings-pw-toggle" onclick="crTogglePasswordFields()">
+        <span class="material-symbols-outlined">lock_reset</span> Change password
+      </button>
+      <div id="settings-pw-fields" hidden>
+        <p class="settings-hint">Set a new password for signing in with email.</p>
+        <input id="settings-newpw" class="settings-input" type="password" minlength="6" placeholder="New password (min 6 characters)" autocomplete="new-password" />
+        <input id="settings-newpw2" class="settings-input" type="password" minlength="6" placeholder="Confirm new password" autocomplete="new-password" style="margin-top:0.5rem" />
+        <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
+          <button type="button" id="settings-pw-btn" class="settings-save" style="flex:1" onclick="crChangePassword()">Update Password</button>
+          <button type="button" class="settings-cancel" onclick="crCancelPasswordChange()">Cancel</button>
+        </div>
+        <p id="settings-pw-msg" class="settings-msg"></p>
+      </div>
     </div>
   </div>
 </div>
