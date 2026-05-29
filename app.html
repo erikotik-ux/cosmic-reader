@@ -4259,6 +4259,21 @@ async function _crSaveUserData(patch) {
   } catch (e) { console.warn('user_data save threw:', e); }
 }
 
+// Upsert the current user's PUBLIC profile (display name + avatar) into the
+// `profiles` table. This is what the community chat reads to show each sender's
+// CURRENT avatar/name across all their past + future messages (and propagates
+// live via realtime). Only public-safe fields — never saved/chat/email.
+async function _crUpsertProfile(fields) {
+  if (!window._supabase || !window._crUser) return;
+  await _crEnsureSlimToken();
+  try {
+    const row = Object.assign({ user_id: window._crUser.id, updated_at: new Date().toISOString() }, fields);
+    const { error } = await window._supabase.from('profiles').upsert(row, { onConflict: 'user_id' });
+    if (error) console.warn('profile upsert:', error.message);
+  } catch (e) { console.warn('profile upsert threw:', e); }
+}
+window._crUpsertProfile = _crUpsertProfile;
+
 // Upload a (data-URI) avatar image to the public `avatars` Storage bucket
 // under the user's own folder, and return its public URL (or null on failure).
 // Images live in Storage — only the small URL is kept in the DB, so neither
@@ -6302,6 +6317,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (error) throw error;
       // Persist the URL; drop any legacy base64 now that we use Storage.
       await _crSaveUserData({ avatar_url: avatarUrl || null, avatar_image: null });
+      // Mirror the public bits (name + avatar) to profiles so chat history
+      // reflects the current avatar/name everywhere, live.
+      await _crUpsertProfile({ username: username || null, avatar_url: avatarUrl || null });
       const baseMeta = (data && data.user && data.user.user_metadata) || { avatar, username, topics };
       _cachedSettings = Object.assign({}, baseMeta, { avatarUrl: avatarUrl || '', avatarImage: '' });
       applySettingsToUI(_cachedSettings);
@@ -6506,6 +6524,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // cached settings so the avatar UI + Settings form behave as before.
       _cachedSettings = Object.assign({}, meta, { avatarUrl: ud.avatar_url || '', avatarImage: ud.avatar_image || '' });
       applySettingsToUI(_cachedSettings);
+      // Keep the public profile (name + avatar) fresh on every load so chat
+      // history shows the user's current avatar/name (self-heals stale rows).
+      if (typeof _crUpsertProfile === 'function') {
+        _crUpsertProfile({ username: meta.username || null, avatar_url: ud.avatar_url || null });
+      }
       // One-time lazy migration: if a legacy base64 avatar exists but hasn't
       // been moved to Storage yet, upload it now (background) so it can show in
       // the community chat and stay light.
@@ -6515,6 +6538,7 @@ document.addEventListener('DOMContentLoaded', () => {
           _crSaveUserData({ avatar_url: url, avatar_image: null });
           _cachedSettings.avatarUrl = url; _cachedSettings.avatarImage = '';
           applySettingsToUI(_cachedSettings);
+          if (typeof _crUpsertProfile === 'function') _crUpsertProfile({ avatar_url: url });
         });
       }
 
@@ -7854,6 +7878,7 @@ document.addEventListener('DOMContentLoaded', () => {
   var seen = Object.create(null); // id -> true (dedupe: fetch + realtime overlap)
   var reactions = Object.create(null); // message_id -> [{user_id, emoji}, ...]
   var QUICK_REACTIONS = ['👍','❤️','😂','🎉','🚀','😮','😢','🔥'];
+  var profiles = Object.create(null); // user_id -> {username, avatar_url} (current, from `profiles`)
 
   function feedEl()  { return document.getElementById('comms-feed'); }
   function textEl()  { return document.getElementById('comms-text'); }
@@ -7880,15 +7905,49 @@ document.addEventListener('DOMContentLoaded', () => {
     return (window._crUserData && window._crUserData.avatar_url) || null;
   }
 
-  // Avatar circle for a message: the sender's image if present, else a
-  // colored initial derived from their callsign.
-  function avatarMarkup(msg, mine) {
-    if (msg.avatar_url) {
-      return '<img class="cr-comms-avatar" src="' + esc(msg.avatar_url) + '" alt="" loading="lazy">';
-    }
-    var name = (mine ? myName() : (msg.username || 'Operator')).trim();
-    var initial = esc((name.charAt(0) || 'O').toUpperCase());
+  // Resolve a sender's CURRENT avatar/name from the profiles cache, falling
+  // back to the per-message snapshot (for senders without a profile yet).
+  function resolvedAvatar(msg) {
+    var p = profiles[msg.user_id];
+    return (p && p.avatar_url) || msg.avatar_url || null;
+  }
+  function resolvedName(msg) {
+    var p = profiles[msg.user_id];
+    return (p && p.username) || msg.username || 'Operator';
+  }
+  // Avatar circle HTML: the image if present, else a colored initial.
+  function avatarHtml(url, name) {
+    if (url) return '<img class="cr-comms-avatar" src="' + esc(url) + '" alt="" loading="lazy">';
+    var initial = esc(((name || 'Operator').trim().charAt(0) || 'O').toUpperCase());
     return '<div class="cr-comms-avatar cr-comms-avatar--fallback">' + initial + '</div>';
+  }
+  // Fetch current profiles for a batch of senders → cache → refresh their bubbles.
+  async function loadProfilesFor(uids) {
+    if (!window._supabase) return;
+    var uniq = Array.from(new Set((uids || []).filter(function(u){ return u && !profiles[u]; })));
+    if (!uniq.length) return;
+    try {
+      var res = await window._supabase.from('profiles').select('user_id,username,avatar_url').in('user_id', uniq);
+      if (res.error) { console.warn('profiles load:', res.error.message); return; }
+      (res.data || []).forEach(function(p){
+        profiles[p.user_id] = { username: p.username, avatar_url: p.avatar_url };
+        refreshUserBubbles(p.user_id);
+      });
+    } catch (e) { console.warn('profiles load threw:', e); }
+  }
+  // Re-render avatar + author name for every visible bubble of a given user
+  // (after their profile loads, or changes live via realtime).
+  function refreshUserBubbles(uid) {
+    var f = feedEl(); if (!f || !uid) return;
+    var p = profiles[uid] || {};
+    var mine = window._crUser && uid === window._crUser.id;
+    var sel = '[data-uid="' + (window.CSS && CSS.escape ? CSS.escape(String(uid)) : String(uid)) + '"]';
+    f.querySelectorAll(sel).forEach(function(row){
+      var av = row.querySelector('.cr-comms-avatar');
+      if (av) av.outerHTML = avatarHtml(p.avatar_url || null, p.username || 'Operator');
+      var au = row.querySelector('.cr-comms-author');
+      if (au && !mine && p.username) au.textContent = p.username;
+    });
   }
 
   function fmtTime(iso) {
@@ -7922,6 +7981,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var row = document.createElement('div');
     row.className = 'cr-comms-msg' + (mine ? ' mine' : '');
     row.dataset.mid = msg.id;
+    if (msg.user_id) row.dataset.uid = msg.user_id; // so profile updates can refresh all of a sender's bubbles
     // Own messages get a delete control (RLS allows delete only on own rows).
     var del = mine
       ? '<button class="cr-comms-del" title="Delete message" aria-label="Delete message" onclick="crCommsDelete(\'' + esc(msg.id) + '\')"><span class="material-symbols-outlined">delete</span></button>'
@@ -7929,10 +7989,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Any message can be reacted to.
     var react = '<button class="cr-comms-react" title="React" aria-label="Add reaction" onclick="crCommsReactToggle(\'' + esc(msg.id) + '\', this)"><span class="material-symbols-outlined">add_reaction</span></button>';
     row.innerHTML =
-      avatarMarkup(msg, mine) +
+      avatarHtml(resolvedAvatar(msg), resolvedName(msg)) +
       '<div class="cr-comms-bubble">' +
         '<div class="cr-comms-meta">' +
-          '<span class="cr-comms-author">' + esc(mine ? 'You' : (msg.username || 'Operator')) + '</span>' +
+          '<span class="cr-comms-author">' + esc(mine ? 'You' : resolvedName(msg)) + '</span>' +
           '<span class="cr-comms-time">' + esc(fmtTime(msg.created_at)) + '</span>' +
           react + del +
         '</div>' +
@@ -8070,6 +8130,8 @@ document.addEventListener('DOMContentLoaded', () => {
             var stick = isNearBottom();
             var mine = window._crUser && payload.new && payload.new.user_id === window._crUser.id;
             var added = append(payload.new, { scroll: false });
+            // Pull the sender's current profile (avatar/name) if we don't have it.
+            if (added && payload.new) loadProfilesFor([payload.new.user_id]);
             // Auto-scroll for new messages when already at the bottom, and
             // always for your own outgoing message.
             if (added && (stick || mine)) scrollToBottom();
@@ -8090,6 +8152,15 @@ document.addEventListener('DOMContentLoaded', () => {
           function(payload) {
             // REPLICA IDENTITY FULL → payload.old has message_id/user_id/emoji.
             var r = payload.old; if (r && r.message_id) rxRemove(r.message_id, r.user_id, r.emoji);
+          })
+      .on('postgres_changes',
+          { event: '*', schema: 'public', table: 'profiles' },
+          function(payload) {
+            // A user changed their avatar/name → update the cache + refresh all
+            // of their visible bubbles live (no reload).
+            var p = payload.new; if (!p || !p.user_id) return;
+            profiles[p.user_id] = { username: p.username, avatar_url: p.avatar_url };
+            refreshUserBubbles(p.user_id);
           })
       .subscribe();
   }
@@ -8120,6 +8191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         rows.forEach(function(m) { append(m, { scroll: false }); });
         scrollToBottom();
         loadReactions(rows.map(function(m) { return m.id; }));
+        loadProfilesFor(rows.map(function(m) { return m.user_id; })); // current avatars/names
       }
       loaded = true;   // latch only after a successful load
       subscribe();
