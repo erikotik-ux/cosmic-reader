@@ -617,6 +617,83 @@
   @media (prefers-reduced-motion: reduce) {
     .cr-map-hint { animation: none; }
   }
+  /* ── UAP cloaked contact ──────────────────────────────────────────────
+     A sensor ghost in the map's negative space. Cloaked (faint, slow shimmer)
+     by default; decloaks on hover / keyboard focus / tap with a scanline sweep
+     and a "UAP // UNRESOLVED" label. NOT a .planet-node, so the constellation
+     math never includes it. Smaller than the planets but a confident target. */
+  .uap-contact {
+    position: absolute;              /* desktop: placed via inline top/left */
+    width: 132px; height: 88px;      /* generous hit area; disc is smaller within */
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; padding: 0; margin: 0;
+    cursor: pointer; z-index: 6;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .uap-disc {
+    position: relative; width: 100px; height: 34px;
+    opacity: 0.16;                   /* cloaked: faint but findable */
+    filter: saturate(0.65);
+    transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease;
+    animation: uap-shimmer 5.5s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+  .uap-disc .uap-body {
+    position: absolute; left: 50%; top: 55%; transform: translate(-50%,-50%);
+    width: 100px; height: 22px; border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 40%, rgba(219,224,255,0.95) 0%, rgba(165,180,252,0.4) 46%, rgba(165,180,252,0) 74%);
+    box-shadow: 0 0 16px 2px rgba(165,180,252,0.4);
+  }
+  .uap-disc .uap-dome {
+    position: absolute; left: 50%; top: 30%; transform: translate(-50%,-50%);
+    width: 42px; height: 20px; border-radius: 50% 50% 42% 42%;
+    background: radial-gradient(ellipse at 50% 72%, rgba(219,252,255,0.9) 0%, rgba(165,180,252,0.3) 60%, transparent 82%);
+  }
+  .uap-disc .uap-rim {
+    position: absolute; left: 50%; top: 62%; transform: translate(-50%,-50%);
+    width: 108px; height: 3px; border-radius: 50%;
+    background: linear-gradient(90deg, transparent, rgba(219,224,255,0.95), transparent);
+    opacity: 0.85;
+  }
+  .uap-scan {
+    position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+    width: 116px; height: 2px; opacity: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.95), transparent);
+  }
+  .uap-label {
+    position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%);
+    font-family: 'Exo 2','Space Grotesk',sans-serif;
+    font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+    color: rgba(165,180,252,0.95); white-space: nowrap;
+    opacity: 0; transition: opacity 0.45s ease; pointer-events: none;
+    text-shadow: 0 0 8px rgba(165,180,252,0.55);
+  }
+  .uap-contact:hover .uap-disc,
+  .uap-contact:focus-visible .uap-disc,
+  .uap-contact.is-revealed .uap-disc { opacity: 1; filter: saturate(1); transform: scale(1.06); animation: none; }
+  .uap-contact:hover .uap-label,
+  .uap-contact:focus-visible .uap-label,
+  .uap-contact.is-revealed .uap-label { opacity: 1; }
+  .uap-contact:hover .uap-scan,
+  .uap-contact:focus-visible .uap-scan,
+  .uap-contact.is-revealed .uap-scan { animation: uap-sweep 1.1s ease-in-out; }
+  .uap-contact:focus { outline: none; }
+  .uap-contact:focus-visible { outline: 1px dashed rgba(165,180,252,0.6); outline-offset: 6px; border-radius: 10px; }
+  @keyframes uap-shimmer { 0%,100% { opacity: 0.12; } 50% { opacity: 0.22; } }
+  @keyframes uap-sweep {
+    0%   { opacity: 0; top: 2px; }
+    15%  { opacity: 0.9; }
+    85%  { opacity: 0.9; }
+    100% { opacity: 0; top: calc(100% - 2px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .uap-disc { animation: none; }
+    .uap-contact:hover .uap-scan, .uap-contact.is-revealed .uap-scan { animation: none; }
+  }
+  /* Mobile: lives in the vertical list as a centered flex item, last (order 6),
+     and sits a touch brighter since there's no hover to decloak. */
+  #mobile-galaxy .uap-contact { position: relative; order: 6; align-self: center; margin: 0.25rem auto 0; width: 160px; height: 96px; }
+  #mobile-galaxy .uap-disc { opacity: 0.32; }
   .hud-card { transition: opacity 0.3s ease, transform 0.3s ease; }
   .article-img { transition: transform 0.7s ease; }
   article:hover .article-img { transform: scale(1.05); }
@@ -1644,6 +1721,21 @@
         </div>
       </div>
 
+      <!-- UAP: cloaked sensor contact. NOT a .planet-node (constellation math
+           ignores it). Sits in the pocket above Physics & Cosmos, below the HUD. -->
+      <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
+           style="top:46%; left:81%;"
+           onclick="openCategoryArticle('UAP')"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
+        <div class="uap-disc">
+          <div class="uap-dome"></div>
+          <div class="uap-body"></div>
+          <div class="uap-rim"></div>
+          <div class="uap-scan"></div>
+        </div>
+        <span class="uap-label">UAP // Unresolved</span>
+      </div>
+
     </div>
 
     <!-- ═══ MOBILE: vertical stacked planets ═══ -->
@@ -1655,6 +1747,19 @@
         <line id="mcl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
         <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
       </svg>
+      <!-- UAP: cloaked sensor contact (mobile). flex order:6 places it last,
+           below Physics & Cosmos — found by scrolling to the bottom. -->
+      <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
+           onclick="openCategoryArticle('UAP')"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
+        <div class="uap-disc">
+          <div class="uap-dome"></div>
+          <div class="uap-body"></div>
+          <div class="uap-rim"></div>
+          <div class="uap-scan"></div>
+        </div>
+        <span class="uap-label">UAP // Unresolved</span>
+      </div>
       <!-- Planet 1: Planets & Exoplanets — chain pos #2 -->
       <div class="planet-node self-end mr-8 pointer-events-auto" style="order:2" onclick="openCategoryArticle('Planets')">
         <div class="relative" style="transform-style:preserve-3d;">
