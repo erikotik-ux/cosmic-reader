@@ -2883,8 +2883,8 @@
           <span class="material-symbols-outlined">mood</span>
         </button>
         <textarea id="comms-text"
-                  placeholder="Transmit a message to the network…"
-                  rows="1" maxlength="2000"
+                  placeholder="Transmit a message…"
+                  rows="1" maxlength="2000" autocomplete="off"
                   onkeydown="crCommsKey(event)" oninput="crCommsAutosize(this)"></textarea>
         <button type="submit" id="comms-send" aria-label="Send message">
           <span class="material-symbols-outlined">send</span>
@@ -6967,6 +6967,10 @@ document.addEventListener('DOMContentLoaded', () => {
      just fall back to h-screen's 100vh. */
   @media (max-width: 767px) {
     #view-comms { height: 100dvh; }
+    /* iOS Safari auto-zooms into any field with font-size < 16px on focus
+       (zooming past the avatars/icons). 16px on mobile prevents that. Desktop
+       keeps its 0.85rem styling. Applies to both chat surfaces (shared class). */
+    .cr-chat-form textarea { font-size: 16px; }
   }
 
   /* Emoji picker popover above the composer */
