@@ -6968,9 +6968,11 @@ document.addEventListener('DOMContentLoaded', () => {
   @media (max-width: 767px) {
     #view-comms { height: 100dvh; }
     /* iOS Safari auto-zooms into any field with font-size < 16px on focus
-       (zooming past the avatars/icons). 16px on mobile prevents that. Desktop
-       keeps its 0.85rem styling. Applies to both chat surfaces (shared class). */
-    .cr-chat-form textarea { font-size: 16px; }
+       (zooming past the avatars/icons), and leaves the page zoomed afterward.
+       16px on mobile prevents that. Desktop keeps its 0.85rem styling.
+       Targeted by ID so this wins over the later `.cr-chat-form textarea`
+       base rule (equal-specificity, so source order would otherwise lose). */
+    #comms-text, #cr-chat-input { font-size: 16px; }
   }
 
   /* Emoji picker popover above the composer */
