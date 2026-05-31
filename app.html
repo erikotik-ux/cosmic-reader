@@ -6840,6 +6840,19 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Gap between a Security toggle button and the fields that drop down below it. */
   #settings-pw-fields:not([hidden]),
   #settings-email-fields:not([hidden]) { margin-top: 0.75rem; }
+
+  /* ── Settings panel: mobile-only refinements ──────────────────────────── */
+  @media (max-width: 767px) {
+    /* iOS Safari auto-zooms (and stays zoomed) on focusing any field under
+       16px. Bump the settings inputs to 16px on mobile only; desktop keeps
+       0.85rem. Scoped via .settings-panel so it wins over the base
+       .settings-input rule regardless of source order. */
+    .settings-panel .settings-input { font-size: 16px; }
+    /* Give the eyebrow + close button breathing room from the top edge — the
+       tall panel sits near the top of the viewport on mobile. */
+    .settings-panel { padding-top: 2.6rem; }
+    .settings-close { top: 1.15rem; }
+  }
 </style>
 
 <div id="settings-overlay" class="settings-overlay" onclick="if(event.target===this)closeSettingsModal()">
