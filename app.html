@@ -1083,18 +1083,9 @@
           <span class="material-symbols-outlined text-base text-[#00f0ff]/80">tune</span>
           Settings
         </button>
-        <a href="about.html" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#dbfcff]/65 hover:bg-white/5 transition-colors flex items-center gap-3 no-underline">
-          <span class="material-symbols-outlined text-base text-[#00f0ff]/70">info</span>
-          About
-        </a>
-        <a href="privacy.html" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#dbfcff]/65 hover:bg-white/5 transition-colors flex items-center gap-3 no-underline">
-          <span class="material-symbols-outlined text-base text-[#00f0ff]/70">shield</span>
-          Privacy
-        </a>
-        <a href="terms.html" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#dbfcff]/65 hover:bg-white/5 transition-colors flex items-center gap-3 no-underline">
-          <span class="material-symbols-outlined text-base text-[#00f0ff]/70">gavel</span>
-          Terms
-        </a>
+        <!-- About / Privacy / Terms moved into Settings → "About & Legal" to
+             declutter this menu. Logged-out visitors still reach them via the
+             home.html footer. -->
         <div class="h-px mx-3" style="background:rgba(0,240,255,0.18);"></div>
         <button onclick="signOut()" class="w-full text-left px-4 py-3 text-[11px] font-headline tracking-widest uppercase text-[#ff6b6b]/80 hover:bg-white/5 transition-colors flex items-center gap-3">
           <span class="material-symbols-outlined text-base text-[#ff6b6b]/80">logout</span>
@@ -6931,6 +6922,23 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="material-symbols-outlined">devices</span> Sign out of all devices
       </button>
       <p id="settings-signout-msg" class="settings-msg"></p>
+      </div>
+
+      <!-- About & Legal — relocated from the profile dropdown. Plain links to
+           the standalone info pages; anchors don't submit the prefs form. -->
+      <div class="settings-section">
+        <h3>About &amp; Legal</h3>
+        <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.7rem;">
+          <a href="about.html" class="settings-pw-toggle no-underline">
+            <span class="material-symbols-outlined">info</span> About
+          </a>
+          <a href="privacy.html" class="settings-pw-toggle no-underline">
+            <span class="material-symbols-outlined">shield</span> Privacy
+          </a>
+          <a href="terms.html" class="settings-pw-toggle no-underline">
+            <span class="material-symbols-outlined">gavel</span> Terms
+          </a>
+        </div>
       </div>
 
       <div class="settings-actions">
