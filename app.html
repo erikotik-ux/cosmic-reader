@@ -6958,6 +6958,17 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Comms composer: roomier than the floating panel + comfortable max width. */
   .cr-comms-form { border-top: 1px solid rgba(0,240,255,0.1); padding-top: 0.85rem; position: relative; }
 
+  /* Mobile only: #view-comms uses Tailwind h-screen (100vh). On mobile the
+     browser's address bar makes 100vh taller than the visible viewport, so the
+     bottom-anchored composer is pushed off-screen until the bar collapses —
+     hence "the text area doesn't show up right away / have to scroll down".
+     100dvh tracks the *visible* viewport, so the composer is visible instantly.
+     Scoped to <768px; desktop keeps 100vh untouched. dvh-unsupported browsers
+     just fall back to h-screen's 100vh. */
+  @media (max-width: 767px) {
+    #view-comms { height: 100dvh; }
+  }
+
   /* Emoji picker popover above the composer */
   #comms-emoji-palette {
     position: absolute;
