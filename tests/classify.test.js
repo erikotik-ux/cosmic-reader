@@ -74,6 +74,17 @@ t('Keep AI despite "casino"',     cat({ title: 'How machine learning detects cas
 t('Keep real story despite "movie"', cat({ title: 'NASA releases a stunning movie of the Mars Perseverance landing', source: 'Space.com' }), 'Planets');
 t('Keep launch despite "trailer"',   cat({ title: 'SpaceX rocket spotted on a trailer ahead of Falcon 9 launch', source: 'Space.com' }), 'Missions');
 
+// ── Health / politics off-theme (generalist sources mix these in) ─────────
+t('Drop vaccine politics (the reported bug)', cat({ title: 'Grifters, cynics, and true believers: The family tree of vaccine opponents', excerpt: 'Stanley Plotkin, 93, was instrumental in developing a number of vaccines over his career.', source: 'Ars Technica' }), 'DROP:off-theme');
+t('Drop Ebola/court news',     cat({ title: 'Kenyan court blocks Trump admin from dumping Ebola-exposed Americans', source: 'Ars Technica' }), 'DROP:off-theme');
+t('Drop election news',        cat({ title: 'What the latest election results mean for the senate', source: 'Ars Technica' }), 'DROP:off-theme');
+t('Drop supreme court ruling', cat({ title: 'Supreme Court rules on a major privacy lawsuit', source: 'Ars Technica' }), 'DROP:off-theme');
+
+// ── Guard: health/politics terms must NOT drop genuine space/AI stories ───
+t('Keep AI vaccine research',  cat({ title: 'How machine learning is speeding up vaccine research', source: 'Ars Technica' }), 'AI & Tech');
+t('Keep SpaceX court story',   cat({ title: 'Supreme Court rules on SpaceX launch license dispute', source: 'SpaceNews' }), 'Missions');
+t('Keep generic Ars tech (USB-C) still works', cat({ title: 'New USB-C cable standard announced', source: 'Ars Technica' }), 'AI & Tech');
+
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
 

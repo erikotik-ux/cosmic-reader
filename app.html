@@ -2995,6 +2995,18 @@ const EXCLUDE_KEYWORDS = [
   'comic con','cosplay','blu-ray','dvd','box set','franchise','sequel',
   'prequel','reboot','trailer','soundtrack','star wars','star trek',
   'transformers','godzilla','marvel','dc comics','superhero',
+  // health / medicine — generalist sources (esp. Ars Technica) mix in public-
+  // health & medical-politics stories. Specific terms only, to avoid colliding
+  // with legit science/tech (e.g. bare 'virus' would catch computer viruses).
+  // The no-keyword guard keeps genuine stories: "How AI speeds vaccine research"
+  // still stays via the 'ai' keyword.
+  'vaccine','anti-vaccine','anti-vax','measles','covid','covid-19','coronavirus',
+  'pandemic','ebola','influenza','flu shot','opioid','abortion','fda approval',
+  'clinical trial','prescription drug',
+  // politics / law / government — non-space policy & court news. Guarded the
+  // same way: "Supreme Court rules on SpaceX launch license" keeps via 'spacex'.
+  'election','senate','white house','supreme court','lawsuit','court blocks',
+  'court rules','indictment','impeachment','deportation','tariff',
 ];
 
 // Classify an article from its text + source. Returns:
@@ -3823,7 +3835,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v5';
+const _CR_CACHE_KEY = 'cr_cache_v6';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 async function loadLiveFeeds() {
