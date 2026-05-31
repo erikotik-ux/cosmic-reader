@@ -6828,6 +6828,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   .settings-pw-toggle:hover { border-color: rgba(0,240,255,0.55); background: rgba(0,240,255,0.08); }
   .settings-pw-toggle .material-symbols-outlined { font-size: 16px; }
+  /* Shared horizontal button row — keeps Security and About & Legal laid out
+     identically (same gap, same wrap behavior) for visual consistency. */
+  .settings-btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   /* Gap between a Security toggle button and the fields that drop down below it. */
   #settings-pw-fields:not([hidden]),
   #settings-email-fields:not([hidden]) { margin-top: 0.75rem; }
@@ -6889,46 +6892,44 @@ document.addEventListener('DOMContentLoaded', () => {
            submit the preferences form, and the inputs guard Enter too. -->
       <div class="settings-section">
         <h3>Security</h3>
-      <button type="button" id="settings-pw-toggle" class="settings-pw-toggle" onclick="crTogglePasswordFields()">
-        <span class="material-symbols-outlined">lock_reset</span> Change password
-      </button>
-      <div id="settings-pw-fields" hidden>
-        <p class="settings-hint">Set a new password for signing in with email.</p>
-        <input id="settings-newpw" class="settings-input" type="password" minlength="6" placeholder="New password (min 6 characters)" autocomplete="new-password" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangePassword();}" />
-        <input id="settings-newpw2" class="settings-input" type="password" minlength="6" placeholder="Confirm new password" autocomplete="new-password" style="margin-top:0.5rem" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangePassword();}" />
-        <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
-          <button type="button" id="settings-pw-btn" class="settings-save" style="flex:1" onclick="crChangePassword()">Update Password</button>
-          <button type="button" class="settings-cancel" onclick="crCancelPasswordChange()">Cancel</button>
+        <div class="settings-btn-row">
+          <button type="button" id="settings-pw-toggle" class="settings-pw-toggle" onclick="crTogglePasswordFields()">
+            <span class="material-symbols-outlined">lock_reset</span> Change password
+          </button>
+          <button type="button" id="settings-email-toggle" class="settings-pw-toggle" onclick="crToggleEmailFields()">
+            <span class="material-symbols-outlined">alternate_email</span> Change email
+          </button>
+          <button type="button" id="settings-signout-all" class="settings-pw-toggle" onclick="crSignOutAllDevices()">
+            <span class="material-symbols-outlined">devices</span> Sign out of all devices
+          </button>
         </div>
-        <p id="settings-pw-msg" class="settings-msg"></p>
-      </div>
-
-      <!-- Change email -->
-      <button type="button" id="settings-email-toggle" class="settings-pw-toggle" style="margin-top:0.7rem" onclick="crToggleEmailFields()">
-        <span class="material-symbols-outlined">alternate_email</span> Change email
-      </button>
-      <div id="settings-email-fields" hidden>
-        <p class="settings-hint">We'll send a confirmation link to the new address.</p>
-        <input id="settings-newemail" class="settings-input" type="email" placeholder="New email address" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangeEmail();}" />
-        <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
-          <button type="button" id="settings-email-btn" class="settings-save" style="flex:1" onclick="crChangeEmail()">Update Email</button>
-          <button type="button" class="settings-cancel" onclick="crCancelEmailChange()">Cancel</button>
+        <div id="settings-pw-fields" hidden>
+          <p class="settings-hint">Set a new password for signing in with email.</p>
+          <input id="settings-newpw" class="settings-input" type="password" minlength="6" placeholder="New password (min 6 characters)" autocomplete="new-password" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangePassword();}" />
+          <input id="settings-newpw2" class="settings-input" type="password" minlength="6" placeholder="Confirm new password" autocomplete="new-password" style="margin-top:0.5rem" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangePassword();}" />
+          <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
+            <button type="button" id="settings-pw-btn" class="settings-save" style="flex:1" onclick="crChangePassword()">Update Password</button>
+            <button type="button" class="settings-cancel" onclick="crCancelPasswordChange()">Cancel</button>
+          </div>
+          <p id="settings-pw-msg" class="settings-msg"></p>
         </div>
-        <p id="settings-email-msg" class="settings-msg"></p>
-      </div>
-
-      <!-- Sign out of all devices -->
-      <button type="button" id="settings-signout-all" class="settings-pw-toggle" style="margin-top:0.7rem" onclick="crSignOutAllDevices()">
-        <span class="material-symbols-outlined">devices</span> Sign out of all devices
-      </button>
-      <p id="settings-signout-msg" class="settings-msg"></p>
+        <div id="settings-email-fields" hidden>
+          <p class="settings-hint">We'll send a confirmation link to the new address.</p>
+          <input id="settings-newemail" class="settings-input" type="email" placeholder="New email address" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();crChangeEmail();}" />
+          <div style="display:flex; gap:0.5rem; margin-top:0.6rem; align-items:center;">
+            <button type="button" id="settings-email-btn" class="settings-save" style="flex:1" onclick="crChangeEmail()">Update Email</button>
+            <button type="button" class="settings-cancel" onclick="crCancelEmailChange()">Cancel</button>
+          </div>
+          <p id="settings-email-msg" class="settings-msg"></p>
+        </div>
+        <p id="settings-signout-msg" class="settings-msg"></p>
       </div>
 
       <!-- About & Legal — relocated from the profile dropdown. Plain links to
            the standalone info pages; anchors don't submit the prefs form. -->
       <div class="settings-section">
         <h3>About &amp; Legal</h3>
-        <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.7rem;">
+        <div class="settings-btn-row">
           <a href="about.html" class="settings-pw-toggle no-underline">
             <span class="material-symbols-outlined">info</span> About
           </a>
