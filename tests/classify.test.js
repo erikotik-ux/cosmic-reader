@@ -85,6 +85,15 @@ t('Keep AI vaccine research',  cat({ title: 'How machine learning is speeding up
 t('Keep SpaceX court story',   cat({ title: 'Supreme Court rules on SpaceX launch license dispute', source: 'SpaceNews' }), 'Missions');
 t('Keep generic Ars tech (USB-C) still works', cat({ title: 'New USB-C cable standard announced', source: 'Ars Technica' }), 'AI & Tech');
 
+// ── UAP category (The Debrief feed + UAP keywords) ────────────────────────
+t('UAP keyword: uap',          cat({ title: 'A new batch of Pentagon UAP videos will soon be released', source: 'The Debrief' }), 'UAP');
+t('UAP keyword: ufo',          cat({ title: 'Trump releases UFO files in new transparency push', source: 'The Debrief' }), 'UAP');
+t('UAP keyword: aaro',         cat({ title: 'AARO hosts private workshop with civilian researchers', source: 'The Debrief' }), 'UAP');
+t('UAP wins over Missions',    cat({ title: 'NASA panel reviews UAP sightings near launch sites', source: 'NASA' }), 'UAP'); // 'nasa' present but UAP checked first
+t('The Debrief source default', cat({ title: 'An interview about the latest disclosure hearing', source: 'The Debrief' }), 'UAP');
+// Guard: astrobiology/exoplanet stays out of UAP (no bare 'alien' keyword)
+t('Alien planet stays Planets', cat({ title: 'Astronomers find a potentially habitable alien planet orbiting a red dwarf', source: 'Space.com' }), 'Planets');
+
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
 

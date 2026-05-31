@@ -2909,11 +2909,18 @@ const FEEDS = [
   { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
   // Ben's Bites — Substack AI newsletter (per-article RSS with image enclosures)
   { url: 'https://www.bensbites.com/feed',                source: "Ben's Bites" },
+  // The Debrief — serious UAP / anomalous-phenomena journalism (UAP category feed)
+  { url: 'https://thedebrief.org/category/uap/feed/',     source: 'The Debrief' },
 ];
 // Order matters — first match wins. Most specific topics first.
 // Physics is checked BEFORE Missions so cosmology articles (which often
 // mention NASA/spacecraft in passing) don't get misrouted to Missions.
+// UAP is checked FIRST so a genuine UAP story isn't grabbed by a passing
+// 'nasa'/'pentagon' mention and misrouted to Missions/AI. Terms are kept
+// UAP-specific (no bare 'alien'/'extraterrestrial') to avoid pulling in
+// astrobiology/exoplanet coverage.
 const KEYWORD_CATS = [
+  [['uap','uaps','ufo','ufos','unidentified anomalous phenomena','unidentified aerial phenomena','unidentified flying object','flying saucer','aaro','all-domain anomaly resolution','david grusch','grusch','nonhuman intelligence','non-human intelligence','uap disclosure','pentagon ufo'],'UAP'],
   [['openai','anthropic','gpt','gemini','llm','large language','artificial intelligence','machine learning','neural network','chatgpt','generative ai','foundation model','deepmind','mistral','meta ai','ai model','claude ai','copilot','perplexity','cursor','hugging face','stability ai','midjourney','xai','grok','semiconductor','microchip','processor','gpu','cpu','nvidia','intel','amd','qualcomm','apple silicon','smartphone','software','hardware','github','open source','developer','cloud computing','data center','silicon','app store','operating system','programming','cybersecurity','hacker','hacking','cyber attack','malware','ransomware','data breach','vulnerability','exploit','zero-day','phishing','encryption','ars technica','tech industry','big tech','surveillance','privacy violation'],'AI & Tech'],
   [['moon','lunar','artemis','south pole crater','lend','lro','lcross'],'Moon'],
   [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid belt','solar system','planet','exoplanet','gas giant','ice giant','lightning storm'],'Planets'],
@@ -2926,9 +2933,10 @@ const FALLBACK_IMAGES = {
   Moon:       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg',
   Missions:   'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg',
   'AI & Tech': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg',
+  'UAP':       'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
 };
-const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]' };
-const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
+const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]', 'UAP':'text-[#a5b4fc]' };
+const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy', 'UAP':'radar' };
 
 // ─────────────────────────────────────────────────────────────────────────
 // FEED RELEVANCE & CLASSIFICATION  —  centralized, transparent rules.
@@ -2942,7 +2950,7 @@ const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Mission
 
 // The ONLY categories the product surfaces. Anything that can't be confidently
 // mapped to one of these is treated as off-theme and dropped.
-const CORE_CATEGORIES = ['Moon', 'Planets', 'Physics', 'Missions', 'AI & Tech'];
+const CORE_CATEGORIES = ['Moon', 'Planets', 'Physics', 'Missions', 'AI & Tech', 'UAP'];
 
 // Per-source default category, used ONLY when no keyword rule matches. This
 // replaces the old scattered "if space source → Missions else → AI & Tech"
@@ -2958,6 +2966,7 @@ const SOURCE_DEFAULT_CAT = {
   'Sky & Telescope':   'Physics',
   'Ars Technica':      'AI & Tech',
   "Ben's Bites":       'AI & Tech',
+  'The Debrief':       'UAP',
 };
 
 // Obviously off-theme topics. An article is hidden ONLY when one of these
@@ -3085,6 +3094,14 @@ const FALLBACK_POOL = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/1024px-NGC_4414_%28NASA-med%29.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
+  ],
+  // UAP — dark/anomalous deep-space frames (verified Wikimedia URLs). The Debrief
+  // supplies its own images, so these are rarely shown.
+  'UAP': [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Blackhole.png/1024px-Blackhole.png',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
   ],
 };
@@ -5091,6 +5108,7 @@ const PUBLISHER_BYLINE = {
   'Teslarati':         { logo: 'https://www.google.com/s2/favicons?domain=teslarati.com&sz=128',      label: 'Teslarati' },
   'Planetary Society': { logo: 'https://www.google.com/s2/favicons?domain=planetary.org&sz=128',      label: 'Planetary Society' },
   "Ben's Bites":       { logo: 'https://www.google.com/s2/favicons?domain=bensbites.com&sz=128',     label: "Ben's Bites" },
+  'The Debrief':       { logo: 'https://www.google.com/s2/favicons?domain=thedebrief.org&sz=128',    label: 'The Debrief' },
 };
 
 // ── Open Full Reading ─────────────────────────────────────
