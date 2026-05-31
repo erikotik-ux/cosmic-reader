@@ -6851,7 +6851,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /* Give the eyebrow + close button breathing room from the top edge — the
        tall panel sits near the top of the viewport on mobile. */
     .settings-panel { padding-top: 2.6rem; }
-    .settings-close { top: 1.15rem; }
+    /* Drop the close button down to align with the lowered "Crew Profile"
+       eyebrow so it isn't stranded against the top edge. */
+    .settings-close { top: 2.2rem; }
   }
 </style>
 
