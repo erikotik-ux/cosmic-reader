@@ -14,6 +14,8 @@ const OG_ALLOWED_HOSTS = new Set([
   'arstechnica.com', 'www.arstechnica.com',
   // Ben's Bites (Substack-hosted AI newsletter)
   'www.bensbites.com', 'bensbites.com',
+  // The Debrief (UAP / anomalous-phenomena journalism)
+  'thedebrief.org', 'www.thedebrief.org',
   // Currently blocked but historically supported (keep here in case re-enabled)
   'skyandtelescope.org', 'www.skyandtelescope.org',
 ]);
