@@ -94,6 +94,13 @@ t('The Debrief source default', cat({ title: 'An interview about the latest disc
 // Guard: astrobiology/exoplanet stays out of UAP (no bare 'alien' keyword)
 t('Alien planet stays Planets', cat({ title: 'Astronomers find a potentially habitable alien planet orbiting a red dwarf', source: 'Space.com' }), 'Planets');
 
+// ── Hard off-theme: entertainment/toy IP drops even when a space keyword hits ─
+t('Drop He-Man / Masters of the Universe', cat({ title: "It had the power! The weird origins of He-Man, Skeletor, and the 'Masters of the Universe'", excerpt: "Mattel's musclebound response to 'Star Wars' had a life of its own", source: 'Space.com' }), 'DROP:off-theme');
+t('Drop Miss Universe pageant', cat({ title: 'Miss Universe 2026 crowned in a dazzling ceremony', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop cinematic universe', cat({ title: 'The Marvel cinematic universe announces its next phase at Comic Con', source: 'Space.com' }), 'DROP:off-theme');
+// Guard: genuine cosmology with "universe" stays Physics (not hard-excluded)
+t('Keep origin-of-the-universe cosmology', cat({ title: 'New model rewrites the origin of the universe after the Big Bang', source: 'Space.com' }), 'Physics');
+
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
 
