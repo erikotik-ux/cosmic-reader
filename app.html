@@ -3099,7 +3099,7 @@ const FALLBACK_IMAGES = {
   Moon:       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg',
   Missions:   'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg',
   'AI & Tech': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg',
-  'UAP':       'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
+  'UAP':       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
 };
 const CAT_COLOR   = { Physics:'text-[#ffb5a0]', Planets:'text-[#00f0ff]', Moon:'text-[#dbfcff]', Missions:'text-[#00f0ff]', 'AI & Tech':'text-[#7dd3fc]', 'UAP':'text-[#a5b4fc]' };
 const CAT_ICON    = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy', 'UAP':'radar' };
@@ -3262,13 +3262,15 @@ const FALLBACK_POOL = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
   ],
-  // UAP — dark/anomalous deep-space frames (verified Wikimedia URLs). The Debrief
-  // supplies its own images, so these are rarely shown.
+  // UAP — bright, clearly-visible cosmic frames (verified Wikimedia URLs).
+  // Avoid near-black images (Hubble UDF / black hole) — they look blank on the
+  // dark UI. The Debrief usually supplies its own image (og:image enrichment),
+  // so these are a rarely-shown safety net.
   'UAP': [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Blackhole.png/1024px-Blackhole.png',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/1024px-NGC_4414_%28NASA-med%29.jpg',
   ],
 };
 // Hash article title to a stable integer — used to pick a unique pool image per article
@@ -3676,7 +3678,7 @@ async function fetchFeed(feedInfo) {
       }).filter(Boolean);
       // OG image enrichment — Planetary Society & Sky & Telescope don't include images in their RSS.
       // Fetch the article's og:image server-side for any article that has no real feed image.
-      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews', 'Teslarati']);
+      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews', 'Teslarati', 'The Debrief']);
       if (NO_IMG_SRCS.has(feedInfo.source)) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {

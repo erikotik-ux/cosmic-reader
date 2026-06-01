@@ -266,8 +266,8 @@ const FALLBACK_POOL = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
   ],
   'UAP': [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Blackhole.png/1024px-Blackhole.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg',
   ],
 };
 
@@ -319,7 +319,7 @@ async function fetchFeed(feedInfo) {
         return {title,excerpt,category,date,source:feedInfo.source,image,link,_hasRealImg};
       }).filter(Boolean);
       // OG image enrichment for sources whose RSS feeds don't include article images
-      const NO_IMG_SRCS=new Set(['Planetary Society','Sky & Telescope','SpaceNews','Teslarati']);
+      const NO_IMG_SRCS=new Set(['Planetary Society','Sky & Telescope','SpaceNews','Teslarati','The Debrief']);
       if(NO_IMG_SRCS.has(feedInfo.source)){
         await Promise.allSettled(
           articlesList.filter(a=>!a._hasRealImg).map(async a=>{

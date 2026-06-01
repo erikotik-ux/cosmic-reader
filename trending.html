@@ -238,7 +238,7 @@ const FALLBACK_POOL = {
   Moon:       ['https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Full_Moon_Luc_Viatour.jpg/1024px-Full_Moon_Luc_Viatour.jpg'],
   Missions:   ['https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg'],
   'AI & Tech':['https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg'],
-  'UAP':      ['https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Blackhole.png/1024px-Blackhole.png'],
+  'UAP':      ['https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cosmic_Cliffs_Webb.jpg/1024px-Cosmic_Cliffs_Webb.jpg'],
 };
 
 function _hashTitle(s) { let h=0; for(let i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0;} return Math.abs(h); }
@@ -288,7 +288,7 @@ async function fetchFeed(feedInfo) {
         return { title, excerpt, category, date, source: feedInfo.source, image, link, _hasRealImg };
       }).filter(Boolean);
       // OG image enrichment for sources whose RSS feeds don't include article images
-      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews', 'Teslarati']);
+      const NO_IMG_SRCS = new Set(['Planetary Society', 'Sky & Telescope', 'SpaceNews', 'Teslarati', 'The Debrief']);
       if (NO_IMG_SRCS.has(feedInfo.source)) {
         await Promise.allSettled(
           articlesList.filter(a => !a._hasRealImg).map(async a => {
