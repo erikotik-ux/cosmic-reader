@@ -2293,7 +2293,7 @@
     function epath(a,b,phi,yoff){ ctx.beginPath(); for(var t=0;t<=64;t++){var p=P(a,b,phi,t/64*6.2832,yoff); t?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.closePath(); }
     function ring(a,b,phi,yoff,al,lw,col){ ctx.beginPath(); for(var t=0;t<=64;t++){var p=P(a,b,phi,t/64*6.2832,yoff); t?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.globalAlpha=al; ctx.lineWidth=lw||1; ctx.strokeStyle=col; ctx.stroke(); }
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var A=34,B=5.5, DA=10,DB=8, domeY=B*0.4+DB*0.5;
+    var A=34,B=5.5;
     function frame(){
       ctx.clearRect(0,0,W,H);
       ctx.save(); ctx.translate(cx,cyy); ctx.rotate(ROLL); ctx.translate(-cx,-cyy);
@@ -2302,17 +2302,19 @@
       var g=ctx.createLinearGradient(0,cyy-B-4,0,cyy+B+4);
       g.addColorStop(0,'rgba(225,230,240,0.15)'); g.addColorStop(0.5,'rgba(150,160,180,0.07)'); g.addColorStop(1,'rgba(95,105,125,0.15)');
       ctx.globalAlpha=1; ctx.fillStyle=g; ctx.fill();
-      // rotating spoke-lines on the plate
-      for(var k=0;k<12;k++){ var th=k/12*6.2832, rim=P(A,B,Math.PI*0.5,th); ctx.beginPath(); ctx.moveTo(cx,cyy); ctx.lineTo(rim.x,rim.y); ctx.globalAlpha=0.16; ctx.lineWidth=1; ctx.strokeStyle='rgba(210,220,235,0.7)'; ctx.stroke(); }
+      // 18 rotating spoke-lines on the bottom plate (inner ring -> rim, clear of the dome)
+      var N=18;
+      for(var k=0;k<N;k++){ var th=k/N*6.2832, pin=P(A*0.34,B*0.34,Math.PI*0.5,th), po=P(A,B,Math.PI*0.5,th); ctx.beginPath(); ctx.moveTo(pin.x,pin.y); ctx.lineTo(po.x,po.y); ctx.globalAlpha=0.18; ctx.lineWidth=1; ctx.strokeStyle='rgba(212,222,236,0.7)'; ctx.stroke(); }
       // bright glass rim
       ring(A,B,Math.PI*0.5,0,0.6,1.1,'rgba(236,240,248,0.85)');
-      // centered dome — uniform glass, no bright spot, no beak
-      epath(DA,DB,Math.PI*0.5,domeY);
-      ctx.globalAlpha=1; ctx.fillStyle='rgba(170,180,200,0.13)'; ctx.fill();
-      ring(DA,DB,Math.PI*0.5,domeY,0.5,1,'rgba(232,238,247,0.78)');
-      ctx.beginPath(); for(var i=0;i<=24;i++){var ph=Math.PI*0.5-(i/24)*Math.PI*0.5, p=P(DA,DB,ph,0,domeY); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.globalAlpha=0.5; ctx.lineWidth=1; ctx.strokeStyle='rgba(232,238,247,0.7)'; ctx.stroke();
+      // STATIC dome (drawn in 2D so it never rotates): glass cap + base seam
+      var dcx=cx, dcy=cyy-1.5, dW=11, baseH=3.2, capH=8.5;
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.closePath();
+      ctx.globalAlpha=1; ctx.fillStyle='rgba(172,182,202,0.16)'; ctx.fill();
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.globalAlpha=0.6; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(234,239,248,0.88)'; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,2*Math.PI); ctx.globalAlpha=0.28; ctx.lineWidth=1; ctx.strokeStyle='rgba(220,228,240,0.7)'; ctx.stroke();
       ctx.restore();
-      if(!reduce){ rot+=0.01; requestAnimationFrame(frame); }
+      if(!reduce){ rot+=0.012; requestAnimationFrame(frame); }
     }
     frame();
   }
