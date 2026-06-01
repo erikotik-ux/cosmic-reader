@@ -2304,7 +2304,7 @@
       // behind it, so you read its outer surface rather than seeing through it.
       epath(A,B,Math.PI*0.5,0); ctx.globalAlpha=1; ctx.fillStyle=SPACE; ctx.fill();
       // top-surface meridian grid (front face only), fanning from the dome base to the rim
-      for(var k=0;k<14;k++){ merid(k/14*6.2832, Math.PI*0.13, Math.PI*0.50, 0.45, 'rgba(232,240,252,0.9)'); }
+      for(var k=0;k<14;k++){ merid(k/14*6.2832, Math.PI*0.13, Math.PI*0.50, 0.25, 'rgba(232,240,252,0.9)'); }
       // bright rim (soft canvas glow)
       ctx.shadowColor='rgba(205,214,230,0.5)'; ctx.shadowBlur=5;
       ring(A,B,Math.PI*0.5,0,0.75,1.2,'rgba(240,244,250,0.95)');
@@ -2316,7 +2316,7 @@
       ctx.shadowColor='rgba(205,214,230,0.45)'; ctx.shadowBlur=4;
       ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.globalAlpha=0.8; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(236,241,250,0.95)'; ctx.stroke();
       ctx.shadowBlur=0;
-      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,2*Math.PI); ctx.globalAlpha=0.4; ctx.lineWidth=1; ctx.strokeStyle='rgba(220,228,240,0.7)'; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,Math.PI); ctx.globalAlpha=0.8; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(236,241,250,0.95)'; ctx.stroke();
       ctx.restore();
       if(!reduce){ rot+=0.012; requestAnimationFrame(frame); }
     }
