@@ -2305,29 +2305,33 @@
     function ring(a,b,phi,yoff,al,lw,col){ ctx.beginPath(); for(var t=0;t<=64;t++){var p=P(a,b,phi,t/64*6.2832,yoff); t?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.globalAlpha=al; ctx.lineWidth=lw||1; ctx.strokeStyle=col; ctx.stroke(); }
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var A=34,B=7;
+    // vertical meridian (constant theta, phi p0->p1) over the oblate plate
+    function merid(th,p0,p1,al,col){ ctx.beginPath(); for(var i=0;i<=40;i++){var phi=p0+(p1-p0)*i/40, p=P(A,B,phi,th,0); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.globalAlpha=al; ctx.lineWidth=1; ctx.strokeStyle=col; ctx.stroke(); }
     function frame(){
       ctx.clearRect(0,0,W,H);
       ctx.save(); ctx.translate(cx,cyy); ctx.rotate(ROLL); ctx.translate(-cx,-cyy);
-      // transparent glass plate (Predator-cloak look), banked like the classic photo
+      // faint glass plate
       epath(A,B,Math.PI*0.5,0);
       var g=ctx.createLinearGradient(0,cyy-B-4,0,cyy+B+4);
-      g.addColorStop(0,'rgba(225,230,240,0.13)'); g.addColorStop(0.5,'rgba(150,160,180,0.06)'); g.addColorStop(1,'rgba(95,105,125,0.13)');
+      g.addColorStop(0,'rgba(225,230,240,0.10)'); g.addColorStop(1,'rgba(95,105,125,0.10)');
       ctx.globalAlpha=1; ctx.fillStyle=g; ctx.fill();
-      // 18 BRIGHT rotating spoke-lines on the bottom plate (inner ring -> rim)
-      var N=18;
-      for(var k=0;k<N;k++){ var th=k/N*6.2832, pin=P(A*0.40,B*0.40,Math.PI*0.5,th), po=P(A,B,Math.PI*0.5,th); ctx.beginPath(); ctx.moveTo(pin.x,pin.y); ctx.lineTo(po.x,po.y); ctx.globalAlpha=0.5; ctx.lineWidth=1; ctx.strokeStyle='rgba(245,249,255,0.95)'; ctx.stroke(); }
-      // bright glass rim (soft canvas glow replaces the removed CSS drop-shadow)
+      // 14 vertical meridian lines fanning from the dome base to the rim — a
+      // rotating wireframe grid (vertical only), AI-planet style but spokes-only.
+      for(var k=0;k<14;k++){ merid(k/14*6.2832, Math.PI*0.10, Math.PI*0.90, 0.4, 'rgba(232,240,252,0.85)'); }
+      // bright glass rim (soft canvas glow)
       ctx.shadowColor='rgba(205,214,230,0.5)'; ctx.shadowBlur=5;
       ring(A,B,Math.PI*0.5,0,0.65,1.2,'rgba(240,244,250,0.9)');
       ctx.shadowBlur=0;
-      // STATIC, more-transparent dome (2D so it never rotates): glass cap + base seam
-      var dcx=cx, dcy=cyy-2, dW=12, baseH=3.6, capH=9;
+      // STATIC dome ~80% opacity (solid glass): cap fill + outline + base seam
+      var dcx=cx, dcy=cyy-2, dW=12, baseH=3.6, capH=9.5;
       ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.closePath();
-      ctx.globalAlpha=1; ctx.fillStyle='rgba(180,190,210,0.05)'; ctx.fill();
+      var gd=ctx.createLinearGradient(0,dcy-capH,0,dcy+2);
+      gd.addColorStop(0,'rgba(214,222,238,0.85)'); gd.addColorStop(1,'rgba(120,132,160,0.8)');
+      ctx.globalAlpha=1; ctx.fillStyle=gd; ctx.fill();
       ctx.shadowColor='rgba(205,214,230,0.45)'; ctx.shadowBlur=4;
-      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.globalAlpha=0.42; ctx.lineWidth=1; ctx.strokeStyle='rgba(234,239,248,0.85)'; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.globalAlpha=0.7; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(236,241,250,0.9)'; ctx.stroke();
       ctx.shadowBlur=0;
-      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,2*Math.PI); ctx.globalAlpha=0.22; ctx.lineWidth=1; ctx.strokeStyle='rgba(220,228,240,0.7)'; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,2*Math.PI); ctx.globalAlpha=0.35; ctx.lineWidth=1; ctx.strokeStyle='rgba(220,228,240,0.7)'; ctx.stroke();
       ctx.restore();
       if(!reduce){ rot+=0.012; requestAnimationFrame(frame); }
     }
