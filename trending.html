@@ -220,22 +220,25 @@ const FEEDS = [
   { url: 'https://feeds.arstechnica.com/arstechnica/index', source: 'Ars Technica' },
   { url: 'https://www.teslarati.com/feed/',               source: 'Teslarati' },
   { url: 'https://www.planetary.org/rss/articles',        source: 'Planetary Society' },
+  { url: 'https://thedebrief.org/category/uap/feed/',     source: 'The Debrief' },
 ];
 const KEYWORD_CATS = [
+  [['uap','uaps','ufo','ufos','unidentified anomalous phenomena','unidentified aerial phenomena','unidentified flying object','flying saucer','aaro','grusch','nonhuman intelligence','non-human intelligence'],'UAP'],
   [['openai','anthropic','gpt','gemini','llm','artificial intelligence','machine learning','neural network','chatgpt','generative ai','semiconductor','microchip','gpu','cpu','nvidia','smartphone','software','hardware','cybersecurity','hacker','malware'],'AI & Tech'],
   [['moon','lunar','artemis','south pole','crater'],'Moon'],
   [['mars','jupiter','saturn','venus','uranus','neptune','pluto','asteroid','solar system','planet'],'Planets'],
   [['nasa','esa','spacex','rocket','starship','launch','mission','spacecraft','probe','falcon','sls'],'Missions'],
   [['black hole','gravitational wave','neutron star','dark matter','dark energy','quantum','galaxy','nebula','big bang','telescope','hubble','physics'],'Physics'],
 ];
-const CAT_COLOR = { Physics:'#ffb5a0', Planets:'#00f0ff', Moon:'#dbfcff', Missions:'#00f0ff', 'AI & Tech':'#7dd3fc' };
-const CAT_ICON  = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy' };
+const CAT_COLOR = { Physics:'#ffb5a0', Planets:'#00f0ff', Moon:'#dbfcff', Missions:'#00f0ff', 'AI & Tech':'#7dd3fc', 'UAP':'#a5b4fc' };
+const CAT_ICON  = { Physics:'flare', Planets:'public', Moon:'bedtime', Missions:'rocket_launch', 'AI & Tech':'smart_toy', 'UAP':'radar' };
 const FALLBACK_POOL = {
   Physics:    ['https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/1024px-Crab_Nebula.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg'],
   Planets:    ['https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1024px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1024px-Saturn_during_Equinox.jpg'],
   Moon:       ['https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Full_Moon_Luc_Viatour.jpg/1024px-Full_Moon_Luc_Viatour.jpg'],
   Missions:   ['https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/International_Space_Station_after_undocking_of_STS-132.jpg/1024px-International_Space_Station_after_undocking_of_STS-132.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Hubble_Space_Telescope_in_orbit.jpg/1024px-The_Hubble_Space_Telescope_in_orbit.jpg'],
   'AI & Tech':['https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Intel_80486DX2_top.jpg/1024px-Intel_80486DX2_top.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg'],
+  'UAP':      ['https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Hubble_ultra_deep_field.jpg/1024px-Hubble_ultra_deep_field.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Blackhole.png/1024px-Blackhole.png'],
 };
 
 function _hashTitle(s) { let h=0; for(let i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0;} return Math.abs(h); }
@@ -269,7 +272,7 @@ async function fetchFeed(feedInfo) {
         const excerpt = stripHtml(descRaw).slice(0, 220).trim();
         const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
         const tags = (item.categories || []).join(' ');
-        const category = guessCategory(title, tags) || (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech');
+        const category = guessCategory(title, tags) || (feedInfo.source === 'The Debrief' ? 'UAP' : (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech'));
         const _encLink = item.enclosure?.link || '';
         const _encType = item.enclosure?.type || '';
         const _encIsImg = /^image/i.test(_encType) || (!_encType && /\.(jpg|jpeg|png|webp|gif)$/i.test(_encLink));
@@ -324,7 +327,7 @@ async function fetchFeed(feedInfo) {
     const date = pubDate ? new Date(pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
     const tags = Array.from(item.querySelectorAll('category')).map(c=>c.textContent).join(' ');
     const PURE_SPACE = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
-    const category = guessCategory(title, tags) || (PURE_SPACE.includes(feedInfo.source) ? 'Missions' : null);
+    const category = guessCategory(title, tags) || (feedInfo.source === 'The Debrief' ? 'UAP' : (PURE_SPACE.includes(feedInfo.source) ? 'Missions' : null));
     let image = '';
     const allEls = Array.from(item.getElementsByTagName('*'));
     for (const el of allEls) {
@@ -384,7 +387,7 @@ function renderTrending() {
 async function loadFeeds() {
   // ── Fast path: use articles cached by app.html ──
   try {
-    const c = JSON.parse(sessionStorage.getItem('cr_cache_v5') || '{}');
+    const c = JSON.parse(sessionStorage.getItem('cr_cache_v6') || '{}');
     if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
       allArticles = c.articles.map(a => ({ ...a, link: a.read_more || a.link })).filter(a => a.link && a.title && !isOffThemeArticle(a));
       renderTrending();
