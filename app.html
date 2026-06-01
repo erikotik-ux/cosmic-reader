@@ -637,11 +637,20 @@
     position: relative; line-height: 0;
     opacity: 0;                      /* cloaked: fully invisible until revealed */
     transform: scale(0.96);
-    transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
-    filter: drop-shadow(0 0 7px rgba(205,214,230,0.28));  /* subtle desaturated glow */
+    transition: opacity 0.6s ease, transform 0.6s ease;
     will-change: opacity, transform;
+    /* No CSS filter here — it would neutralize the dome's backdrop-filter.
+       The craft's soft glow is drawn on the canvas (shadowBlur) instead. */
   }
-  .uap-canvas { display: block; }
+  .uap-canvas { display: block; position: relative; z-index: 2; }
+  /* Frosted-glass dome: blurs the starfield behind the dome. Sits under the
+     canvas (z-index 1) so the canvas-drawn dome outline overlays it. */
+  .uap-domeblur {
+    position: absolute; left: 50%; top: 44%; width: 26px; height: 19px;
+    transform: translate(-50%,-50%) rotate(-8deg); z-index: 1; pointer-events: none;
+    border-radius: 50% 50% 48% 48%;
+    -webkit-backdrop-filter: blur(2.5px) brightness(1.05); backdrop-filter: blur(2.5px) brightness(1.05);
+  }
   /* The only hint while cloaked: a soft radial ring that slowly pings —
      same style as the planets' .pw-ripple (just periodic instead of on-hover). */
   .uap-ripple {
@@ -665,7 +674,7 @@
   }
   .uap-contact:hover .uap-craft,
   .uap-contact:focus-visible .uap-craft,
-  .uap-contact.is-revealed .uap-craft { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 12px rgba(205,214,230,0.45)); }
+  .uap-contact.is-revealed .uap-craft { opacity: 1; transform: scale(1); }
   .uap-contact:hover .uap-label,
   .uap-contact:focus-visible .uap-label,
   .uap-contact.is-revealed .uap-label { opacity: 1; }
@@ -1727,6 +1736,7 @@
            onclick="openCategoryArticle('UAP')"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
         <div class="uap-craft">
+          <div class="uap-domeblur" aria-hidden="true"></div>
           <canvas class="uap-canvas" aria-hidden="true"></canvas>
           <div class="uap-scan"></div>
         </div>
@@ -1751,6 +1761,7 @@
            onclick="openCategoryArticle('UAP')"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
         <div class="uap-craft">
+          <div class="uap-domeblur" aria-hidden="true"></div>
           <canvas class="uap-canvas" aria-hidden="true"></canvas>
           <div class="uap-scan"></div>
         </div>
@@ -2283,7 +2294,7 @@
     var dpr=Math.min(window.devicePixelRatio||1,2), W=108, H=74;
     canvas.width=W*dpr; canvas.height=H*dpr; canvas.style.width=W+'px'; canvas.style.height=H+'px';
     var ctx=canvas.getContext('2d'); if(!ctx) return; ctx.setTransform(dpr,0,0,dpr,0,0);
-    var cx=W/2, cyy=H/2+2, rot=Math.random()*6.2832, TILT=0.40, ROLL=-0.14; // flat banked plate, photo-like
+    var cx=W/2, cyy=H/2+2, rot=Math.random()*6.2832, TILT=0.52, ROLL=-0.14; // banked plate, open enough to see the spin
     function P(a,b,phi,theta,yoff){
       var x=a*Math.sin(phi)*Math.cos(theta), y=b*Math.cos(phi)+yoff, z=a*Math.sin(phi)*Math.sin(theta);
       var cr=Math.cos(rot),sr=Math.sin(rot), x1=x*cr+z*sr, z1=-x*sr+z*cr;
@@ -2293,26 +2304,30 @@
     function epath(a,b,phi,yoff){ ctx.beginPath(); for(var t=0;t<=64;t++){var p=P(a,b,phi,t/64*6.2832,yoff); t?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.closePath(); }
     function ring(a,b,phi,yoff,al,lw,col){ ctx.beginPath(); for(var t=0;t<=64;t++){var p=P(a,b,phi,t/64*6.2832,yoff); t?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.globalAlpha=al; ctx.lineWidth=lw||1; ctx.strokeStyle=col; ctx.stroke(); }
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var A=34,B=5.5;
+    var A=34,B=7;
     function frame(){
       ctx.clearRect(0,0,W,H);
       ctx.save(); ctx.translate(cx,cyy); ctx.rotate(ROLL); ctx.translate(-cx,-cyy);
       // transparent glass plate (Predator-cloak look), banked like the classic photo
       epath(A,B,Math.PI*0.5,0);
       var g=ctx.createLinearGradient(0,cyy-B-4,0,cyy+B+4);
-      g.addColorStop(0,'rgba(225,230,240,0.15)'); g.addColorStop(0.5,'rgba(150,160,180,0.07)'); g.addColorStop(1,'rgba(95,105,125,0.15)');
+      g.addColorStop(0,'rgba(225,230,240,0.13)'); g.addColorStop(0.5,'rgba(150,160,180,0.06)'); g.addColorStop(1,'rgba(95,105,125,0.13)');
       ctx.globalAlpha=1; ctx.fillStyle=g; ctx.fill();
-      // 18 rotating spoke-lines on the bottom plate (inner ring -> rim, clear of the dome)
+      // 18 BRIGHT rotating spoke-lines on the bottom plate (inner ring -> rim)
       var N=18;
-      for(var k=0;k<N;k++){ var th=k/N*6.2832, pin=P(A*0.34,B*0.34,Math.PI*0.5,th), po=P(A,B,Math.PI*0.5,th); ctx.beginPath(); ctx.moveTo(pin.x,pin.y); ctx.lineTo(po.x,po.y); ctx.globalAlpha=0.18; ctx.lineWidth=1; ctx.strokeStyle='rgba(212,222,236,0.7)'; ctx.stroke(); }
-      // bright glass rim
-      ring(A,B,Math.PI*0.5,0,0.6,1.1,'rgba(236,240,248,0.85)');
-      // STATIC dome (drawn in 2D so it never rotates): glass cap + base seam
-      var dcx=cx, dcy=cyy-1.5, dW=11, baseH=3.2, capH=8.5;
+      for(var k=0;k<N;k++){ var th=k/N*6.2832, pin=P(A*0.40,B*0.40,Math.PI*0.5,th), po=P(A,B,Math.PI*0.5,th); ctx.beginPath(); ctx.moveTo(pin.x,pin.y); ctx.lineTo(po.x,po.y); ctx.globalAlpha=0.5; ctx.lineWidth=1; ctx.strokeStyle='rgba(245,249,255,0.95)'; ctx.stroke(); }
+      // bright glass rim (soft canvas glow replaces the removed CSS drop-shadow)
+      ctx.shadowColor='rgba(205,214,230,0.5)'; ctx.shadowBlur=5;
+      ring(A,B,Math.PI*0.5,0,0.65,1.2,'rgba(240,244,250,0.9)');
+      ctx.shadowBlur=0;
+      // STATIC, more-transparent dome (2D so it never rotates): glass cap + base seam
+      var dcx=cx, dcy=cyy-2, dW=12, baseH=3.6, capH=9;
       ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.closePath();
-      ctx.globalAlpha=1; ctx.fillStyle='rgba(172,182,202,0.16)'; ctx.fill();
-      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.globalAlpha=0.6; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(234,239,248,0.88)'; ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,2*Math.PI); ctx.globalAlpha=0.28; ctx.lineWidth=1; ctx.strokeStyle='rgba(220,228,240,0.7)'; ctx.stroke();
+      ctx.globalAlpha=1; ctx.fillStyle='rgba(180,190,210,0.05)'; ctx.fill();
+      ctx.shadowColor='rgba(205,214,230,0.45)'; ctx.shadowBlur=4;
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.globalAlpha=0.42; ctx.lineWidth=1; ctx.strokeStyle='rgba(234,239,248,0.85)'; ctx.stroke();
+      ctx.shadowBlur=0;
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,2*Math.PI); ctx.globalAlpha=0.22; ctx.lineWidth=1; ctx.strokeStyle='rgba(220,228,240,0.7)'; ctx.stroke();
       ctx.restore();
       if(!reduce){ rot+=0.012; requestAnimationFrame(frame); }
     }
