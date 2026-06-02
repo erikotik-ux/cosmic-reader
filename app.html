@@ -575,7 +575,7 @@
   /* Physics & Cosmos label: its rings-wrap box is taller than the visible
      planet, so the default mt-4 gap reads larger than the other planets'.
      Pull the label up to match. Desktop only. */
-  #desktop-galaxy .phys-wrap + .mt-4 { margin-top: -20px; }
+  #desktop-galaxy .phys-wrap + .mt-4 { margin-top: -4px; }
   /* Subtle affordance hint telling users the galaxy sectors are clickable.
      Isolated, pointer-events:none element — never affects planet hit-testing
      or the constellation-line math. Desktop only (mobile shows tappable
@@ -698,7 +698,7 @@
   }
   /* Mobile: in the vertical list, last (order 6), with separation below Physics.
      Still cloaked + ripple tell; revealed when scrolled into view (see init JS). */
-  #mobile-galaxy .uap-contact { position: relative; order: 6; align-self: center; margin: 2.25rem auto 2.5rem; }
+  #mobile-galaxy .uap-contact { position: relative; order: 6; align-self: center; margin: 0.5rem auto 2.5rem; transform: translateX(40px); }
   .hud-card { transition: opacity 0.3s ease, transform 0.3s ease; }
   .article-img { transition: transform 0.7s ease; }
   article:hover .article-img { transform: scale(1.05); }

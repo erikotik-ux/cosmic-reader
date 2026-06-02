@@ -140,7 +140,7 @@ if (window.innerWidth <= 768) {
   /* Physics & Cosmos label: its rings-wrap box is taller than the visible
      planet, so the default mt-4 gap reads larger than the other planets'.
      Pull the label up to match. Desktop only. */
-  #desktop-galaxy .phys-wrap + .mt-4 { margin-top: -20px; }
+  #desktop-galaxy .phys-wrap + .mt-4 { margin-top: -4px; }
 
   /* ── UAP cloaked contact (ported from app.html) ───────────────────────
      A 3D canvas saucer hidden in the map's negative space. Truly cloaked;
@@ -209,7 +209,7 @@ if (window.innerWidth <= 768) {
     .uap-ripple { animation: none; }
     .uap-contact:hover .uap-scan, .uap-contact.is-revealed .uap-scan { animation: none; }
   }
-  #mobile-galaxy .uap-contact { position: relative; order: 6; align-self: center; margin: 2.25rem auto 2.5rem; }
+  #mobile-galaxy .uap-contact { position: relative; order: 6; align-self: center; margin: 0.5rem auto 2.5rem; transform: translateX(40px); }
   /* ── Top bar ── */
   .top-bar {
     position: fixed;
