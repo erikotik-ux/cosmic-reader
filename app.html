@@ -572,6 +572,10 @@
   .phys-wrap { transition: transform 0.4s ease; }
   .planet-node:hover .phys-wrap { transform: scale(1.08); }
   .planet-node:hover .phys-wrap .planet-sphere { transform: none; }
+  /* Physics & Cosmos label: its rings-wrap box is taller than the visible
+     planet, so the default mt-4 gap reads larger than the other planets'.
+     Pull the label up to match. Desktop only. */
+  #desktop-galaxy .phys-wrap + .mt-4 { margin-top: -20px; }
   /* Subtle affordance hint telling users the galaxy sectors are clickable.
      Isolated, pointer-events:none element — never affects planet hit-testing
      or the constellation-line math. Desktop only (mobile shows tappable

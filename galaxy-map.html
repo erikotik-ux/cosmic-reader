@@ -137,6 +137,79 @@ if (window.innerWidth <= 768) {
   .phys-wrap { transition: transform 0.4s ease; }
   .planet-node:hover .phys-wrap { transform: scale(1.08); }
   .planet-node:hover .phys-wrap .planet-sphere { transform: none; }
+  /* Physics & Cosmos label: its rings-wrap box is taller than the visible
+     planet, so the default mt-4 gap reads larger than the other planets'.
+     Pull the label up to match. Desktop only. */
+  #desktop-galaxy .phys-wrap + .mt-4 { margin-top: -20px; }
+
+  /* ── UAP cloaked contact (ported from app.html) ───────────────────────
+     A 3D canvas saucer hidden in the map's negative space. Truly cloaked;
+     only a faint periodic ripple hints at it. Materializes on hover/focus
+     (desktop) or when scrolled into view (mobile). NOT a .planet-node. */
+  .uap-contact {
+    position: absolute;
+    width: 180px; height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; padding: 0; margin: 0;
+    cursor: pointer; z-index: 30;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .uap-craft {
+    position: relative; line-height: 0;
+    opacity: 0; transform: scale(0.96);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+  }
+  .uap-canvas { display: block; }
+  .uap-ripple {
+    position: absolute; left: 50%; top: 54%; width: 46px; height: 46px;
+    margin: -23px 0 0 -23px; border-radius: 50%; opacity: 0; pointer-events: none;
+    background: radial-gradient(circle, transparent 54%, rgba(165,180,252,0.3) 67%, transparent 80%);
+    animation: uap-ping 7s ease-out infinite;
+  }
+  .uap-scan {
+    position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+    width: 120px; height: 2px; opacity: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.95), transparent);
+  }
+  .uap-label {
+    position: absolute; top: calc(50% + 28px); left: 50%; transform: translateX(-50%);
+    font-family: 'Exo 2','Space Grotesk',sans-serif;
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    text-align: center; line-height: 1.25;
+    color: rgba(165,180,252,0.95); white-space: nowrap;
+    opacity: 0; transition: opacity 0.45s ease; pointer-events: none;
+    text-shadow: 0 0 8px rgba(165,180,252,0.55);
+  }
+  .uap-contact:hover .uap-craft,
+  .uap-contact:focus-visible .uap-craft,
+  .uap-contact.is-revealed .uap-craft { opacity: 1; transform: scale(1); }
+  .uap-contact:hover .uap-label,
+  .uap-contact:focus-visible .uap-label,
+  .uap-contact.is-revealed .uap-label { opacity: 1; }
+  .uap-contact:hover .uap-scan,
+  .uap-contact:focus-visible .uap-scan,
+  .uap-contact.is-revealed .uap-scan { animation: uap-sweep 1.2s ease-in-out; }
+  .uap-contact:focus { outline: none; }
+  .uap-contact:focus-visible { outline: 1px dashed rgba(165,180,252,0.6); outline-offset: 8px; border-radius: 12px; }
+  @keyframes uap-ping {
+    0%   { transform: scale(1);   opacity: 0; }
+    6%   { opacity: 0.42; }
+    34%  { transform: scale(2.7); opacity: 0; }
+    100% { transform: scale(2.7); opacity: 0; }
+  }
+  @keyframes uap-sweep {
+    0%   { opacity: 0; top: 4%; }
+    15%  { opacity: 0.9; }
+    85%  { opacity: 0.9; }
+    100% { opacity: 0; top: 92%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .uap-ripple { animation: none; }
+    .uap-contact:hover .uap-scan, .uap-contact.is-revealed .uap-scan { animation: none; }
+  }
+  #mobile-galaxy .uap-contact { position: relative; order: 6; align-self: center; margin: 2.25rem auto 2.5rem; }
   /* ── Top bar ── */
   .top-bar {
     position: fixed;
@@ -908,6 +981,19 @@ if (window.innerWidth <= 768) {
       </div>
     </div>
 
+      <!-- UAP: cloaked sensor contact (ported from app.html). NOT a .planet-node. -->
+      <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
+           style="top:calc(28% - 10px); left:calc(84% - 6px);"
+           onclick="openCategoryArticle('UAP')"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
+        <div class="uap-craft">
+          <canvas class="uap-canvas" aria-hidden="true"></canvas>
+          <div class="uap-scan"></div>
+        </div>
+        <div class="uap-ripple" aria-hidden="true"></div>
+        <span class="uap-label">Anomaly<br>Detected</span>
+      </div>
+
   </div><!-- /desktop-galaxy -->
 
   <!-- ═══ MOBILE: vertical stacked planets ═══ -->
@@ -918,6 +1004,18 @@ if (window.innerWidth <= 768) {
       <line id="mcl2" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
       <line id="mcl3" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.18" x1="0" y1="0" x2="0" y2="0"/>
     </svg>
+
+    <!-- UAP: cloaked sensor contact (mobile, ported). flex order:6 = last. -->
+    <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
+         onclick="openCategoryArticle('UAP')"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
+      <div class="uap-craft">
+        <canvas class="uap-canvas" aria-hidden="true"></canvas>
+        <div class="uap-scan"></div>
+      </div>
+      <div class="uap-ripple" aria-hidden="true"></div>
+      <span class="uap-label">Anomaly<br>Detected</span>
+    </div>
 
     <!-- Mobile Planet 1: Moon — right -->
     <div class="planet-node self-end mr-8 pointer-events-auto" onclick="openCategoryArticle('Moon')">
@@ -1382,9 +1480,11 @@ const FEEDS = [
   { url:'https://www.universetoday.com/feed/',     name:'Universe Today'    },
   { url:'https://www.nasa.gov/rss/dyn/breaking_news.rss', name:'NASA'      },
   { url:'https://feeds.skynews.com/feeds/rss/science.xml', name:'SkyNews'  },
+  { url:'https://thedebrief.org/category/uap/feed/', name:'The Debrief'    },
 ];
 
 const KEYWORD_CATS = [
+  { cat:'UAP',      kw:['uap','uaps','ufo','ufos','unidentified anomalous','unidentified aerial','unidentified flying object','flying saucer','aaro','grusch','nonhuman intelligence','non-human intelligence'] },
   { cat:'Planets',  kw:['planet','exoplanet','mars','jupiter','saturn','venus','mercury','uranus','neptune','pluto','world','atmosphere','orbit'] },
   { cat:'Missions', kw:['mission','launch','rocket','spacecraft','starship','falcon','nasa','esa','spacex','sls','artemis','crew','capsule','probe','lander','rover'] },
   { cat:'Physics',  kw:['black hole','dark matter','dark energy','quantum','gravity','gravitational','neutron','pulsar','supernova','galaxy','cosmos','universe','relativity','telescope','hubble','webb','event horizon'] },
@@ -1814,6 +1914,58 @@ setTimeout(() => getArticles(), 1200);
   } else {
     setTimeout(initAll, 120);
   }
+})();
+</script>
+
+<!-- UAP cloaked saucer: 3D canvas renderer (ported from app.html) + mobile reveal-on-scroll. -->
+<script>
+(function(){
+  function initCanvas(canvas){
+    if(canvas.dataset.uapInit) return; canvas.dataset.uapInit='1';
+    var dpr=Math.min(window.devicePixelRatio||1,2), W=108, H=74;
+    canvas.width=W*dpr; canvas.height=H*dpr; canvas.style.width=W+'px'; canvas.style.height=H+'px';
+    var ctx=canvas.getContext('2d'); if(!ctx) return; ctx.setTransform(dpr,0,0,dpr,0,0);
+    var cx=W/2, cyy=H/2+2, rot=Math.random()*6.2832, TILT=0.52, ROLL=-0.14;
+    function P(a,b,phi,theta,yoff){
+      var x=a*Math.sin(phi)*Math.cos(theta), y=b*Math.cos(phi)+yoff, z=a*Math.sin(phi)*Math.sin(theta);
+      var cr=Math.cos(rot),sr=Math.sin(rot), x1=x*cr+z*sr, z1=-x*sr+z*cr;
+      var ct=Math.cos(TILT),st=Math.sin(TILT), y1=y*ct-z1*st;
+      return {x:cx+x1, y:cyy-y1};
+    }
+    function epath(a,b,phi,yoff){ ctx.beginPath(); for(var t=0;t<=64;t++){var p=P(a,b,phi,t/64*6.2832,yoff); t?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.closePath(); }
+    function ring(a,b,phi,yoff,al,lw,col){ ctx.beginPath(); for(var t=0;t<=64;t++){var p=P(a,b,phi,t/64*6.2832,yoff); t?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.globalAlpha=al; ctx.lineWidth=lw||1; ctx.strokeStyle=col; ctx.stroke(); }
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var A=34,B=7, SPACE='rgb(19,19,19)';
+    function merid(th,p0,p1,al,col){ ctx.beginPath(); for(var i=0;i<=40;i++){var phi=p0+(p1-p0)*i/40, p=P(A,B,phi,th,0); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);} ctx.globalAlpha=al; ctx.lineWidth=1; ctx.strokeStyle=col; ctx.stroke(); }
+    function frame(){
+      ctx.clearRect(0,0,W,H);
+      ctx.save(); ctx.translate(cx,cyy); ctx.rotate(ROLL); ctx.translate(-cx,-cyy);
+      epath(A,B,Math.PI*0.5,0); ctx.globalAlpha=1; ctx.fillStyle=SPACE; ctx.fill();
+      for(var k=0;k<14;k++){ merid(k/14*6.2832, Math.PI*0.13, Math.PI*0.50, 0.25, 'rgba(232,240,252,0.9)'); }
+      ctx.shadowColor='rgba(205,214,230,0.5)'; ctx.shadowBlur=5;
+      ring(A,B,Math.PI*0.5,0,0.75,1.2,'rgba(240,244,250,0.95)');
+      ctx.shadowBlur=0;
+      var dcx=cx, dcy=cyy-2, dW=12, baseH=3.6, capH=9.5;
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.closePath();
+      ctx.globalAlpha=1; ctx.fillStyle=SPACE; ctx.fill();
+      ctx.shadowColor='rgba(205,214,230,0.45)'; ctx.shadowBlur=4;
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,capH,0,Math.PI,2*Math.PI); ctx.globalAlpha=0.8; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(236,241,250,0.95)'; ctx.stroke();
+      ctx.shadowBlur=0;
+      ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,Math.PI); ctx.globalAlpha=0.8; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(236,241,250,0.95)'; ctx.stroke();
+      ctx.restore();
+      if(!reduce){ rot+=0.012; requestAnimationFrame(frame); }
+    }
+    frame();
+  }
+  function init(){
+    var cs=document.querySelectorAll('.uap-canvas');
+    for(var i=0;i<cs.length;i++) initCanvas(cs[i]);
+    var mob=document.querySelector('#mobile-galaxy .uap-contact');
+    if(mob && 'IntersectionObserver' in window){
+      new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('is-revealed', e.isIntersecting); }); }, {threshold:0.55}).observe(mob);
+    }
+  }
+  if(document.readyState!=='loading') init(); else document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
 </body>
