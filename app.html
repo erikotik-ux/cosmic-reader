@@ -11,6 +11,26 @@
 <link rel="stylesheet" href="cosmic-reader.css"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // ── Perf governor for galaxy-map canvas animations ──
+  // Each planet/saucer renderer runs its own requestAnimationFrame loop. They
+  // used to keep drawing even when the map wasn't on screen (user reading an
+  // article, on another view, or tab backgrounded) — pure wasted CPU/GPU that
+  // made the app feel sluggish on lower-powered machines. crGate() replaces the
+  // tail rAF reschedule in those loops: it skips the (expensive) draw while the
+  // map view isn't active or the tab is hidden, then resumes seamlessly. While
+  // the map IS visible it runs at the normal full frame rate, so there is no
+  // visual change when watching. On galaxy-map.html (no #view-map) it gates on
+  // tab visibility only.
+  window.crGate = function(fn){
+    requestAnimationFrame(function(){
+      var m = window.__crViewMap;
+      if (m === undefined) m = window.__crViewMap = (document.getElementById('view-map') || null);
+      if (document.hidden || (m && !m.classList.contains('active'))) { window.crGate(fn); return; }
+      fn();
+    });
+  };
+</script>
+<script>
   // ── Auth guard — redirect to home.html if not signed in ──
   // Rewritten to be loop-proof. The previous version reacted to the
   // INITIAL_SESSION event, which races against the PKCE code exchange:
@@ -1464,7 +1484,7 @@
       if(Math.sin(moonT)>=0)drawMoon();
       ring(true);
       moonT+=0.018;t+=0.012;
-      requestAnimationFrame(frame);
+      crGate(frame);
     }
     frame();
   }
@@ -1704,7 +1724,7 @@
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
       ctx.restore();
       rot+=0.0038;
-      requestAnimationFrame(draw);
+      crGate(draw);
     }
     draw();
   }
@@ -1957,7 +1977,7 @@
       if(Math.sin(moonT)>=0)drawMoon();
       ring(true);
       moonT+=0.018;t+=0.012;
-      requestAnimationFrame(frame);
+      crGate(frame);
     }
     frame();
   }
@@ -2197,7 +2217,7 @@
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
       ctx.restore();
       rot+=0.0038;
-      requestAnimationFrame(draw);
+      crGate(draw);
     }
     draw();
   }
@@ -2323,7 +2343,7 @@
       ctx.shadowBlur=0;
       ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,Math.PI); ctx.globalAlpha=0.8; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(236,241,250,0.95)'; ctx.stroke();
       ctx.restore();
-      if(!reduce){ rot+=0.012; requestAnimationFrame(frame); }
+      if(!reduce){ rot+=0.012; crGate(frame); }
     }
     frame();
   }

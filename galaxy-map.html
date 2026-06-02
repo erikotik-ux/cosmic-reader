@@ -9,6 +9,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="cosmic-reader.css"/>
+<script>
+  // ── Perf governor for galaxy-map canvas animations ──
+  // Replaces the tail rAF reschedule in each planet/saucer render loop so they
+  // pause (skip the expensive draw) while the tab is hidden, then resume
+  // seamlessly. Full frame rate while visible — no visual change when watching.
+  // (No #view-map on this standalone page, so it gates on tab visibility only.)
+  window.crGate = function(fn){
+    requestAnimationFrame(function(){
+      var m = window.__crViewMap;
+      if (m === undefined) m = window.__crViewMap = (document.getElementById('view-map') || null);
+      if (document.hidden || (m && !m.classList.contains('active'))) { window.crGate(fn); return; }
+      fn();
+    });
+  };
+</script>
 <!-- Signal to home.html that we're navigating WITHIN the site —
      skip the intro animation on the next visit to home. Refresh
      of home.html itself still replays it (flag is consumed there). -->
@@ -740,7 +755,7 @@ if (window.innerWidth <= 768) {
       if(Math.sin(moonT)>=0)drawMoon();
       ring(true);
       moonT+=0.018;t+=0.012;
-      requestAnimationFrame(frame);
+      crGate(frame);
     }
     frame();
   }
@@ -960,7 +975,7 @@ if (window.innerWidth <= 768) {
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
       ctx.restore();
       rot+=0.0038;
-      requestAnimationFrame(draw);
+      crGate(draw);
     }
     draw();
   }
@@ -1271,7 +1286,7 @@ if (window.innerWidth <= 768) {
       ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
       ctx.restore();
       rot+=0.0038;
-      requestAnimationFrame(draw);
+      crGate(draw);
     }
     draw();
   }
@@ -1434,7 +1449,7 @@ if (window.innerWidth <= 768) {
       if(Math.sin(moonT)>=0)drawMoon();
       ring(true);
       moonT+=0.018;t+=0.012;
-      requestAnimationFrame(frame);
+      crGate(frame);
     }
     frame();
   }
@@ -1953,7 +1968,7 @@ setTimeout(() => getArticles(), 1200);
       ctx.shadowBlur=0;
       ctx.beginPath(); ctx.ellipse(dcx,dcy,dW,baseH,0,0,Math.PI); ctx.globalAlpha=0.8; ctx.lineWidth=1.1; ctx.strokeStyle='rgba(236,241,250,0.95)'; ctx.stroke();
       ctx.restore();
-      if(!reduce){ rot+=0.012; requestAnimationFrame(frame); }
+      if(!reduce){ rot+=0.012; crGate(frame); }
     }
     frame();
   }
