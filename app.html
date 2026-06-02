@@ -1730,7 +1730,7 @@
            ignores it). Sits in the pocket above Physics & Cosmos, below the HUD. -->
       <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
            style="top:calc(28% - 10px); left:calc(84% - 6px);"
-           onclick="openCategoryArticle('UAP')"
+           onclick="crUapActivate(this)"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
         <div class="uap-craft">
           <canvas class="uap-canvas" aria-hidden="true"></canvas>
@@ -1754,7 +1754,7 @@
       <!-- UAP: cloaked sensor contact (mobile). flex order:6 places it last,
            below Physics & Cosmos — found by scrolling to the bottom. -->
       <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
-           onclick="openCategoryArticle('UAP')"
+           onclick="crUapActivate(this)"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
         <div class="uap-craft">
           <canvas class="uap-canvas" aria-hidden="true"></canvas>
@@ -2327,14 +2327,26 @@
     }
     frame();
   }
+  // Click/tap handler for the saucer. Desktop (hover-capable): hover already
+  // revealed it, so a click opens. Touch (no hover): 1st tap reveals the
+  // cloaked saucer, 2nd tap on the revealed saucer opens it.
+  function crUapActivate(el){
+    var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+    if(canHover){ openCategoryArticle('UAP'); return; }
+    if(el.classList.contains('is-revealed')){ openCategoryArticle('UAP'); }
+    else { el.classList.add('is-revealed'); }
+  }
+  window.crUapActivate = crUapActivate;
   function init(){
     var cs=document.querySelectorAll('.uap-canvas');
     for(var i=0;i<cs.length;i++) initCanvas(cs[i]);
-    // Mobile has no hover: reveal the saucer when it scrolls into view.
-    var mob=document.querySelector('#mobile-galaxy .uap-contact');
-    if(mob && 'IntersectionObserver' in window){
-      new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('is-revealed', e.isIntersecting); }); }, {threshold:0.55}).observe(mob);
-    }
+    // Touch has no hover, so the saucer stays cloaked by default (like desktop).
+    // Tapping anywhere outside a revealed saucer re-cloaks it.
+    document.addEventListener('click', function(e){
+      if(e.target.closest && e.target.closest('.uap-contact')) return;
+      var r=document.querySelectorAll('.uap-contact.is-revealed');
+      for(var i=0;i<r.length;i++) r[i].classList.remove('is-revealed');
+    });
   }
   if(document.readyState!=='loading') init(); else document.addEventListener('DOMContentLoaded', init);
 })();
