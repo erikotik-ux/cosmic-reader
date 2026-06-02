@@ -1725,7 +1725,7 @@
       <!-- UAP: cloaked sensor contact. NOT a .planet-node (constellation math
            ignores it). Sits in the pocket above Physics & Cosmos, below the HUD. -->
       <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
-           style="top:28%; left:84%;"
+           style="top:calc(28% - 10px); left:calc(84% - 6px);"
            onclick="openCategoryArticle('UAP')"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
         <div class="uap-craft">
