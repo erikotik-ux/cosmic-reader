@@ -1007,7 +1007,7 @@ if (window.innerWidth <= 768) {
 
     <!-- UAP: cloaked sensor contact (mobile, ported). flex order:6 = last. -->
     <div class="uap-contact" role="button" tabindex="0" aria-label="UAP, Unidentified Anomalous Phenomena"
-         onclick="openCategoryArticle('UAP')"
+         onclick="crUapActivate(this)"
          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCategoryArticle('UAP');}">
       <div class="uap-craft">
         <canvas class="uap-canvas" aria-hidden="true"></canvas>
