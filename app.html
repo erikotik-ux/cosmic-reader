@@ -6101,10 +6101,20 @@ window.addEventListener('resize', () => {
 setTimeout(drawConstellationLines, 200);
 setTimeout(drawMobileConstellationLines, 250);
 
-// Redraw mobile lines on scroll (planet positions shift in SVG space)
+// Redraw mobile lines on scroll. Passive + coalesced to one redraw per frame:
+// the old handler ran a full layout read (getBoundingClientRect on the
+// container + every planet) and SVG rewrite on EVERY scroll event, which
+// blocked and janked mobile scrolling. rAF coalescing collapses a burst of
+// scroll events into a single redraw per frame; passive lets the browser
+// scroll without waiting on us.
 document.addEventListener('DOMContentLoaded', () => {
   const mg = document.getElementById('mobile-galaxy');
-  if (mg) mg.addEventListener('scroll', drawMobileConstellationLines);
+  if (!mg) return;
+  let scrollRaf = 0;
+  mg.addEventListener('scroll', () => {
+    if (scrollRaf) return;
+    scrollRaf = requestAnimationFrame(() => { scrollRaf = 0; drawMobileConstellationLines(); });
+  }, { passive: true });
 });
 </script>
 

@@ -1772,9 +1772,16 @@ window.addEventListener('resize', () => {
 });
 setTimeout(drawConstellationLines, 200);
 setTimeout(drawMobileConstellationLines, 250);
+// Redraw mobile lines on scroll. Passive + coalesced to one redraw per frame
+// (was: full layout read + SVG rewrite on every scroll event = mobile scroll jank).
 document.addEventListener('DOMContentLoaded', () => {
   const mg = document.getElementById('mobile-galaxy');
-  if (mg) mg.addEventListener('scroll', drawMobileConstellationLines);
+  if (!mg) return;
+  let scrollRaf = 0;
+  mg.addEventListener('scroll', () => {
+    if (scrollRaf) return;
+    scrollRaf = requestAnimationFrame(() => { scrollRaf = 0; drawMobileConstellationLines(); });
+  }, { passive: true });
 });
 
 // Pre-warm article cache in background
