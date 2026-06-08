@@ -101,6 +101,12 @@ t('Drop cinematic universe', cat({ title: 'The Marvel cinematic universe announc
 // Guard: genuine cosmology with "universe" stays Physics (not hard-excluded)
 t('Keep origin-of-the-universe cosmology', cat({ title: 'New model rewrites the origin of the universe after the Big Bang', source: 'Space.com' }), 'Physics');
 
+// ── Entertainment obituaries on a tech feed must NOT fall to its source default ─
+t('Drop Buffy actor obituary (Ars Technica)', cat({ title: "RIP Anthony Head: Our 10 favorite moments of Buffy's Giles", excerpt: 'News broke of the passing of actor Anthony Head, best known for his portrayal of Rupert Giles on the supernatural drama Buffy the Vampire Slayer.', source: 'Ars Technica' }), 'DROP:off-theme');
+t('Drop generic TV obituary', cat({ title: 'Beloved sitcom star dies at 80', excerpt: 'The actor was a fixture of the long-running soap opera.', source: 'Ars Technica' }), 'DROP:off-theme');
+// Guard: a real Ars Technica AI/tech story still classifies (source default intact)
+t('Keep real Ars AI story', cat({ title: 'OpenAI releases a new GPT model for developers', source: 'Ars Technica' }), 'AI & Tech');
+
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
 
