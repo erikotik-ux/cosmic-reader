@@ -1,81 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 80" width="140" height="80">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 92" width="160" height="92">
   <defs>
-    <linearGradient id="sat-foil" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f6e6a4"/>
-      <stop offset="0.45" stop-color="#cda347"/>
-      <stop offset="1" stop-color="#7c5d20"/>
+    <linearGradient id="sat-tube" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="rgba(150,210,240,0.26)"/>
+      <stop offset="0.5" stop-color="rgba(95,170,215,0.16)"/>
+      <stop offset="1" stop-color="rgba(60,120,165,0.20)"/>
     </linearGradient>
-    <linearGradient id="sat-foil-top" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#fbf0c4"/>
-      <stop offset="1" stop-color="#e6c768"/>
+    <linearGradient id="sat-wing" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="rgba(130,195,232,0.22)"/>
+      <stop offset="1" stop-color="rgba(70,135,180,0.14)"/>
     </linearGradient>
-    <linearGradient id="sat-foil-side" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#a9842f"/>
-      <stop offset="1" stop-color="#5a4214"/>
-    </linearGradient>
-    <linearGradient id="sat-panel" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#4275ad"/>
-      <stop offset="0.5" stop-color="#1f4368"/>
-      <stop offset="1" stop-color="#122a44"/>
-    </linearGradient>
-    <radialGradient id="sat-dish" cx="0.38" cy="0.32" r="0.85">
-      <stop offset="0" stop-color="#eef4f8"/>
-      <stop offset="0.6" stop-color="#9fb0bd"/>
-      <stop offset="1" stop-color="#56646f"/>
-    </radialGradient>
   </defs>
 
-  <!-- ── Booms / struts ── -->
-  <line x1="58" y1="43" x2="50" y2="38" stroke="#7e93a3" stroke-width="1.4"/>
-  <line x1="82" y1="44" x2="90" y2="48" stroke="#5d6f7e" stroke-width="1.4"/>
+  <g fill="none" stroke="#a8dcf2" stroke-width="1" stroke-linejoin="round" stroke-linecap="round">
 
-  <!-- ── LEFT solar array (perspective parallelogram) ── -->
-  <polygon points="14,18 52,26 52,50 14,42" fill="url(#sat-panel)" stroke="#5286bb" stroke-width="0.9"/>
-  <!-- top sheen -->
-  <polygon points="14,18 52,26 52,30 14,22" fill="rgba(185,218,242,0.16)"/>
-  <!-- cell grid -->
-  <g stroke="rgba(150,193,228,0.42)" stroke-width="0.6">
-    <line x1="21.6" y1="19.6" x2="21.6" y2="43.6"/>
-    <line x1="29.2" y1="21.2" x2="29.2" y2="45.2"/>
-    <line x1="36.8" y1="22.8" x2="36.8" y2="46.8"/>
-    <line x1="44.4" y1="24.4" x2="44.4" y2="48.4"/>
-    <line x1="14" y1="30" x2="52" y2="38"/>
-  </g>
+    <!-- ── Booms ── -->
+    <line x1="52" y1="44" x2="58" y2="44" stroke="#7fb6d4" stroke-width="1.4"/>
+    <line x1="104" y1="44" x2="110" y2="44" stroke="#7fb6d4" stroke-width="1.4"/>
 
-  <!-- ── RIGHT solar array (perspective parallelogram) ── -->
-  <polygon points="88,32 126,40 126,64 88,56" fill="url(#sat-panel)" stroke="#3f6c9c" stroke-width="0.9"/>
-  <polygon points="88,32 126,40 126,44 88,36" fill="rgba(150,190,225,0.10)"/>
-  <g stroke="rgba(120,165,205,0.38)" stroke-width="0.6">
-    <line x1="97.5" y1="34" x2="97.5" y2="58"/>
-    <line x1="107" y1="36" x2="107" y2="60"/>
-    <line x1="116.5" y1="38" x2="116.5" y2="62"/>
-    <line x1="88" y1="44" x2="126" y2="52"/>
-  </g>
+    <!-- ── LEFT solar wing ── -->
+    <polygon points="52,30 12,24 12,52 52,58" fill="url(#sat-wing)" stroke="#8fc8e6"/>
+    <g stroke="rgba(150,205,235,0.5)" stroke-width="0.6">
+      <line x1="42" y1="28.5" x2="42" y2="56.5"/>
+      <line x1="32" y1="27" x2="32" y2="55"/>
+      <line x1="22" y1="25.5" x2="22" y2="53.5"/>
+      <line x1="52" y1="44" x2="12" y2="38"/>
+    </g>
 
-  <!-- ── BUS (isometric box, gold thermal foil) ── -->
-  <!-- right (shadow) face -->
-  <polygon points="82,30 90,21 90,47 82,56" fill="url(#sat-foil-side)" stroke="#5a4214" stroke-width="0.5"/>
-  <!-- top face -->
-  <polygon points="58,30 82,30 90,21 66,21" fill="url(#sat-foil-top)" stroke="#b6932f" stroke-width="0.5"/>
-  <!-- front face -->
-  <polygon points="58,30 82,30 82,56 58,56" fill="url(#sat-foil)" stroke="#6a4f1a" stroke-width="0.5"/>
-  <!-- MLI foil seams -->
-  <g stroke="rgba(92,68,22,0.5)" stroke-width="0.7">
-    <line x1="59" y1="37" x2="81" y2="37"/>
-    <line x1="59" y1="43" x2="81" y2="43"/>
-    <line x1="59" y1="49" x2="81" y2="49"/>
-  </g>
-  <!-- specular highlight -->
-  <polygon points="58,30 66,30 63,43 58,43" fill="rgba(255,250,225,0.22)"/>
-  <!-- cyan rim light (ties into the scene glow) -->
-  <line x1="58" y1="30" x2="58" y2="56" stroke="rgba(125,205,240,0.55)" stroke-width="1"/>
+    <!-- ── RIGHT solar wing ── -->
+    <polygon points="110,30 150,36 150,64 110,58" fill="url(#sat-wing)" stroke="#6fa9cd"/>
+    <g stroke="rgba(120,175,210,0.45)" stroke-width="0.6">
+      <line x1="120" y1="31.5" x2="120" y2="59.5"/>
+      <line x1="130" y1="33" x2="130" y2="61"/>
+      <line x1="140" y1="34.5" x2="140" y2="62.5"/>
+      <line x1="110" y1="44" x2="150" y2="50"/>
+    </g>
 
-  <!-- ── DISH ANTENNA ── -->
-  <line x1="70" y1="21" x2="70" y2="13" stroke="#9aa8b4" stroke-width="1.2"/>
-  <g transform="rotate(-20 70 12)">
-    <ellipse cx="70" cy="12" rx="8.4" ry="4.8" fill="url(#sat-dish)" stroke="#586772" stroke-width="0.7"/>
-    <ellipse cx="70" cy="12" rx="5" ry="2.8" fill="rgba(40,55,68,0.45)"/>
+    <!-- ── CYLINDER BODY (tube) ── -->
+    <path d="M58,28 L104,28 A6,16 0 0 1 104,60 L58,60 A6,16 0 0 1 58,28 Z" fill="url(#sat-tube)"/>
+    <!-- back rim of the tube (left) -->
+    <ellipse cx="58" cy="44" rx="6" ry="16" stroke="rgba(150,205,235,0.4)"/>
+    <!-- segment bands -->
+    <ellipse cx="74" cy="44" rx="6" ry="16" stroke="rgba(150,205,235,0.55)"/>
+    <ellipse cx="88" cy="44" rx="6" ry="16" stroke="rgba(150,205,235,0.55)"/>
+    <ellipse cx="97" cy="44" rx="6" ry="16" stroke="rgba(170,215,240,0.7)"/>
+    <!-- small sensor box on the hull -->
+    <rect x="64" y="33" width="9" height="5" rx="1" stroke="rgba(180,222,242,0.7)"/>
+
+    <!-- ── THRUSTER / engine ring (right end cap) ── -->
+    <ellipse cx="104" cy="44" rx="6" ry="16" stroke="#bfe4f6"/>
+    <ellipse cx="104" cy="44" rx="3" ry="8.5" stroke="rgba(190,228,246,0.85)"/>
+    <ellipse cx="104" cy="44" rx="1.4" ry="4" stroke="rgba(190,228,246,0.7)"/>
+
+    <!-- ── PARABOLIC DISH (top-front) with tripod feed ── -->
+    <line x1="66" y1="29" x2="62" y2="18"/>
+    <g transform="rotate(-22 60 14)">
+      <ellipse cx="60" cy="14" rx="11" ry="6" fill="rgba(150,210,238,0.18)" stroke="#bfe4f6"/>
+      <ellipse cx="60" cy="14" rx="6.5" ry="3.4" stroke="rgba(150,205,235,0.6)"/>
+    </g>
+    <line x1="52" y1="11" x2="60" y2="3"/>
+    <line x1="68" y1="13" x2="60" y2="3"/>
+    <circle cx="60" cy="2.6" r="1.4" fill="rgba(214,230,240,0.9)" stroke="none"/>
+
+    <!-- whip antenna -->
+    <line x1="100" y1="28" x2="106" y2="17" stroke="rgba(170,215,240,0.7)" stroke-width="0.8"/>
   </g>
-  <line x1="70" y1="12" x2="73.5" y2="6.5" stroke="#aebcc7" stroke-width="0.8"/>
-  <circle cx="73.8" cy="6.2" r="1.2" fill="#d6e6f0"/>
 </svg>
