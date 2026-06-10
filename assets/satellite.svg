@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 80" width="140" height="80">
+  <defs>
+    <linearGradient id="sat-foil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6e6a4"/>
+      <stop offset="0.45" stop-color="#cda347"/>
+      <stop offset="1" stop-color="#7c5d20"/>
+    </linearGradient>
+    <linearGradient id="sat-foil-top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf0c4"/>
+      <stop offset="1" stop-color="#e6c768"/>
+    </linearGradient>
+    <linearGradient id="sat-foil-side" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a9842f"/>
+      <stop offset="1" stop-color="#5a4214"/>
+    </linearGradient>
+    <linearGradient id="sat-panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4275ad"/>
+      <stop offset="0.5" stop-color="#1f4368"/>
+      <stop offset="1" stop-color="#122a44"/>
+    </linearGradient>
+    <radialGradient id="sat-dish" cx="0.38" cy="0.32" r="0.85">
+      <stop offset="0" stop-color="#eef4f8"/>
+      <stop offset="0.6" stop-color="#9fb0bd"/>
+      <stop offset="1" stop-color="#56646f"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ── Booms / struts ── -->
+  <line x1="58" y1="43" x2="50" y2="38" stroke="#7e93a3" stroke-width="1.4"/>
+  <line x1="82" y1="44" x2="90" y2="48" stroke="#5d6f7e" stroke-width="1.4"/>
+
+  <!-- ── LEFT solar array (perspective parallelogram) ── -->
+  <polygon points="14,18 52,26 52,50 14,42" fill="url(#sat-panel)" stroke="#5286bb" stroke-width="0.9"/>
+  <!-- top sheen -->
+  <polygon points="14,18 52,26 52,30 14,22" fill="rgba(185,218,242,0.16)"/>
+  <!-- cell grid -->
+  <g stroke="rgba(150,193,228,0.42)" stroke-width="0.6">
+    <line x1="21.6" y1="19.6" x2="21.6" y2="43.6"/>
+    <line x1="29.2" y1="21.2" x2="29.2" y2="45.2"/>
+    <line x1="36.8" y1="22.8" x2="36.8" y2="46.8"/>
+    <line x1="44.4" y1="24.4" x2="44.4" y2="48.4"/>
+    <line x1="14" y1="30" x2="52" y2="38"/>
+  </g>
+
+  <!-- ── RIGHT solar array (perspective parallelogram) ── -->
+  <polygon points="88,32 126,40 126,64 88,56" fill="url(#sat-panel)" stroke="#3f6c9c" stroke-width="0.9"/>
+  <polygon points="88,32 126,40 126,44 88,36" fill="rgba(150,190,225,0.10)"/>
+  <g stroke="rgba(120,165,205,0.38)" stroke-width="0.6">
+    <line x1="97.5" y1="34" x2="97.5" y2="58"/>
+    <line x1="107" y1="36" x2="107" y2="60"/>
+    <line x1="116.5" y1="38" x2="116.5" y2="62"/>
+    <line x1="88" y1="44" x2="126" y2="52"/>
+  </g>
+
+  <!-- ── BUS (isometric box, gold thermal foil) ── -->
+  <!-- right (shadow) face -->
+  <polygon points="82,30 90,21 90,47 82,56" fill="url(#sat-foil-side)" stroke="#5a4214" stroke-width="0.5"/>
+  <!-- top face -->
+  <polygon points="58,30 82,30 90,21 66,21" fill="url(#sat-foil-top)" stroke="#b6932f" stroke-width="0.5"/>
+  <!-- front face -->
+  <polygon points="58,30 82,30 82,56 58,56" fill="url(#sat-foil)" stroke="#6a4f1a" stroke-width="0.5"/>
+  <!-- MLI foil seams -->
+  <g stroke="rgba(92,68,22,0.5)" stroke-width="0.7">
+    <line x1="59" y1="37" x2="81" y2="37"/>
+    <line x1="59" y1="43" x2="81" y2="43"/>
+    <line x1="59" y1="49" x2="81" y2="49"/>
+  </g>
+  <!-- specular highlight -->
+  <polygon points="58,30 66,30 63,43 58,43" fill="rgba(255,250,225,0.22)"/>
+  <!-- cyan rim light (ties into the scene glow) -->
+  <line x1="58" y1="30" x2="58" y2="56" stroke="rgba(125,205,240,0.55)" stroke-width="1"/>
+
+  <!-- ── DISH ANTENNA ── -->
+  <line x1="70" y1="21" x2="70" y2="13" stroke="#9aa8b4" stroke-width="1.2"/>
+  <g transform="rotate(-20 70 12)">
+    <ellipse cx="70" cy="12" rx="8.4" ry="4.8" fill="url(#sat-dish)" stroke="#586772" stroke-width="0.7"/>
+    <ellipse cx="70" cy="12" rx="5" ry="2.8" fill="rgba(40,55,68,0.45)"/>
+  </g>
+  <line x1="70" y1="12" x2="73.5" y2="6.5" stroke="#aebcc7" stroke-width="0.8"/>
+  <circle cx="73.8" cy="6.2" r="1.2" fill="#d6e6f0"/>
+</svg>
