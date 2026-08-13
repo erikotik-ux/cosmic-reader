@@ -3441,6 +3441,55 @@ function stripHtml(s) {
   return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#\d+;/g,' ').trim();
 }
 
+// A navigation column reads as many SHORT fragments with no sentence-ending
+// punctuation ("Earth Observatory / Science / Image of the Day / Topics …"),
+// whereas real article prose is long lines that terminate in punctuation.
+// Used to detect when a feed handed us page furniture instead of a story.
+function _looksLikeNavList(text) {
+  const lines = String(text || '').split(/\n+/).map(s => s.trim()).filter(Boolean);
+  if (lines.length < 6) return false;
+  const head  = lines.slice(0, 20);
+  const frags = head.filter(l => l.length < 32 && !/[.!?:;,]$/.test(l)).length;
+  return frags / head.length > 0.5;
+}
+
+// Some publishers put an ENTIRE PAGE inside <content:encoded> — site nav,
+// breadcrumbs, topic menus, download lists and "related" rails wrapped around
+// the actual story. NASA's science.nasa.gov (Earth Observatory) items are the
+// worst offender: naively stripping tags yields a column of menu labels
+// ("Earth Observatory / Science / Image of the Day / EO Explorer / Topics …")
+// instead of the article — which is exactly what the reader then displayed.
+// Parse the markup, drop the non-content elements, then VERIFY what's left
+// still reads like prose; if it doesn't, fall back to the feed's <description>,
+// which is always a clean editorial summary. Guarded end to end, so feeds whose
+// content:encoded is already clean pass through unchanged.
+function extractFeedBody(encodedHtml, descriptionHtml) {
+  const desc = stripHtml(descriptionHtml || '');
+  const raw  = encodedHtml || '';
+  if (!raw.trim()) return desc;
+  // Plain text (no markup) — nothing to prune.
+  if (!/<[a-z][^>]*>/i.test(raw)) return stripHtml(raw) || desc;
+
+  let text = '';
+  try {
+    const d = new DOMParser().parseFromString(raw, 'text/html');
+    d.querySelectorAll(
+      'nav, header, footer, aside, script, style, noscript, svg, form, button, ' +
+      '[role="navigation"], [role="banner"], [role="search"], ' +
+      '[class*="breadcrumb" i], [class*="secondary-nav" i], [class*="site-nav" i], ' +
+      '[class*="menu" i], [class*="sidebar" i], [class*="share" i], [class*="social" i], ' +
+      '[class*="related" i], [class*="newsletter" i], [class*="subscribe" i]'
+    ).forEach(el => el.remove());
+    text = stripHtml(((d.body || d.documentElement || {}).innerHTML) || '');
+  } catch (e) {
+    text = stripHtml(raw);
+  }
+  // Quality gate — if it still reads like a menu, our selectors didn't match
+  // this publisher's markup, so prefer the clean summary over showing labels.
+  if (!text || text.length < 40 || _looksLikeNavList(text)) return desc || text;
+  return text;
+}
+
 // Strip publisher boilerplate that some feeds embed around the real
 // article text. Notably NASA's JPL Photojournal entries wrap the actual
 // description in a leading nav block ("1 Min Read … Photojournal Home
@@ -3492,6 +3541,13 @@ function cleanArticleBody(text) {
     const i = t.indexOf(m);
     if (i > 60) { t = t.slice(0, i); break; }
   }
+
+  // 2a. NASA Earth Observatory tails. Those posts close with a downloads list,
+  //     a references block and a "you may also be interested in" rail. The
+  //     ampersand may already have been flattened by stripHtml (&#038; → space),
+  //     so match it loosely. Only cuts when real story text precedes it.
+  const eoTail = t.search(/\bReferences\s*&?\s*Resources\b|\bYou\s+may\s+also\s+be\s+interested\s+in\b|\n\s*Downloads\s*\n/i);
+  if (eoTail > 60) t = t.slice(0, eoTail);
 
   // 2b. NASA newsroom footer block. NASA.gov articles append a metadata
   //     trailer: "Share Details Last Updated <date> Editor <name> Location
@@ -3646,7 +3702,7 @@ async function fetchFeed(feedInfo) {
         const read_more = item.link || item.guid || '#';
         if (!/^https?:\/\/.+\..+/i.test(read_more)) return null;
         const descRaw  = item.content || item.description || '';
-        const cleaned  = cleanArticleBody(stripHtml(descRaw));
+        const cleaned  = cleanArticleBody(extractFeedBody(descRaw, item.description || ''));
         const excerpt  = cleaned.slice(0, 280).replace(/\s+/g,' ').trim();
         const body     = cleaned.slice(0, 2000);
         const date     = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
@@ -3773,7 +3829,7 @@ async function fetchFeed(feedInfo) {
     const descRaw = item.querySelector('description')?.textContent
                  || item.querySelector('summary')?.textContent
                  || item.querySelector('content')?.textContent || '';
-    const cleanedX = cleanArticleBody(stripHtml(item.querySelector('encoded')?.textContent || descRaw));
+    const cleanedX = cleanArticleBody(extractFeedBody(item.querySelector('encoded')?.textContent || '', descRaw));
     const excerpt = cleanedX.slice(0, 280).replace(/\s+/g,' ').trim();
     const body    = cleanedX.slice(0, 2000);
     // RSS uses <pubDate>, Atom uses <published> or <updated>
@@ -4062,7 +4118,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v8';
+const _CR_CACHE_KEY = 'cr_cache_v9';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 async function loadLiveFeeds() {
@@ -4218,10 +4274,25 @@ function openPrioritySignal() {
 // ── og:image enrichment — fills in images for feeds (e.g. SpaceNews) that omit them from RSS ──
 const _ogCache = {};
 const _ogPending = new Set();
-const _OG_FALLBACK_DOMAINS = ['spacetelescope.org', 'staticflickr.com'];
+// Hosts that only ever serve our generic category placeholders. FALLBACK_POOL
+// / FALLBACK_IMAGES were migrated to Wikimedia Commons, but this list was left
+// on the two pre-migration hosts — so _isFallbackImg() stopped recognising any
+// placeholder and enrichOgImages() silently skipped every card as "already has
+// a real image". That's why articles from image-less feeds (Planetary Society,
+// The Debrief …) could stay stuck on a generic moon/nebula picture.
+const _OG_FALLBACK_DOMAINS = ['upload.wikimedia.org', 'wikimedia.org', 'spacetelescope.org', 'staticflickr.com'];
 
 function _isFallbackImg(src) {
-  try { return _OG_FALLBACK_DOMAINS.some(d => new URL(src).hostname.includes(d)); } catch(e) { return false; }
+  if (!src) return true; // no image at all — worth trying to fetch a real one
+  try {
+    let u = new URL(src);
+    // Unwrap wsrv.nl proxying so we test the ORIGINAL publisher host.
+    if (u.hostname.includes('wsrv.nl')) {
+      const inner = u.searchParams.get('url');
+      if (inner) u = new URL(/^https?:/i.test(inner) ? inner : 'https://' + inner);
+    }
+    return _OG_FALLBACK_DOMAINS.some(d => u.hostname.includes(d));
+  } catch(e) { return false; }
 }
 
 async function enrichOgImages() {
@@ -4268,6 +4339,45 @@ function _applyOgImg(img, src, idx) {
   img.onerror = () => { img.onerror = null; }; // if og:image also 404s, leave broken silently
   // Keep the article data in sync so the detail panel also uses the real image
   if (articles[idx]) articles[idx].image = src;
+}
+
+// Paint a freshly-resolved og:image everywhere the article is currently shown.
+function _applyResolvedImg(idx, rawSrc) {
+  const src = proxyImg(rawSrc);
+  if (articles[idx]) articles[idx].image = src;
+  if (currentArticle === idx) {
+    ['detail-bg', 'detail-img', 'read-img'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.src !== src) el.src = src;
+    });
+  }
+  const card = document.querySelector('#article-grid article[onclick*="openArticle(' + idx + ')"] img.article-img');
+  if (card) card.src = src;
+}
+
+// Lazily resolve a real og:image for an article still showing a placeholder.
+// Parse-time enrichment only covers NO_IMG_SRCS on the JSON feed path, and the
+// grid pass only touches cards rendered in My Feed — so an article opened from
+// the galaxy map, Trending, Saved or search (or one whose enrichment timed out)
+// could stay on a generic picture forever. This closes that gap for every entry
+// point, and is a no-op when the article already has a real image.
+async function _ensureRealImage(idx) {
+  const a = articles[idx];
+  if (!a || !a.read_more || a.read_more === '#') return;
+  if (a.image && !_isFallbackImg(a.image)) return;
+  const url = a.read_more;
+  if (_ogCache[url]) { _applyResolvedImg(idx, _ogCache[url]); return; }
+  if (_ogPending.has(url)) return;
+  _ogPending.add(url);
+  try {
+    const res = await fetch(`/api/og?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout(6000) });
+    const { image } = await res.json();
+    if (image && /^https?:/i.test(image)) {
+      _ogCache[url] = image;
+      _applyResolvedImg(idx, image);
+    }
+  } catch (e) { /* keep the placeholder — network or timeout */ }
+  _ogPending.delete(url);
 }
 
 // ── Search ─────────────────────────────────────────────────
@@ -5297,6 +5407,10 @@ function openArticle(idx) {
   _dImg2.onerror = () => imgChain(_dImg2, _dfb, a.category);
   _dImg.src = a.image || _dfb;
   _dImg2.src = a.image || _dfb;
+  // Still on a generic placeholder? Try to resolve the article's real
+  // og:image now — covers entries from the galaxy map, Trending, Saved and
+  // search, plus any parse-time enrichment that failed or timed out.
+  if (_isFallbackImg(a.image)) _ensureRealImage(idx);
   document.getElementById('detail-title').textContent = a.title;
   document.getElementById('detail-excerpt').textContent = a.excerpt;
   document.getElementById('detail-source').textContent = 'Source: ' + a.source;

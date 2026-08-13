@@ -256,6 +256,19 @@ const BLOCKED_HOSTS=['kinsta.cloud','kinsta.app'];
 function normaliseImg(u){if(!u)return '';u=u.trim();if(u.startsWith('//'))u='https:'+u;else if(u.startsWith('http:'))u='https'+u.slice(4);try{const p=new URL(u);if(BLOCKED_HOSTS.some(d=>p.hostname===d||p.hostname.endsWith('.'+d)))return '';return p.href;}catch(e){return u;}}
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function stripHtml(s) { return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').trim(); }
+// Some feeds (notably NASA's science.nasa.gov Earth Observatory posts) ship an
+// ENTIRE PAGE in content:encoded — nav menus, breadcrumbs, topic lists — so
+// tag-stripping yields a column of menu labels instead of the story. Prefer the
+// clean <description> whenever the richer field reads like a menu.
+function pickBodyText(contentHtml, descHtml) {
+  const desc = stripHtml(descHtml || '');
+  const full = stripHtml(contentHtml || '');
+  if (!full) return desc;
+  const lines = full.split(/\n+/).map(s => s.trim()).filter(Boolean).slice(0, 20);
+  if (lines.length < 6) return full;
+  const frags = lines.filter(l => l.length < 32 && !/[.!?:;,]$/.test(l)).length;
+  return (frags / lines.length > 0.5 && desc) ? desc : full;
+}
 
 async function fetchFeed(feedInfo) {
   const SPACE_SRCS = ['Space.com','Universe Today','SpaceNews','NASA','Phys.org','Teslarati','Planetary Society','Sky & Telescope'];
@@ -269,7 +282,7 @@ async function fetchFeed(feedInfo) {
         const link = item.link || item.guid || '#';
         if (!/^https?:\/\/.+\..+/i.test(link)) return null;
         const descRaw = item.content || item.description || '';
-        const excerpt = stripHtml(descRaw).slice(0, 220).trim();
+        const excerpt = pickBodyText(item.content || '', item.description || '').slice(0, 220).trim();
         const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
         const tags = (item.categories || []).join(' ');
         const category = guessCategory(title, tags) || (feedInfo.source === 'The Debrief' ? 'UAP' : (SPACE_SRCS.includes(feedInfo.source) ? 'Missions' : 'AI & Tech'));
@@ -387,7 +400,7 @@ function renderTrending() {
 async function loadFeeds() {
   // ── Fast path: use articles cached by app.html ──
   try {
-    const c = JSON.parse(sessionStorage.getItem('cr_cache_v8') || '{}');
+    const c = JSON.parse(sessionStorage.getItem('cr_cache_v9') || '{}');
     if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
       allArticles = c.articles.map(a => ({ ...a, link: a.read_more || a.link })).filter(a => a.link && a.title && !isOffThemeArticle(a));
       renderTrending();
