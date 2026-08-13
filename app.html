@@ -3511,6 +3511,10 @@ function cleanArticleBody(text) {
   do {
     _creditPrev = t;
     t = t.replace(/^\s*\(?\s*(?:(?:image|photo|photograph|illustration|video|art)\s+)?credits?\s*[:\-–—][^\n]{1,80}\r?\n+/i, '');
+    // Bare agency credit on its own leading line ("NASA/Bill Dunford",
+    // "ESA/Hubble"). The slash is required so a sentence merely starting with
+    // an agency name is never touched.
+    t = t.replace(/^\s*(?:NASA|ESA|JAXA|NOAA|USGS|SpaceX|Roscosmos|CSA|ISRO|JPL|Caltech)\s*\/\s*[^\n]{1,60}\r?\n+/i, '');
   } while (t !== _creditPrev);
   t = t.trim();
 
@@ -3520,6 +3524,12 @@ function cleanArticleBody(text) {
   //     that mentions a read time elsewhere is never touched. (Also fixes the
   //     drop-cap, which would otherwise enlarge the leading digit.)
   t = t.replace(/^\s*\d+\s*min\s+read\b[\s.:;,–—-]*/i, '').trim();
+
+  // 0b. APOD masthead. NASA's Astronomy Picture of the Day items lead with the
+  //     site's standing blurb ("Discover the cosmos! Each day a different image
+  //     … written by a professional astronomer.") before the actual caption.
+  //     Anchored to the very start, so a passing mention elsewhere is untouched.
+  t = t.replace(/^\s*(?:APOD\s+)?Astronomy Picture of the Day\s+Discover the cosmos![\s\S]{0,200}?professional astronomer\.\s*/i, '').trim();
 
   // 1. Leading nav block → the real content follows a "Description" marker.
   //    Only strip if the lead-in clearly looks like Photojournal cruft.

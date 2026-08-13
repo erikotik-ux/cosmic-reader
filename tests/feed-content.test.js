@@ -102,6 +102,29 @@ t('keeps the real story text', cleanArticleBody(body + '\nReferences & Resources
 // Guard: a short body that merely mentions the words is not truncated to nothing.
 t('never truncates below the guard', cleanArticleBody('Downloads').length > 0, true);
 
+// ── 2b. APOD masthead ─────────────────────────────────────────────────────
+// NASA's Astronomy Picture of the Day items lead with the site's standing blurb
+// before the real caption. (Its <description> is nav junk too, so falling back
+// to the summary can't save this one — the lead-in must be trimmed.)
+const APOD = 'Astronomy Picture of the Day Discover the cosmos! Each day a different image or photograph of our fascinating universe is featured, along with a brief explanation written by a professional astronomer. Total Solar Eclipse Over Spain Explanation: On August 12 the Moon\'s shadow swept across northern Spain.';
+t('strips the APOD masthead', cleanArticleBody(APOD).startsWith('Total Solar Eclipse Over Spain'), true);
+t('keeps the APOD caption body', cleanArticleBody(APOD).includes('the Moon\'s shadow swept across northern Spain'), true);
+// Guard: prose that merely mentions the phrase mid-article is untouched.
+const MENTION = 'The team published a striking view of the aurora this week. Astronomy Picture of the Day Discover the cosmos! featured it soon after, drawing wide attention from researchers.';
+t('does not strip a mid-article mention', cleanArticleBody(MENTION).startsWith('The team published'), true);
+
+// ── 2c. Bare agency photo credit ──────────────────────────────────────────
+t('strips a bare NASA/photographer credit line',
+  cleanArticleBody('NASA/Bill Dunford\n\nThe constellation Orion is framed by two Perseid meteors in this photo from Aug. 12, 2018.')
+    .startsWith('The constellation Orion'), true);
+t('strips an ESA credit line',
+  cleanArticleBody('ESA/Hubble & NASA\n\nA glittering globular cluster sits some 20,000 light-years from Earth in this new portrait.')
+    .startsWith('A glittering globular'), true);
+// Guard: a sentence that merely begins with an agency name is untouched.
+t('keeps prose starting with an agency name',
+  cleanArticleBody('NASA and ESA confirmed the docking sequence completed without incident early on Tuesday morning.')
+    .startsWith('NASA and ESA confirmed'), true);
+
 // ── 3. Fallback-image detection (og enrichment gate) ──────────────────────
 t('wikimedia placeholder is a fallback',
   _isFallbackImg('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg'), true);

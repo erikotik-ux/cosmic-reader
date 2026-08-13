@@ -260,14 +260,30 @@ function stripHtml(s) { return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').r
 // ENTIRE PAGE in content:encoded — nav menus, breadcrumbs, topic lists — so
 // tag-stripping yields a column of menu labels instead of the story. Prefer the
 // clean <description> whenever the richer field reads like a menu.
+function _looksLikeNavList(text) {
+  const lines = String(text || '').split(/\n+/).map(s => s.trim()).filter(Boolean);
+  if (lines.length < 6) return false;
+  const head = lines.slice(0, 20);
+  const frags = head.filter(l => l.length < 32 && !/[.!?:;,]$/.test(l)).length;
+  return frags / head.length > 0.5;
+}
 function pickBodyText(contentHtml, descHtml) {
   const desc = stripHtml(descHtml || '');
-  const full = stripHtml(contentHtml || '');
-  if (!full) return desc;
-  const lines = full.split(/\n+/).map(s => s.trim()).filter(Boolean).slice(0, 20);
-  if (lines.length < 6) return full;
-  const frags = lines.filter(l => l.length < 32 && !/[.!?:;,]$/.test(l)).length;
-  return (frags / lines.length > 0.5 && desc) ? desc : full;
+  const raw  = contentHtml || '';
+  if (!raw.trim()) return desc;
+  if (!/<[a-z][^>]*>/i.test(raw)) return stripHtml(raw) || desc;
+  let text = '';
+  try {
+    const d = new DOMParser().parseFromString(raw, 'text/html');
+    d.querySelectorAll('nav, header, footer, aside, script, style, noscript, svg, form, button, [role="navigation"], [role="banner"], [role="search"], [class*="breadcrumb" i], [class*="secondary-nav" i], [class*="site-nav" i], [class*="menu" i], [class*="sidebar" i], [class*="share" i], [class*="social" i], [class*="related" i], [class*="newsletter" i], [class*="subscribe" i]').forEach(e => e.remove());
+    text = stripHtml(((d.body || d.documentElement || {}).innerHTML) || '');
+  } catch (e) { text = stripHtml(raw); }
+  // Leading bare agency photo credit ("NASA/Bill Dunford") — slash required.
+  text = text.replace(/^\s*(?:NASA|ESA|JAXA|NOAA|USGS|SpaceX|Roscosmos|CSA|ISRO|JPL|Caltech)\s*\/\s*[^\n]{1,60}\r?\n+/i, '').trim();
+  // APOD items lead with the site's standing masthead blurb — drop it.
+  text = text.replace(/^\s*(?:APOD\s+)?Astronomy Picture of the Day\s+Discover the cosmos![\s\S]{0,200}?professional astronomer\.\s*/i, '').trim();
+  if (!text || text.length < 40 || _looksLikeNavList(text)) return desc || text;
+  return text;
 }
 
 async function fetchFeed(feedInfo) {
