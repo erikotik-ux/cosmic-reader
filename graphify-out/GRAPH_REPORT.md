@@ -1,0 +1,129 @@
+# Graph Report - cosmic-reader  (2026-08-14)
+
+## Corpus Check
+- 20 files · ~116,870 words
+- Verdict: corpus is large enough that graph structure adds value.
+
+## Summary
+- 141 nodes · 131 edges · 20 communities (18 shown, 2 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `0dffac6b`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
+
+## Community Hubs (Navigation)
+- [[_COMMUNITY_Community 0|Community 0]]
+- [[_COMMUNITY_Community 1|Community 1]]
+- [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
+- [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
+- [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 14|Community 14]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+
+## God Nodes (most connected - your core abstractions)
+1. `🚀 Cosmic Reader` - 7 edges
+2. `Article-by-Article Detail` - 7 edges
+3. `Priority Issues` - 6 edges
+4. `handler()` - 6 edges
+5. `Image Audit Report — Cosmic Reader Dashboard` - 6 edges
+6. `Live verification (signed-in dashboard, real DOM)` - 4 edges
+7. `scripts` - 4 edges
+8. `jsonError()` - 2 edges
+9. `handler()` - 2 edges
+10. `callHealthcheck()` - 2 edges
+
+## Surprising Connections (you probably didn't know these)
+- None detected - all connections are within the same source files.
+
+## Import Cycles
+- None detected.
+
+## Communities (20 total, 2 thin omitted)
+
+### Community 0 - "Community 0"
+Cohesion: 0.14
+Nodes (13): Article [0] — LIGO's Primordial Black Hole Detection, Article [1] — Hunting Moon Water With Neutrons, Article [2] — Hera Aces Massive Engine Burn to Didymos, Article [3] — Jupiter's Lightning Is Up To 1 Million Times More Powerful, Article [4] — How Did Venus Become a Hellscape?, Article [5] — AI Models Reach New Frontier, Article-by-Article Detail, Before → After per category (+5 more)
+
+### Community 1 - "Community 1"
+Cohesion: 0.15
+Nodes (9): APP, classBlk, ctx, fs, guessFn, kwCats, path, src (+1 more)
+
+### Community 2 - "Community 2"
+Cohesion: 0.18
+Nodes (10): dependencies, @vercel/speed-insights, devDependencies, tailwindcss, @tailwindcss/container-queries, @tailwindcss/forms, scripts, build (+2 more)
+
+### Community 3 - "Community 3"
+Cohesion: 0.18
+Nodes (8): APP, art, ctx, fn, fs, path, src, vm
+
+### Community 4 - "Community 4"
+Cohesion: 0.20
+Nodes (7): APP, ctx, fs, parseFn, path, src, vm
+
+### Community 5 - "Community 5"
+Cohesion: 0.22
+Nodes (8): 🚀 Cosmic Reader, Features, Getting Started, Philosophy, Rebuilding the CSS, RSS Sources, Tech Stack, What It Is
+
+### Community 6 - "Community 6"
+Cohesion: 0.52
+Nodes (6): buildIssueBody(), callHealthcheck(), commentOnIssue(), createIssue(), findOpenIssue(), handler()
+
+### Community 7 - "Community 7"
+Cohesion: 0.50
+Nodes (3): handler(), probeUrl(), PUBLISHER_SAMPLES
+
+### Community 8 - "Community 8"
+Cohesion: 0.50
+Nodes (4): ALLOWED_HOSTNAMES, handler(), isAllowed(), UA_POOL
+
+### Community 9 - "Community 9"
+Cohesion: 0.67
+Nodes (3): config, handler(), jsonError()
+
+### Community 10 - "Community 10"
+Cohesion: 0.67
+Nodes (3): handler(), isHostAllowed(), OG_ALLOWED_HOSTS
+
+### Community 11 - "Community 11"
+Cohesion: 0.67
+Nodes (3): config, handler(), jsonError()
+
+### Community 12 - "Community 12"
+Cohesion: 0.50
+Nodes (3): crons, outputDirectory, rewrites
+
+### Community 18 - "Community 18"
+Cohesion: 0.17
+Nodes (9): APP, ctx, fs, HEADLINES, NASA_NAV, path, REAL_PROSE, src (+1 more)
+
+### Community 19 - "Community 19"
+Cohesion: 0.11
+Nodes (17): Confirmed (observed, not inferred), Corrected after observation, Design Health Score, Design Specificity Verdict, Live verification (signed-in dashboard, real DOM), Minor Observations, Note, Overall Impression (+9 more)
+
+## Knowledge Gaps
+- **82 isolated node(s):** `Design Health Score`, `Design Specificity Verdict`, `Overall Impression`, `What's Working`, `[P0] The highest-value cards cannot be opened without a mouse` (+77 more)
+  These have ≤1 connection - possible missing edges or undocumented components.
+- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+
+## Suggested Questions
+_Questions this graph is uniquely positioned to answer:_
+
+- **What connects `Design Health Score`, `Design Specificity Verdict`, `Overall Impression` to the rest of the system?**
+  _82 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Community 0` be split into smaller, more focused modules?**
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+- **Should `Community 19` be split into smaller, more focused modules?**
+  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._

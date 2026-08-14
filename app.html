@@ -4841,6 +4841,9 @@ function showToast(message, opts) {
   el.innerHTML = '';
   const ic = document.createElement('span');
   ic.className = 'material-symbols-outlined cr-toast-icon';
+  // The toast is a live region, so the ligature text would otherwise be
+  // announced verbatim ("satellite_alt 4 new signals received").
+  ic.setAttribute('aria-hidden', 'true');
   ic.textContent = opts.icon || (opts.variant === 'error' ? 'error' : 'check_circle');
   const msg = document.createElement('span');
   msg.className = 'cr-toast-msg';

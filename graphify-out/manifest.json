@@ -1,0 +1,162 @@
+{
+  "api/chat.js": {
+    "mtime": 1779669258.6029372,
+    "ast_hash": "b7ac3928f82139eaefc51221b7f5a237",
+    "semantic_hash": ""
+  },
+  "api/healthcheck-watcher.js": {
+    "mtime": 1779169353.6359036,
+    "ast_hash": "d671ad106408b75f48374d1cebe01256",
+    "semantic_hash": ""
+  },
+  "api/healthcheck.js": {
+    "mtime": 1779168591.147681,
+    "ast_hash": "fb1ed3bc88dcda1c84e6cf0627e062ee",
+    "semantic_hash": ""
+  },
+  "api/img.js": {
+    "mtime": 1778426360.5874467,
+    "ast_hash": "b2abdf61b4a7eaa7962e1699485dc56c",
+    "semantic_hash": ""
+  },
+  "api/launches.js": {
+    "mtime": 1779195556.807304,
+    "ast_hash": "a361e127ba0db0ad8144b19748d89ecb",
+    "semantic_hash": ""
+  },
+  "api/og.js": {
+    "mtime": 1780362854.6828494,
+    "ast_hash": "526f8da3342c9b8f814161ab52a0a6ed",
+    "semantic_hash": ""
+  },
+  "api/rss.js": {
+    "mtime": 1778388706.8445308,
+    "ast_hash": "30f7a1c425d2fbf7d24dce332c32b581",
+    "semantic_hash": ""
+  },
+  "api/spacenews.js": {
+    "mtime": 1778426510.3223028,
+    "ast_hash": "98d5c2b20225351f3f610300f5f6caa7",
+    "semantic_hash": ""
+  },
+  "api/summarize.js": {
+    "mtime": 1779661573.981851,
+    "ast_hash": "7798fb4eb34f7e32a1d45dde17cebf43",
+    "semantic_hash": ""
+  },
+  "deploy.ps1": {
+    "mtime": 1776134650.4617376,
+    "ast_hash": "bf07977ad338008e100300060ec7f061",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1779755364.6827533,
+    "ast_hash": "ae6a138ffcf6010862149279a48e7a2f",
+    "semantic_hash": ""
+  },
+  "tailwind.config.js": {
+    "mtime": 1786722104.9723237,
+    "ast_hash": "26559e9bff3252e816c293416096023e",
+    "semantic_hash": ""
+  },
+  "tests/chat-refs.test.js": {
+    "mtime": 1779669258.6226318,
+    "ast_hash": "b7aca3e918ab5064560192477e18987e",
+    "semantic_hash": ""
+  },
+  "tests/classify.test.js": {
+    "mtime": 1781139435.9372683,
+    "ast_hash": "5b558e01345d015d5471afec84336102",
+    "semantic_hash": ""
+  },
+  "tests/hidden-prefs.test.js": {
+    "mtime": 1779755364.6827533,
+    "ast_hash": "f0422cb6bff34428421ca5df5009b432",
+    "semantic_hash": ""
+  },
+  "vercel.json": {
+    "mtime": 1779169371.3056946,
+    "ast_hash": "ee3522f9305454b2d9bb08e19925d64f",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1775530218.7240722,
+    "ast_hash": "fbd904d47ef783f3fbb20e245410da31",
+    "semantic_hash": ""
+  },
+  "about.html": {
+    "mtime": 1780260889.5488062,
+    "ast_hash": "518662b14b024f95b344aec90de7282f",
+    "semantic_hash": ""
+  },
+  "app.html": {
+    "mtime": 1786741907.894107,
+    "ast_hash": "42accebc62ebba185a9160295896790d",
+    "semantic_hash": ""
+  },
+  "assets/article-images/AUDIT_REPORT.md": {
+    "mtime": 1776465679.050313,
+    "ast_hash": "e13727c9211f8045bcfdb159a57a36e5",
+    "semantic_hash": ""
+  },
+  "galaxy-map.html": {
+    "mtime": 1781139435.9342704,
+    "ast_hash": "c3b1ae5d7a6e30560feb0c052a61bfa4",
+    "semantic_hash": ""
+  },
+  "home.html": {
+    "mtime": 1786676778.7911823,
+    "ast_hash": "c5ad3919d2bed0d9d3d0b4fd1ff2d17d",
+    "semantic_hash": ""
+  },
+  "privacy.html": {
+    "mtime": 1780260889.597849,
+    "ast_hash": "fde7d6ff7a25cd153fa4407739600c78",
+    "semantic_hash": ""
+  },
+  "terms.html": {
+    "mtime": 1780260889.598847,
+    "ast_hash": "286ebbdf0fbad1422474b85c7872d966",
+    "semantic_hash": ""
+  },
+  "transmissions.html": {
+    "mtime": 1786654027.8549945,
+    "ast_hash": "15a0c45ba0a362fd82aacae3688445b8",
+    "semantic_hash": ""
+  },
+  "trending.html": {
+    "mtime": 1786654027.8549945,
+    "ast_hash": "6670285f7dafd09df3e1956ae5e6a2d5",
+    "semantic_hash": ""
+  },
+  "assets/cr-logo-new.svg": {
+    "mtime": 1777869037.220215,
+    "ast_hash": "f21224740e5622f5ffbafdf22a3519f5",
+    "semantic_hash": ""
+  },
+  "assets/planet.png": {
+    "mtime": 1777960482.908251,
+    "ast_hash": "22d07f2b0a2d4fb8a8b78785d3905598",
+    "semantic_hash": ""
+  },
+  "assets/satellite.svg": {
+    "mtime": 1781139435.9312708,
+    "ast_hash": "30ce52c067a31a7294eee82e5e4f4891",
+    "semantic_hash": ""
+  },
+  "tests/feed-content.test.js": {
+    "mtime": 1786653959.688788,
+    "ast_hash": "8fb6458cd220eb9fa8477c820c75598c",
+    "semantic_hash": ""
+  },
+  ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md": {
+    "mtime": 1786679972.9848626,
+    "ast_hash": "855d423b21f5d23d257fd8b9617c4319",
+    "semantic_hash": ""
+  },
+  ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md": {
+    "mtime": 1786723274.0325735,
+    "ast_hash": "ecabf3091cc3ed2b4a83c18c12c4775e",
+    "semantic_hash": ""
+  }
+}

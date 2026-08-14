@@ -1,0 +1,2741 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "2026-08-14T03-42-32Z__app-html.md",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html",
+      "community": 19,
+      "norm_label": "2026-08-14t03-42-32z__app-html.md"
+    },
+    {
+      "label": "Design Health Score",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_design_health_score",
+      "community": 19,
+      "norm_label": "design health score"
+    },
+    {
+      "label": "Design Specificity Verdict",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_design_specificity_verdict",
+      "community": 19,
+      "norm_label": "design specificity verdict"
+    },
+    {
+      "label": "Overall Impression",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_overall_impression",
+      "community": 19,
+      "norm_label": "overall impression"
+    },
+    {
+      "label": "What's Working",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_what_s_working",
+      "community": 19,
+      "norm_label": "what's working"
+    },
+    {
+      "label": "Priority Issues",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L61",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_priority_issues",
+      "community": 19,
+      "norm_label": "priority issues"
+    },
+    {
+      "label": "[P0] The highest-value cards cannot be opened without a mouse",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_p0_the_highest_value_cards_cannot_be_opened_without_a_mouse",
+      "community": 19,
+      "norm_label": "[p0] the highest-value cards cannot be opened without a mouse"
+    },
+    {
+      "label": "[P0] Planet clicks silently do nothing until feeds load",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_p0_planet_clicks_silently_do_nothing_until_feeds_load",
+      "community": 19,
+      "norm_label": "[p0] planet clicks silently do nothing until feeds load"
+    },
+    {
+      "label": "[P1] Total feed failure presents fabricated articles as live news",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_p1_total_feed_failure_presents_fabricated_articles_as_live_news",
+      "community": 19,
+      "norm_label": "[p1] total feed failure presents fabricated articles as live news"
+    },
+    {
+      "label": "[P1] Low-alpha text tiers fail WCAG AA \u2014 both agents converged on this independently",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_p1_low_alpha_text_tiers_fail_wcag_aa_both_agents_converged_on_this_independently",
+      "community": 19,
+      "norm_label": "[p1] low-alpha text tiers fail wcag aa \u2014 both agents converged on this independently"
+    },
+    {
+      "label": "[P2] A dead bookmark control sits on every small card",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L90",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_p2_a_dead_bookmark_control_sits_on_every_small_card",
+      "community": 19,
+      "norm_label": "[p2] a dead bookmark control sits on every small card"
+    },
+    {
+      "label": "Persona Red Flags",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_persona_red_flags",
+      "community": 19,
+      "norm_label": "persona red flags"
+    },
+    {
+      "label": "Minor Observations",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_minor_observations",
+      "community": 19,
+      "norm_label": "minor observations"
+    },
+    {
+      "label": "Questions to Consider",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L115",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_questions_to_consider",
+      "community": 19,
+      "norm_label": "questions to consider"
+    },
+    {
+      "label": "Live verification (signed-in dashboard, real DOM)",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L125",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_live_verification_signed_in_dashboard_real_dom",
+      "community": 19,
+      "norm_label": "live verification (signed-in dashboard, real dom)"
+    },
+    {
+      "label": "Confirmed (observed, not inferred)",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L129",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_confirmed_observed_not_inferred",
+      "community": 19,
+      "norm_label": "confirmed (observed, not inferred)"
+    },
+    {
+      "label": "Corrected after observation",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L141",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_corrected_after_observation",
+      "community": 19,
+      "norm_label": "corrected after observation"
+    },
+    {
+      "label": "Note",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L146",
+      "_origin": "ast",
+      "id": "critique_2026_08_14t03_42_32z_app_html_note",
+      "community": 19,
+      "norm_label": "note"
+    },
+    {
+      "label": "feed-content.test.js",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "feed-content.test.js",
+      "id": "tests_feed_content_test"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "fs",
+      "id": "tests_feed_content_test_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L17",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "path",
+      "id": "tests_feed_content_test_path"
+    },
+    {
+      "label": "vm",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "vm",
+      "id": "tests_feed_content_test_vm"
+    },
+    {
+      "label": "APP",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "app",
+      "id": "tests_feed_content_test_app"
+    },
+    {
+      "label": "src",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "src",
+      "id": "tests_feed_content_test_src"
+    },
+    {
+      "label": "slice()",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L23",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "slice()",
+      "id": "tests_feed_content_test_slice"
+    },
+    {
+      "label": "ctx",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L31",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "ctx",
+      "id": "tests_feed_content_test_ctx"
+    },
+    {
+      "label": "t()",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L45",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "t()",
+      "id": "tests_feed_content_test_t"
+    },
+    {
+      "label": "NASA_NAV",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L54",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "nasa_nav",
+      "id": "tests_feed_content_test_nasa_nav"
+    },
+    {
+      "label": "REAL_PROSE",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L64",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "real_prose",
+      "id": "tests_feed_content_test_real_prose"
+    },
+    {
+      "label": "HEADLINES",
+      "file_type": "code",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L75",
+      "_origin": "ast",
+      "community": 18,
+      "norm_label": "headlines",
+      "id": "tests_feed_content_test_headlines"
+    },
+    {
+      "label": "chat.js",
+      "file_type": "code",
+      "source_file": "api/chat.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "chat.js",
+      "id": "api_chat"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "api/chat.js",
+      "source_location": "L22",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "config",
+      "id": "api_chat_config"
+    },
+    {
+      "label": "jsonError()",
+      "file_type": "code",
+      "source_file": "api/chat.js",
+      "source_location": "L59",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "jsonerror()",
+      "id": "api_chat_jsonerror"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/chat.js",
+      "source_location": "L66",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "handler()",
+      "id": "api_chat_handler"
+    },
+    {
+      "label": "healthcheck-watcher.js",
+      "file_type": "code",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "healthcheck-watcher.js",
+      "id": "api_healthcheck_watcher"
+    },
+    {
+      "label": "callHealthcheck()",
+      "file_type": "code",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L33",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "callhealthcheck()",
+      "id": "api_healthcheck_watcher_callhealthcheck"
+    },
+    {
+      "label": "findOpenIssue()",
+      "file_type": "code",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L42",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "findopenissue()",
+      "id": "api_healthcheck_watcher_findopenissue"
+    },
+    {
+      "label": "createIssue()",
+      "file_type": "code",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L58",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "createissue()",
+      "id": "api_healthcheck_watcher_createissue"
+    },
+    {
+      "label": "commentOnIssue()",
+      "file_type": "code",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L78",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "commentonissue()",
+      "id": "api_healthcheck_watcher_commentonissue"
+    },
+    {
+      "label": "buildIssueBody()",
+      "file_type": "code",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L98",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "buildissuebody()",
+      "id": "api_healthcheck_watcher_buildissuebody"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L132",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "handler()",
+      "id": "api_healthcheck_watcher_handler"
+    },
+    {
+      "label": "healthcheck.js",
+      "file_type": "code",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "healthcheck.js",
+      "id": "api_healthcheck"
+    },
+    {
+      "label": "proxyImg()",
+      "file_type": "code",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "proxyimg()",
+      "id": "api_healthcheck_proxyimg"
+    },
+    {
+      "label": "probeUrl()",
+      "file_type": "code",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "probeurl()",
+      "id": "api_healthcheck_probeurl"
+    },
+    {
+      "label": "PUBLISHER_SAMPLES",
+      "file_type": "code",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L78",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "publisher_samples",
+      "id": "api_healthcheck_publisher_samples"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L91",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "handler()",
+      "id": "api_healthcheck_handler"
+    },
+    {
+      "label": "img.js",
+      "file_type": "code",
+      "source_file": "api/img.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "img.js",
+      "id": "api_img"
+    },
+    {
+      "label": "UA_POOL",
+      "file_type": "code",
+      "source_file": "api/img.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "ua_pool",
+      "id": "api_img_ua_pool"
+    },
+    {
+      "label": "ALLOWED_HOSTNAMES",
+      "file_type": "code",
+      "source_file": "api/img.js",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "allowed_hostnames",
+      "id": "api_img_allowed_hostnames"
+    },
+    {
+      "label": "isAllowed()",
+      "file_type": "code",
+      "source_file": "api/img.js",
+      "source_location": "L60",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "isallowed()",
+      "id": "api_img_isallowed"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/img.js",
+      "source_location": "L69",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "handler()",
+      "id": "api_img_handler"
+    },
+    {
+      "label": "launches.js",
+      "file_type": "code",
+      "source_file": "api/launches.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": "launches.js",
+      "id": "api_launches"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/launches.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": "handler()",
+      "id": "api_launches_handler"
+    },
+    {
+      "label": "og.js",
+      "file_type": "code",
+      "source_file": "api/og.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "og.js",
+      "id": "api_og"
+    },
+    {
+      "label": "OG_ALLOWED_HOSTS",
+      "file_type": "code",
+      "source_file": "api/og.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "og_allowed_hosts",
+      "id": "api_og_og_allowed_hosts"
+    },
+    {
+      "label": "isHostAllowed()",
+      "file_type": "code",
+      "source_file": "api/og.js",
+      "source_location": "L23",
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "ishostallowed()",
+      "id": "api_og_ishostallowed"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/og.js",
+      "source_location": "L34",
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "handler()",
+      "id": "api_og_handler"
+    },
+    {
+      "label": "rss.js",
+      "file_type": "code",
+      "source_file": "api/rss.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": "rss.js",
+      "id": "api_rss"
+    },
+    {
+      "label": "UA_POOL",
+      "file_type": "code",
+      "source_file": "api/rss.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": "ua_pool",
+      "id": "api_rss_ua_pool"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/rss.js",
+      "source_location": "L14",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": "handler()",
+      "id": "api_rss_handler"
+    },
+    {
+      "label": "spacenews.js",
+      "file_type": "code",
+      "source_file": "api/spacenews.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": "spacenews.js",
+      "id": "api_spacenews"
+    },
+    {
+      "label": "UA_POOL",
+      "file_type": "code",
+      "source_file": "api/spacenews.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": "ua_pool",
+      "id": "api_spacenews_ua_pool"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/spacenews.js",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": "handler()",
+      "id": "api_spacenews_handler"
+    },
+    {
+      "label": "summarize.js",
+      "file_type": "code",
+      "source_file": "api/summarize.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 11,
+      "norm_label": "summarize.js",
+      "id": "api_summarize"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "api/summarize.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 11,
+      "norm_label": "config",
+      "id": "api_summarize_config"
+    },
+    {
+      "label": "jsonError()",
+      "file_type": "code",
+      "source_file": "api/summarize.js",
+      "source_location": "L23",
+      "_origin": "ast",
+      "community": 11,
+      "norm_label": "jsonerror()",
+      "id": "api_summarize_jsonerror"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/summarize.js",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 11,
+      "norm_label": "handler()",
+      "id": "api_summarize_handler"
+    },
+    {
+      "label": "deploy.ps1",
+      "file_type": "code",
+      "source_file": "deploy.ps1",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 16,
+      "norm_label": "deploy.ps1",
+      "id": "deploy"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "package.json",
+      "id": "package"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "devdependencies",
+      "id": "package_devdependencies"
+    },
+    {
+      "label": "@tailwindcss/container-queries",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "@tailwindcss/container-queries",
+      "id": "package_devdependencies_tailwindcss_container_queries"
+    },
+    {
+      "label": "@tailwindcss/forms",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "@tailwindcss/forms",
+      "id": "package_devdependencies_tailwindcss_forms"
+    },
+    {
+      "label": "tailwindcss",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "tailwindcss",
+      "id": "package_devdependencies_tailwindcss"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "scripts",
+      "id": "package_scripts"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "build",
+      "id": "package_scripts_build"
+    },
+    {
+      "label": "build:watch",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "build:watch",
+      "id": "package_scripts_build_watch"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "test",
+      "id": "package_scripts_test"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "dependencies",
+      "id": "package_dependencies"
+    },
+    {
+      "label": "@vercel/speed-insights",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "@vercel/speed-insights",
+      "id": "package_dependencies_vercel_speed_insights"
+    },
+    {
+      "label": "tailwind.config.js",
+      "file_type": "code",
+      "source_file": "tailwind.config.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 17,
+      "norm_label": "tailwind.config.js",
+      "id": "tailwind_config"
+    },
+    {
+      "label": "chat-refs.test.js",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "chat-refs.test.js",
+      "id": "tests_chat_refs_test"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "fs",
+      "id": "tests_chat_refs_test_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "path",
+      "id": "tests_chat_refs_test_path"
+    },
+    {
+      "label": "vm",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "vm",
+      "id": "tests_chat_refs_test_vm"
+    },
+    {
+      "label": "APP",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L15",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "app",
+      "id": "tests_chat_refs_test_app"
+    },
+    {
+      "label": "src",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "src",
+      "id": "tests_chat_refs_test_src"
+    },
+    {
+      "label": "slice()",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "slice()",
+      "id": "tests_chat_refs_test_slice"
+    },
+    {
+      "label": "parseFn",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "parsefn",
+      "id": "tests_chat_refs_test_parsefn"
+    },
+    {
+      "label": "ctx",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L29",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "ctx",
+      "id": "tests_chat_refs_test_ctx"
+    },
+    {
+      "label": "t()",
+      "file_type": "code",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L35",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "t()",
+      "id": "tests_chat_refs_test_t"
+    },
+    {
+      "label": "classify.test.js",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "classify.test.js",
+      "id": "tests_classify_test"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "fs",
+      "id": "tests_classify_test_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "path",
+      "id": "tests_classify_test_path"
+    },
+    {
+      "label": "vm",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "vm",
+      "id": "tests_classify_test_vm"
+    },
+    {
+      "label": "APP",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L15",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "app",
+      "id": "tests_classify_test_app"
+    },
+    {
+      "label": "src",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "src",
+      "id": "tests_classify_test_src"
+    },
+    {
+      "label": "slice()",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "slice()",
+      "id": "tests_classify_test_slice"
+    },
+    {
+      "label": "kwCats",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "kwcats",
+      "id": "tests_classify_test_kwcats"
+    },
+    {
+      "label": "classBlk",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "classblk",
+      "id": "tests_classify_test_classblk"
+    },
+    {
+      "label": "guessFn",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L29",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "guessfn",
+      "id": "tests_classify_test_guessfn"
+    },
+    {
+      "label": "ctx",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L31",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "ctx",
+      "id": "tests_classify_test_ctx"
+    },
+    {
+      "label": "cat()",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L38",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "cat()",
+      "id": "tests_classify_test_cat"
+    },
+    {
+      "label": "t()",
+      "file_type": "code",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L41",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "t()",
+      "id": "tests_classify_test_t"
+    },
+    {
+      "label": "hidden-prefs.test.js",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "hidden-prefs.test.js",
+      "id": "tests_hidden_prefs_test"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "fs",
+      "id": "tests_hidden_prefs_test_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "path",
+      "id": "tests_hidden_prefs_test_path"
+    },
+    {
+      "label": "vm",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "vm",
+      "id": "tests_hidden_prefs_test_vm"
+    },
+    {
+      "label": "APP",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L15",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "app",
+      "id": "tests_hidden_prefs_test_app"
+    },
+    {
+      "label": "src",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "src",
+      "id": "tests_hidden_prefs_test_src"
+    },
+    {
+      "label": "slice()",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "slice()",
+      "id": "tests_hidden_prefs_test_slice"
+    },
+    {
+      "label": "fn",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "fn",
+      "id": "tests_hidden_prefs_test_fn"
+    },
+    {
+      "label": "ctx",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "ctx",
+      "id": "tests_hidden_prefs_test_ctx"
+    },
+    {
+      "label": "t()",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L34",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "t()",
+      "id": "tests_hidden_prefs_test_t"
+    },
+    {
+      "label": "art",
+      "file_type": "code",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "art",
+      "id": "tests_hidden_prefs_test_art"
+    },
+    {
+      "label": "vercel.json",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 12,
+      "norm_label": "vercel.json",
+      "id": "vercel"
+    },
+    {
+      "label": "outputDirectory",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "community": 12,
+      "norm_label": "outputdirectory",
+      "id": "vercel_outputdirectory"
+    },
+    {
+      "label": "rewrites",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "community": 12,
+      "norm_label": "rewrites",
+      "id": "vercel_rewrites"
+    },
+    {
+      "label": "crons",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "community": 12,
+      "norm_label": "crons",
+      "id": "vercel_crons"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "readme.md",
+      "id": "readme"
+    },
+    {
+      "label": "\ud83d\ude80 Cosmic Reader",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "\ud83d\ude80 cosmic reader",
+      "id": "readme_cosmic_reader"
+    },
+    {
+      "label": "What It Is",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "what it is",
+      "id": "readme_what_it_is"
+    },
+    {
+      "label": "Features",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "features",
+      "id": "readme_features"
+    },
+    {
+      "label": "Tech Stack",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L34",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "tech stack",
+      "id": "readme_tech_stack"
+    },
+    {
+      "label": "Getting Started",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L49",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "getting started",
+      "id": "readme_getting_started"
+    },
+    {
+      "label": "Rebuilding the CSS",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L63",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "rebuilding the css",
+      "id": "readme_rebuilding_the_css"
+    },
+    {
+      "label": "RSS Sources",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L77",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "rss sources",
+      "id": "readme_rss_sources"
+    },
+    {
+      "label": "Philosophy",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L92",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "philosophy",
+      "id": "readme_philosophy"
+    },
+    {
+      "label": "AUDIT_REPORT.md",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "audit_report.md",
+      "id": "article_images_audit_report"
+    },
+    {
+      "label": "Image Audit Report \u2014 Cosmic Reader Dashboard",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "image audit report \u2014 cosmic reader dashboard",
+      "id": "article_images_audit_report_image_audit_report_cosmic_reader_dashboard"
+    },
+    {
+      "label": "Summary",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "summary",
+      "id": "article_images_audit_report_summary"
+    },
+    {
+      "label": "Article-by-Article Detail",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L23",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "article-by-article detail",
+      "id": "article_images_audit_report_article_by_article_detail"
+    },
+    {
+      "label": "Article [0] \u2014 LIGO's Primordial Black Hole Detection",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L25",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "article [0] \u2014 ligo's primordial black hole detection",
+      "id": "article_images_audit_report_article_0_ligo_s_primordial_black_hole_detection"
+    },
+    {
+      "label": "Article [1] \u2014 Hunting Moon Water With Neutrons",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "article [1] \u2014 hunting moon water with neutrons",
+      "id": "article_images_audit_report_article_1_hunting_moon_water_with_neutrons"
+    },
+    {
+      "label": "Article [2] \u2014 Hera Aces Massive Engine Burn to Didymos",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L43",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "article [2] \u2014 hera aces massive engine burn to didymos",
+      "id": "article_images_audit_report_article_2_hera_aces_massive_engine_burn_to_didymos"
+    },
+    {
+      "label": "Article [3] \u2014 Jupiter's Lightning Is Up To 1 Million Times More Powerful",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L55",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "article [3] \u2014 jupiter's lightning is up to 1 million times more powerful",
+      "id": "article_images_audit_report_article_3_jupiter_s_lightning_is_up_to_1_million_times_more_powerful"
+    },
+    {
+      "label": "Article [4] \u2014 How Did Venus Become a Hellscape?",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L66",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "article [4] \u2014 how did venus become a hellscape?",
+      "id": "article_images_audit_report_article_4_how_did_venus_become_a_hellscape"
+    },
+    {
+      "label": "Article [5] \u2014 AI Models Reach New Frontier",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L76",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "article [5] \u2014 ai models reach new frontier",
+      "id": "article_images_audit_report_article_5_ai_models_reach_new_frontier"
+    },
+    {
+      "label": "FALLBACK_POOL Changes",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L83",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "fallback_pool changes",
+      "id": "article_images_audit_report_fallback_pool_changes"
+    },
+    {
+      "label": "Before \u2192 After per category",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L85",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "before \u2192 after per category",
+      "id": "article_images_audit_report_before_after_per_category"
+    },
+    {
+      "label": "Image Storage",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L101",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "image storage",
+      "id": "article_images_audit_report_image_storage"
+    },
+    {
+      "label": "Unresolved / Watch Items",
+      "file_type": "document",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L113",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "unresolved / watch items",
+      "id": "article_images_audit_report_unresolved_watch_items"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_design_health_score",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_design_specificity_verdict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_live_verification_signed_in_dashboard_real_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_minor_observations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_overall_impression",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_persona_red_flags",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_priority_issues",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_questions_to_consider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html",
+      "target": "critique_2026_08_14t03_42_32z_app_html_what_s_working",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_priority_issues",
+      "target": "critique_2026_08_14t03_42_32z_app_html_p0_planet_clicks_silently_do_nothing_until_feeds_load",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_priority_issues",
+      "target": "critique_2026_08_14t03_42_32z_app_html_p0_the_highest_value_cards_cannot_be_opened_without_a_mouse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_priority_issues",
+      "target": "critique_2026_08_14t03_42_32z_app_html_p1_low_alpha_text_tiers_fail_wcag_aa_both_agents_converged_on_this_independently",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_priority_issues",
+      "target": "critique_2026_08_14t03_42_32z_app_html_p1_total_feed_failure_presents_fabricated_articles_as_live_news",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_priority_issues",
+      "target": "critique_2026_08_14t03_42_32z_app_html_p2_a_dead_bookmark_control_sits_on_every_small_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_live_verification_signed_in_dashboard_real_dom",
+      "target": "critique_2026_08_14t03_42_32z_app_html_confirmed_observed_not_inferred",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_live_verification_signed_in_dashboard_real_dom",
+      "target": "critique_2026_08_14t03_42_32z_app_html_corrected_after_observation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T03-42-32Z__app-html.md",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "critique_2026_08_14t03_42_32z_app_html_live_verification_signed_in_dashboard_real_dom",
+      "target": "critique_2026_08_14t03_42_32z_app_html_note",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L31",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_ctx"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L75",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_headlines"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L54",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_nasa_nav"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L64",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_real_prose"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_slice"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_src"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_t"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/feed-content.test.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_feed_content_test",
+      "target": "tests_feed_content_test_vm"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/chat.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_chat",
+      "target": "api_chat_config"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/chat.js",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_chat",
+      "target": "api_chat_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/chat.js",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_chat",
+      "target": "api_chat_jsonerror"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/chat.js",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_chat_handler",
+      "target": "api_chat_jsonerror"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L98",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher",
+      "target": "api_healthcheck_watcher_buildissuebody"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L33",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher",
+      "target": "api_healthcheck_watcher_callhealthcheck"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher",
+      "target": "api_healthcheck_watcher_commentonissue"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L58",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher",
+      "target": "api_healthcheck_watcher_createissue"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher",
+      "target": "api_healthcheck_watcher_findopenissue"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L132",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher",
+      "target": "api_healthcheck_watcher_handler"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L147",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher_handler",
+      "target": "api_healthcheck_watcher_callhealthcheck"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L172",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher_handler",
+      "target": "api_healthcheck_watcher_findopenissue"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L180",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher_handler",
+      "target": "api_healthcheck_watcher_createissue"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L177",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher_handler",
+      "target": "api_healthcheck_watcher_commentonissue"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck-watcher.js",
+      "source_location": "L177",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_watcher_handler",
+      "target": "api_healthcheck_watcher_buildissuebody"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L91",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck",
+      "target": "api_healthcheck_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck",
+      "target": "api_healthcheck_probeurl"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck",
+      "target": "api_healthcheck_proxyimg"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck",
+      "target": "api_healthcheck_publisher_samples"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/healthcheck.js",
+      "source_location": "L107",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_healthcheck_handler",
+      "target": "api_healthcheck_probeurl"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/img.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_img",
+      "target": "api_img_allowed_hostnames"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/img.js",
+      "source_location": "L69",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_img",
+      "target": "api_img_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/img.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_img",
+      "target": "api_img_isallowed"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/img.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_img",
+      "target": "api_img_ua_pool"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/img.js",
+      "source_location": "L74",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_img_handler",
+      "target": "api_img_isallowed"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/launches.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_launches",
+      "target": "api_launches_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/og.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_og",
+      "target": "api_og_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/og.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_og",
+      "target": "api_og_ishostallowed"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/og.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_og",
+      "target": "api_og_og_allowed_hosts"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/og.js",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_og_handler",
+      "target": "api_og_ishostallowed"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/rss.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_rss",
+      "target": "api_rss_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/rss.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_rss",
+      "target": "api_rss_ua_pool"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/spacenews.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_spacenews",
+      "target": "api_spacenews_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/spacenews.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_spacenews",
+      "target": "api_spacenews_ua_pool"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/summarize.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_summarize",
+      "target": "api_summarize_config"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/summarize.js",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_summarize",
+      "target": "api_summarize_handler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/summarize.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_summarize",
+      "target": "api_summarize_jsonerror"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/summarize.js",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_summarize_handler",
+      "target": "api_summarize_jsonerror"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package",
+      "target": "package_dependencies"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package",
+      "target": "package_devdependencies"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package",
+      "target": "package_scripts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_tailwindcss"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_tailwindcss_container_queries"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_tailwindcss_forms"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package_scripts",
+      "target": "package_scripts_build"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package_scripts",
+      "target": "package_scripts_build_watch"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package_scripts",
+      "target": "package_scripts_test"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package_dependencies",
+      "target": "package_dependencies_vercel_speed_insights"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_ctx"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_parsefn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_slice"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_src"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_t"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/chat-refs.test.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_chat_refs_test",
+      "target": "tests_chat_refs_test_vm"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_cat"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_classblk"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L31",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_ctx"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_guessfn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_kwcats"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_slice"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_src"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_t"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/classify.test.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_classify_test",
+      "target": "tests_classify_test_vm"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_art"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_ctx"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_fn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_slice"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_src"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_t"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hidden-prefs.test.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_hidden_prefs_test",
+      "target": "tests_hidden_prefs_test_vm"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "vercel.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vercel",
+      "target": "vercel_crons"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "vercel.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vercel",
+      "target": "vercel_outputdirectory"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "vercel.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vercel",
+      "target": "vercel_rewrites"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme",
+      "target": "readme_cosmic_reader"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_cosmic_reader",
+      "target": "readme_features"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_cosmic_reader",
+      "target": "readme_getting_started"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L92",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_cosmic_reader",
+      "target": "readme_philosophy"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L77",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_cosmic_reader",
+      "target": "readme_rss_sources"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_cosmic_reader",
+      "target": "readme_tech_stack"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_cosmic_reader",
+      "target": "readme_what_it_is"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_getting_started",
+      "target": "readme_rebuilding_the_css"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report",
+      "target": "article_images_audit_report_image_audit_report_cosmic_reader_dashboard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_image_audit_report_cosmic_reader_dashboard",
+      "target": "article_images_audit_report_article_by_article_detail"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L83",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_image_audit_report_cosmic_reader_dashboard",
+      "target": "article_images_audit_report_fallback_pool_changes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L101",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_image_audit_report_cosmic_reader_dashboard",
+      "target": "article_images_audit_report_image_storage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_image_audit_report_cosmic_reader_dashboard",
+      "target": "article_images_audit_report_summary"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L113",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_image_audit_report_cosmic_reader_dashboard",
+      "target": "article_images_audit_report_unresolved_watch_items"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_article_by_article_detail",
+      "target": "article_images_audit_report_article_0_ligo_s_primordial_black_hole_detection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_article_by_article_detail",
+      "target": "article_images_audit_report_article_1_hunting_moon_water_with_neutrons"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L43",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_article_by_article_detail",
+      "target": "article_images_audit_report_article_2_hera_aces_massive_engine_burn_to_didymos"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L55",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_article_by_article_detail",
+      "target": "article_images_audit_report_article_3_jupiter_s_lightning_is_up_to_1_million_times_more_powerful"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_article_by_article_detail",
+      "target": "article_images_audit_report_article_4_how_did_venus_become_a_hellscape"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_article_by_article_detail",
+      "target": "article_images_audit_report_article_5_ai_models_reach_new_frontier"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/article-images/AUDIT_REPORT.md",
+      "source_location": "L85",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "article_images_audit_report_fallback_pool_changes",
+      "target": "article_images_audit_report_before_after_per_category"
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "0dffac6b9f39fb113f3eb011370c70d88bd8b2bf"
+}
