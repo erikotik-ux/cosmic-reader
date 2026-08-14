@@ -53,7 +53,9 @@
     html { scroll-behavior: smooth; }
 
     body {
-      background-color: var(--surface);
+      /* Solid black base, matching the dashboard. The #home-stars canvas sits
+         on top of this (fixed, z-index 0) so the starfield stays fully visible. */
+      background-color: #000;
       color: var(--on-surface);
       font-family: 'Exo 2', 'Space Grotesk', sans-serif;
       overflow-x: hidden;
@@ -216,10 +218,15 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       padding: 1.25rem 4rem;
-      background: rgba(8, 15, 16, 0.55);
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(0, 240, 255, 0.08);
+      /* Seamless over the black page: no tint, no glassy blur band and no
+         divider line — the three things that made the bar read as its own
+         section. The starfield now runs straight through it. A soft black
+         gradient fades out downward so nav text keeps a backing when content
+         scrolls beneath, without ever showing a hard edge. */
+      background: linear-gradient(to bottom, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.62) 55%, rgba(0,0,0,0) 100%);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      border-bottom: none;
     }
     nav.top-bar > .btn-primary { justify-self: end; }
     .nav-brand {
@@ -679,7 +686,10 @@
       position: relative;
       z-index: 1;
       padding: 6rem 4rem;
-      background: rgba(13,21,21,0.5);
+      /* Transparent so the black page + starfield read through uniformly —
+         the old grey wash made this band a visibly different shade. The
+         hairline top rule is kept as the section's structural divider. */
+      background: transparent;
       border-top: 1px solid rgba(255,255,255,0.04);
       overflow: hidden;
     }
@@ -777,7 +787,9 @@
       position: relative;
       z-index: 1;
       padding: 3.5rem 4rem;
-      background: rgba(8,15,16,0.6);
+      /* Transparent so the page stays uniformly black through to the bottom;
+         the hairline top rule still separates it structurally. */
+      background: transparent;
       border-top: 1px solid rgba(255,255,255,0.05);
       display: flex;
       flex-direction: column;
@@ -848,7 +860,10 @@
       top: 60px;
       left: 0; right: 0;
       z-index: 48;
-      background: rgba(8,15,16,0.97);
+      /* Mobile counterpart of the top bar — black instead of the teal tint so
+         the open menu matches the page. Kept near-opaque (and blurred) because
+         this panel overlays scrolling content and must stay readable. */
+      background: rgba(0,0,0,0.97);
       -webkit-backdrop-filter: blur(24px);
       backdrop-filter: blur(24px);
       border-bottom: 1px solid rgba(0,240,255,0.1);
@@ -951,8 +966,8 @@
          layers so their idle keyframes don't dirty the whole document
          while the user is scrolling. */
       nav.top-bar {
-        backdrop-filter: blur(8px);      /* was 16px */
-        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: none;            /* bar is now gradient-only, no glass */
+        -webkit-backdrop-filter: none;
       }
       .cat-card {
         backdrop-filter: none;            /* was blur(12px) */
