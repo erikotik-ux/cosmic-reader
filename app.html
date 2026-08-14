@@ -4161,6 +4161,10 @@ function renderFeedFailure(detail) {
         '<button type="button" onclick="retryFeeds(this)" class="mt-1 px-5 py-2 rounded-lg bg-primary-container text-[#00363a] font-headline text-xs uppercase tracking-widest hover:brightness-110 transition-all">Retry</button>' +
       '</div>';
   }
+  // Zero the header stat card too — it kept reporting the demo counts (e.g.
+  // "6 articles") next to a "no signals" message.
+  document.querySelectorAll('#view-feed [data-stat="articles"], #view-feed .text-2xl.text-\[\#00f0ff\], #view-feed .text-base.text-\[\#00f0ff\]')
+    .forEach(el => { el.textContent = '0'; });
   updateFeedTelemetry(0, FEEDS.length + 1, 0);
   showProbeReport({ error: true, detail: 'No relays responded', time: new Date().toLocaleTimeString() });
 }
