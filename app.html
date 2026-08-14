@@ -186,7 +186,8 @@
     max-width: 60%;
   }
   .cr-launch-provider {
-    color: rgba(219,252,255,0.4);
+    /* was 0.4 -> measured 3.62:1 on the ticker's #0a1212 band (WCAG AA needs 4.5) */
+    color: rgba(219,252,255,0.55);
     font-family: 'Exo 2', 'Space Grotesk', sans-serif;
     font-size: 0.65rem;
     letter-spacing: 0.16em;
@@ -214,7 +215,8 @@
     text-shadow: 0 0 12px rgba(0,240,255,0.4);
   }
   .cr-launch-cd-label {
-    color: rgba(219,252,255,0.35);
+    /* was 0.35 -> measured 3.05:1, the lowest ratio anywhere in the feed view */
+    color: rgba(219,252,255,0.55);
     font-size: 0.6rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
