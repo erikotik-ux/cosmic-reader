@@ -4146,6 +4146,30 @@ const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 // set dressing — a hardcoded "Live Feed Active", fixed New York coordinates and
 // a fake relay id — which meant the status line claimed a healthy feed even
 // during a total outage. They now report what actually happened.
+// Total feed failure. The app used to leave its six hardcoded demo articles on
+// screen -- fictional headlines presented as live news -- under a status line
+// that claimed "Using cached signals" in the exact branch where no cache exists,
+// with no way to retry. Replace the grid with an explicit, honest failure state.
+function renderFeedFailure(detail) {
+  const grid = document.getElementById('article-grid');
+  if (grid) {
+    grid.innerHTML =
+      '<div role="alert" class="md:col-span-12 flex flex-col items-center text-center gap-4 py-16 px-6 rounded-xl border border-white/10 bg-surface-container-low/40">' +
+        '<span aria-hidden="true" class="material-symbols-outlined text-[#ffb5a0] text-5xl">sensors_off</span>' +
+        '<h2 class="font-headline text-xl font-bold text-[#dbfcff]">No signals received</h2>' +
+        '<p class="text-sm text-[#dbfcff]/65 max-w-md">' + escHtml(detail || 'None of the feed relays responded. This is a connection problem, not a quiet news day.') + '</p>' +
+        '<button type="button" onclick="retryFeeds(this)" class="mt-1 px-5 py-2 rounded-lg bg-primary-container text-[#00363a] font-headline text-xs uppercase tracking-widest hover:brightness-110 transition-all">Retry</button>' +
+      '</div>';
+  }
+  updateFeedTelemetry(0, FEEDS.length + 1, 0);
+  showProbeReport({ error: true, detail: 'No relays responded', time: new Date().toLocaleTimeString() });
+}
+
+function retryFeeds(btn) {
+  if (btn) { btn.disabled = true; btn.textContent = 'Retrying…'; }
+  loadLiveFeeds();
+}
+
 function setFeedTelemetryCached(articleCount, ts) {
   const st = document.getElementById('hud-system-status');
   if (st) st.textContent = 'System Status: Cached Signals';
@@ -4292,15 +4316,24 @@ async function loadLiveFeeds() {
         setTimeout(() => filterFeed(deepCat), 150);
       }
     } else if (!cachedArticles) {
-      if (statusTxt) statusTxt.textContent = 'Using cached signals (network unavailable)';
-      setTimeout(() => statusEl && statusEl.classList.add('hidden'), 3000);
+      // Nothing fetched AND nothing cached -> a real outage. Say so, and stop
+      // presenting the hardcoded demo articles as if they were live signals.
+      if (statusTxt) statusTxt.textContent = 'No feeds reachable — check your connection';
+      renderFeedFailure();
     } else if (statusEl) {
       // Stale cache rendered + fresh fetch returned nothing — hide status
       statusEl.classList.add('hidden');
     }
   } catch (e) {
     console.warn('RSS fetch failed:', e);
-    if (statusEl) statusEl.classList.add('hidden');
+    // Only surface a failure state if we have nothing to show; if a cache was
+    // already painted, leave that content up rather than replacing it.
+    if (!articles.length) {
+      if (statusTxt) statusTxt.textContent = 'Feed sync failed — no signals available';
+      renderFeedFailure('The feed request failed before any relay responded.');
+    } else if (statusEl) {
+      statusEl.classList.add('hidden');
+    }
   }
 }
 
