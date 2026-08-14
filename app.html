@@ -745,6 +745,10 @@
      Keyboard users previously had almost no focus indicator. :focus-visible
      only triggers for keyboard navigation (not mouse clicks), so this adds a
      clear on-brand cyan ring without affecting the look during normal use. */
+  /* Placeholder text measured 2.4-3.5:1. Tailwind's prebuilt sheet only ships
+     placeholder-[#dbfcff]/30 and /40, so raise it here rather than invent a
+     utility class that would silently not exist in the build. */
+  input::placeholder, textarea::placeholder { color: rgba(219, 252, 255, 0.6); }
   :focus-visible {
     outline: 2px solid rgba(0, 240, 255, 0.9);
     outline-offset: 2px;
@@ -1162,7 +1166,7 @@
         <span class="text-[11px] font-bold tracking-[0.28em] uppercase text-[#dbfcff]/70 group-hover:text-[#dbfcff] transition-colors">Reader</span>
       </div>
     </a>
-    <nav class="hidden md:flex items-center gap-2 text-[#dbfcff]/30">
+    <nav class="hidden md:flex items-center gap-2 text-[#dbfcff]/60">
       <span class="font-headline text-[10px] uppercase tracking-widest">Deep Space Network</span>
       <span class="text-[#00f0ff]/40">›</span>
       <span id="breadcrumb" onclick="breadcrumbBack()" class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]">Galaxy Map</span>
@@ -1173,7 +1177,7 @@
       <div class="bg-[#131313]/60 border border-[#00f0ff]/20 rounded-full px-4 py-1.5 flex items-center gap-2 focus-within:border-[#00f0ff] transition-all">
         <span class="material-symbols-outlined text-[#00f0ff] text-lg">search</span>
         <input id="search-input" class="bg-transparent border-none focus:ring-0 text-xs font-headline text-[#dbfcff] placeholder-[#dbfcff]/40 w-48 outline-none" placeholder="Search articles..." type="text" autocomplete="off" oninput="handleSearch(this.value)" onkeydown="searchKeyNav(event)"/>
-        <button id="search-clear" onclick="clearSearch()" aria-label="Clear search" class="material-symbols-outlined text-[#dbfcff]/30 hover:text-[#dbfcff] text-base transition-all" style="display:none">close</button>
+        <button id="search-clear" onclick="clearSearch()" aria-label="Clear search" class="material-symbols-outlined text-[#dbfcff]/60 hover:text-[#dbfcff] text-base transition-all" style="display:none">close</button>
       </div>
       <!-- Search results dropdown -->
       <div id="search-results" style="display:none" class="absolute top-full left-0 mt-2 w-96 bg-[#0d1515] border border-[#00f0ff]/20 rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.6)] overflow-hidden z-50 max-h-[480px] overflow-y-auto">
@@ -1237,7 +1241,7 @@
       <span id="probe-report-title" class="font-headline text-[9px] uppercase tracking-widest text-[#00f0ff]/80">Probe Report</span>
     </div>
     <div id="probe-report-rows" class="flex flex-col gap-2">
-      <div class="text-[10px] text-[#dbfcff]/30 font-body italic">Awaiting probe telemetry…</div>
+      <div class="text-[10px] text-[#dbfcff]/60 font-body italic">Awaiting probe telemetry…</div>
     </div>
   </div>
   <div class="p-6 hidden md:block relative">
@@ -1253,7 +1257,7 @@
         <text x="98" y="11" text-anchor="middle" font-size="12" font-family="'Exo 2','Space Grotesk',sans-serif" fill="rgba(219,252,255,0.55)">Scan feeds for the latest signals</text>
       </svg>
     </div>
-    <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/30 uppercase tracking-widest mt-1.5 h-3"></p>
+    <p id="deploy-probe-status" class="text-[9px] font-headline text-center text-[#dbfcff]/60 uppercase tracking-widest mt-1.5 h-3"></p>
   </div>
   <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent w-[1px] h-3/4"></div>
 </aside>
@@ -2454,7 +2458,7 @@
             For You
           </button>
           <div class="cr-source-filter relative flex items-center gap-2">
-            <span class="material-symbols-outlined text-[#dbfcff]/40 text-base">filter_list</span>
+            <span class="material-symbols-outlined text-[#dbfcff]/65 text-base">filter_list</span>
             <select id="feed-source-tablet" onchange="filterBySource(this.value)"
               class="appearance-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
               <option value="All">All Sources</option>
@@ -2466,12 +2470,12 @@
         <div class="cr-feed-stats hidden md:flex bg-surface-container-low p-5 rounded-xl glow-border gap-6 items-center glass-panel shrink-0">
           <div class="text-center">
             <span class="block text-2xl font-bold font-headline text-[#00f0ff]">9</span>
-            <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/40">Articles</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/65">Articles</span>
           </div>
           <div class="h-8 w-px bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent"></div>
           <div class="text-center">
             <span class="block text-2xl font-bold font-headline text-[#ffb5a0]">4</span>
-            <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/40">Categories</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/65">Categories</span>
           </div>
           <div class="h-8 w-px bg-gradient-to-b from-transparent via-[#00f0ff]/20 to-transparent"></div>
           <div class="text-center">
@@ -2482,7 +2486,7 @@
                 <circle cx="12" cy="12" r="4.5" fill="#00f0ff"/>
               </svg>
             </span>
-            <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/40">Signal</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#dbfcff]/65">Signal</span>
           </div>
         </div>
       </section>
@@ -2508,7 +2512,7 @@
         </button>
         <!-- Source / publication filter (works alongside the category chips) -->
         <div class="cr-source-filter relative flex items-center gap-2">
-          <span class="material-symbols-outlined text-[#dbfcff]/40 text-base">filter_list</span>
+          <span class="material-symbols-outlined text-[#dbfcff]/65 text-base">filter_list</span>
           <select id="feed-source-desktop" onchange="filterBySource(this.value)"
             class="appearance-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
             <option value="All">All Sources</option>
@@ -2596,10 +2600,10 @@
             <span class="text-[#ffb5a0] font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">Physics Report</span>
             <h2 class="text-3xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight max-w-2xl">A Signal From Before the Stars: LIGO's Primordial Black Hole Detection</h2>
             <div class="flex items-center gap-5">
-              <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/40 flex items-center gap-1">
+              <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/65 flex items-center gap-1">
                 <span class="material-symbols-outlined text-sm">schedule</span> 5m read
               </span>
-              <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/40 flex items-center gap-1">
+              <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/65 flex items-center gap-1">
                 <span class="material-symbols-outlined text-sm">language</span> Universe Today
               </span>
             </div>
@@ -2614,10 +2618,10 @@
               <div class="w-10 h-10 rounded-lg bg-[#dbfcff]/10 flex items-center justify-center border border-[#dbfcff]/20">
                 <span class="material-symbols-outlined text-[#dbfcff] text-xl">bedtime</span>
               </div>
-              <span aria-hidden="true" class="material-symbols-outlined text-[#dbfcff]/20 hover:text-[#dbfcff] transition-all cursor-pointer text-lg">bookmark_add</span>
+              <span aria-hidden="true" class="material-symbols-outlined text-[#dbfcff]/55 hover:text-[#dbfcff] transition-all cursor-pointer text-lg">bookmark_add</span>
             </div>
             <h3 class="text-lg font-headline font-bold text-[#dbfcff] mb-2 leading-tight">Hunting Moon Water With Neutrons</h3>
-            <p class="text-[#dbfcff]/40 text-sm font-body line-clamp-3">NASA sends a clever instrument that hunts for water without digging, using subatomic particles to sniff out hidden ice deposits at the lunar south pole.</p>
+            <p class="text-[#dbfcff]/65 text-sm font-body line-clamp-3">NASA sends a clever instrument that hunts for water without digging, using subatomic particles to sniff out hidden ice deposits at the lunar south pole.</p>
           </div>
           <div class="mt-6 flex items-center justify-between">
             <span class="text-[10px] font-headline uppercase tracking-widest text-[#00f0ff]">Lunar Ops</span>
@@ -2633,10 +2637,10 @@
               <div class="w-10 h-10 rounded-lg bg-tertiary-container/10 flex items-center justify-center border border-tertiary-container/20">
                 <span class="material-symbols-outlined text-tertiary text-xl">whatshot</span>
               </div>
-              <span class="material-symbols-outlined text-[#dbfcff]/20 hover:text-[#dbfcff] transition-all cursor-pointer text-lg">bookmark_added</span>
+              <span class="material-symbols-outlined text-[#dbfcff]/55 hover:text-[#dbfcff] transition-all cursor-pointer text-lg">bookmark_added</span>
             </div>
             <h3 class="text-lg font-headline font-bold text-[#dbfcff] mb-2 leading-tight">How Did Venus Become a Hellscape?</h3>
-            <p class="text-[#dbfcff]/40 text-sm font-body line-clamp-3">234,000 simulations reveal four possible evolutionary paths that explain why Venus became a scorching inferno while Earth stayed habitable.</p>
+            <p class="text-[#dbfcff]/65 text-sm font-body line-clamp-3">234,000 simulations reveal four possible evolutionary paths that explain why Venus became a scorching inferno while Earth stayed habitable.</p>
           </div>
           <div class="mt-6 flex items-center justify-between">
             <span class="text-[10px] font-headline uppercase tracking-widest text-tertiary">Planetary Science</span>
@@ -2655,7 +2659,7 @@
             <h2 class="text-xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight">Hera Aces Massive Engine Burn to Didymos</h2>
             <p class="text-[#dbfcff]/50 text-sm font-body mb-5 leading-relaxed">ESA's Hera spacecraft completed its most dramatic deep-space orbital maneuver toward the asteroid deflection target system.</p>
             <div class="flex items-center gap-3">
-              <span class="text-[10px] font-headline text-[#dbfcff]/40">Reviewed by ESA Mission Team</span>
+              <span class="text-[10px] font-headline text-[#dbfcff]/65">Reviewed by ESA Mission Team</span>
             </div>
           </div>
         </article>
@@ -2674,7 +2678,7 @@
           </div>
           <div class="flex items-center gap-10 shrink-0 pr-2">
             <div class="hidden lg:block text-right">
-              <span class="block text-[10px] font-headline text-[#dbfcff]/30 uppercase tracking-widest">Signal Strength</span>
+              <span class="block text-[10px] font-headline text-[#dbfcff]/60 uppercase tracking-widest">Signal Strength</span>
               <div class="flex gap-0.5 mt-1">
                 <div class="w-1 h-3 bg-[#00f0ff] rounded-full"></div>
                 <div class="w-1 h-3 bg-[#00f0ff] rounded-full"></div>
@@ -2701,7 +2705,7 @@
           </div>
           <div class="flex items-center gap-10 shrink-0 pr-2">
             <div class="hidden lg:block text-right">
-              <span class="block text-[10px] font-headline text-[#dbfcff]/30 uppercase tracking-widest">Signal Strength</span>
+              <span class="block text-[10px] font-headline text-[#dbfcff]/60 uppercase tracking-widest">Signal Strength</span>
               <div class="flex gap-0.5 mt-1">
                 <div class="w-1 h-3 bg-[#ffb5a0] rounded-full"></div>
                 <div class="w-1 h-3 bg-[#ffb5a0] rounded-full"></div>
@@ -2720,7 +2724,7 @@
       <footer class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="flex items-center gap-3">
           <div class="w-2 h-2 rounded-full bg-[#00f0ff] shadow-[0_0_8px_#00f0ff] animate-pulse"></div>
-          <span id="hud-system-status" class="text-[10px] font-headline uppercase tracking-[0.3em] text-[#dbfcff]/40">System Status: Syncing…</span>
+          <span id="hud-system-status" class="text-[10px] font-headline uppercase tracking-[0.3em] text-[#dbfcff]/65">System Status: Syncing…</span>
         </div>
         <div class="flex items-center gap-2">
           <button id="page-prev" onclick="prevPage()" aria-label="Previous page" class="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-[#dbfcff]/55 hover:text-[#00f0ff] hover:border-[#00f0ff]/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
@@ -2728,14 +2732,14 @@
           </button>
           <div class="px-4 py-2 rounded-lg bg-surface-container-high border border-[#00f0ff]/20 min-w-[110px] text-center">
             <span id="page-current" class="text-xs font-headline font-bold text-[#00f0ff]">PAGE 01</span>
-            <span class="text-xs font-headline text-[#dbfcff]/40 mx-2">/</span>
-            <span id="page-total" class="text-xs font-headline text-[#dbfcff]/40">01</span>
+            <span class="text-xs font-headline text-[#dbfcff]/65 mx-2">/</span>
+            <span id="page-total" class="text-xs font-headline text-[#dbfcff]/65">01</span>
           </div>
           <button id="page-next" onclick="nextPage()" aria-label="Next page" class="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-[#dbfcff]/55 hover:text-[#00f0ff] hover:border-[#00f0ff]/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
             <span class="material-symbols-outlined text-sm">chevron_right</span>
           </button>
         </div>
-        <div id="hud-sync-meta" class="text-[10px] font-headline text-[#dbfcff]/20">Last sync: —</div>
+        <div id="hud-sync-meta" class="text-[10px] font-headline text-[#dbfcff]/55">Last sync: —</div>
       </footer>
     </div>
   </div>
@@ -2982,7 +2986,7 @@
            Hidden until there is at least one saved story. -->
       <div id="saved-controls" class="mb-6 flex flex-col sm:flex-row gap-3" style="display:none">
         <div class="relative flex-1">
-          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/30 text-base">search</span>
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/60 text-base">search</span>
           <input id="saved-search" type="text" oninput="renderSavedStories()" placeholder="Search saved…" autocomplete="off"
             class="w-full bg-surface-container-high border border-[#00f0ff]/20 rounded-full pl-9 pr-4 py-2.5 text-sm font-body text-[#dbfcff] placeholder-[#dbfcff]/30 focus:outline-none focus:border-[#00f0ff] transition-all"/>
         </div>
@@ -3013,7 +3017,7 @@
         <div class="text-center py-16">
           <span class="material-symbols-outlined text-[#00f0ff]/40 text-6xl mb-6 block">bookmark</span>
           <h2 class="text-xl font-headline font-bold tracking-tighter text-[#dbfcff]/60 mb-3">No Saved Stories Yet</h2>
-          <p class="text-[#dbfcff]/30 font-body max-w-sm mx-auto text-sm">Click Save Story on any article to bookmark it here.</p>
+          <p class="text-[#dbfcff]/60 font-body max-w-sm mx-auto text-sm">Click Save Story on any article to bookmark it here.</p>
         </div>
       </div>
     </div>
@@ -3042,7 +3046,7 @@
         </div>
       </div>
       <div id="trending-list" class="flex flex-col gap-3">
-        <p class="text-[#dbfcff]/30 font-body text-sm">Loading signals…</p>
+        <p class="text-[#dbfcff]/60 font-body text-sm">Loading signals…</p>
       </div>
     </div>
   </div>
@@ -3952,6 +3956,7 @@ function renderFeed(list) {
     const fb = pickFallback(a.category, a.title);
     // Dim + badge already-read articles (relative needed for the ::after badge).
     const readCls = isArticleRead(a) ? ' cr-read relative' : '';
+    const cardSaved = savedStories.some(s => _savedKey(s) === _savedKey(a));
     // For You reason label — only in For You mode, only for matched topics.
     const matched = forYouMode && Array.isArray(window._crTopics) && window._crTopics.indexOf(a.category) !== -1;
     const reasonPill = matched ? '<span class="cr-reason"><span class="material-symbols-outlined cr-reason-icon">auto_awesome</span>Because you follow ' + escHtml(a.category) + '</span>' : '';
@@ -3966,8 +3971,8 @@ function renderFeed(list) {
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
           <h2 class="text-3xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight max-w-2xl">${escHtml(a.title)}</h2>
           <div class="flex items-center gap-5">
-            <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/40 flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> ${a.readTime} read</span>
-            <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/40 flex items-center gap-1"><span class="material-symbols-outlined text-sm">language</span> ${escHtml(a.source)}</span>
+            <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/65 flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> ${a.readTime} read</span>
+            <span class="font-headline text-[10px] uppercase tracking-widest text-[#dbfcff]/65 flex items-center gap-1"><span class="material-symbols-outlined text-sm">language</span> ${escHtml(a.source)}</span>
           </div>
         </div>
       </article>`;
@@ -3979,10 +3984,10 @@ function renderFeed(list) {
             <div class="w-10 h-10 rounded-lg bg-[#dbfcff]/10 flex items-center justify-center border border-[#dbfcff]/20">
               <span class="material-symbols-outlined text-[#dbfcff] text-xl">${CAT_ICON[a.category]||'article'}</span>
             </div>
-            <span aria-hidden="true" class="material-symbols-outlined text-[#dbfcff]/20 hover:text-[#dbfcff] transition-all cursor-pointer text-lg">bookmark_add</span>
+            <button type="button" onclick="event.stopPropagation(); toggleSaveFromCard(${i}, this)" aria-pressed="${cardSaved ? 'true' : 'false'}" aria-label="${cardSaved ? 'Remove from saved stories' : 'Save story'}" class="material-symbols-outlined text-[#dbfcff]/55 hover:text-[#dbfcff] transition-all cursor-pointer text-lg"${cardSaved ? ' style="color:#00f0ff"' : ''}>${cardSaved ? 'bookmark_added' : 'bookmark_add'}</button>
           </div>
           <h3 class="text-lg font-headline font-bold text-[#dbfcff] mb-2 leading-tight">${escHtml(a.title)}</h3>
-          <p class="text-[#dbfcff]/40 text-sm font-body line-clamp-3">${escHtml(a.excerpt)}</p>
+          <p class="text-[#dbfcff]/65 text-sm font-body line-clamp-3">${escHtml(a.excerpt)}</p>
         </div>
         <div class="mt-5 flex items-center justify-between">
           <span class="text-[10px] font-headline uppercase tracking-widest ${cc}">${a.category} · ${escHtml(a.source)}</span>
@@ -4000,7 +4005,7 @@ function renderFeed(list) {
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-3 block">${a.category}</span>
           <h2 class="text-xl font-headline font-bold text-[#dbfcff] mb-3 leading-tight">${escHtml(a.title)}</h2>
           <p class="text-[#dbfcff]/50 text-sm font-body mb-4 leading-relaxed line-clamp-3">${escHtml(a.excerpt)}</p>
-          <span class="text-[10px] font-headline text-[#dbfcff]/30">${escHtml(a.source)} · ${a.date}</span>
+          <span class="text-[10px] font-headline text-[#dbfcff]/60">${escHtml(a.source)} · ${a.date}</span>
         </div>
       </article>`;
     // style === 'row'
@@ -4020,8 +4025,8 @@ function renderFeed(list) {
         </div>
         <div class="flex items-center gap-6 shrink-0 pr-2">
           <div class="hidden lg:block text-right">
-            <span class="block text-[10px] font-headline text-[#dbfcff]/30 uppercase tracking-widest">${escHtml(a.source)}</span>
-            <span class="block text-[10px] font-headline text-[#dbfcff]/20">${a.date}</span>
+            <span class="block text-[10px] font-headline text-[#dbfcff]/60 uppercase tracking-widest">${escHtml(a.source)}</span>
+            <span class="block text-[10px] font-headline text-[#dbfcff]/55">${a.date}</span>
           </div>
           <button class="px-4 py-2 bg-[#dbfcff]/5 border border-[#dbfcff]/10 hover:border-[#dbfcff]/40 rounded-lg text-[10px] font-headline uppercase tracking-widest text-[#dbfcff] transition-all">Read Signal</button>
         </div>
@@ -4500,7 +4505,7 @@ function handleSearch(q) {
   const matches = scored.slice(0, 10);
 
   if (!matches.length) {
-    inner.innerHTML = `<div class="px-5 py-6 text-center text-[#dbfcff]/30 font-headline text-xs uppercase tracking-widest">No results for "${escHtml(q)}"</div>`;
+    inner.innerHTML = `<div class="px-5 py-6 text-center text-[#dbfcff]/60 font-headline text-xs uppercase tracking-widest">No results for "${escHtml(q)}"</div>`;
     wrap.style.display = '';
     return;
   }
@@ -4513,7 +4518,7 @@ function handleSearch(q) {
     const snippetHtml = titleHasAll ? '' :
       `<p class="text-[11px] font-body text-[#dbfcff]/45 leading-snug mt-1 line-clamp-2">${_searchHighlight(_searchSnippet(bodyRaw, terms), terms)}</p>`;
     return `<button data-ri="${ri}" onclick="searchOpen(${i})" class="search-result-item w-full text-left px-5 py-3.5 border-b border-white/5 last:border-0 hover:bg-[#00f0ff]/5 transition-colors flex items-start gap-3">
-      <span class="material-symbols-outlined text-[#dbfcff]/30 text-lg mt-0.5">${CAT_ICON[a.category]||'article'}</span>
+      <span class="material-symbols-outlined text-[#dbfcff]/60 text-lg mt-0.5">${CAT_ICON[a.category]||'article'}</span>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-headline text-[#dbfcff] leading-snug mb-1 line-clamp-2">${titleHtml}</p>
         <p class="text-[10px] font-headline uppercase tracking-widest ${cc(a.category)}">${escHtml(a.category)} · ${escHtml(a.source||'')}</p>
@@ -4814,6 +4819,23 @@ function _updateSaveButton(isSaved) {
   if (btn)   btn.setAttribute('aria-pressed', isSaved ? 'true' : 'false');
 }
 
+// Quick-save straight from a feed card. This control used to be a decorative
+// <span> with cursor:pointer and no handler at all, so clicking it bubbled to the
+// card and opened the article instead of saving. Route it through saveStory(),
+// which owns persistence, the Undo toast and the detail-view button state, then
+// reflect the result on the card control itself.
+function toggleSaveFromCard(idx, el) {
+  saveStory(idx);
+  const a = articles[idx];
+  const saved = !!a && savedStories.some(s => _savedKey(s) === _savedKey(a));
+  if (el) {
+    el.textContent = saved ? 'bookmark_added' : 'bookmark_add';
+    el.setAttribute('aria-pressed', saved ? 'true' : 'false');
+    el.setAttribute('aria-label', saved ? 'Remove from saved stories' : 'Save story');
+    el.style.color = saved ? '#00f0ff' : '';
+  }
+}
+
 function saveStory(idx) {
   const a = articles[idx];
   if (!a) return;
@@ -4949,7 +4971,7 @@ function renderSavedStories() {
       <div class="text-center py-16">
         <span class="material-symbols-outlined text-[#00f0ff]/40 text-6xl mb-6 block">bookmark</span>
         <h2 class="text-xl font-headline font-bold tracking-tighter text-[#dbfcff]/60 mb-3">No Saved Stories Yet</h2>
-        <p class="text-[#dbfcff]/30 font-body max-w-sm mx-auto text-sm">Click Save Story on any article to bookmark it here.</p>
+        <p class="text-[#dbfcff]/60 font-body max-w-sm mx-auto text-sm">Click Save Story on any article to bookmark it here.</p>
       </div>`;
     return;
   }
@@ -4991,7 +5013,7 @@ function renderSavedStories() {
         <span class="w-1.5 h-1.5 bg-[#00f0ff] rounded-full"></span>
         <span class="font-headline text-[10px] uppercase tracking-widest text-[#00f0ff]/60">${countLabel}</span>
       </div>
-      <div class="text-center py-12 text-[#dbfcff]/30 font-body text-sm">No saved stories match your filters.</div>`;
+      <div class="text-center py-12 text-[#dbfcff]/60 font-body text-sm">No saved stories match your filters.</div>`;
     return;
   }
 
@@ -5016,8 +5038,8 @@ function renderSavedStories() {
             <p class="text-[10px] text-[#dbfcff]/60 font-body mt-1 line-clamp-1">${escHtml(a.excerpt.slice(0,120))}</p>
           </div>
           <div class="flex items-center justify-between mt-2">
-            <span class="text-[10px] text-[#dbfcff]/30 font-headline">${a.date}</span>
-            <button onclick="event.stopPropagation(); removeSaved(this.dataset.key);" data-key="${escHtml(_savedKey(a))}" class="text-[10px] font-headline uppercase tracking-widest text-[#dbfcff]/20 hover:text-[#ffb5a0] transition-colors px-2 py-1">Remove</button>
+            <span class="text-[10px] text-[#dbfcff]/60 font-headline">${a.date}</span>
+            <button onclick="event.stopPropagation(); removeSaved(this.dataset.key);" data-key="${escHtml(_savedKey(a))}" class="text-[10px] font-headline uppercase tracking-widest text-[#dbfcff]/55 hover:text-[#ffb5a0] transition-colors px-2 py-1">Remove</button>
           </div>
         </div>
       </article>`;
@@ -5257,7 +5279,7 @@ function renderTrending() {
   if (!container) return;
 
   if (!articles.length) {
-    container.innerHTML = '<p class="text-[#dbfcff]/30 font-body text-sm">Waiting for live signals…</p>';
+    container.innerHTML = '<p class="text-[#dbfcff]/60 font-body text-sm">Waiting for live signals…</p>';
     return;
   }
 
@@ -5280,7 +5302,7 @@ function renderTrending() {
     <article onclick="openArticle(${artIdx})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="group flex items-center gap-5 p-4 bg-surface-container-low/50 border border-white/5 rounded-xl hover:bg-surface-container-low hover:border-[#00f0ff]/15 transition-all cursor-pointer">
       <!-- Rank -->
       <div class="w-10 h-10 shrink-0 flex items-center justify-center rounded-lg border ${rb} bg-surface-container-highest/50">
-        <span class="font-headline font-bold text-sm ${rank <= 3 ? rc : 'text-[#dbfcff]/20'}">${rank <= 3 ? '#' : ''}${rank}</span>
+        <span class="font-headline font-bold text-sm ${rank <= 3 ? rc : 'text-[#dbfcff]/55'}">${rank <= 3 ? '#' : ''}${rank}</span>
       </div>
       <!-- Thumbnail -->
       <div class="w-16 h-12 shrink-0 rounded-lg overflow-hidden hidden sm:block">
@@ -5291,15 +5313,15 @@ function renderTrending() {
         <div class="flex items-center gap-2 mb-1">
           <span class="material-symbols-outlined ${cc} text-sm">${ic}</span>
           <span class="${cc} font-headline text-[9px] uppercase tracking-widest">${a.category}</span>
-          <span class="text-[#dbfcff]/20 text-[9px]">·</span>
-          <span class="font-headline text-[9px] uppercase tracking-widest text-[#dbfcff]/30">${escHtml(a.source)}</span>
+          <span class="text-[#dbfcff]/55 text-[9px]">·</span>
+          <span class="font-headline text-[9px] uppercase tracking-widest text-[#dbfcff]/60">${escHtml(a.source)}</span>
         </div>
         <h4 class="font-headline font-bold text-[#dbfcff] text-sm leading-tight truncate">${escHtml(a.title)}</h4>
       </div>
       <!-- Meta -->
       <div class="shrink-0 hidden md:flex flex-col items-end gap-1">
-        <span class="font-headline text-[9px] text-[#dbfcff]/20 uppercase tracking-widest">${a.date || 'Recent'}</span>
-        <span class="font-headline text-[9px] text-[#dbfcff]/20">${a.readTime || '—'} read</span>
+        <span class="font-headline text-[9px] text-[#dbfcff]/55 uppercase tracking-widest">${a.date || 'Recent'}</span>
+        <span class="font-headline text-[9px] text-[#dbfcff]/55">${a.readTime || '—'} read</span>
       </div>
       <span class="material-symbols-outlined text-[#00f0ff] opacity-0 group-hover:opacity-100 transition-all shrink-0 text-sm">arrow_forward</span>
     </article>`;
@@ -6078,7 +6100,7 @@ let probeDeployed = false;
 function _prRow(icon, label, val) {
   return '<div class="flex items-center gap-2 text-[11px] leading-tight">' +
     '<span class="material-symbols-outlined text-[#00f0ff]/55 text-[14px] shrink-0">' + icon + '</span>' +
-    '<span class="text-[#dbfcff]/40 uppercase tracking-wider text-[9px] w-[4.4rem] shrink-0">' + label + '</span>' +
+    '<span class="text-[#dbfcff]/65 uppercase tracking-wider text-[9px] w-[4.4rem] shrink-0">' + label + '</span>' +
     '<span class="text-[#dbfcff]/90 font-medium truncate min-w-0">' + escHtml(val) + '</span></div>';
 }
 function showProbeReport(d) {
