@@ -573,6 +573,12 @@
   /* View switching — !important ensures the ID selector on body doesn't interfere */
   .view { display: none !important; }
   .view.active { display: flex !important; }
+  /* Every main content section sits on solid black, matching the galaxy map's
+     #000. Background colour ONLY — none of the map's starfield/glow effects are
+     carried over, and the fixed top bar + sidebar keep their own translucent
+     chrome untouched. The inner wrappers are transparent (layout utilities
+     only), so this single rule is all that's needed. */
+  .view { background: #000; }
   /* Map view is full-screen flex row; all others are flex column with internal scroll */
   #view-feed.active, #view-detail.active, #view-reading.active,
   #view-saved.active, #view-trending.active {
