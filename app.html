@@ -4141,6 +4141,16 @@ const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 // set dressing — a hardcoded "Live Feed Active", fixed New York coordinates and
 // a fake relay id — which meant the status line claimed a healthy feed even
 // during a total outage. They now report what actually happened.
+function setFeedTelemetryCached(articleCount, ts) {
+  const st = document.getElementById('hud-system-status');
+  if (st) st.textContent = 'System Status: Cached Signals';
+  const meta = document.getElementById('hud-sync-meta');
+  if (meta) {
+    meta.textContent = 'Last sync: ' + (ts ? new Date(ts).toLocaleTimeString() : '—')
+      + ' · ' + articleCount + ' signals (cached)';
+  }
+}
+
 function updateFeedTelemetry(feedsOnline, feedsTotal, articleCount) {
   // Never report more sources online than exist. The initial load pulls the
   // FEEDS list plus SpaceNews (fetched via its own API), while a manual probe
@@ -4168,11 +4178,13 @@ async function loadLiveFeeds() {
   // ── Read cache (used for stale-while-revalidate) ──
   let cachedArticles = null;
   let cacheAge = Infinity;
+  let cacheTs = 0;
   try {
     const c = JSON.parse(sessionStorage.getItem(_CR_CACHE_KEY) || '{}');
     if (c.articles?.length) {
       cachedArticles = c.articles;
-      cacheAge = Date.now() - (c.ts || 0);
+      cacheTs = c.ts || 0;
+      cacheAge = Date.now() - cacheTs;
     }
   } catch(e) {}
 
@@ -4196,6 +4208,10 @@ async function loadLiveFeeds() {
         statusTxt.textContent = 'Showing cached signals — refreshing in background…';
       }
     }
+    // A fresh cache returns early, so the network completion block below never
+    // runs — without this the HUD sat on its "Syncing…" placeholder while a full
+    // set of cached signals was already on screen.
+    setFeedTelemetryCached(articles.length, cacheTs);
     if (cacheAge < _CR_CACHE_TTL) return; // fresh — done, no refetch
   }
 
