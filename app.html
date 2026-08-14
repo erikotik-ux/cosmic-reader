@@ -4279,7 +4279,7 @@ async function loadLiveFeeds() {
       populateSourceFilter();
       // Seed the sidebar Probe Report panel with the initial sync stats.
       updateFeedTelemetry(liveCount, FEEDS.length + 1, articles.length);
-      showProbeReport({ feedsOnline: liveCount, feedsTotal: FEEDS.length, total: articles.length, top: articles[0], time: new Date().toLocaleTimeString(), initial: true });
+      showProbeReport({ feedsOnline: liveCount, feedsTotal: FEEDS.length + 1, total: articles.length, top: articles[0], time: new Date().toLocaleTimeString(), initial: true });
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
         setTimeout(() => statusEl.classList.add('hidden'), 4000);
@@ -6105,6 +6105,10 @@ function _prRow(icon, label, val) {
 }
 function showProbeReport(d) {
   d = d || {};
+  // The initial sync pulls the FEEDS list plus SpaceNews (its own API), so
+  // feedsOnline could exceed feedsTotal and the panel rendered "10 of 9 online".
+  // Clamp here so every call path stays sane.
+  const relayTotal = Math.max(d.feedsTotal || 0, d.feedsOnline || 0);
   const rowsEl = document.getElementById('probe-report-rows');
   const titleEl = document.getElementById('probe-report-title');
   if (!rowsEl) return;
@@ -6114,13 +6118,13 @@ function showProbeReport(d) {
            _prRow('inventory_2', 'Fallback', d.detail || 'Cached signals kept') +
            _prRow('schedule', 'Last try', d.time || new Date().toLocaleTimeString());
   } else if (d.initial) {
-    rows = _prRow('cell_tower', 'Relays', d.feedsOnline + ' of ' + d.feedsTotal + ' online') +
+    rows = _prRow('cell_tower', 'Relays', d.feedsOnline + ' of ' + relayTotal + ' online') +
            _prRow('inventory_2', 'Signals', d.total + ' loaded') +
            _prRow('leaderboard', 'Ranking', 'Synced') +
            (d.top && d.top.title ? _prRow('kid_star', 'Top signal', d.top.title) : '') +
            _prRow('schedule', 'Last sync', d.time);
   } else {
-    rows = _prRow('cell_tower', 'Relays', d.feedsOnline + ' of ' + d.feedsTotal + ' online') +
+    rows = _prRow('cell_tower', 'Relays', d.feedsOnline + ' of ' + relayTotal + ' online') +
            _prRow('auto_awesome', 'New signals', d.newCount > 0 ? ('+' + d.newCount + ' detected') : 'No new signals') +
            _prRow('leaderboard', 'Ranking', 'Recalibrated') +
            (d.top && d.top.title ? _prRow('kid_star', 'Top signal', d.top.title) : '') +
