@@ -634,7 +634,10 @@
       font-size: 0.7rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(0, 240, 255, 0.55);
+      /* Was 0.55. Combined with the pulse below, the effective alpha fell to
+         0.22 at the trough (1.56:1) and only reached 3.28:1 at the peak, so the
+         hint failed WCAG AA at EVERY point in its cycle. */
+      color: rgba(0, 240, 255, 0.9);
       pointer-events: none;
       z-index: 5;
       white-space: nowrap;
@@ -642,9 +645,13 @@
     }
   }
   .cr-map-hint .material-symbols-outlined { font-size: 14px; }
+  /* Trough lifted from 0.4 to 0.7 so the whole cycle clears AA (5.95:1 at the
+     trough, 11.96:1 at the peak). The breathing motion is preserved, just with a
+     narrower amplitude. Reduced-motion users get opacity 1 via `animation: none`
+     below, which was already the only passing state. */
   @keyframes cr-map-hint-pulse {
-    0%, 100% { opacity: 0.4; }
-    50%      { opacity: 0.8; }
+    0%, 100% { opacity: 0.7; }
+    50%      { opacity: 1;   }
   }
   @media (prefers-reduced-motion: reduce) {
     .cr-map-hint { animation: none; }
@@ -5381,6 +5388,21 @@ function renderTrending() {
 }
 
 // ── State ─────────────────────────────────────────────────
+// ── Deep-linkable views ────────────────────────────────────
+// Every view previously lived at /app.html with no URL of its own: Saved
+// Stories could not be bookmarked, no view could be sent to anyone, and a
+// refresh mid-session always dumped the user back on the Galaxy Map.
+// Article-level links are deliberately EXCLUDED: article indices are re-derived
+// on every feed fetch, so a "#article/3" link would point at a different story
+// tomorrow. Restoring a view is safe; restoring an index is not.
+const CR_ROUTABLE_VIEWS = new Set(['map', 'feed', 'saved', 'trending', 'comms']);
+
+function crRestoreViewFromHash() {
+  const v = (location.hash || '').replace(/^#/, '');
+  // fromPop: the hash is already correct, so don't push a duplicate entry.
+  if (v && CR_ROUTABLE_VIEWS.has(v) && v !== currentView) navigate(v, { fromPop: true });
+}
+
 let currentView = 'map';
 let currentArticle = 0;
 
@@ -5390,7 +5412,12 @@ function navigate(viewName, opts) {
   // Push a browser-history entry so the hardware/trackpad Back gesture works.
   // Skipped when we're already responding to a popstate (Back) event.
   if (!opts.fromPop && viewName !== currentView) {
-    try { history.pushState({ crView: viewName }, ''); } catch (e) {}
+    try {
+      // Detail and reading intentionally do not get their own URL — they depend
+      // on an article index that will not survive a reload.
+      if (CR_ROUTABLE_VIEWS.has(viewName)) history.pushState({ crView: viewName }, '', '#' + viewName);
+      else                                 history.pushState({ crView: viewName }, '');
+    } catch (e) {}
   }
   // Hide all views
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -5500,6 +5527,9 @@ window.addEventListener('popstate', function (e) {
   const v = (e.state && e.state.crView) || 'map';
   navigate(v, { fromPop: true });
 });
+
+// Typed or pasted hash (no popstate fires for a manual edit).
+window.addEventListener('hashchange', crRestoreViewFromHash);
 
 // Esc closes article views (chat handles its own Esc separately).
 document.addEventListener('keydown', function (e) {
@@ -6264,6 +6294,34 @@ async function deployProbe() {
         top:         articles[0],
         time:        new Date().toLocaleTimeString()
       });
+      // The refresh used to finish silently for anyone not watching the 9px
+      // sidebar panel: #feed-status kept a stale timestamp and no toast fired,
+      // so users re-clicked or assumed the button was decorative. Report the
+      // outcome where they are actually looking.
+      const _pStatusEl  = document.getElementById('feed-status');
+      const _pStatusTxt = document.getElementById('feed-status-text');
+      if (_pStatusTxt) {
+        _pStatusTxt.textContent = merged.length + ' signals · '
+          + (newCount > 0 ? newCount + ' new' : 'no new signals')
+          + ' — ' + new Date().toLocaleTimeString();
+      }
+      if (_pStatusEl) {
+        _pStatusEl.classList.remove('hidden');
+        setTimeout(() => _pStatusEl.classList.add('hidden'), 4000);
+      }
+      if (newCount > 0) {
+        showToast(newCount + ' new signal' + (newCount === 1 ? '' : 's') + ' received', {
+          icon: 'satellite_alt',
+          actionLabel: 'Jump to top',
+          onAction: () => {
+            navigate('feed');
+            const sc = document.querySelector('#view-feed .overflow-y-auto');
+            if (sc) sc.scrollTop = 0;
+          }
+        });
+      } else {
+        showToast('No new signals since last sync', { icon: 'satellite_alt' });
+      }
     } else {
       if (icon)   icon.textContent   = 'signal_disconnected';
       if (label)  label.textContent  = 'No Signal';
@@ -6356,6 +6414,9 @@ if (savedStories.length > 0) renderSavedStories();
 loadLiveFeeds();
 // Live Launch Tracker — fires once at boot, ticks the countdown every second
 loadNextLaunch();
+// Honour a deep link like /app.html#saved on first paint, so a refresh keeps
+// the user where they were instead of returning them to the Galaxy Map.
+crRestoreViewFromHash();
 
 // Draw constellation lines after layout settles, and on resize
 window.addEventListener('load', () => {
