@@ -4142,10 +4142,14 @@ const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 // a fake relay id — which meant the status line claimed a healthy feed even
 // during a total outage. They now report what actually happened.
 function updateFeedTelemetry(feedsOnline, feedsTotal, articleCount) {
+  // Never report more sources online than exist. The initial load pulls the
+  // FEEDS list plus SpaceNews (fetched via its own API), while a manual probe
+  // refresh only re-runs FEEDS — so callers pass different totals.
+  const total = Math.max(feedsTotal, feedsOnline);
   const st = document.getElementById('hud-system-status');
   if (st) {
     st.textContent = feedsOnline > 0
-      ? 'System Status: ' + feedsOnline + '/' + feedsTotal + ' Feeds Online'
+      ? 'System Status: ' + feedsOnline + '/' + total + ' Feeds Online'
       : 'System Status: No Signal';
   }
   const meta = document.getElementById('hud-sync-meta');
@@ -4253,7 +4257,7 @@ async function loadLiveFeeds() {
       if (feedCountEl) feedCountEl.textContent = liveCount > 0 ? liveCount : FEEDS.length + 1;
       populateSourceFilter();
       // Seed the sidebar Probe Report panel with the initial sync stats.
-      updateFeedTelemetry(liveCount, FEEDS.length, articles.length);
+      updateFeedTelemetry(liveCount, FEEDS.length + 1, articles.length);
       showProbeReport({ feedsOnline: liveCount, feedsTotal: FEEDS.length, total: articles.length, top: articles[0], time: new Date().toLocaleTimeString(), initial: true });
       if (statusEl) {
         statusTxt.textContent = articles.length + ' live signals loaded from ' + liveCount + ' feeds — ' + new Date().toLocaleTimeString();
