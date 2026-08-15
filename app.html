@@ -748,7 +748,6 @@
   .cr-hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
   .cr-hide-scrollbar::-webkit-scrollbar { width: 0; height: 0; display: none; }
   .clock-display { font-variant-numeric: tabular-nums; }
-  .article-card-hover:hover { background: rgba(30,30,30,0.8); }
 
   /* ── Accessibility: visible keyboard focus ──────────────────────────────
      Keyboard users previously had almost no focus indicator. :focus-visible
@@ -2609,7 +2608,7 @@
       <div id="article-grid" class="grid grid-cols-1 md:grid-cols-12 gap-5">
 
         <!-- Large Feature Card (col-8) -->
-        <article data-category="Physics" onclick="openArticle(0)" tabindex="0" role="button" data-keyactivate class="md:col-span-8 bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
+        <article data-category="Physics" onclick="openArticle(0)" tabindex="0" role="button" data-keyactivate class="md:col-span-8 bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 transition-all group relative cursor-pointer" style="height:360px;">
           <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
           <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg" alt="Gravitational waves eject black hole — Hubble"/>
           <div class="absolute top-5 left-5 z-20 flex items-center gap-2">
@@ -2633,7 +2632,7 @@
         </article>
 
         <!-- Side Card: Moon -->
-        <article data-category="Moon" onclick="openArticle(1)" tabindex="0" role="button" data-keyactivate class="md:col-span-4 bg-surface-container-low rounded-xl glow-border p-5 flex flex-col justify-between group glass-panel relative overflow-hidden cursor-pointer article-card-hover transition-colors">
+        <article data-category="Moon" onclick="openArticle(1)" tabindex="0" role="button" data-keyactivate class="md:col-span-4 bg-surface-container-low/50 rounded-xl border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 p-5 flex flex-col justify-between group relative overflow-hidden cursor-pointer transition-all">
           <div class="absolute top-0 right-0 w-28 h-28 bg-[#dbfcff]/5 blur-3xl -mr-12 -mt-12"></div>
           <div>
             <div class="flex justify-between items-start mb-6">
@@ -2652,7 +2651,7 @@
         </article>
 
         <!-- Side Card: AI/Tech -->
-        <article data-category="Planets" onclick="openArticle(4)" tabindex="0" role="button" data-keyactivate class="md:col-span-4 bg-surface-container-low rounded-xl glow-border p-5 flex flex-col justify-between group glass-panel relative overflow-hidden cursor-pointer article-card-hover transition-colors">
+        <article data-category="Planets" onclick="openArticle(4)" tabindex="0" role="button" data-keyactivate class="md:col-span-4 bg-surface-container-low/50 rounded-xl border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 p-5 flex flex-col justify-between group relative overflow-hidden cursor-pointer transition-all">
           <div class="absolute bottom-0 left-0 w-28 h-28 bg-[#e7d0ff]/5 blur-3xl -ml-12 -mb-12"></div>
           <div>
             <div class="flex justify-between items-start mb-6">
@@ -2671,7 +2670,7 @@
         </article>
 
         <!-- Medium Feature Card (col-8) -->
-        <article data-category="Missions" onclick="openArticle(2)" tabindex="0" role="button" data-keyactivate class="md:col-span-8 grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
+        <article data-category="Missions" onclick="openArticle(2)" tabindex="0" role="button" data-keyactivate class="md:col-span-8 grid grid-cols-1 md:grid-cols-2 bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 group cursor-pointer transition-all">
           <div class="relative h-52 md:h-auto overflow-hidden">
             <img class="article-img absolute inset-0 w-full h-full object-cover" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg" alt="Hubble images DART impact ejecta at Dimorphos"/>
             <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
@@ -3985,7 +3984,7 @@ function renderFeed(list) {
     const reasonRow = matched ? '<div class="mb-2">' + reasonPill + '</div>' : '';
     const reasonOverlay = matched ? '<div class="absolute z-30" style="top:0.75rem;left:0.75rem;">' + reasonPill + '</div>' : '';
     if (style === 'hero') return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} bg-surface-container-low rounded-xl overflow-hidden glow-border group relative cursor-pointer" style="height:360px;">
+      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 transition-all group relative cursor-pointer" style="height:360px;">
         <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10${a.title.length > 60 ? ' cr-hero-grad-long' : ''}"></div>
         <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         ${reasonOverlay}
@@ -3999,7 +3998,7 @@ function renderFeed(list) {
         </div>
       </article>`;
     if (style === 'small') return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} bg-surface-container-low rounded-xl glow-border p-5 flex flex-col justify-between group glass-panel relative overflow-hidden cursor-pointer article-card-hover transition-colors">
+      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} bg-surface-container-low/50 rounded-xl border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 p-5 flex flex-col justify-between group relative overflow-hidden cursor-pointer transition-all">
         <div>
           ${reasonRow}
           <div class="flex justify-between items-start mb-5">
@@ -4017,7 +4016,7 @@ function renderFeed(list) {
         </div>
       </article>`;
     if (style === 'medium') return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-colors">
+      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 group cursor-pointer transition-all">
         <div class="relative h-52 md:h-auto overflow-hidden">
           <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block"></div>
@@ -4033,7 +4032,7 @@ function renderFeed(list) {
     // style === 'row'
     const ic = CAT_ICON[a.category] || 'article';
     return `
-      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low transition-all cursor-pointer">
+      <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} bg-surface-container-low/50 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center gap-6 group hover:bg-surface-container-low hover:border-[#00f0ff]/15 transition-all cursor-pointer">
         <div class="w-full md:w-28 h-20 rounded-lg overflow-hidden shrink-0">
           <img class="article-img w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
@@ -5089,7 +5088,7 @@ function renderSavedStories() {
       const cc = CAT_COLOR[a.category] || 'text-[#00f0ff]';
       const fb = pickFallback(a.category, a.title);
       return `
-      <article data-k="${escHtml(_savedKey(a))}" onclick="openSavedStory(this.dataset.k)" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="bg-surface-container-low rounded-xl overflow-hidden glow-border group cursor-pointer article-card-hover transition-all flex">
+      <article data-k="${escHtml(_savedKey(a))}" onclick="openSavedStory(this.dataset.k)" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 group cursor-pointer transition-all flex">
         <div class="w-32 self-stretch shrink-0 overflow-hidden relative">
           <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         </div>
