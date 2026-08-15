@@ -2785,10 +2785,10 @@
 <!-- ═══════════════════════════════════════════════════════ -->
 <main id="view-detail" class="view h-screen w-full overflow-hidden relative">
   <!-- Blurred BG -->
-  <div class="fixed inset-0 z-0 overflow-hidden opacity-30 blur-lg grayscale">
+  <div class="fixed inset-0 z-0 overflow-hidden opacity-25 blur-lg grayscale">
     <img id="detail-bg" class="w-full h-full object-cover scale-110" src="" alt=""/>
   </div>
-  <div class="fixed inset-0 bg-[#131313]/70 z-0"></div>
+  <div class="fixed inset-0 bg-black/90 z-0"></div>
 
   <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
     <div class="max-w-5xl mx-auto px-6 pt-2 pb-10 md:pt-10">
@@ -2796,20 +2796,20 @@
       <!-- Cyan glow + cyan hairline removed and the fill made near-opaque: at
            50% the blurred hero image behind read straight through and lit the
            whole panel up. Neutral hairline matches the article cards. -->
-      <div class="cr-card-blur bg-[#16181a]/95 relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(0,240,255,0.45);">
+      <div class="cr-card-blur bg-[#101a1c]/95 relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(0,240,255,0.25);">
         <!-- Left accent line -->
         <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-transparent opacity-60"></div>
         <!-- Hero Image -->
         <div class="lg:col-span-5 h-64 lg:h-full relative overflow-hidden min-h-64">
           <img id="detail-img" class="w-full h-full object-cover" src="" alt=""/>
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#16181a] z-10 hidden lg:block"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-[#16181a] to-transparent lg:hidden block z-10"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#101a1c] z-10 hidden lg:block"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#101a1c] to-transparent lg:hidden block z-10"></div>
           <div class="absolute bottom-4 left-5 z-20">
             <span id="detail-coord" class="font-headline text-[10px] uppercase tracking-[0.2em] text-primary bg-background/60 backdrop-blur-md px-2 py-1 rounded-sm border border-primary/20">Coordinate: XX.XX.XX</span>
           </div>
         </div>
         <!-- Content -->
-        <div class="lg:col-span-7 p-8 lg:p-10 flex flex-col bg-[#16181a]">
+        <div class="lg:col-span-7 p-8 lg:p-10 flex flex-col bg-[#101a1c]">
           <div class="flex items-center gap-3 mb-5">
             <div class="h-px w-8 bg-secondary"></div>
             <span id="detail-tag" class="font-headline uppercase tracking-widest text-[10px] text-secondary font-bold">Transmission Received</span>
@@ -2860,19 +2860,19 @@
 
       <!-- Stat Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div id="stat1" class="bg-[#16181a]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.45);">
+        <div id="stat1" class="bg-[#101a1c]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.25);">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Category</p>
           <div class="flex items-end gap-2">
             <span id="stat1-val" class="text-2xl font-headline font-bold text-primary">—</span>
           </div>
         </div>
-        <div class="bg-[#16181a]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.45);">
+        <div class="bg-[#101a1c]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.25);">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Source</p>
           <div class="flex items-end gap-2">
             <span id="stat2-val" class="text-xl font-headline font-bold text-secondary">—</span>
           </div>
         </div>
-        <div class="bg-[#16181a]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.45);">
+        <div class="bg-[#101a1c]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(0,240,255,0.25);">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Date Received</p>
           <div class="flex items-end gap-2">
             <span id="stat3-val" class="text-xl font-headline font-bold text-on-surface">—</span>
