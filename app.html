@@ -6662,6 +6662,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let _cachedSettings = null; // populated on first menu open
 
+  // ── Settings modal focus management ────────────────────────────
+  // The panel already carries role="dialog" + aria-modal="true", but without
+  // a focus trap Tab walked straight out of it and into the dashboard behind
+  // the overlay — landing on controls that are visually covered.
+  // Focus only: no auth, account or network behaviour is touched here.
+  let _settingsPrevFocus = null;
+
+  // Visible, focusable descendants of the panel, in DOM order. offsetParent
+  // filters out the hidden avatar file input (display:none) and anything the
+  // form conditionally hides.
+  function _settingsFocusables() {
+    const panel = document.querySelector('#settings-overlay .settings-panel');
+    if (!panel) return [];
+    const sel = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    return Array.prototype.filter.call(panel.querySelectorAll(sel), function (el) {
+      return el.offsetParent !== null && !el.hasAttribute('aria-hidden');
+    });
+  }
+
+  function _settingsKeydown(e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeSettingsModal(); return; }
+    if (e.key !== 'Tab') return;
+    const items = _settingsFocusables();
+    if (!items.length) return;
+    const first = items[0];
+    const last  = items[items.length - 1];
+    // Focus sitting on the overlay itself (or anywhere outside) counts as
+    // "before the first item", so Tab pulls it into the dialog rather than out.
+    if (e.shiftKey && (document.activeElement === first || !items.includes(document.activeElement))) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  }
+
   function openSettingsModal() {
     document.getElementById('user-menu').style.display = 'none';
     const overlay = document.getElementById('settings-overlay');
@@ -6670,12 +6705,27 @@ document.addEventListener('DOMContentLoaded', () => {
     hydrateSettingsForm();
     overlay.classList.add('open');
     overlay.style.display = 'flex';
+    // Remember where focus came from so closing can hand it back.
+    _settingsPrevFocus = document.activeElement;
+    document.addEventListener('keydown', _settingsKeydown, true);
+    // hydrateSettingsForm() builds the avatar grid, so wait a frame for the
+    // panel's focusables to exist before reaching for the first one.
+    requestAnimationFrame(function () {
+      const items = _settingsFocusables();
+      if (items.length) items[0].focus();
+    });
   }
   function closeSettingsModal() {
     const overlay = document.getElementById('settings-overlay');
     if (overlay) { overlay.classList.remove('open'); overlay.style.display = 'none'; }
     const msg = document.getElementById('settings-msg');
     if (msg) { msg.textContent = ''; msg.className = 'settings-msg'; }
+    document.removeEventListener('keydown', _settingsKeydown, true);
+    // Hand focus back to whatever opened the modal, if it's still in the page.
+    if (_settingsPrevFocus && document.contains(_settingsPrevFocus)) {
+      try { _settingsPrevFocus.focus(); } catch (e) {}
+    }
+    _settingsPrevFocus = null;
   }
 
   // Resize a user-picked image to a square 128×128 JPEG data URI.

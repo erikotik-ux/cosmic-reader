@@ -90,8 +90,8 @@
     "semantic_hash": ""
   },
   "app.html": {
-    "mtime": 1786741907.894107,
-    "ast_hash": "42accebc62ebba185a9160295896790d",
+    "mtime": 1786742252.9292955,
+    "ast_hash": "bcb96141ef27b75899ff43634c5a85b8",
     "semantic_hash": ""
   },
   "assets/article-images/AUDIT_REPORT.md": {
@@ -157,6 +157,11 @@
   ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md": {
     "mtime": 1786723274.0325735,
     "ast_hash": "ecabf3091cc3ed2b4a83c18c12c4775e",
+    "semantic_hash": ""
+  },
+  "DEFERRED.md": {
+    "mtime": 1786742267.4306417,
+    "ast_hash": "b115d3d58ef42a7e7aaf2468fcb327a5",
     "semantic_hash": ""
   }
 }

@@ -1,16 +1,16 @@
 # Graph Report - cosmic-reader  (2026-08-14)
 
 ## Corpus Check
-- 20 files · ~116,870 words
+- 22 files · ~120,564 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 141 nodes · 131 edges · 20 communities (18 shown, 2 thin omitted)
+- 161 nodes · 149 edges · 22 communities (20 shown, 2 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0dffac6b`
+- Built from commit: `aac58777`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -32,18 +32,20 @@
 - [[_COMMUNITY_Community 14|Community 14]]
 - [[_COMMUNITY_Community 18|Community 18]]
 - [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 21|Community 21]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `🚀 Cosmic Reader` - 7 edges
-2. `Article-by-Article Detail` - 7 edges
-3. `Priority Issues` - 6 edges
-4. `handler()` - 6 edges
-5. `Image Audit Report — Cosmic Reader Dashboard` - 6 edges
-6. `Live verification (signed-in dashboard, real DOM)` - 4 edges
-7. `scripts` - 4 edges
-8. `jsonError()` - 2 edges
-9. `handler()` - 2 edges
-10. `callHealthcheck()` - 2 edges
+1. `Priority Issues` - 7 edges
+2. `🚀 Cosmic Reader` - 7 edges
+3. `Article-by-Article Detail` - 7 edges
+4. `Priority Issues` - 6 edges
+5. `handler()` - 6 edges
+6. `Image Audit Report — Cosmic Reader Dashboard` - 6 edges
+7. `Live verification (signed-in dashboard, real DOM)` - 4 edges
+8. `scripts` - 4 edges
+9. `Deferred items — Cosmic Reader` - 3 edges
+10. `jsonError()` - 2 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -51,7 +53,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 2 thin omitted)
+## Communities (22 total, 2 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.14
@@ -113,17 +115,27 @@ Nodes (9): APP, ctx, fs, HEADLINES, NASA_NAV, path, REAL_PROSE, src (+1 more)
 Cohesion: 0.11
 Nodes (17): Confirmed (observed, not inferred), Corrected after observation, Design Health Score, Design Specificity Verdict, Live verification (signed-in dashboard, real DOM), Minor Observations, Note, Overall Impression (+9 more)
 
+### Community 20 - "Community 20"
+Cohesion: 0.12
+Nodes (15): Comparability caveat — read before trusting the delta, Design Health Score, Deterministic scan, Minor observations, [P1] Deploy Probe reports its result in three contradictory places, none where the user is looking, [P1] Material Symbols ligature text is exposed to assistive tech app-wide, [P1] No URL routing — every view is `/app.html`, [P2] Filter chips have no selected state for assistive tech; source select has no label (+7 more)
+
+### Community 21 - "Community 21"
+Cohesion: 0.50
+Nodes (3): Also still open (from the 2026-08-14 critique, lower priority), Deferred items — Cosmic Reader, P2 — Settings modal has no focus trap
+
 ## Knowledge Gaps
-- **82 isolated node(s):** `Design Health Score`, `Design Specificity Verdict`, `Overall Impression`, `What's Working`, `[P0] The highest-value cards cannot be opened without a mouse` (+77 more)
+- **98 isolated node(s):** `Design Health Score`, `What actually moved, and why`, `Comparability caveat — read before trusting the delta`, `Deterministic scan`, `What's Working` (+93 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What connects `Design Health Score`, `Design Specificity Verdict`, `Overall Impression` to the rest of the system?**
-  _82 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `Design Health Score`, `What actually moved, and why`, `Comparability caveat — read before trusting the delta` to the rest of the system?**
+  _98 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
 - **Should `Community 19` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+- **Should `Community 20` be split into smaller, more focused modules?**
+  _Cohesion score 0.125 - nodes in this community are weakly interconnected._
