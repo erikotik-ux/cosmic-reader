@@ -2788,8 +2788,12 @@
   <div class="fixed inset-0 z-0 overflow-hidden opacity-[0.55] blur-lg grayscale">
     <img id="detail-bg" class="w-full h-full object-cover scale-110" src="" alt=""/>
   </div>
-  <!-- Scrim over the blurred hero. Keep the opacity on Tailwind's scale:
-       a bare bg-black/78 compiles to nothing and the scrim silently vanishes. -->
+  <!-- Scrim over the blurred hero. Opacity modifiers on a NAMED color are
+       fussy here: bg-black/80 and /40 compile, but /55 and /78 produce no rule
+       at all and the scrim silently vanishes. Verified by probe against the
+       built CSS - check cosmic-reader.css before changing this number.
+       (Bare opacity-N and modifiers on arbitrary colors like text-[#dbfcff]/45
+       behave differently again, so don't generalise from one to the other.) -->
   <div class="fixed inset-0 bg-black/80 z-0"></div>
 
   <div class="relative z-10 flex-1 min-h-0 overflow-y-auto mobile-safe-scroll cr-hide-scrollbar md:pl-64 pt-20 md:pt-20 pb-28 md:pb-10">
