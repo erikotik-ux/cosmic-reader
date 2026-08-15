@@ -6708,12 +6708,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Remember where focus came from so closing can hand it back.
     _settingsPrevFocus = document.activeElement;
     document.addEventListener('keydown', _settingsKeydown, true);
-    // hydrateSettingsForm() builds the avatar grid, so wait a frame for the
-    // panel's focusables to exist before reaching for the first one.
-    requestAnimationFrame(function () {
-      const items = _settingsFocusables();
-      if (items.length) items[0].focus();
-    });
+    // Focus the first control (the close button — static markup, present as
+    // soon as the overlay is shown). Done synchronously rather than in a
+    // requestAnimationFrame: rAF never fires in a background tab, which would
+    // leave the dialog open with focus still on the page behind it.
+    const items = _settingsFocusables();
+    if (items.length) items[0].focus();
   }
   function closeSettingsModal() {
     const overlay = document.getElementById('settings-overlay');
