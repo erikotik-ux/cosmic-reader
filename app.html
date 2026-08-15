@@ -1119,13 +1119,27 @@
      text legible when the headline runs 4-6+ lines. Apply a darker,
      taller gradient ONLY when JS detects the title length is over
      60 chars; short headlines keep the lighter look. */
+  /* Colors track the card surface: #071112 is surface-container-low at 50%
+     over the black view (the card's resting fill), #0e2223 is the solid token
+     it lifts to on hover. Gradients can't be transitioned, so the hover
+     variant is a second layer that cross-fades over this one. */
   .cr-hero-grad-long {
     background-image: linear-gradient(
       to top,
-      #131313 0%,
-      rgba(19,19,19,0.92) 30%,
-      rgba(19,19,19,0.65) 60%,
-      rgba(19,19,19,0.25) 85%,
+      #071112 0%,
+      rgba(7,17,18,0.92) 30%,
+      rgba(7,17,18,0.65) 60%,
+      rgba(7,17,18,0.25) 85%,
+      transparent 100%
+    ) !important;
+  }
+  .cr-hero-grad-long-hover {
+    background-image: linear-gradient(
+      to top,
+      #0e2223 0%,
+      rgba(14,34,35,0.92) 30%,
+      rgba(14,34,35,0.65) 60%,
+      rgba(14,34,35,0.25) 85%,
       transparent 100%
     ) !important;
   }
@@ -2616,8 +2630,9 @@
 
         <!-- Large Feature Card (col-8) -->
         <article data-category="Physics" onclick="openArticle(0)" tabindex="0" role="button" data-keyactivate class="md:col-span-8 bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 transition-all group relative cursor-pointer" style="height:360px;">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10"></div>
-          <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg" alt="Gravitational waves eject black hole — Hubble"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#071112] via-[#071112]/30 to-transparent z-10"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/30 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:brightness-110 transition-all duration-500" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic1706b.jpg" alt="Gravitational waves eject black hole — Hubble"/>
           <div class="absolute top-5 left-5 z-20 flex items-center gap-2">
             <div class="w-9 h-9 rounded-full bg-[#00f0ff]/20 backdrop-blur-md flex items-center justify-center border border-[#00f0ff]/40">
               <span aria-hidden="true" class="material-symbols-outlined text-[#00f0ff] text-base">radio_button_checked</span>
@@ -2679,10 +2694,12 @@
         <!-- Medium Feature Card (col-8) -->
         <article data-category="Missions" onclick="openArticle(2)" tabindex="0" role="button" data-keyactivate class="md:col-span-8 grid grid-cols-1 md:grid-cols-2 bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 group cursor-pointer transition-all">
           <div class="relative h-52 md:h-auto overflow-hidden">
-            <img class="article-img absolute inset-0 w-full h-full object-cover" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg" alt="Hubble images DART impact ejecta at Dimorphos"/>
+            <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:brightness-110 transition-all duration-500" src="https://cdn.spacetelescope.org/archives/images/publicationjpg/heic2213a.jpg" alt="Hubble images DART impact ejecta at Dimorphos"/>
             <!-- Fades the image into the card. Ends at the card's RESTING color:
-               surface-container-low at 50% over the black view = #071112. -->
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#071112] z-10 hidden md:block"></div>
+               surface-container-low at 50% over the black view = #071112.
+               Second layer ends at the HOVER color and cross-fades in. -->
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#071112] z-10 hidden md:block"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
           <div class="p-7 flex flex-col justify-center">
             <span class="text-[#00f0ff] font-headline text-[10px] uppercase tracking-[0.2em] mb-3 block">Deep Space Missions</span>
@@ -2792,20 +2809,20 @@
       <!-- Cyan glow + cyan hairline removed and the fill made near-opaque: at
            50% the blurred hero image behind read straight through and lit the
            whole panel up. Neutral hairline matches the article cards. -->
-      <div class="cr-card-blur bg-surface-container-lowest/90 relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
+      <div class="cr-card-blur bg-[#071112]/95 relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
         <!-- Left accent line -->
         <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-transparent opacity-60"></div>
         <!-- Hero Image -->
         <div class="lg:col-span-5 h-64 lg:h-full relative overflow-hidden min-h-64">
           <img id="detail-img" class="w-full h-full object-cover" src="" alt=""/>
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden lg:block"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent lg:hidden block z-10"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#071112] z-10 hidden lg:block"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#071112] to-transparent lg:hidden block z-10"></div>
           <div class="absolute bottom-4 left-5 z-20">
             <span id="detail-coord" class="font-headline text-[10px] uppercase tracking-[0.2em] text-primary bg-background/60 backdrop-blur-md px-2 py-1 rounded-sm border border-primary/20">Coordinate: XX.XX.XX</span>
           </div>
         </div>
         <!-- Content -->
-        <div class="lg:col-span-7 p-8 lg:p-10 flex flex-col bg-surface-container-low/95">
+        <div class="lg:col-span-7 p-8 lg:p-10 flex flex-col bg-[#071112]">
           <div class="flex items-center gap-3 mb-5">
             <div class="h-px w-8 bg-secondary"></div>
             <span id="detail-tag" class="font-headline uppercase tracking-widest text-[10px] text-secondary font-bold">Transmission Received</span>
@@ -2856,19 +2873,19 @@
 
       <!-- Stat Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div id="stat1" class="bg-surface-container-low/85 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
+        <div id="stat1" class="bg-[#071112]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Category</p>
           <div class="flex items-end gap-2">
             <span id="stat1-val" class="text-2xl font-headline font-bold text-primary">—</span>
           </div>
         </div>
-        <div class="bg-surface-container-low/85 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
+        <div class="bg-[#071112]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Source</p>
           <div class="flex items-end gap-2">
             <span id="stat2-val" class="text-xl font-headline font-bold text-secondary">—</span>
           </div>
         </div>
-        <div class="bg-surface-container-low/85 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
+        <div class="bg-[#071112]/90 backdrop-blur-lg p-5 rounded-lg" style="border:1px solid rgba(255,255,255,0.05);">
           <p class="font-headline text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Date Received</p>
           <div class="flex items-end gap-2">
             <span id="stat3-val" class="text-xl font-headline font-bold text-on-surface">—</span>
@@ -3997,8 +4014,9 @@ function renderFeed(list) {
     const reasonOverlay = matched ? '<div class="absolute z-30" style="top:0.75rem;left:0.75rem;">' + reasonPill + '</div>' : '';
     if (style === 'hero') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 transition-all group relative cursor-pointer" style="height:360px;">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/30 to-transparent z-10${a.title.length > 60 ? ' cr-hero-grad-long' : ''}"></div>
-        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%]" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#071112] via-[#071112]/30 to-transparent z-10${a.title.length > 60 ? ' cr-hero-grad-long' : ''}"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/30 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300${a.title.length > 60 ? ' cr-hero-grad-long-hover' : ''}"></div>
+        <img class="article-img absolute inset-0 w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:brightness-110 transition-all duration-500" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
         ${reasonOverlay}
         <div class="absolute bottom-0 left-0 p-7 z-20 w-full">
           <span class="${cc} font-headline text-[10px] uppercase tracking-[0.2em] mb-2 block">${a.category}</span>
@@ -4030,10 +4048,13 @@ function renderFeed(list) {
     if (style === 'medium') return `
       <article data-category="${a.category}" onclick="openArticle(${i})" tabindex="0" role="button" data-keyactivate aria-label="${escHtml(a.title)}" class="${colClass}${readCls} grid grid-cols-1 md:grid-cols-2 bg-surface-container-low/50 rounded-xl overflow-hidden border border-white/5 hover:bg-surface-container-low hover:border-[#00f0ff]/15 group cursor-pointer transition-all">
         <div class="relative h-52 md:h-auto overflow-hidden">
-          <img class="article-img absolute inset-0 w-full h-full object-cover" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
+          <img class="article-img absolute inset-0 w-full h-full object-cover group-hover:brightness-110 transition-all duration-500" src="${escHtml(a.image||fb)}" alt="" loading="lazy" onerror="imgChain(this,'${fb}','${a.category}')"/>
           <!-- Fades the image into the card. Ends at the card's RESTING color:
-               surface-container-low at 50% over the black view = #071112. -->
+               surface-container-low at 50% over the black view = #071112.
+               The second layer is the same gradient ending at the card's HOVER
+               color, cross-faded in because background-image can't transition. -->
           <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#071112] z-10 hidden md:block"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-container-low z-10 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
         <div class="p-7 flex flex-col justify-center">
           ${reasonRow}
