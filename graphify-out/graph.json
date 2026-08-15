@@ -4,166 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "label": "2026-08-14T16-01-14Z__app-html.md",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html",
-      "community": 20,
-      "norm_label": "2026-08-14t16-01-14z__app-html.md"
-    },
-    {
-      "label": "Design Health Score",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_design_health_score",
-      "community": 20,
-      "norm_label": "design health score"
-    },
-    {
-      "label": "What actually moved, and why",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L32",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_what_actually_moved_and_why",
-      "community": 20,
-      "norm_label": "what actually moved, and why"
-    },
-    {
-      "label": "Comparability caveat \u2014 read before trusting the delta",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_comparability_caveat_read_before_trusting_the_delta",
-      "community": 20,
-      "norm_label": "comparability caveat \u2014 read before trusting the delta"
-    },
-    {
-      "label": "Deterministic scan",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L51",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_deterministic_scan",
-      "community": 20,
-      "norm_label": "deterministic scan"
-    },
-    {
-      "label": "What's Working",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L59",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_what_s_working",
-      "community": 20,
-      "norm_label": "what's working"
-    },
-    {
-      "label": "Priority Issues",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L65",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "community": 20,
-      "norm_label": "priority issues"
-    },
-    {
-      "label": "[P1] Deploy Probe reports its result in three contradictory places, none where the user is looking",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L67",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_p1_deploy_probe_reports_its_result_in_three_contradictory_places_none_where_the_user_is_looking",
-      "community": 20,
-      "norm_label": "[p1] deploy probe reports its result in three contradictory places, none where the user is looking"
-    },
-    {
-      "label": "[P1] Material Symbols ligature text is exposed to assistive tech app-wide",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L73",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_p1_material_symbols_ligature_text_is_exposed_to_assistive_tech_app_wide",
-      "community": 20,
-      "norm_label": "[p1] material symbols ligature text is exposed to assistive tech app-wide"
-    },
-    {
-      "label": "[P1] No URL routing \u2014 every view is `/app.html`",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L79",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_p1_no_url_routing_every_view_is_app_html",
-      "community": 20,
-      "norm_label": "[p1] no url routing \u2014 every view is `/app.html`"
-    },
-    {
-      "label": "[P2] The Settings modal is the one unfinished dialog",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L85",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_p2_the_settings_modal_is_the_one_unfinished_dialog",
-      "community": 20,
-      "norm_label": "[p2] the settings modal is the one unfinished dialog"
-    },
-    {
-      "label": "[P2] Filter chips have no selected state for assistive tech; source select has no label",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L90",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_p2_filter_chips_have_no_selected_state_for_assistive_tech_source_select_has_no_label",
-      "community": 20,
-      "norm_label": "[p2] filter chips have no selected state for assistive tech; source select has no label"
-    },
-    {
-      "label": "[P3] Primary navigation is set at 9-10px",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L95",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_p3_primary_navigation_is_set_at_9_10px",
-      "community": 20,
-      "norm_label": "[p3] primary navigation is set at 9-10px"
-    },
-    {
-      "label": "Remaining contrast findings (measured, live)",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L100",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_remaining_contrast_findings_measured_live",
-      "community": 20,
-      "norm_label": "remaining contrast findings (measured, live)"
-    },
-    {
-      "label": "Minor observations",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L108",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_minor_observations",
-      "community": 20,
-      "norm_label": "minor observations"
-    },
-    {
-      "label": "Questions to Consider",
-      "file_type": "document",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L121",
-      "_origin": "ast",
-      "id": "critique_2026_08_14t16_01_14z_app_html_questions_to_consider",
-      "community": 20,
-      "norm_label": "questions to consider"
-    },
-    {
       "label": "DEFERRED.md",
       "file_type": "document",
       "source_file": "DEFERRED.md",
@@ -184,24 +24,174 @@
       "norm_label": "deferred items \u2014 cosmic reader"
     },
     {
-      "label": "P2 \u2014 Settings modal has no focus trap",
+      "label": "Still open (from the 2026-08-14 critique, lower priority)",
       "file_type": "document",
       "source_file": "DEFERRED.md",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "deferred_p2_settings_modal_has_no_focus_trap",
+      "id": "deferred_still_open_from_the_2026_08_14_critique_lower_priority",
       "community": 21,
-      "norm_label": "p2 \u2014 settings modal has no focus trap"
+      "norm_label": "still open (from the 2026-08-14 critique, lower priority)"
     },
     {
-      "label": "Also still open (from the 2026-08-14 critique, lower priority)",
+      "label": "2026-08-14T16-01-14Z__app-html.md",
       "file_type": "document",
-      "source_file": "DEFERRED.md",
-      "source_location": "L36",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "deferred_also_still_open_from_the_2026_08_14_critique_lower_priority",
-      "community": 21,
-      "norm_label": "also still open (from the 2026-08-14 critique, lower priority)"
+      "community": 20,
+      "norm_label": "2026-08-14t16-01-14z__app-html.md",
+      "id": "critique_2026_08_14t16_01_14z_app_html"
+    },
+    {
+      "label": "Design Health Score",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "design health score",
+      "id": "critique_2026_08_14t16_01_14z_app_html_design_health_score"
+    },
+    {
+      "label": "What actually moved, and why",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L32",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "what actually moved, and why",
+      "id": "critique_2026_08_14t16_01_14z_app_html_what_actually_moved_and_why"
+    },
+    {
+      "label": "Comparability caveat \u2014 read before trusting the delta",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L42",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "comparability caveat \u2014 read before trusting the delta",
+      "id": "critique_2026_08_14t16_01_14z_app_html_comparability_caveat_read_before_trusting_the_delta"
+    },
+    {
+      "label": "Deterministic scan",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L51",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "deterministic scan",
+      "id": "critique_2026_08_14t16_01_14z_app_html_deterministic_scan"
+    },
+    {
+      "label": "What's Working",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L59",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "what's working",
+      "id": "critique_2026_08_14t16_01_14z_app_html_what_s_working"
+    },
+    {
+      "label": "Priority Issues",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L65",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "priority issues",
+      "id": "critique_2026_08_14t16_01_14z_app_html_priority_issues"
+    },
+    {
+      "label": "[P1] Deploy Probe reports its result in three contradictory places, none where the user is looking",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L67",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "[p1] deploy probe reports its result in three contradictory places, none where the user is looking",
+      "id": "critique_2026_08_14t16_01_14z_app_html_p1_deploy_probe_reports_its_result_in_three_contradictory_places_none_where_the_user_is_looking"
+    },
+    {
+      "label": "[P1] Material Symbols ligature text is exposed to assistive tech app-wide",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L73",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "[p1] material symbols ligature text is exposed to assistive tech app-wide",
+      "id": "critique_2026_08_14t16_01_14z_app_html_p1_material_symbols_ligature_text_is_exposed_to_assistive_tech_app_wide"
+    },
+    {
+      "label": "[P1] No URL routing \u2014 every view is `/app.html`",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L79",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "[p1] no url routing \u2014 every view is `/app.html`",
+      "id": "critique_2026_08_14t16_01_14z_app_html_p1_no_url_routing_every_view_is_app_html"
+    },
+    {
+      "label": "[P2] The Settings modal is the one unfinished dialog",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L85",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "[p2] the settings modal is the one unfinished dialog",
+      "id": "critique_2026_08_14t16_01_14z_app_html_p2_the_settings_modal_is_the_one_unfinished_dialog"
+    },
+    {
+      "label": "[P2] Filter chips have no selected state for assistive tech; source select has no label",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L90",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "[p2] filter chips have no selected state for assistive tech; source select has no label",
+      "id": "critique_2026_08_14t16_01_14z_app_html_p2_filter_chips_have_no_selected_state_for_assistive_tech_source_select_has_no_label"
+    },
+    {
+      "label": "[P3] Primary navigation is set at 9-10px",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L95",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "[p3] primary navigation is set at 9-10px",
+      "id": "critique_2026_08_14t16_01_14z_app_html_p3_primary_navigation_is_set_at_9_10px"
+    },
+    {
+      "label": "Remaining contrast findings (measured, live)",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L100",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "remaining contrast findings (measured, live)",
+      "id": "critique_2026_08_14t16_01_14z_app_html_remaining_contrast_findings_measured_live"
+    },
+    {
+      "label": "Minor observations",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L108",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "minor observations",
+      "id": "critique_2026_08_14t16_01_14z_app_html_minor_observations"
+    },
+    {
+      "label": "Questions to Consider",
+      "file_type": "document",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L121",
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "questions to consider",
+      "id": "critique_2026_08_14t16_01_14z_app_html_questions_to_consider"
     },
     {
       "label": "2026-08-14T03-42-32Z__app-html.md",
@@ -1618,172 +1608,12 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_comparability_caveat_read_before_trusting_the_delta",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_design_health_score",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L51",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_deterministic_scan",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L108",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_minor_observations",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L65",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L121",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_questions_to_consider",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L100",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_remaining_contrast_findings_measured_live",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L32",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_what_actually_moved_and_why",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html",
-      "target": "critique_2026_08_14t16_01_14z_app_html_what_s_working",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L67",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "target": "critique_2026_08_14t16_01_14z_app_html_p1_deploy_probe_reports_its_result_in_three_contradictory_places_none_where_the_user_is_looking",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L73",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "target": "critique_2026_08_14t16_01_14z_app_html_p1_material_symbols_ligature_text_is_exposed_to_assistive_tech_app_wide",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L79",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "target": "critique_2026_08_14t16_01_14z_app_html_p1_no_url_routing_every_view_is_app_html",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L90",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "target": "critique_2026_08_14t16_01_14z_app_html_p2_filter_chips_have_no_selected_state_for_assistive_tech_source_select_has_no_label",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L85",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "target": "critique_2026_08_14t16_01_14z_app_html_p2_the_settings_modal_is_the_one_unfinished_dialog",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
-      "source_location": "L95",
-      "weight": 1.0,
-      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
-      "target": "critique_2026_08_14t16_01_14z_app_html_p3_primary_navigation_is_set_at_9_10px",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "DEFERRED.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "deferred",
-      "target": "deferred_deferred_items_cosmic_reader",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "DEFERRED.md",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "deferred_deferred_items_cosmic_reader",
-      "target": "deferred_also_still_open_from_the_2026_08_14_critique_lower_priority",
-      "confidence_score": 1.0
+      "target": "deferred_deferred_items_cosmic_reader"
     },
     {
       "relation": "contains",
@@ -1792,8 +1622,158 @@
       "source_location": "L8",
       "weight": 1.0,
       "source": "deferred_deferred_items_cosmic_reader",
-      "target": "deferred_p2_settings_modal_has_no_focus_trap",
+      "target": "deferred_still_open_from_the_2026_08_14_critique_lower_priority",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_comparability_caveat_read_before_trusting_the_delta"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_design_health_score"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L51",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_deterministic_scan"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_minor_observations"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L65",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_priority_issues"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L121",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_questions_to_consider"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L100",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_remaining_contrast_findings_measured_live"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_what_actually_moved_and_why"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html",
+      "target": "critique_2026_08_14t16_01_14z_app_html_what_s_working"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L67",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
+      "target": "critique_2026_08_14t16_01_14z_app_html_p1_deploy_probe_reports_its_result_in_three_contradictory_places_none_where_the_user_is_looking"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L73",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
+      "target": "critique_2026_08_14t16_01_14z_app_html_p1_material_symbols_ligature_text_is_exposed_to_assistive_tech_app_wide"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L79",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
+      "target": "critique_2026_08_14t16_01_14z_app_html_p1_no_url_routing_every_view_is_app_html"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L90",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
+      "target": "critique_2026_08_14t16_01_14z_app_html_p2_filter_chips_have_no_selected_state_for_assistive_tech_source_select_has_no_label"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L85",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
+      "target": "critique_2026_08_14t16_01_14z_app_html_p2_the_settings_modal_is_the_one_unfinished_dialog"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".impeccable/critique/2026-08-14T16-01-14Z__app-html.md",
+      "source_location": "L95",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "critique_2026_08_14t16_01_14z_app_html_priority_issues",
+      "target": "critique_2026_08_14t16_01_14z_app_html_p3_primary_navigation_is_set_at_9_10px"
     },
     {
       "relation": "contains",
@@ -3117,5 +3097,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "aac58777f620a940e0b4f63e4591377f44a96131"
+  "built_at_commit": "5b7bb61466d2de95f569af89cdf28da577c9f9ee"
 }

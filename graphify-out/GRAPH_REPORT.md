@@ -1,16 +1,16 @@
 # Graph Report - cosmic-reader  (2026-08-14)
 
 ## Corpus Check
-- 22 files · ~120,564 words
+- 22 files · ~120,716 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 161 nodes · 149 edges · 22 communities (20 shown, 2 thin omitted)
+- 160 nodes · 148 edges · 22 communities (19 shown, 3 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `aac58777`
+- Built from commit: `5b7bb614`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -44,7 +44,7 @@
 6. `Image Audit Report — Cosmic Reader Dashboard` - 6 edges
 7. `Live verification (signed-in dashboard, real DOM)` - 4 edges
 8. `scripts` - 4 edges
-9. `Deferred items — Cosmic Reader` - 3 edges
+9. `Deferred items — Cosmic Reader` - 2 edges
 10. `jsonError()` - 2 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -53,7 +53,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (22 total, 2 thin omitted)
+## Communities (22 total, 3 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.14
@@ -119,20 +119,16 @@ Nodes (17): Confirmed (observed, not inferred), Corrected after observation, Des
 Cohesion: 0.12
 Nodes (15): Comparability caveat — read before trusting the delta, Design Health Score, Deterministic scan, Minor observations, [P1] Deploy Probe reports its result in three contradictory places, none where the user is looking, [P1] Material Symbols ligature text is exposed to assistive tech app-wide, [P1] No URL routing — every view is `/app.html`, [P2] Filter chips have no selected state for assistive tech; source select has no label (+7 more)
 
-### Community 21 - "Community 21"
-Cohesion: 0.50
-Nodes (3): Also still open (from the 2026-08-14 critique, lower priority), Deferred items — Cosmic Reader, P2 — Settings modal has no focus trap
-
 ## Knowledge Gaps
-- **98 isolated node(s):** `Design Health Score`, `What actually moved, and why`, `Comparability caveat — read before trusting the delta`, `Deterministic scan`, `What's Working` (+93 more)
+- **97 isolated node(s):** `Still open (from the 2026-08-14 critique, lower priority)`, `Design Health Score`, `What actually moved, and why`, `Comparability caveat — read before trusting the delta`, `Deterministic scan` (+92 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What connects `Design Health Score`, `What actually moved, and why`, `Comparability caveat — read before trusting the delta` to the rest of the system?**
-  _98 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `Still open (from the 2026-08-14 critique, lower priority)`, `Design Health Score`, `What actually moved, and why` to the rest of the system?**
+  _97 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
 - **Should `Community 19` be split into smaller, more focused modules?**
