@@ -128,6 +128,41 @@
     background: rgba(19, 19, 19, 0.5);
   }
   .glow-border { border: 1px solid rgba(0, 240, 255, 0.15); }
+  /* Signal Detail hero fade.
+     A plain two-stop gradient (transparent -> panel) ramps linearly, so the
+     image is already ~50% washed out at its own midpoint — the whole picture
+     reads faded even though only the edge needs to blend. These keep the SAME
+     span, so the meeting with the panel stays seamless, but hold the image
+     untouched for the first ~45% and then ease in on a curve. The stops
+     approximate ease-in-cubic; the extra midpoints stop the ramp from banding
+     on wide flat areas like sky.
+     Color must track the panel fill (#141718 = 20,23,24). */
+  .cr-detail-fade-r {
+    background-image: linear-gradient(
+      to right,
+      rgba(20,23,24,0)    0%,
+      rgba(20,23,24,0)    45%,
+      rgba(20,23,24,0.06) 57%,
+      rgba(20,23,24,0.20) 68%,
+      rgba(20,23,24,0.44) 78%,
+      rgba(20,23,24,0.72) 87%,
+      rgba(20,23,24,0.92) 95%,
+      rgba(20,23,24,1)    100%
+    );
+  }
+  .cr-detail-fade-t {
+    background-image: linear-gradient(
+      to top,
+      rgba(20,23,24,1)    0%,
+      rgba(20,23,24,0.92) 6%,
+      rgba(20,23,24,0.72) 13%,
+      rgba(20,23,24,0.44) 22%,
+      rgba(20,23,24,0.20) 32%,
+      rgba(20,23,24,0.06) 43%,
+      rgba(20,23,24,0)    55%,
+      rgba(20,23,24,0)    100%
+    );
+  }
   /* Blur only — no background. .glass-panel bundles a rgba(19,19,19,0.5) fill
      that overrode the surface token and made cards read gray instead of teal,
      so article cards take the frost from here and their color from Tailwind. */
@@ -2808,8 +2843,8 @@
         <!-- Hero Image -->
         <div class="lg:col-span-5 h-64 lg:h-full relative overflow-hidden min-h-64">
           <img id="detail-img" class="w-full h-full object-cover" src="" alt=""/>
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#141718] z-10 hidden lg:block"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-[#141718] to-transparent lg:hidden block z-10"></div>
+          <div class="cr-detail-fade-r absolute inset-0 z-10 hidden lg:block"></div>
+          <div class="cr-detail-fade-t absolute inset-0 lg:hidden block z-10"></div>
           <div class="absolute bottom-4 left-5 z-20">
             <span id="detail-coord" class="font-headline text-[10px] uppercase tracking-[0.2em] text-primary bg-background/60 backdrop-blur-md px-2 py-1 rounded-sm border border-primary/20">Coordinate: XX.XX.XX</span>
           </div>

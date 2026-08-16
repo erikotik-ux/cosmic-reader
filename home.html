@@ -439,6 +439,23 @@
       position: relative;
       z-index: 1;
     }
+    /* Phone: the eyebrow is 41 characters at 0.2em tracking, which needs 362px
+       but only has ~335px at 375px wide, so it wrapped to two lines. The bullet
+       saves 6px; the rest comes from easing the tracking. Narrower phones also
+       step the size down. nowrap makes the single line a guarantee rather than
+       something that silently re-breaks if the copy changes. */
+    @media (max-width: 480px) {
+      .hero-eyebrow {
+        white-space: nowrap;
+        letter-spacing: 0.13em;
+      }
+    }
+    @media (max-width: 360px) {
+      .hero-eyebrow {
+        font-size: 0.625rem;
+        letter-spacing: 0.11em;
+      }
+    }
     .hero-title {
       font-size: clamp(2.8rem, 6vw, 5rem);
       font-weight: 700;
@@ -1349,7 +1366,7 @@
     </svg>
   </div>
 
-  <p class="label-caps hero-eyebrow">Signal incoming — deep space intelligence</p>
+  <p class="label-caps hero-eyebrow">Signal incoming &bull; deep space intelligence</p>
   <h1 class="hero-title"><span style="color:#00f0ff;text-shadow:0 0 22px rgba(0,240,255,0.45);">Cosmic</span> Reader</h1>
   <p class="hero-subtitle">The Universe, Decoded Daily.</p>
 
