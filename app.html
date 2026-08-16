@@ -2583,9 +2583,15 @@
         <button onclick="filterFeed('Missions')" aria-pressed="false" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">Missions</button>
         <button onclick="filterFeed('AI & Tech')" aria-pressed="false" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">AI &amp; Tech</button>
         <button onclick="filterFeed('UAP')" aria-pressed="false" class="feed-filter px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all">UAP</button>
+        <!-- For You + source filter travel together as one flex item. ml-auto
+             used to sit on the For You button alone, so when the row ran out of
+             width (its content needs ~1092px) the source dropdown wrapped to a
+             second line by itself. Grouped, the pair either both sit at the
+             right of line one or both move down together. -->
+        <div class="ml-auto flex items-center gap-3">
         <!-- For You ranking toggle (off by default) -->
         <button onclick="toggleForYou()" aria-pressed="false" title="Prioritize your selected topics"
-          class="cr-foryou-toggle ml-auto px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all flex items-center gap-2">
+          class="cr-foryou-toggle px-5 py-2 rounded-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest hover:border-[#00f0ff] transition-all flex items-center gap-2">
           <span aria-hidden="true" class="material-symbols-outlined text-sm">auto_awesome</span>
           For You
         </button>
@@ -2597,7 +2603,8 @@
             <option value="All">All Sources</option>
           </select>
           <span aria-hidden="true" class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
-        </div>
+          </div>
+      </div>
       </div>
       <!-- Mobile filter + compact stats — single horizontal row.
            Filter dropdown (cyan pill, OS-native picker) on the left,
