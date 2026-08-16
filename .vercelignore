@@ -1,0 +1,28 @@
+# Files excluded from the Vercel deployment.
+#
+# vercel.json sets "outputDirectory": ".", so EVERY tracked file at the repo
+# root is uploaded and served at its path — /DEFERRED.md, /tests/…, and so on
+# were all publicly readable. This list keeps internal documents and dev
+# artifacts off the public site.
+#
+# Deliberately NOT excluded, because the site or the platform needs them:
+#   *.html, cosmic-reader.css, assets/, api/, vercel.json
+#   package.json / package-lock.json  (kept so Vercel's project detection is
+#     unchanged — excluding them risks altering how the deploy is built)
+#   README.md  (a public project readme, not an internal document)
+
+# Internal review documents — these enumerate known defects in the app
+DEFERRED.md
+.impeccable/
+
+# Test sources — run in CI/locally, never needed at runtime
+tests/
+
+# Graphify knowledge-graph output: a full structural dump of the codebase
+graphify-out/
+
+# Local tooling
+deploy.ps1
+input.css
+.claude/
+node_modules/
