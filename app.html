@@ -814,7 +814,20 @@
   :focus-visible {
     outline: 2px solid rgba(0, 240, 255, 0.9);
     outline-offset: 2px;
-    border-radius: 4px;
+  }
+  /* The rule above used to also set border-radius: 4px, which overrode each
+     element'''s OWN radius while focused — a pill-shaped input visibly squared
+     off the moment it took focus. Outlines follow the element'''s border-radius
+     on their own, so the override was never needed. */
+  /* These three already announce focus by turning their own border from
+     cyan/20 to solid cyan, which is indicator enough; the extra ring on top
+     read as a stray blue box. Note text inputs match :focus-visible on MOUSE
+     click too (typing is expected), so this fired on a plain click, not only
+     on keyboard focus. */
+  #saved-search:focus-visible,
+  #saved-cat:focus-visible,
+  #saved-sort:focus-visible {
+    outline: none;
   }
 
   .sidebar-link { transition: all 0.2s ease; }
@@ -2526,7 +2539,7 @@
           <div class="cr-source-filter relative flex items-center gap-2">
             <span aria-hidden="true" class="material-symbols-outlined text-[#dbfcff]/65 text-base">filter_list</span>
             <select id="feed-source-tablet" aria-label="Filter by source" onchange="filterBySource(this.value)"
-              class="appearance-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+              class="appearance-none bg-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
               <option value="All">All Sources</option>
             </select>
             <span aria-hidden="true" class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
@@ -2580,7 +2593,7 @@
         <div class="cr-source-filter relative flex items-center gap-2">
           <span aria-hidden="true" class="material-symbols-outlined text-[#dbfcff]/65 text-base">filter_list</span>
           <select id="feed-source-desktop" aria-label="Filter by source" onchange="filterBySource(this.value)"
-            class="appearance-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+            class="appearance-none bg-none bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2 hover:border-[#00f0ff] focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
             <option value="All">All Sources</option>
           </select>
           <span aria-hidden="true" class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
@@ -2593,7 +2606,7 @@
       <div class="md:hidden mb-8 flex items-center justify-between gap-3">
         <div class="cr-mobile-filter relative shrink-0">
           <select id="feed-filter-mobile" onchange="filterFeed(this.value)"
-            class="appearance-none bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+            class="appearance-none bg-none bg-[#00f0ff] text-[#00363a] font-headline text-xs font-bold uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
             <option value="All">All</option>
             <option value="Planets">Planets</option>
             <option value="Physics">Physics</option>
@@ -2632,7 +2645,7 @@
         </button>
         <div class="cr-source-filter relative flex-1">
           <select id="feed-source-mobile" aria-label="Filter by source" onchange="filterBySource(this.value)"
-            class="appearance-none w-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
+            class="appearance-none bg-none w-full bg-surface-container-high border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00f0ff]/40 transition-all cursor-pointer">
             <option value="All">All Sources</option>
           </select>
           <span aria-hidden="true" class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#dbfcff]/50 text-base">expand_more</span>
@@ -3076,7 +3089,7 @@
         </div>
         <div class="relative">
           <select id="saved-cat" onchange="renderSavedStories()"
-            class="appearance-none w-full sm:w-auto bg-[#071112] border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:border-[#00f0ff] cursor-pointer">
+            class="appearance-none bg-none w-full sm:w-auto bg-[#071112] border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:border-[#00f0ff] cursor-pointer">
             <option value="All">All Categories</option>
             <option value="Planets">Planets</option>
             <option value="Physics">Physics</option>
@@ -3089,7 +3102,7 @@
         </div>
         <div class="relative">
           <select id="saved-sort" onchange="renderSavedStories()"
-            class="appearance-none w-full sm:w-auto bg-[#071112] border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:border-[#00f0ff] cursor-pointer">
+            class="appearance-none bg-none w-full sm:w-auto bg-[#071112] border border-[#00f0ff]/20 text-[#dbfcff] font-headline text-xs uppercase tracking-widest rounded-full pl-4 pr-9 py-2.5 focus:outline-none focus:border-[#00f0ff] cursor-pointer">
             <option value="saved">Saved order</option>
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
