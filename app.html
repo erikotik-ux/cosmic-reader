@@ -2838,8 +2838,14 @@
            50% the blurred hero image behind read straight through and lit the
            whole panel up. Neutral hairline matches the article cards. -->
       <div class="cr-card-blur bg-[#141718]/95 relative grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg" style="border:1px solid rgba(0,240,255,0.25);">
-        <!-- Left accent line -->
-        <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-transparent opacity-60"></div>
+        <!-- Left accent line removed: it was 4px of `primary` (#dbfcff, a text
+             color) at 60%, which over the darkened panel read as a thick gray
+             bar rather than an accent — and on mobile the panel stacks, so it
+             ran down the left of the headline. The cyan hairline border now
+             carries this edge. To restore it as an accent rather than a slab,
+             use a 1px width, a cyan gradient start, and ~40% opacity — write
+             the class names out rather than copying them from prose, since
+             Tailwind scans comments and will emit whatever it finds here. -->
         <!-- Hero Image -->
         <div class="lg:col-span-5 h-64 lg:h-full relative overflow-hidden min-h-64">
           <img id="detail-img" class="w-full h-full object-cover" src="" alt=""/>
