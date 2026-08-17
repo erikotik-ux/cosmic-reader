@@ -416,7 +416,7 @@ function renderTrending() {
 async function loadFeeds() {
   // ── Fast path: use articles cached by app.html ──
   try {
-    const c = JSON.parse(sessionStorage.getItem('cr_cache_v10') || '{}');
+    const c = JSON.parse(sessionStorage.getItem('cr_cache_v11') || '{}');
     if (c.ts && Date.now() - c.ts < 8 * 60 * 1000 && c.articles?.length) {
       allArticles = c.articles.map(a => ({ ...a, link: a.read_more || a.link })).filter(a => a.link && a.title && !isOffThemeArticle(a));
       renderTrending();

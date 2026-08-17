@@ -122,6 +122,15 @@ t('Keep lunar eclipse how-to',    cat({ title: 'How to watch the total lunar ecl
 t('Keep launch livestream how-to', cat({ title: 'How to watch SpaceX launch Starlink satellites live', excerpt: 'The rocket lifts off from Cape Canaveral; live stream begins at 3pm.', source: 'Space.com' }), 'Missions');
 t('Keep NASA Mars movie',          cat({ title: 'NASA releases a movie of the Mars landing', excerpt: 'The rover camera captured the descent.', source: 'NASA' }), 'Planets');
 
+// ── Our own galaxy is a Physics subject, not a NASA mission ───────────────
+// Regression: "APOD: Milky Way over Yellowstone" landed in Missions because no
+// keyword matched at all ('milky way' was absent while 'galaxy' was present),
+// so it fell through to SOURCE_DEFAULT_CAT['NASA'].
+t('APOD Milky Way is Physics', cat({ title: 'APOD: 2026 August 16 – Milky Way over Yellowstone', excerpt: 'The Milky Way was not created by an evaporating lake. The colorful pool of water is known as Silex Spring in Yellowstone National Park.', source: 'NASA' }), 'Physics');
+t('Milky Way beats NASA default', cat({ title: 'A new map of the Milky Way core', source: 'NASA' }), 'Physics');
+// Guard: a genuine NASA mission story still uses the source default / keywords
+t('NASA mission still Missions', cat({ title: 'NASA and Boeing complete Starliner crew rotation review', source: 'NASA' }), 'Missions');
+
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
 
