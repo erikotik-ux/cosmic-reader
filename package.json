@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tailwindcss -i input.css -o cosmic-reader.css --minify",
     "build:watch": "tailwindcss -i input.css -o cosmic-reader.css --watch",
-    "test": "node tests/classify.test.js && node tests/chat-refs.test.js && node tests/hidden-prefs.test.js"
+    "test": "node tests/classify.test.js && node tests/chat-refs.test.js && node tests/hidden-prefs.test.js && node tests/feed-content.test.js"
   },
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0"

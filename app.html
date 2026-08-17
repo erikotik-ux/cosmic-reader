@@ -3304,10 +3304,10 @@ const EXCLUDE_KEYWORDS = [
   // no-keyword guard means a genuine story (e.g. "NASA releases a movie of
   // the Mars landing") still keeps its category via the matched core keyword.
   'movie','film festival','tv series','tv show','television series',
-  'season finale','episode','cartoon','animated','anime','comic book',
+  'season finale','episode','cartoon','animated','anime',
   'comic con','cosplay','blu-ray','dvd','box set','franchise','sequel',
   'prequel','reboot','trailer','soundtrack','star wars','star trek',
-  'transformers','godzilla','marvel','dc comics','superhero',
+  'transformers','godzilla','marvel',
   'sitcom','soap opera','miniseries','tv drama','drama series','obituary',
   // health / medicine — generalist sources (esp. Ars Technica) mix in public-
   // health & medical-politics stories. Specific terms only, to avoid colliding
@@ -3332,6 +3332,14 @@ const HARD_EXCLUDE_KEYWORDS = [
   'cinematic universe','dc universe','marvel cinematic','comic con',
   'cosplay','box office','action figure','mattel','red carpet','met gala',
   'buffy','vampire slayer',
+  // Comic/streaming IP. These were in the SOFT list, where they could never
+  // fire: soft exclusion only runs when no core keyword matched, and
+  // space-themed entertainment always trips one — "How to watch 'Lanterns'"
+  // landed in Physics because its blurb says "spans the boundaries of the
+  // cosmos". Promoted here because none of these has a genuine space-science
+  // meaning, so hard-dropping them can't cost a real story.
+  'dc comics','green lantern','superhero','comic book',
+  'hbo','netflix','hulu','prime video',
 ];
 
 // Classify an article from its text + source. Returns:
@@ -4246,7 +4254,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v9';
+const _CR_CACHE_KEY = 'cr_cache_v10';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 // Drive the feed HUD from real state. These three readouts used to be static

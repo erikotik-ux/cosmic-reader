@@ -107,6 +107,21 @@ t('Drop generic TV obituary', cat({ title: 'Beloved sitcom star dies at 80', exc
 // Guard: a real Ars Technica AI/tech story still classifies (source default intact)
 t('Keep real Ars AI story', cat({ title: 'OpenAI releases a new GPT model for developers', source: 'Ars Technica' }), 'AI & Tech');
 
+// ── Comic / streaming IP that carries space words ─────────────────────────
+// Regression: "How to watch 'Lanterns'" landed in Physics because its blurb
+// says "spans the boundaries of the cosmos". 'dc comics' WAS in the soft list,
+// but soft exclusion only runs when no core keyword matched — and space-themed
+// entertainment always trips one, so the guard could never fire. These terms
+// now live in HARD_EXCLUDE_KEYWORDS.
+t('Drop Green Lantern / HBO show', cat({ title: "How to watch 'Lanterns' — HBO's gritty new Green Lantern show", excerpt: "DC Comics' Green Lantern Corps. spans the infinite boundaries of the cosmos with its legion of 7,204 intergalactic space cops", source: 'Space.com' }), 'DROP:off-theme');
+t('Drop superhero film w/ space words', cat({ title: 'New superhero film explores the galaxy', excerpt: 'A comic book adaptation set among the stars.', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop streaming series w/ cosmos',   cat({ title: 'Netflix series about the cosmos', excerpt: 'Streaming now.', source: 'Space.com' }), 'DROP:off-theme');
+// Guards: real "how to watch" space events must SURVIVE — these are exactly
+// what a blunter fix (excluding "how to watch" or "streaming") would destroy.
+t('Keep lunar eclipse how-to',    cat({ title: 'How to watch the total lunar eclipse tonight', excerpt: 'The moon will pass through Earth shadow; here is when to look up.', source: 'Space.com' }), 'Moon');
+t('Keep launch livestream how-to', cat({ title: 'How to watch SpaceX launch Starlink satellites live', excerpt: 'The rocket lifts off from Cape Canaveral; live stream begins at 3pm.', source: 'Space.com' }), 'Missions');
+t('Keep NASA Mars movie',          cat({ title: 'NASA releases a movie of the Mars landing', excerpt: 'The rover camera captured the descent.', source: 'NASA' }), 'Planets');
+
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
 
