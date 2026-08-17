@@ -3274,7 +3274,12 @@ const SOURCE_DEFAULT_CAT = {
   'SpaceNews':         'Missions',
   'NASA':              'Missions',
   'Phys.org':          'Physics',
-  'Teslarati':         'Missions',
+  // Teslarati has NO default on purpose. It covers Tesla and SpaceX; the
+  // SpaceX pieces match 'spacex'/'starship'/'falcon' and land in Missions on
+  // their own, while pure car/energy news (Model Y adapters, Powerwall leases,
+  // union disputes) previously inherited 'Missions' and filled a space reader
+  // with automotive coverage. With no default those fall out as unclassified.
+  // To keep them instead, map this to 'AI & Tech' rather than 'Missions'.
   'Planetary Society': 'Planets',
   'Sky & Telescope':   'Physics',
   'Ars Technica':      'AI & Tech',
@@ -3307,7 +3312,7 @@ const EXCLUDE_KEYWORDS = [
   'season finale','episode','cartoon','animated','anime',
   'comic con','cosplay','blu-ray','dvd','box set','franchise','sequel',
   'prequel','reboot','trailer','soundtrack','star wars','star trek',
-  'transformers','godzilla','marvel',
+  'transformers','godzilla','marvel','x-files','ars live',
   'sitcom','soap opera','miniseries','tv drama','drama series','obituary',
   // health / medicine — generalist sources (esp. Ars Technica) mix in public-
   // health & medical-politics stories. Specific terms only, to avoid colliding
@@ -3320,7 +3325,26 @@ const EXCLUDE_KEYWORDS = [
   // politics / law / government — non-space policy & court news. Guarded the
   // same way: "Supreme Court rules on SpaceX launch license" keeps via 'spacex'.
   'election','senate','white house','supreme court','lawsuit','court blocks',
-  'court rules','indictment','impeachment','deportation','tariff',
+  'court rules','judge orders','indictment','impeachment','deportation','tariff',
+  'sports bet','sportsbook','wager',
+  // Feed index/landing entries, not articles. Planetary Society publishes one
+  // RSS item per translation hub ('Artículos en español'), which carried no
+  // keyword and so inherited the source default. Accented and plain spellings
+  // both listed because feeds differ on encoding.
+  'artículos en español','articulos en espanol',
+  'articles en français','articles en francais','deutsche artikel',
+  // Health/medicine that generalist feeds (esp. Ars Technica) mix in. Specific
+  // nouns only — bare 'film' or 'diagnosis' would collide with thin-film
+  // physics and instrument diagnostics.
+  // NB: 'public health' was tried here and removed — it dropped a real UAP
+  // story whose blurb read 'scientists and public health advocates'.
+  'cancer','surgery','surgeries','prenatal','chemotherapy',
+  // Consumer autos — Ars and Teslarati car coverage is not space news.
+  // 'brake assemblies' is listed explicitly: the matcher only appends a bare
+  // 's', so it does not derive irregular plurals from 'brake assembly'.
+  'brake assembly','brake assemblies','sedan','horsepower','test drive','suv',
+  // Retail/product round-ups that Space.com files as editorial
+  'binoculars','board game','best telescope deal',
 ];
 
 // HARD off-theme: unambiguous entertainment / toy / pageant IP that must drop
@@ -4254,7 +4278,7 @@ async function fetchSpaceNewsFeed() {
 }
 
 // ── Load Live Feeds ────────────────────────────────────────
-const _CR_CACHE_KEY = 'cr_cache_v11';
+const _CR_CACHE_KEY = 'cr_cache_v12';
 const _CR_CACHE_TTL = 8 * 60 * 1000; // 8 minutes
 
 // Drive the feed HUD from real state. These three readouts used to be static

@@ -131,6 +131,22 @@ t('Milky Way beats NASA default', cat({ title: 'A new map of the Milky Way core'
 // Guard: a genuine NASA mission story still uses the source default / keywords
 t('NASA mission still Missions', cat({ title: 'NASA and Boeing complete Starliner crew rotation review', source: 'NASA' }), 'Missions');
 
+// ── Source-default noise: off-topic stories inheriting a feed's category ──
+// These all reached the feed by falling through to SOURCE_DEFAULT_CAT with no
+// keyword match, so they were filed as real space news.
+t('Drop retail round-up',      cat({ title: 'We think these Nikon binoculars are excellent for variable magnification on the go', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop board-game feature',   cat({ title: '6 space board games to channel the political drama of For All Mankind', source: 'Space.com' }), 'DROP:off-theme');
+t('Drop health story on Ars',  cat({ title: 'US wait times for cancer surgeries are getting longer and longer', source: 'Ars Technica' }), 'DROP:off-theme');
+t('Drop gambling ruling',      cat({ title: 'State judge orders Kalshi to stop offering sports bets and other wagers', source: 'Ars Technica' }), 'DROP:off-theme');
+t('Drop car review on Ars',    cat({ title: 'Organic-looking brake assemblies debut on new Czinger 21C Spyder', source: 'Ars Technica' }), 'DROP:off-theme');
+t('Drop feed index page',      cat({ title: 'Artículos en español', source: 'Planetary Society' }), 'DROP:off-theme');
+// Teslarati has no source default: car news falls out, SpaceX news survives on
+// its own keywords.
+t('Drop Tesla car news',       cat({ title: 'Tesla launches Powerwall Lease for affordable home backup', source: 'Teslarati' }), 'DROP:unclassified');
+t('Keep Teslarati SpaceX news', cat({ title: 'SpaceX Starship completes static fire ahead of next launch', source: 'Teslarati' }), 'Missions');
+// Guard: 'public health' was briefly excluded and killed a real UAP story.
+t('Keep UAP w/ public health phrasing', cat({ title: 'Disclosure Day in Real Life? Scientists Update Rules for Alien Contact', excerpt: 'Scientists and public health advocates are urging for preparedness in advance of confirmation of the discovery of extraterrestrial life.', source: 'The Debrief' }), 'UAP');
+
 // ── Unknown source with no keyword → unclassified, dropped ────────────────
 t('Unknown source, no keyword',   cat({ title: 'Generic announcement about nothing in particular', source: 'Random Blog' }), 'DROP:unclassified');
 
