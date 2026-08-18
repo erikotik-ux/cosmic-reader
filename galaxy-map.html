@@ -314,7 +314,62 @@ if (window.innerWidth <= 768) {
     .page-chip span { color: #00f0ff; }
   }
   /* ── Mobile: scroll & snap ── */
+  /* The decorative glows are 384px wide at an 80px offset = 464px, which is
+     wider than a phone viewport. body had overflow-x:hidden but html did not,
+     so the document still widened to 464px — and because fixed elements size
+     to that block, the top bar stretched to 464px and justified the Enter
+     Terminal pill to x=450, off screen and across the wordmark. Clipping at
+     the html level as well keeps the ICB at the viewport width. */
+  html { overflow-x: hidden; }
+
   @media (max-width: 767px) {
+    /* Glows scale with the viewport instead of a fixed 384px, so they can
+       never be the thing that widens the page. */
+    .ambient-glow {
+      width: 60vw;
+      height: 60vw;
+      left: auto;
+      right: auto;
+    }
+
+    /* Phone top bar. Desktop sizing needed ~399px of nav at minimum and the
+       content measured 465px wide, so on a 375px phone the bar overflowed by
+       90px: the page scrolled sideways and the Enter Terminal pill rode over
+       the wordmark. Nothing here changes the desktop bar. */
+    .top-bar {
+      padding: 0.6rem 0.9rem;
+      gap: 0.5rem;
+    }
+    .nav-left { gap: 0.6rem; min-width: 0; }
+    /* Home pill becomes arrow-only: the wordmark next to it is also a link to
+       home.html, so the word is redundant at this width. Kept at 40x40 so it
+       stays a real tap target rather than a 12px glyph. */
+    .back-btn {
+      font-size: 0;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .back-btn::before {
+      content: '←';
+      font-size: 0.95rem;
+      letter-spacing: 0;
+    }
+    .nav-brand { gap: 0.4rem; min-width: 0; }
+    .nav-brand img { width: 26px; height: 26px; }
+    .nav-brand-top,
+    .nav-brand-bot { font-size: 0.58rem; letter-spacing: 0.16em; }
+    .btn-enter {
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      padding: 0.55rem 0.85rem;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
     #mobile-galaxy {
       overflow-x: hidden;
       touch-action: pan-y;
@@ -544,8 +599,8 @@ if (window.innerWidth <= 768) {
 <canvas id="star-canvas" aria-hidden="true"></canvas>
 
 <!-- ═══ AMBIENT GLOWS ═══ -->
-<div class="absolute top-1/4 left-20 w-96 h-96 pointer-events-none" style="background:rgba(0,240,255,0.04);filter:blur(120px);border-radius:50%;z-index:1;"></div>
-<div class="absolute bottom-1/4 right-20 w-96 h-96 pointer-events-none" style="background:rgba(215,59,0,0.04);filter:blur(120px);border-radius:50%;z-index:1;"></div>
+<div class="ambient-glow absolute top-1/4 left-20 w-96 h-96 pointer-events-none" style="background:rgba(0,240,255,0.04);filter:blur(120px);border-radius:50%;z-index:1;"></div>
+<div class="ambient-glow absolute bottom-1/4 right-20 w-96 h-96 pointer-events-none" style="background:rgba(215,59,0,0.04);filter:blur(120px);border-radius:50%;z-index:1;"></div>
 
 <!-- ═══ GALAXY MAP WRAPPER ═══ -->
 <div id="galaxy-wrap" class="relative w-full flex items-center justify-center pointer-events-none" style="height:100vh;z-index:2;">
