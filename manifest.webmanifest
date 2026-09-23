@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "Cosmic Reader",
+  "short_name": "Cosmic Reader",
+  "description": "A unified deep-space news terminal. Live signals from NASA, ESA, SpaceX, and the world's leading space publishers.",
+  "start_url": "/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0b1416",
+  "background_color": "#0b1416",
+  "categories": ["news", "education", "science"],
+  "icons": [
+    {
+      "src": "/assets/cr-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/cr-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/cr-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

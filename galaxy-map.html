@@ -4,6 +4,14 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link rel="icon" type="image/svg+xml" href="/assets/cr-logo-new.svg"/>
+  <!-- PWA: installable shell. Does not change how the site behaves in a tab. -->
+  <link rel="manifest" href="/manifest.webmanifest"/>
+  <meta name="theme-color" content="#0b1416"/>
+  <link rel="apple-touch-icon" href="/assets/cr-icon-192.png"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Cosmic Reader"/>
 <title>Galaxy Map | Cosmic Reader</title>
 <meta name="description" content="Navigate the Cosmic Reader galaxy map — five planets, five sectors of space news. Tap any planet to enter its dedicated feed." />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
@@ -2053,6 +2061,24 @@ setTimeout(() => getArticles(), 1200);
   }
   if(document.readyState!=='loading') init(); else document.addEventListener('DOMContentLoaded', init);
 })();
+</script>
+<script>
+  /* Service worker registration.
+     Deliberately skipped while an auth handshake is present in the URL, so the
+     worker can never install in the middle of a Supabase sign-in. The worker
+     itself also passes every auth and /api/ request straight to the network.
+     To remove entirely: navigator.serviceWorker.getRegistrations()
+       .then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); */
+  (function () {
+    if (!('serviceWorker' in navigator)) return;
+    var q = new URLSearchParams(location.search);
+    var keys = ['code', 'access_token', 'refresh_token', 'reset', 'openauth', 'error', 'token_hash', 'type'];
+    for (var i = 0; i < keys.length; i++) { if (q.has(keys[i])) return; }
+    if (location.hash.indexOf('access_token') !== -1) return;
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () { /* non-fatal */ });
+    });
+  })();
 </script>
 </body>
 </html>

@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="/assets/cr-logo-new.svg"/>
+  <!-- PWA: installable shell. Does not change how the site behaves in a tab. -->
+  <link rel="manifest" href="/manifest.webmanifest"/>
+  <meta name="theme-color" content="#0b1416"/>
+  <link rel="apple-touch-icon" href="/assets/cr-icon-192.png"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Cosmic Reader"/>
   <title>Cosmic Reader — The Universe, Decoded Daily</title>
   <meta name="description" content="A unified deep-space news terminal. Live signals from NASA, ESA, SpaceX, and the world's leading space publishers — aggregated, decoded, and delivered daily." />
   <meta property="og:title" content="Cosmic Reader — The Universe, Decoded Daily" />
@@ -2185,6 +2193,24 @@
     }, CHROME_REVEAL_MS);
   }, INTRO_DURATION_MS);
 })();
+</script>
+<script>
+  /* Service worker registration.
+     Deliberately skipped while an auth handshake is present in the URL, so the
+     worker can never install in the middle of a Supabase sign-in. The worker
+     itself also passes every auth and /api/ request straight to the network.
+     To remove entirely: navigator.serviceWorker.getRegistrations()
+       .then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); */
+  (function () {
+    if (!('serviceWorker' in navigator)) return;
+    var q = new URLSearchParams(location.search);
+    var keys = ['code', 'access_token', 'refresh_token', 'reset', 'openauth', 'error', 'token_hash', 'type'];
+    for (var i = 0; i < keys.length; i++) { if (q.has(keys[i])) return; }
+    if (location.hash.indexOf('access_token') !== -1) return;
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () { /* non-fatal */ });
+    });
+  })();
 </script>
 </body>
 </html>

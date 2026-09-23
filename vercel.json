@@ -3,6 +3,24 @@
   "rewrites": [
     { "source": "/", "destination": "/home.html" }
   ],
+  "headers": [
+    {
+      "comment": "Never let a CDN or browser pin an old service worker. Without this an updated sw.js can sit behind a stale cached copy and users keep running the old one.",
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    },
+    {
+      "comment": "The install prompt only appears when the manifest is served with the right type.",
+      "source": "/manifest.webmanifest",
+      "headers": [
+        { "key": "Content-Type", "value": "application/manifest+json" },
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    }
+  ],
   "crons": [
     { "path": "/api/healthcheck-watcher", "schedule": "0 12 * * 1" }
   ]

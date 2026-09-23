@@ -8,6 +8,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="icon" href="/assets/cr-logo-new.svg" type="image/svg+xml"/>
+  <!-- PWA: installable shell. Does not change how the site behaves in a tab. -->
+  <link rel="manifest" href="/manifest.webmanifest"/>
+  <meta name="theme-color" content="#0b1416"/>
+  <link rel="apple-touch-icon" href="/assets/cr-icon-192.png"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Cosmic Reader"/>
 <!-- Tell home.html to skip the intro animation when the user navigates back. -->
 <script>try{sessionStorage.setItem('cr_skip_intro_next','1');}catch(e){}</script>
 <style>
@@ -224,6 +232,20 @@
       }
     }
     draw(); window.addEventListener('resize',draw);
+  })();
+</script>
+<script>
+  /* Service worker registration. Skipped while an auth handshake is in the URL
+     so the worker can never install mid sign-in. */
+  (function () {
+    if (!('serviceWorker' in navigator)) return;
+    var q = new URLSearchParams(location.search);
+    var keys = ['code','access_token','refresh_token','reset','openauth','error','token_hash','type'];
+    for (var i = 0; i < keys.length; i++) { if (q.has(keys[i])) return; }
+    if (location.hash.indexOf('access_token') !== -1) return;
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
   })();
 </script>
 </body>
