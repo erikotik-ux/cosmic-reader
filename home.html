@@ -38,6 +38,18 @@
           document.documentElement.classList.add('cr-intro-pending');
         }
       } catch(e) {}
+      /* On a RELOAD, start at the hero. Browsers restore the previous scroll
+         position on refresh, so reloading after scrolling a little brought the
+         page back ~100px down: the nav switched to its scrolled state and sat
+         over the top of the logo. Back/forward navigation is left alone. */
+      try {
+        var navEntry = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        if (navEntry && navEntry.type === 'reload' && 'scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+          window.scrollTo(0, 0);
+          window.addEventListener('load', function () { window.scrollTo(0, 0); });
+        }
+      } catch(e) {}
     })();
   </script>
   <style>

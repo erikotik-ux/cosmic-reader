@@ -3972,6 +3972,15 @@ async function fetchFeed(feedInfo) {
       const res = await fetch(proxyFn(feedInfo.url), { signal: AbortSignal.timeout(8000) });
       const t = await res.text();
       if (t.includes('<item') || t.includes('<entry')) { text = t; break; }
+      // A well-formed feed with zero items is a real answer ("this feed is
+      // empty right now"), not a proxy failure: every other proxy fetches the
+      // same URL and can only return the same empty feed, after a full timeout
+      // each. Space.com's feed went empty in Sep 2026 and walking the three
+      // fallbacks cost ~21s on every uncached load. Our /api/rss answers errors
+      // with a 4xx/502 JSON body, so valid feed XML here means the source
+      // genuinely replied.
+      if ((/<rss[\s>]/i.test(t) && /<channel[\s>]/i.test(t)) ||
+          (/<feed[\s>]/i.test(t) && /www\.w3\.org\/2005\/Atom/i.test(t))) break;
     } catch(e) { /* try next proxy */ }
   }
   if (!text) return [];

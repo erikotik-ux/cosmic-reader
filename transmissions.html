@@ -369,7 +369,7 @@ async function fetchFeed(feedInfo) {
     }
   } catch(e){}
   let text='';
-  for(const proxyFn of RSS_PROXIES){try{const res=await fetch(proxyFn(feedInfo.url),{signal:AbortSignal.timeout(7000)});const t=await res.text();if(t.includes('<item')||t.includes('<entry')){text=t;break;}}catch(e){}}
+  for(const proxyFn of RSS_PROXIES){try{const res=await fetch(proxyFn(feedInfo.url),{signal:AbortSignal.timeout(7000)});const t=await res.text();if(t.includes('<item')||t.includes('<entry')){text=t;break;}/* valid-but-empty feed = real answer; skip the other proxies (see app.html) */if((/<rss[\s>]/i.test(t)&&/<channel[\s>]/i.test(t))||(/<feed[\s>]/i.test(t)&&/www\.w3\.org\/2005\/Atom/i.test(t)))break;}catch(e){}}
   if(!text)return [];
   const sanitized=text.replace(/&(?!(?:[a-zA-Z][a-zA-Z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);)/g,'&amp;');
   let doc=new DOMParser().parseFromString(sanitized,'application/xml');
