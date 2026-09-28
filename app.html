@@ -5453,11 +5453,55 @@ function renderCurrentPage() {
   const start    = (currentPage - 1) * ARTICLES_PER_PAGE;
   const slice    = filtered.slice(start, start + ARTICLES_PER_PAGE);
   renderFeed(slice);
+  // Filters left nothing to show while feeds DID load: say so, instead of a
+  // blank grid. The category chip and the source dropdown combine, and it is
+  // easy to leave a category on (a Galaxy Map planet click sets one) and then
+  // pick a source that has no articles in it. That read as "this source does
+  // not load", when e.g. Universe Today had 5 articles, none of them Physics.
+  if (!filtered.length && articles.length) renderFilterEmpty();
   renderForYouBanner();
   updatePaginationUI();
   // Scroll feed to top
   const scrollEl = document.querySelector('#view-feed .overflow-y-auto');
   if (scrollEl) scrollEl.scrollTop = 0;
+}
+
+function renderFilterEmpty() {
+  const grid = document.getElementById('article-grid');
+  if (!grid) return;
+  const cat = currentFilter !== 'All' ? currentFilter : '';
+  const src = currentSource !== 'All' ? currentSource : '';
+  let title, detail;
+  if (cat && src) {
+    title  = 'No ' + cat + ' signals from ' + src + ' right now';
+    detail = src + ' is loading fine; none of its current articles are in ' + cat + '.';
+  } else if (cat) {
+    title  = 'No ' + cat + ' signals right now';
+    detail = 'Nothing currently loaded falls in this category. Check back after the next sync.';
+  } else if (src) {
+    title  = 'No signals from ' + src + ' right now';
+    detail = 'This source has nothing in the current sync, or it is hidden in Settings.';
+  } else {
+    title  = 'Nothing to show';
+    detail = 'Everything loaded is filtered out by your Settings.';
+  }
+  const btn = 'mt-1 px-5 py-2 rounded-lg font-headline text-xs uppercase tracking-widest transition-all';
+  let actions = '';
+  if (cat && src) {
+    actions += '<button type="button" onclick="filterFeed(\'All\')" class="' + btn + ' bg-primary-container text-[#00363a] hover:brightness-110">Show all ' + escHtml(src) + '</button>';
+    actions += '<button type="button" onclick="filterBySource(\'All\')" class="' + btn + ' border border-[#00f0ff]/40 text-[#dbfcff] hover:border-[#00f0ff]">' + escHtml(cat) + ' from all sources</button>';
+  } else if (cat) {
+    actions += '<button type="button" onclick="filterFeed(\'All\')" class="' + btn + ' bg-primary-container text-[#00363a] hover:brightness-110">Show all categories</button>';
+  } else if (src) {
+    actions += '<button type="button" onclick="filterBySource(\'All\')" class="' + btn + ' bg-primary-container text-[#00363a] hover:brightness-110">Show all sources</button>';
+  }
+  grid.innerHTML =
+    '<div role="status" class="md:col-span-12 flex flex-col items-center text-center gap-4 py-16 px-6 rounded-xl border border-white/10 bg-surface-container-low/40">' +
+      '<span aria-hidden="true" class="material-symbols-outlined text-[#00f0ff] text-5xl">filter_alt_off</span>' +
+      '<h2 class="font-headline text-xl font-bold text-[#dbfcff]">' + escHtml(title) + '</h2>' +
+      '<p class="text-sm text-[#dbfcff]/65 max-w-md">' + escHtml(detail) + '</p>' +
+      (actions ? '<div class="flex flex-wrap justify-center gap-3">' + actions + '</div>' : '') +
+    '</div>';
 }
 
 function prevPage() {
